@@ -1,0 +1,25 @@
+{
+  "id": "unconscious",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Unconscious", "ru": "Бессознательный" },
+  "description": {
+    "en": "While you have the Unconscious condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Бессознательный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 365
+  },
+  "tags": ["control", "out-of-combat", "combat"],
+  "effects": [
+    { "en": "You have the Incapacitated and Prone conditions and drop everything you're holding. When your Unconscious condition ends, you remain Prone.", "ru": "Бездеятельность. У вас есть состояния Недееспособный и Опрокинутый, и вы роняете всё, что держите. Когда ваше состояние Бессознательный заканчивается, вы остаётесь Опрокинутым." },
+    { "en": "Your Speed is 0 and can't increase.", "ru": "Скорость 0. Ваша Скорость равна 0 и не может быть увеличена." },
+    { "en": "Attack rolls against you have Advantage.", "ru": "Влияние на атаки. Броски атаки по вам совершаются с Преимуществом." },
+    { "en": "You automatically fail Strength and Dexterity saving throws.", "ru": "Влияние на спасброски. Вы автоматически проваливаете спасброски Силы и Ловкости." },
+    { "en": "Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.", "ru": "Автоматические критические попадания. Все броски атаки, попадающие по вам, считаются Критическими попаданиями, если атакующий находится в пределах 5 футов от вас." },
+    { "en": "You are unaware of your surroundings.", "ru": "Неосознанность. Вы не осознаёте своё окружение." }
+  ],
+  "mechanical": true
+}

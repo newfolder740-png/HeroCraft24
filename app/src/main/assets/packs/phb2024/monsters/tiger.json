@@ -1,0 +1,98 @@
+{
+    "id":  "tiger",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Tiger",
+                 "ru":  "Тигр"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "30 (4d10 + 8)",
+    "hit_dice":  "4d10 + 8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  16,
+                           "constitution":  14,
+                           "intelligence":  3,
+                           "wisdom":  12,
+                           "charisma":  8
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3,
+                   "stealth":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 10 (2к6 + 3) Рубящего урона. Если цель Большого размера или меньше, она получает состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Ловкий побег"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Тигр совершает действие Отход или Затаивание."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

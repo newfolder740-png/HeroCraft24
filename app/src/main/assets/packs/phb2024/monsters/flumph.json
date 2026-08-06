@@ -1,0 +1,131 @@
+{
+    "id":  "flumph",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Flumph",
+                 "ru":  "Фламф"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "aberration"
+             ],
+    "size":  "small",
+    "creature_type":  "aberration",
+    "subtype":  null,
+    "alignment":  "lawful good",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "7 (2d6)",
+    "hit_dice":  "2d6",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  5,
+                  "fly":  30,
+                  "hover":  true
+              },
+    "ability_scores":  {
+                           "strength":  6,
+                           "dexterity":  15,
+                           "constitution":  10,
+                           "intelligence":  14,
+                           "wisdom":  14,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "history":  4,
+                   "religion":  4,
+                   "arcana":  4
+               },
+    "damage_vulnerabilities":  [
+                                   "к урону Психический"
+                               ],
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "понимает Глубинную речь, но не говорит, Телепатия 60 фт.",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Продвинутая телепатия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Фламф воспринимает содержание любых телепатических сообщений в пределах 60 футов от него."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Опрокинутая беспомощность"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Когда фламф получает состояние Опрокинутый, бросьте любую кость; при выпадении нечётного числа он также получает состояние Недееспособный. В конце каждого своего хода фламф совершает спасбросок Ловкости Сл 10, при успехе прекращая на себе это состояние Недееспособный."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Телепатический покров"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Мысли фламфа невозможно прочитать никакими способами, и магия не может определить его местоположение или наблюдать за ним на расстоянии."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Щупальце"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 4 (1к4 + 2) урона Кислотой."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Вонючие брызги (1/день)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Ловкости: Сл 10, одно видимое фламфом в пределах 15 футов от него существо. Провал: Цель покрывается зловонной жидкостью и источает смрад 1к4 часов, получая состояние Отравленный, пока вонь не пройдёт. Другие существа имеют состояние Отравленный, пока находятся в 5-футовой Эманации, исходящей от покрытой этой жидкостью цели. Цель может очиститься от вони, если искупается во время Короткого или Долгого отдыха."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

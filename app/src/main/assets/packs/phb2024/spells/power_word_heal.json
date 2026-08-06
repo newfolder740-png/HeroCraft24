@@ -1,0 +1,40 @@
+{
+  "id": "power_word_heal",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Power Word Heal",
+    "ru": "Слово силы: исцеление"
+  },
+  "description": {
+    "en": "",
+    "ru": "Волна целебной энергии омывает одно видимое вами в пределах дистанции существо. Цель восстанавливает все свои Хиты. Состояния Испуганный, Отравленный, Очарованный, Ошеломлённый и Парализованный на цели оканчиваются, если они есть. Если у цели есть состояние Опрокинутый, она может Реакцией подняться."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 9,
+  "school": "enchantment",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:cleric"
+  ]
+}

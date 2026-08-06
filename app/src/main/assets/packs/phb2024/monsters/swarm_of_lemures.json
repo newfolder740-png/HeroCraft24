@@ -1,0 +1,131 @@
+{
+    "id":  "swarm_of_lemures",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Lemures",
+                 "ru":  "Рой лемуров"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Лемуры\nДьяволы агонии и отчаяния\n\nЛемуры — самые слабые из всех дьяволов, которые появляются из злых душ, начисто лишённых воспоминаний о прошлой жизни. Из этих сгустков адской протоматерии проступают лишь неясные формы конечностей и черты измученных лиц.\n\nКогда дьяволы сгоняют множество лемуров в одно место или те сливаются в единую массу, возникает стая с общим сознанием."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "lawful evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d10 + 12)",
+    "hit_dice":  "6d10 + 12",
+    "initiative":  "-2 (8)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  7,
+                           "constitution":  14,
+                           "intelligence":  1,
+                           "wisdom":  12,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing",
+                               "cold"
+                           ],
+    "damage_immunities":  [
+                              "fire",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "понимает Инфернальный, но не говорит",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Адское возрождение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Когда рой умирает в пределах Девяти Преисподних, он возрождается со всеми Хитами спустя 1к10 дней, если только не был убит существом под эффектом заклинания Благословение или его останки не были облиты Святой водой."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также может проходить через отверстия, которые достаточно велики для Среднего существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Рой совершает две атаки Мерзкой слизью."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мерзкая слизь"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 11 (2к8 + 2) урона Ядом, или 9 (2к6 + 2) урона Ядом, если рой Окровавлен."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "nine hells"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

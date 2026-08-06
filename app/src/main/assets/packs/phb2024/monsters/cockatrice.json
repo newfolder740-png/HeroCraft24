@@ -1,0 +1,87 @@
+{
+    "id":  "cockatrice",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Cockatrice",
+                 "ru":  "Куролиск"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Куролиски\nПревращающие в камень проклятые птицы\n\nКуролиски похожи одновременно на взбешённых петухов и голодных рептилий. Своим укусом они превращают жертв в камень, поэтому даже лёгкий удар их клюва может стать смертельным.\n\nКак правило, куролиски пытаются захватить живописные строения, такие как развалины или уединённые фермы, и превратить их в свой насест."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "small",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "22 (5d6 + 5)",
+    "hit_dice":  "5d6 + 5",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  20,
+                  "fly":  40
+              },
+    "ability_scores":  {
+                           "strength":  6,
+                           "dexterity":  12,
+                           "constitution":  12,
+                           "intelligence":  2,
+                           "wisdom":  13,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "petrified"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Окаменяющий клевок"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 3 (1к4 + 1) Колющего урона. Если цель является существом, она подвергается следующим эффектам: Спасбросок Телосложения: Сл 11. Первый провал: Цель получает состояние Опутанный. Цель повторяет спасбросок в конце своего следующего хода, если она всё ещё Опутана таким образом, оканчивая эффект на себе при успехе. Второй провал: Цель получает состояние Окаменевший вместо состояния Опутанный на 24 часа."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "grassland"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

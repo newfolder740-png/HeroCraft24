@@ -1,0 +1,134 @@
+{
+    "id":  "scout_captain",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Scout Captain",
+                 "ru":  "Капитан разведчиков"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Разведчики\nДозорные и странники\n\nРазведчики — это воители диких земель, обученные охоте и выслеживанию. Они могут быть первопроходцами или звероловами, а могут исполнять и более ратные роли: метких лучников, охотников за головами либо конных дозорных.\n\nКапитаны разведчиков — это бывалые землепроходцы и меткие стрелки. Они могут вести за собой отряды других разведчиков или по одиночке пропадать в диких землях на долгие месяцы кряду."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "66 (12d8 + 12)",
+    "hit_dice":  "12d8 + 12",
+    "initiative":  "+5 (15)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  16,
+                           "constitution":  12,
+                           "intelligence":  14,
+                           "wisdom":  15,
+                           "charisma":  11
+                       },
+    "saving_throws":  {
+                          "dexterity":  5,
+                          "intelligence":  4
+                      },
+    "skills":  {
+                   "survival":  6,
+                   "perception":  6,
+                   "stealth":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "16"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Капитан совершает две атаки Коротким мечом или Длинным луком в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Короткий меч"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Колющего урона, плюс 10 (3к6) Колющего урона, если атака совершалась с Преимуществом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Длинный лук"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +5, дистанция 150/600 фт. Попадание: 7 (1к8 + 3) Колющего урона, плюс 10 (3к6) Колющего урона, если атака совершалась с Преимуществом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Прицеливание"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Капитан получает Преимущество на следующий бросок атаки, который совершит в текущем ходу."
+                                              }
+                          }
+                      ],
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Невероятное уклонение"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: По капитану попадает бросок атаки. Эффект: Капитан ополовинивает полученный от этой атаки урон (округляя вниз)."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  "Длинный лук, Короткий меч, Проклёпанный кожаный доспех"
+}

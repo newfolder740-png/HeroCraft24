@@ -1,0 +1,97 @@
+{
+    "id":  "owlbear",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Owlbear",
+                 "ru":  "Совомедведь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Совомедведи\nМагически усовершенствованные хищники\n\nСозданные в незапамятные времена заблудшими магами, совомедведи сочетают в себе зоркие птичьи глаза, густое оперение и рвущий плоть клюв с могучим медвежьим телом. Несмотря на искусственное происхождение, эти твари расплодились по диким землям всей мультивселенной.\n\nЛогова совомедведей отличаются от прочих по характерным признакам. Совершите бросок по таблице «Особенности логова совомедведя» для вдохновения или определите сами приметные черты его жилища.\n\nОсобенности логова совомедведя\n1к4\tВ логове совомедведя есть…\n1\tСледы прежних обитателей — бандитов, волков или драконов.\n2\tКучи отрыгнутых катышков, утыканные монетами и ценностями.\n3\tГнездо с 1к6 яиц совомедведя.\n4\tХоды в толще земли или внутри полых деревьев.\nСовомедведи — упорные охотники, которые выслеживают добычу многие мили и почти никогда не отказываются от начатой погони."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "59 (7d10 + 21)",
+    "hit_dice":  "7d10 + 21",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  40
+              },
+    "ability_scores":  {
+                           "strength":  20,
+                           "dexterity":  12,
+                           "constitution":  17,
+                           "intelligence":  3,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "нет",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Совомедведь совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 14 (2к8 + 5) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

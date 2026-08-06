@@ -1,0 +1,44 @@
+{
+  "id": "locate_animals_or_plants",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Locate Animals or Plants",
+    "ru": "Поиск животных или растений"
+  },
+  "description": {
+    "en": "",
+    "ru": "Назовите или опишите определённый вид существа-Зверя, существа-Растения или немагического растения. Вы узнаёте направление и расстояние до ближайшего существа или растения этого вида в пределах 5 миль, если они вообще есть."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "divination",
+  "casting_time": "Действие или Ритуал",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "кусочек меха ищейки",
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": true,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:druid",
+    "phb2024:ranger"
+  ]
+}

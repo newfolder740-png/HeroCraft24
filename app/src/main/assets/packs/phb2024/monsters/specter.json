@@ -1,0 +1,128 @@
+{
+    "id":  "specter",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Specter",
+                 "ru":  "Спектр"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Спектр\nДух гнева и служитель смерти\n\nСпектры — бестелесные, пожирающие жизнь духи, которых тянет к тьме и отрицательным эмоциям. Утратив всякую связь с теми, кем были прежде, эти злобные призраки иссушают эссенцию смертных, воруя мимолётные отголоски жизни и тепла.\n\nСпектры ищут существ и места, источающие зло, и питаются страданиями, которые сами порождают. Совершите бросок по таблице «Обиталища спектров» для вдохновения или определите сами укрывающее спектра место.\n\nОбиталища спектров\nк8\tСпектр скрывается рядом с...\n1\tОбщиной, поражённой проклятиями, обидами, морами или трагедиями.\n2\tЗлым Артефактом или смертоносным магическим устройством.\n3\tЛоговом Исчадия или Нежити.\n4\tМестом, где умер или погребён злодей.\n5\tПорталом на Нижние планы, Негативный план или Царство Теней.\n6\tСвятилищем некроманта или культа смерти.\n7\tУединённым монументом, сковывающим злые души.\n8\tМестом катастрофы или массовой гибели."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "undead"
+             ],
+    "size":  "medium",
+    "creature_type":  "undead",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "22 (5d8)",
+    "hit_dice":  "5d8",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "fly":  50,
+                  "hover":  true
+              },
+    "ability_scores":  {
+                           "strength":  1,
+                           "dexterity":  14,
+                           "constitution":  11,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing",
+                               "thunder",
+                               "acid",
+                               "fire",
+                               "cold",
+                               "lightning"
+                           ],
+    "damage_immunities":  [
+                              "necrotic",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "unconscious",
+                                 "exhaustion",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "charmed",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "знает Общий плюс один другой язык, но не говорит",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Бестелесное перемещение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Спектр может перемещаться через других существ и объекты, как если бы они были Труднопроходимой местностью. Он получает 5 (1к10) Силового урона, если завершает свой ход внутри объекта."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Чувствительность к солнечному свету"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Находясь на солнечном свету, спектр совершает с Помехой все проверки характеристик и броски атаки."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Вытягивание жизни"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 7 (2к6) Некротического урона. Если цель — существо, её максимум Хитов снижается на число, равное полученному урону."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban",
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

@@ -1,0 +1,84 @@
+{
+    "id":  "larva",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Larva",
+                 "ru":  "Ларва"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ларвы\nУчасть падших душ\n\nДуши, обречённые на скитания по Нижним планам, нередко превращаются в ларв — омерзительных червеобразных существ с искажённой внешностью их прижизненного облика. Эти жалкие создания почти полностью беспомощны и стараются не привлекать внимание более могущественных обитателей своих планов. Многие Исчадия считают их деликатесом, а маги используют в своих порочных ритуалах. Ночные карги часто собирают и пасут ларв, а также торгуют ими с тёмными силами по всей мультивселенной.\n\nНекоторым ларвам удаётся выживать на Нижних планах достаточно долго, чтобы в итоге превратиться в других представителей низших Исчадий.\n\nВоспоминания ларв об их прошлой жизни обрывочны и наполнены болью. Они стараются любой ценой избежать встречи с другими существами."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "medium",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "9 (2d8)",
+    "hit_dice":  "2d8",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  9,
+                           "dexterity":  9,
+                           "constitution":  10,
+                           "intelligence":  6,
+                           "wisdom":  10,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "знает Общий плюс один другой язык, но не говорит",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +1, досягаемость 5 фт. Попадание: 1 (1к4 - 1) Некротического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "lower planes"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

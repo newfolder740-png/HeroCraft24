@@ -1,0 +1,106 @@
+{
+    "id":  "spider",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Spider",
+                 "ru":  "Паук"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "tiny",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "1 (1d4 - 1)",
+    "hit_dice":  "1d4 - 1",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  20,
+                  "climb":  20
+              },
+    "ability_scores":  {
+                           "strength":  2,
+                           "dexterity":  14,
+                           "constitution":  8,
+                           "intelligence":  1,
+                           "wisdom":  10,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Паучье лазание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Паук может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Хождение по паутине"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Паук игнорирует ограничения перемещения, вызванные паутиной, и знает точное местоположение всех других существ, находящихся в контакте с той же паутиной."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 1 Колющего урона плюс 2 (1к4) урона Ядом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

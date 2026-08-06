@@ -1,0 +1,92 @@
+{
+    "id":  "myconid_spore_servant",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Myconid Spore Servant",
+                 "ru":  "Споровый слуга миконидов"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Микониды\nПереносчики спор\n\nМикониды обитают в отдалённых глубинах Подземья, где разрастается плесень и грибы. Эти ходячие грибные создания заботятся о своих святилищах и стараются не втягивать себя в распри иных народов. Для общения, тревожных сигналов и самозащиты они используют особые споры. Когда микониды встречают других созданий, они выпускают споры мыслесвязи, что позволяют всем поблизости телепатически делиться мыслями. И всё же намерения миконидов остаются загадкой для большинства тех, кто не принадлежит к грибному роду.\n\nСпоровые слуги — это тела мертвецов, оплетённые грибницей и вновь оживлённые спорами верхновного миконида. Эти заражённые грибами трупы служат продолжением воли своего владыки и беспрекословно исполняют его приказы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "plant"
+             ],
+    "size":  "medium",
+    "creature_type":  "plant",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "37 (5d8 + 15)",
+    "hit_dice":  "5d8 + 15",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  12,
+                           "constitution":  16,
+                           "intelligence":  2,
+                           "wisdom":  6,
+                           "charisma":  1
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "blinded",
+                                 "poisoned",
+                                 "charmed",
+                                 "paralyzed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "Телепатия 30 фт.",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Размашистый удар"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Дробящего урона плюс 2 (1к4) урона Ядом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Любые",
+    "equipment":  null
+}

@@ -1,0 +1,15 @@
+{
+    "id":  "misty_visions",
+    "name":  {
+                 "en":  "Misty Visions",
+                 "ru":  "Туманные видения"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Безмолвный образ без траты ячеек заклинаний."
+                    },
+    "level":  2,
+    "requirements":  {
+                         "warlock_level":  2
+                     }
+}

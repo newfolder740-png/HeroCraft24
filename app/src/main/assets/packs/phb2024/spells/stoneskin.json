@@ -1,0 +1,48 @@
+{
+  "id": "stoneskin",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Stoneskin",
+    "ru": "Каменная кожа"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь согласного существа; пока заклинание действует, это существо обладает Сопротивлением Дробящему, Колющему и Рубящему урону."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 4,
+  "school": "transmutation",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "алмазная пыль стоимостью не менее 100 ЗМ, расходуемая заклинанием",
+  "duration": "Концентрация, вплоть до 1 часа",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:druid",
+    "phb2024:ranger",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Клятва древних"
+  ]
+}

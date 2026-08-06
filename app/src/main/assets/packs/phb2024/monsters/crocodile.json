@@ -1,0 +1,96 @@
+{
+    "id":  "crocodile",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Crocodile",
+                 "ru":  "Крокодил"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "13 (2d10 + 2)",
+    "hit_dice":  "2d10 + 2",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  20,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  10,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Задержка дыхания"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Крокодил может задержать дыхание на 1 час."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 6 (1к8 + 2) Колющего урона. Если цель — существо Среднего размера или меньше, она получает состояние Схваченный (Сл освобождения от захвата 14). Пока у цели есть это состояние, у неё есть и состояние Опутанный."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

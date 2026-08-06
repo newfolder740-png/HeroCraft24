@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Material 3 colors required by ReferenceListFragment -->
+    <color name="onSurface">#191C1E</color>
+    <color name="primary">#6750A4</color>
+    <color name="onPrimary">#FFFFFF</color>
+</resources>

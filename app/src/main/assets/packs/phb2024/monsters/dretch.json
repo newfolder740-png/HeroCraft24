@@ -1,0 +1,102 @@
+{
+    "id":  "dretch",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Dretch",
+                 "ru":  "Дретч"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Дретчи\nМордовороты и задиры\n\nДретчи — слуги и жертвы высших демонов, которые воплощают в себе низменные побуждениям, хаотичные поступки и насилие. В глубине Бездны обитает бесчисленное число этих существ, собирающихся в вонючие орды.\n\nНекоторые дретчи служат другим демонам или злым магам. Они непредсказуемы, неопрятны и жестоки, и у них почти полностью отсутствует инстинкт самосохранения."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "small",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "18 (4d6 + 4)",
+    "hit_dice":  "4d6 + 4",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  11,
+                           "constitution":  12,
+                           "intelligence":  5,
+                           "wisdom":  8,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "fire",
+                               "cold",
+                               "lightning"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "9"
+               },
+    "languages":  "Бездны, Телепатия 60 фт. (работает только с существами, понимающими язык Бездны)",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 4 (1к6 + 1) Рубящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Зловонное облако (1/день)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Телосложения: Сл 11, каждое существо в 10-футовой Эманации, исходящей от дретча. Провал: Цель получает состояние Отравленный до конца её следующего хода. Отравленное таким образом существо может в свой ход совершать либо действие, либо Бонусное действие, но не то и другое, и не может совершать Реакции."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "abyss"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

@@ -1,0 +1,146 @@
+{
+    "id":  "gibbering_mouther",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Gibbering Mouther",
+                 "ru":  "Бормочущий ротовик"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "aberration"
+             ],
+    "size":  "medium",
+    "creature_type":  "aberration",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "52 (7d8 + 21)",
+    "hit_dice":  "7d8 + 21",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  20,
+                  "swim":  20
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  8,
+                           "constitution":  16,
+                           "intelligence":  3,
+                           "wisdom":  10,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "prone"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Искажённая земля"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Земля в 10-футовой Эманации, исходящей от ротовика, становится Труднопроходимой местностью."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Бормотание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Ротовик непрерывно и неразборчиво бормочет, пока не имеет состояния Недееспособный. Спасбросок Мудрости: Сл 10, любое существо, начинающее свой ход в пределах 20 футов от ротовика. Провал: Цель бросает 1к8, чтобы определить, что она будет делать в текущем ходу:"
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "1–4"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Цель ничего не делает."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "5–6"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Цель не совершает ни действия, ни Бонусного действия, а также тратит всю Скорость на перемещение в случайном направлении."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "7–8"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Цель совершает одну рукопашную атаку по случайно выбранному существу в пределах досягаемости; цель ничего не делает, если не может совершить такую атаку."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +2, досягаемость 5 фт. Попадание: 7 (2к6) Колющего урона. Если цель Среднего размера или меньше, она Опрокидывается. Если эта атака опускает Хиты цели до 0, цель умирает. После этого ротовик поглощает её тело, оставляя только снаряжение."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ослепляющий плевок (Перезарядка 5–6)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Ловкости: Сл 10, каждое существо в Сфере радиусом 10 футов с центром в точке в пределах 30 футов. Провал: 7 (2к6) урона Излучением, и цель Ослеплена до конца следующего хода ротовика."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

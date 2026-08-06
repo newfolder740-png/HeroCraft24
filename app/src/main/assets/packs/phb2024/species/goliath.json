@@ -1,0 +1,69 @@
+{
+  "id": "goliath",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Goliath",
+    "ru": "Голиаф"
+  },
+  "description": {
+    "en": "Towering over most folk, goliaths are distant descendants of giants. Each goliath bears the favor of the first giants. This manifests in various supernatural gifts, including the ability to rapidly grow in size, temporarily approaching the height of their giant kin.\n\nGoliaths have physical aspects reminiscent of their giant ancestors. Thus, some goliaths look like stone giants, while others resemble fire giants. Whatever giants they consider kin, goliaths have forged their own path in the multiverse — unburdened by the internecine conflicts that have ravaged giantkind for eons — and seek heights exceeding those reached by their ancestors.",
+    "ru": "Возвышающиеся над большинством народов голиафы — отдалённые потомки великанов. Каждый голиаф обладает благоволением первых великанов. Оно проявляется в различных сверхъестественных дарах, включая способность быстро увеличиваться в размерах, временно приближаясь к росту гигантских сородичей голиафов.\n\nГолиафы обладают физическими аспектами, напоминающими их предков-великанов. Так, некоторые голиафы выглядят как каменные великаны, а другие схожи с огненными великанами. Каких бы великанов они не считали родственниками, голиафы проложили свой собственный путь во мультивселенной — не обременённый междоусобными конфликтами, которые веками опустошали род великанов — и стремятся к высотам, превышающим те, что достигли их предки."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "giant",
+    "elemental"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 35,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Giant Ancestry",
+        "ru": "Наследие великанов"
+      },
+      "description": {
+        "en": "You are descended from giants. From your ancestors you have received a supernatural gift. Choose one of the following traits; you can use the chosen trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest:\n\nCloud's Jaunt (Cloud Giant). As a Bonus Action, you can magically teleport up to 30 feet to an unoccupied space you can see.\n\nFire's Burn (Fire Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d10 Fire damage to that target.\n\nFrost's Chill (Frost Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d6 Cold damage to that target and reduce its Speed by 10 feet until the start of your next turn.\n\nHill's Tumble (Hill Giant). When you hit a target with an attack roll and deal damage to it, you can give the target the Prone condition if it is Large or smaller.\n\nStone's Endurance (Stone Giant). When you take damage, you can use your Reaction to roll 1d12; add your Constitution modifier to the result and reduce the damage by that total.\n\nStorm's Thunder (Storm Giant). When you take damage from a creature within 60 feet of you, you can use your Reaction to deal 1d8 Thunder damage to that creature.",
+        "ru": "Вы произошли от великанов. От ваших предков вы получили сверхъестественный дар. Выберите одну из следующих особенностей; вы можете использовать выбранную особенность количество раз, равное вашему Бонусу владения, и вы восстанавливаете потраченные использования по завершению Долгого отдыха:\n\nОблачная прогулка (Облачный великан). Бонусным действием вы можете магическим образом телепортироваться на расстояние до 30 футов в видимое вами незанятое пространство.\n\nОгненный ожог (Огненный великан). Когда вы попадаете по цели броском атаки и наносите ей урон, можете также нанести этой цели 1к10 урона Огнём.\n\nМорозный иней (Ледяной великан). Когда вы попадаете по цели броском атаки и наносите ей урон, можете также нанести этой цели 1к6 урона Холодом и уменьшить её Cкорость на 10 футов до начала вашего следующего хода.\n\nОбрушение холма (Холмовой великан). Когда вы попадаете по цели броском атаки и наносите ей урон, можете дать цели состояние Опрокинутый, если она Большого размера или меньше.\n\nВыносливость камня (Каменный великан). Когда вы получаете урон, можете Реакцией бросить 1к12; добавьте к результату ваш модификатор Телосложения и уменьшите урон на эту сумму.\n\nГрохот бури (Штормовой великан). Когда вы получаете урон от существа в пределах 60 футов от вас, можете Реакцией нанести этому существу 1к8 урона Звуком."
+      }
+    },
+    {
+      "name": {
+        "en": "Large Form",
+        "ru": "Большая форма"
+      },
+      "description": {
+        "en": "Starting at character level 5, you can use a Bonus Action to change your size to Large, provided you are in a space large enough. This transformation lasts for 10 minutes or until you end it (no action required). While it lasts, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest.",
+        "ru": "Начиная с 5-го уровня персонажа, вы можете Бонусным действием изменить свой размер на Большой, если вы находитесь в достаточно большом пространстве. Это преобразование длится 10 минут или до тех пор, пока вы не окончите его (действий не требуется). Пока оно длится, вы совершаете с Преимуществом проверки Силы, а ваша Скорость увеличивается на 10 футов. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
+      }
+    },
+    {
+      "name": {
+        "en": "Powerful Build",
+        "ru": "Мощное телосложение"
+      },
+      "description": {
+        "en": "You have Advantage on ability checks to end the Grappled condition. You also count as one size larger when determining your carrying capacity.",
+        "ru": "Вы совершаете с Преимуществом проверки характеристик на окончание состояния Схваченный. Вы также считаетесь существом на один размер больше для определения вашей грузоподъёмности."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+    "id":  "giant_boar",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Boar",
+                 "ru":  "Гигантский кабан"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "42 (5d10 + 15)",
+    "hit_dice":  "5d10 + 15",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  10,
+                           "constitution":  16,
+                           "intelligence":  2,
+                           "wisdom":  7,
+                           "charisma":  5
+                       },
+    "saving_throws":  {
+                          "strength":  5
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Окровавленная ярость"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока кабан Окровавлен, он совершает с Преимуществом броски рукопашных атак."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Бодание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 10 (2к6 + 3) Колющего урона. Если цель — существо Большого размера или меньше, а кабан переместился к ней по прямой хотя бы на 20 футов сразу перед попаданием, цель получает 7 (2к6) дополнительного Колющего урона и состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

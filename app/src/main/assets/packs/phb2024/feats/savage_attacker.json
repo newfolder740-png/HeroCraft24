@@ -1,0 +1,32 @@
+{
+  "id": "savage_attacker",
+  "type": "feat",
+  "format_version": 1,
+  "name": {
+    "en": "Savage Attacker",
+    "ru": "Неистово атакующий"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы научились наносить особенно много урона вашим оружием. Один раз за ход, когда вы попадаете по цели оружием, вы можете бросить урон этого оружия дважды и использовать по этой цели любой из результатов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "feat"
+  ],
+  "category": "origin",
+  "prerequisite": {
+    "en": "",
+    "ru": ""
+  },
+  "repeatable": false,
+  "benefits": [
+    
+  ]
+}

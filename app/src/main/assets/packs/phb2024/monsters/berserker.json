@@ -1,0 +1,93 @@
+{
+    "id":  "berserker",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Berserker",
+                 "ru":  "Берсерк"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Берсерки\nСвирепые захватчики и пылкие воители\n\nОхваченные азартом сражения берсерки превращаются в отчаянных захватчиков, гладиаторов и других неустрашимых воинов.\n\nБерсерки готовы сражаться ради личной славы как в составе дисциплинированной армии, так и вместе с ревущей ордой."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "67 (9d8 + 27)",
+    "hit_dice":  "9d8 + 27",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  12,
+                           "constitution":  17,
+                           "intelligence":  9,
+                           "wisdom":  11,
+                           "charisma":  9
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Окровавленное бешенство"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока берсерк Окровавлен, он совершает с Преимуществом броски атаки и спасброски."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Двуручный топор"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 9 (1к12 + 3) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Секира, Шкурный доспех"
+}

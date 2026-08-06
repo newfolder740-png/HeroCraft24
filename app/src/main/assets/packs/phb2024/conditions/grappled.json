@@ -1,0 +1,22 @@
+{
+  "id": "grappled",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Grappled", "ru": "Схваченный" },
+  "description": {
+    "en": "While you have the Grappled condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Схваченный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["control", "combat"],
+  "effects": [
+    { "en": "Your Speed is 0 and can't increase.", "ru": "Скорость 0. Ваша Скорость равна 0 и не может быть увеличена." },
+    { "en": "Your attack rolls have Disadvantage against any target other than the one grappling you.", "ru": "Влияние на атаки. Вы совершаете с Помехой броски атаки по всем целям, кроме той, что схватила вас." },
+    { "en": "The creature grappling you can drag or carry you when it moves; each foot of movement it spends costs 1 extra foot unless you are Tiny or two sizes smaller than it.", "ru": "Можете быть перемещены. Схватившее вас существо может при своём перемещении тащить или нести вас; при этом каждый фут перемещения стоит на 1 фут больше, если только вы не Крошечного размера или на две размера меньше его." }
+  ],
+  "mechanical": true
+}

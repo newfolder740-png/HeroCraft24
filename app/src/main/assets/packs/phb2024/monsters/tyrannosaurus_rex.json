@@ -1,0 +1,109 @@
+{
+    "id":  "tyrannosaurus_rex",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Tyrannosaurus Rex",
+                 "ru":  "Тираннозавр рекс"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "136 (13d12 + 52)",
+    "hit_dice":  "13d12 + 52",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  25,
+                           "dexterity":  10,
+                           "constitution":  19,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  9
+                       },
+    "saving_throws":  {
+                          "strength":  10,
+                          "wisdom":  4
+                      },
+    "skills":  {
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  8,
+    "xp":  3900,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Тираннозавр совершает одну атаку Укусом и одну атаку Хвостом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +10, досягаемость 10 фт. Попадание: 33 (4к12 + 7) Колющего урона. Если цель — существо Большого размера или меньше, она становится Схваченной (Сл освобождения от захвата 17). Пока она Схвачена, цель также Опутана и не может быть целью Хвоста тираннозавра."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Хвост"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +10, досягаемость 15 фт. Попадание: 25 (4к8 + 7) Дробящего урона. Если цель — существо Огромного размера или меньше, она становится Опрокинутой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

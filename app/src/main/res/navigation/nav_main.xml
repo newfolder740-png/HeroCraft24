@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/navigation_characters">
+
+    <fragment
+        android:id="@+id/navigation_characters"
+        android:name="com.herocraft24.feature.characters.CharactersFragment"
+        android:label="@string/tab_characters" />
+
+    <fragment
+        android:id="@+id/navigation_spells"
+        android:name="com.herocraft24.feature.spells.SpellsFragment"
+        android:label="@string/tab_spells" />
+
+    <fragment
+        android:id="@+id/navigation_equipment"
+        android:name="com.herocraft24.feature.equipment.EquipmentFragment"
+        android:label="@string/tab_equipment" />
+
+    <fragment
+        android:id="@+id/navigation_reference"
+        android:name="com.herocraft24.feature.reference.ReferenceFragment"
+        android:label="@string/tab_reference" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.herocraft24.feature.settings.SettingsFragment"
+        android:label="@string/tab_settings" />
+
+</navigation>

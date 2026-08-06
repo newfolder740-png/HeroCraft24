@@ -1,0 +1,84 @@
+{
+    "id":  "rhinoceros",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Rhinoceros",
+                 "ru":  "Носорог"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d10 + 12)",
+    "hit_dice":  "6d10 + 12",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  21,
+                           "dexterity":  8,
+                           "constitution":  15,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Бодание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 14 (2к8 + 5) Колющего урона.Если цель — существо Большого размера или меньше, а носорог переместился к ней по прямой хотя бы на 30 футов сразу перед попаданием, цель получает 9 (2к8) дополнительного Колющего урона и состояние Опрокинутый.."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

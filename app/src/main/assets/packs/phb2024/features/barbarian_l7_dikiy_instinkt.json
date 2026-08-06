@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l7_dikiy_instinkt",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Дикий инстинкт"},
+  "description": {"en": "", "ru": "Ваши инстинкты настолько отточены, что вы совершаете с Преимуществом броски Инициативы."},
+  "level": 7,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

@@ -1,0 +1,97 @@
+{
+    "id":  "cat",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Cat",
+                 "ru":  "Кошка"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "tiny",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "2 (1d4)",
+    "hit_dice":  "1d4",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  40
+              },
+    "ability_scores":  {
+                           "strength":  3,
+                           "dexterity":  15,
+                           "constitution":  10,
+                           "intelligence":  3,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3,
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Прыгучая"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Дистанция прыжка кошки определяется её Ловкостью, а не Силой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Царапание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 1 Рубящего урона"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

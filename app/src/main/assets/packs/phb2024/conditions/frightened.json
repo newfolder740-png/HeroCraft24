@@ -1,0 +1,21 @@
+{
+  "id": "frightened",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Frightened", "ru": "Испуганный" },
+  "description": {
+    "en": "While you have the Frightened condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Испуганный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["debuff", "combat"],
+  "effects": [
+    { "en": "While the source of your fear is within your line of sight, you have Disadvantage on ability checks and attack rolls.", "ru": "Влияние на атаки и проверки характеристик. Пока источник страха на линии вашего обзора, вы совершаете с Помехой проверки характеристик и броски атаки." },
+    { "en": "You can't willingly move closer to the source of your fear.", "ru": "Не можете приближаться. Вы не можете добровольно приближаться к источнику страха." }
+  ],
+  "mechanical": true
+}

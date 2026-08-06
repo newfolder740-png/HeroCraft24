@@ -1,0 +1,117 @@
+{
+    "id":  "giant_spider",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Spider",
+                 "ru":  "Гигантский паук"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "26 (4d10 + 4)",
+    "hit_dice":  "4d10 + 4",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  16,
+                           "constitution":  12,
+                           "intelligence":  2,
+                           "wisdom":  11,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4,
+                   "stealth":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Паучье лазание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Паук может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Хождение по паутине"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Паук игнорирует ограничения перемещения, вызванные паутиной, и знает точное местоположение всех других существ, находящихся в контакте с той же паутиной."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 7 (1к8 + 3) Колющего урона плюс 7 (2к6) урона Ядом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Паутина (Перезарядка 5–6)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Ловкости: Сл 13, одно видимое пауком в пределах 60 футов от него существо. Провал: Цель получает состояние Опутанный, пока паутина не будет уничтожена (КЗ 10; 5 Хитов; Уязвимость к урону Огнём; Иммунитет к урону Ядом и Психическому урону)."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

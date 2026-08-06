@@ -1,0 +1,50 @@
+{
+  "id": "ray_of_sickness",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Ray of Sickness",
+    "ru": "Луч болезни"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы выстреливаете зеленоватым лучом в существо в пределах дистанции. Совершите дальнобойную атаку заклинанием по этой цели; при попадании она получает 2к8 урона Ядом и состояние Отравленный до конца вашего следующего хода."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "necromancy",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "higher_levels": {
+    "en": "",
+    "ru": "Используя ячейку заклинания большего уровня. Урон увеличивается на 1к8 за каждый уровень ячейки выше 1-го."
+  },
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Алхимик",
+    "Круг земли",
+    "Нежить"
+  ]
+}

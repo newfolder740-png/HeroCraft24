@@ -1,0 +1,106 @@
+{
+    "id":  "swarm_of_larvae",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Larvae",
+                 "ru":  "Рой ларв"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ларвы\nУчасть падших душ\n\nДуши, обречённые на скитания по Нижним планам, нередко превращаются в ларв — омерзительных червеобразных существ с искажённой внешностью их прижизненного облика. Эти жалкие создания почти полностью беспомощны и стараются не привлекать внимание более могущественных обитателей своих планов. Многие Исчадия считают их деликатесом, а маги используют в своих порочных ритуалах. Ночные карги часто собирают и пасут ларв, а также торгуют ими с тёмными силами по всей мультивселенной.\n\nНекоторым ларвам удаётся выживать на Нижних планах достаточно долго, чтобы в итоге превратиться в других представителей низших Исчадий.\n\nПо одиночке ларвы не так опасны, но в большом количестве они могут одолеть слабых противников. В отчаянии ларвы сбиваются в отвратительный рой, приближение которого выдают безмолвные всхлипы и тошнотворные звуки, будто от копошения червей."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "22 (3d10 + 6)",
+    "hit_dice":  "3d10 + 6",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  11,
+                           "constitution":  14,
+                           "intelligence":  6,
+                           "wisdom":  12,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "понимает все языки, но не говорит",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также может проходить через отверстия, которые достаточно велики для Среднего существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 9 (2к6 + 2) Некротического урона, или 7 (2к4 + 2) Некротического урона, если стая Окровавлена."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "lower planes"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

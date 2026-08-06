@@ -1,0 +1,107 @@
+{
+    "id":  "giant_constrictor_snake",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Constrictor Snake",
+                 "ru":  "Гигантский удав"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "60 (8d12 + 8)",
+    "hit_dice":  "8d12 + 8",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  19,
+                           "dexterity":  14,
+                           "constitution":  12,
+                           "intelligence":  1,
+                           "wisdom":  10,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Удав совершает одну атаку Укусом и использует Сжимание."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 11 (2к6 + 4) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сжимание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Силы: Сл 14, одно видимое удавом существо Большого размера или меньше в 10 футах. Провал: 13 (2к8 + 4) Дробящего урона, и цель становится Схваченной (Сл освобождения от захвата 14)."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

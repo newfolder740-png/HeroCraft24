@@ -1,0 +1,113 @@
+{
+    "id":  "swarm_of_crawling_claws",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Crawling Claws",
+                 "ru":  "Рой ползающих рук"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ползающие руки\nОтсечённые конечности, ведомые злой волей\n\nПолзающие руки — это отрубленные кисти рук, что движутся и действуют по собственной убийственной воле. Эти немёртвые конечности могут оживать из отсечённых рук убийц и злодеев, а зловещие заклинатели порой обращают ползающие руки в гнусных прислужников. Обличья их многообразны: от гниющих кистей Гуманоидов до свежих конечностей зверей и чудовищ.\n\nРои ползающих рук, как правило, оживляются порочными некромантами. Порой же эти омерзительные скопища восстают из братских могил или после чудовищных трагедий, не желая выпускать своих убийц из мёртвой хватки."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "49 (11d8)",
+    "hit_dice":  "11d8",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  14,
+                           "constitution":  11,
+                           "intelligence":  5,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  [
+                              "necrotic",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "incapacitated",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "понимает Общий, но не говорит",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для Крошечного существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Рой цепких рук"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 20 (4к8 + 2) Некротического урона, или 11 (2к8 + 2) Некротического урона, если рой Окровавлен. Если цель Среднего размера или меньше, она получает состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "restrained",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Restrained", "ru": "Опутанный" },
+  "description": {
+    "en": "While you have the Restrained condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Опутанный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["control", "combat"],
+  "effects": [
+    { "en": "Your Speed is 0 and can't increase.", "ru": "Скорость 0. Ваша Скорость равна 0 и не может быть увеличена." },
+    { "en": "Your attack rolls have Disadvantage, and attack rolls against you have Advantage.", "ru": "Влияние на атаки. Ваши броски атаки совершаются с Помехой, а броски атаки по вам совершаются с Преимуществом." },
+    { "en": "You have Disadvantage on Dexterity saving throws.", "ru": "Влияние на спасброски. Вы совершаете с Помехой спасброски Ловкости." }
+  ],
+  "mechanical": true
+}

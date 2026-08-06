@@ -1,0 +1,117 @@
+{
+    "id":  "tough_boss",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Tough Boss",
+                 "ru":  "Босс громил"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "82 (11d8 + 33)",
+    "hit_dice":  "11d8 + 33",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  14,
+                           "constitution":  16,
+                           "intelligence":  11,
+                           "wisdom":  10,
+                           "charisma":  11
+                       },
+    "saving_throws":  {
+                          "strength":  5,
+                          "constitution":  5,
+                          "charisma":  2
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Тактика стаи"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Босс громил совершает с Преимуществом броски атаки по существу, если его союзник, не имеющий состояния Недееспособный, находится в пределах 5 футов от этого существа."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Громила совершает две атаки Боевым молотом или Тяжёлым арбалетом в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Боевой молот"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 12 (2к8 + 3) Дробящего урона. Если цель — существо Большого размера или меньше, громила отталкивает цель от себя по прямой на расстояние вплоть до 10 футов."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Тяжёлый арбалет"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +4, дистанция 100/400 фт. Попадание: 13 (2к10 + 2) Колющего урона.\nГромилы\nГромилы — это телохранители, задиры и простые трудяги, которые полагаются на грубую силу, чтобы запугивать противников. Среди них встречаются бывалые уголовники, шумные завсегдатаи таверн, чернорабочие и другие, привыкшие добиваться своего кулаками.\nБлагодаря уличной смекалке, бойцовским навыкам и репутации боссы громил заставляют других следовать своим указаниям."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  "Боевой молот, Кольчужный доспех, Тяжёлый арбалет"
+}

@@ -1,0 +1,40 @@
+{
+  "id": "power_word_fortify",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Power Word Fortify",
+    "ru": "Слово силы: укрепление"
+  },
+  "description": {
+    "en": "",
+    "ru": "Выберите вплоть до шести существ, находящихся в пределах дистанции. Заклинание дарует 120 Временных хитов, распределяемых по вашему усмотрению между этих существ."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 7,
+  "school": "enchantment",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:cleric"
+  ]
+}

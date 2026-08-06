@@ -1,0 +1,89 @@
+{
+    "id":  "awakened_tree",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Awakened Tree",
+                 "ru":  "Пробуждённое дерево"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пробуждённые растения\nОживлённая магией растительность\n\nМагия способна наделить растения подвижностью, разумом и даже даром речи. Такие заклинания, как Пробуждение разума, или влияние иных планов бытия могут вдохнуть жизнь в обычную растительность, а какие-то примечательные растения могут по своей природе обладать подобными свойствами.\n\nОдни пробуждённые деревья подолгу стоят в неподвижном, созерцательном покое, отчего их легко принять за обычные растения, тогда как другие обходят дозором владения природной силы. Порой к жизни их пробуждает влияние Страны Фей, и тогда они расцветают буйством красок, листы и бутонов; порой — энергия Царства теней, покрывая их кору уродливыми наростами или придавая ей безжизненный, иссохший вид."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "plant"
+             ],
+    "size":  "huge",
+    "creature_type":  "plant",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "59 (7d12 + 14)",
+    "hit_dice":  "7d12 + 14",
+    "initiative":  "-2 (8)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  19,
+                           "dexterity":  6,
+                           "constitution":  15,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  [
+                                   "к урону Огонь"
+                               ],
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Размашистый удар"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 14 (3к6 + 4) Дробящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  null
+}

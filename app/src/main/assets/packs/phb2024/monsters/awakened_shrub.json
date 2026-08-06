@@ -1,0 +1,88 @@
+{
+    "id":  "awakened_shrub",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Awakened Shrub",
+                 "ru":  "Пробуждённый куст"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пробуждённые растения\nОживлённая магией растительность\n\nМагия способна наделить растения подвижностью, разумом и даже даром речи. Такие заклинания, как Пробуждение разума, или влияние иных планов бытия могут вдохнуть жизнь в обычную растительность, а какие-то примечательные растения могут по своей природе обладать подобными свойствами.\n\nПробуждённые кусты могут быть любыми некрупными растениями — от лесного молодняка до густых цветочных зарослей. Часто они встречаются близ пробуждённых деревьев или в землях, пропитанных первозданной магией. У одних кустов — причудливый облик и листва, складывающиеся в грубые пародии лиц; другие же напоминают ожившие стриженые фигуры из зелени."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "plant"
+             ],
+    "size":  "small",
+    "creature_type":  "plant",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "10 (3d6)",
+    "hit_dice":  "3d6",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  3,
+                           "dexterity":  8,
+                           "constitution":  11,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  [
+                                   "к урону Огонь"
+                               ],
+    "damage_resistances":  [
+                               "piercing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий плюс один другой язык",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Царапание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +1, досягаемость 5 фт. Попадание: 1 Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  null
+}

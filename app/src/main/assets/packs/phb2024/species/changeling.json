@@ -1,0 +1,61 @@
+{
+  "id": "changeling",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Changeling",
+    "ru": "Ченжлинг"
+  },
+  "description": {
+    "en": "Thanks to their ability to change shape, changelings live unnoticed in many societies. Each changeling can supernaturally assume any appearance they like. Adopting a new form can reveal some new aspect of a changeling's soul.\n\nThe first changelings of the multiverse appeared in the Fey Realm, and the wondrous, mutable essence of that plane is still present in changelings — even in those who have never been to that land.\n\nIn their true form, a changeling looks faded, their facial features almost devoid of detail. It is rare to see a changeling in this form, since a typical member of this species changes their shape as others change clothes. However, many changelings develop deeper identities with histories and beliefs for each of their forms. An adventurer belonging to this species may use separate identities for many situations, such as: negotiation, investigation, combat.\n\nSeveral changelings can use a single identity. Identities can even be passed down by inheritance, allowing a younger changeling to take advantage of contacts established by previous users of that identity.",
+    "ru": "Благодаря своей способности менять облик, ченжлинги незаметно живут во многих обществах. Каждый ченжлинг может сверхъестественным образом принять любой облик, который ему нравится. Принятие нового облика может раскрыть некий новый аспект души ченжлинга.\n\nПервые ченжлинги мультивселенной появились в Царстве Фей, и чудесная, изменчивая сущность этого плана до сих пор присутствует в ченжлингах — даже в тех, кто никогда не бывал в этой стране.\n\nВ истинном своём облике ченжлинг выглядит блёклым, их черты лица почти лишены деталей. Редко можно увидеть ченжлинга в таком виде, поскольку типичный представитель этого вида меняет свою форму, как иные меняют одежду. Однако многие ченжлинги развивают более глубокие личности с историей и убеждениями для каджого своего облика. Искатель приключений, принадлежащий к этому виду, может использовать отдельные личности для многих ситуаций, как то: переговоры, расследования, боевые действия.\n\nНесколько ченжлингов могут использовать одну личность. Личности могут даже передаваться по наследству, позволяя более молодому ченжлингу воспользоваться контактами, установленными предыдущими пользователями этой личности."
+  },
+  "source": {
+    "book": {
+      "en": "Eberron: Forgotten Ages",
+      "ru": "Эберрон: Забытые эпохи"
+    },
+    "abbreviation": "EFA"
+  },
+  "tags": [
+    "fey",
+    "shapeshifter",
+    "eberron",
+    "disguise"
+  ],
+  "creature_type": "fey",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Changeling Instincts",
+        "ru": "Инстинкты подменыша"
+      },
+      "description": {
+        "en": "Your connection to the fey worlds grants you proficiency in two skills of your choice from the following list: Deception, Insight, Intimidation, Performance, Persuasion.",
+        "ru": "Ваша связь с мирами фей дарует вам владение двумя навыками на ваш выбор из следующего списка: Выступление, Запугивание, Обман, Проницательность, Убеждение."
+      }
+    },
+    {
+      "name": {
+        "en": "Shapechanger",
+        "ru": "Перевёртыш"
+      },
+      "description": {
+        "en": "You can use an action to transform, changing your appearance and voice. You determine the specifics of the changes, including your coloration, sex, and hair length. You can also adjust your height and weight, and you can change your size between Medium and Small. You can make yourself appear as a member of another playable species, but this doesn't change your game statistics. You can't appear as a creature of a different size category than you, and your overall body plan must remain similar; you can't change your limb arrangement. This transformation doesn't change the appearance of your gear and clothing.\n\nWhile transformed by this trait, you have Advantage on Charisma checks.\n\nYou stay in this form until you use an action to return to your true form.",
+        "ru": "Вы можете действием перевоплотиться, изменяя внешний вид и голос. Вы определяете, какие именно изменения произойдут, включая окраски, пол, длину волос. Кроме того, вы можете изменять рост и вес, а также размер со Среднего до Маленького и наоборот. Вы можете менять облик так, чтобы выглядеть как представитель другого доступного игрокам вида, но это никаким образом не изменяет вашу игровую статистику. Вы не можете принимать облик личности, которой вы никогда не видели, и ваш новый облик должен иметь примерно то же расположение конечностей. Это перевоплощение не изменяет облик вашего снаряжения и одежды.\n\nПока вы перевоплощены этой особенностью, вы совершаете с Преимуществом проверки Харизмы.\n\nВы сохраняете этот облик до тех пор, пока действием не вернётесь в ваш истинный облик."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+    "id":  "giant_weasel",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Weasel",
+                 "ru":  "Гигантская куница"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "medium",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "9 (2d8)",
+    "hit_dice":  "2d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  17,
+                           "constitution":  10,
+                           "intelligence":  4,
+                           "wisdom":  12,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "acrobatics":  5,
+                   "perception":  3,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

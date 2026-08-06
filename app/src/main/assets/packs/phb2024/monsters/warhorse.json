@@ -1,0 +1,86 @@
+{
+    "id":  "warhorse",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Warhorse",
+                 "ru":  "Боевой конь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "19 (3d10 + 3)",
+    "hit_dice":  "3d10 + 3",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  60
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  12,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  {
+                          "wisdom":  3
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Копыта"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 9 (2к4 + 4) Дробящего урона. Если цель Большого размера или меньше, а конь переместился как минимум на 20 футов по прямой к цели непосредственно перед попаданием, цель получает дополнительно 5 (2к4) Дробящего урона и состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

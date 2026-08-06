@@ -1,0 +1,107 @@
+{
+    "id":  "brown_bear",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Brown bear",
+                 "ru":  "Бурый медведь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "22 (3d10 + 6)",
+    "hit_dice":  "3d10 + 6",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  12,
+                           "constitution":  15,
+                           "intelligence":  2,
+                           "wisdom":  13,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Медведь совершает одну атаку Укусом и одну атаку Когтями."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 7 (1к8 + 3) Колющего урона"
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Рубящего урона, и цель получает состояние Опрокинутый, если она Большого размера или меньше."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

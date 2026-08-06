@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_settings"
+    app:startDestination="@id/settingsMain">
+
+    <fragment
+        android:id="@+id/settingsMain"
+        android:name="com.herocraft24.feature.settings.SettingsMainFragment"
+        android:label="Настройки" />
+
+    <fragment
+        android:id="@+id/about"
+        android:name="com.herocraft24.feature.settings.AboutFragment"
+        android:label="About" />
+
+</navigation>

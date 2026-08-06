@@ -1,0 +1,98 @@
+{
+    "id":  "giant_rat",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Rat",
+                 "ru":  "Гигантская крыса"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "small",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "7 (2d6)",
+    "hit_dice":  "2d6",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  7,
+                           "dexterity":  16,
+                           "constitution":  11,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  {
+                          "dexterity":  5
+                      },
+    "skills":  {
+                   "perception":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Тактика стаи"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Крыса совершает с Преимуществом броски атаки по существам, если его союзник, не имеющий состояния Недееспособный, находится в пределах 5 футов от цели."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

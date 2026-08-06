@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l17_uluchshennyy_zhestokiy_udar",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Улучшенный жестокий удар"},
+  "description": {"en": "", "ru": "Дополнительный урон вашего Жестокого удара увеличивается до 2к10. Кроме того, вы можете использовать сразу два разных эффекта, когда используете Жестокий удар."},
+  "level": 17,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

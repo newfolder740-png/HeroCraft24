@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- D20 dice shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 L30,40 L54,50 L78,40 Z" />
+    <path
+        android:fillColor="#EADDFF"
+        android:pathData="M30,40 L54,50 L54,88 L30,65 Z" />
+    <path
+        android:fillColor="#D0BCFF"
+        android:pathData="M78,40 L54,50 L54,88 L78,65 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,42 L54,46 L38,44 L54,42 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,42 L54,46 L70,44 L54,42 Z" />
+</vector>

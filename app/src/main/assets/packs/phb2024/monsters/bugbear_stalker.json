@@ -1,0 +1,133 @@
+{
+    "id":  "bugbear_stalker",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bugbear Stalker",
+                 "ru":  "Медвежатник-охотник"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "medium",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "65 (10d8 + 20)",
+    "hit_dice":  "10d8 + 20",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  14,
+                           "constitution":  14,
+                           "intelligence":  11,
+                           "wisdom":  12,
+                           "charisma":  11
+                       },
+    "saving_throws":  {
+                          "constitution":  4,
+                          "wisdom":  3
+                      },
+    "skills":  {
+                   "stealth":  6,
+                   "survival":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "Общий, Гоблинский",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Похищение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Медвежатнику не нужно тратить дополнительные футы для перемещения Схваченного им существа."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Медвежатник совершает две атаки Моргенштерном или Метательным копьём."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Моргенштерн"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5 (с Преимуществом, если цель Схвачена этим медвежатником), досягаемость 10 фт. Попадание: 12 (2к8 + 3) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Метательное копьё"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +5, досягаемость 10 фт. или дистанция 30/120 фт. Попадание: 13 (3к6 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Быстрый захват"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Спасбросок Ловкости: Сл 13, одно видимое медвежатником существо размером не больше Среднего в 10 футах. Провал: Цель Схвачена (Сл высвобождения из захвата 13).\nМедвежатники\nМедвежатники — воплощение страха перед дикими землями и опасностью, затаившейся в тени чащоб. Они славятся своей незаметностью, и враги, осмелившиеся ступить на их землю, часто исчезают без следа.\nМедвежатники охотники часто берут своих жертв в заложники, а затем используют их для захвата или запугивания других существ."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "underdark",
+                        "feywild"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Кольчужная рубаха, Метательное копьё x6, Моргенштерн"
+}

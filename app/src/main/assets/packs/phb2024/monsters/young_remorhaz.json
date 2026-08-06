@@ -1,0 +1,96 @@
+{
+    "id":  "young_remorhaz",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Young Remorhaz",
+                 "ru":  "Молодой ремораз"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Реморазы\nРаскалённые арктические многоножки\n\nРеморазы — это похожие на гигантских многоножек кошмары, что прокапываются сквозь снег и лёд, подстерегая мелких существ, забредших в их ледяные владения.\n\nМолодые реморазы сжигают и пожирают любую добычу, которую способны догнать и одолеть."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "93 (11d10 + 33)",
+    "hit_dice":  "11d10 + 33",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  13,
+                           "constitution":  17,
+                           "intelligence":  3,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "fire",
+                              "cold"
+                          ],
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  5,
+    "xp":  1800,
+    "proficiency_bonus":  3,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Раскалённая аура"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "В конце каждого хода ремораза каждое существо в 5-футовой Эманации, исходящей от ремораза, получает 11 (2к10) урона Огнём."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 15 (2к10 + 4) Колющего урона плюс 13 (3к8) урона Огнём."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "arctic"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

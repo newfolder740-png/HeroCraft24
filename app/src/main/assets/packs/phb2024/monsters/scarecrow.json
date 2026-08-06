@@ -1,0 +1,107 @@
+{
+    "id":  "scarecrow",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Scarecrow",
+                 "ru":  "Пугало"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пугало\nСлуга суеверий\n\nПугала — духи отмщения, привязанные к грубым остовым, которые возникают благодаря народной магии, молитвам отчаявшихся крестьян или вселению душ, что умерли, не завершив жестокого дела. Пугала могут служить тем, кто их создал, или защищать место, семью или общину от угроз — будь то явная опасность или посягательство на уклад жизни.\n\nХотя своим названием пугала обязаны деревенским чучелам, облик они принимают самый разный. Совершите бросок по таблице «Остовы пугал» для вдохновения или определите сами обличие пугала.\n\nОстовы пугал\nк8\tПугало сделано из…\n1\tЗвериных шкур, костей, рогов и когтей.\n2\tПчелиных или осиных гнёзд, насаженных на плетёный каркас.\n3\tВырезанной тыквы, надетой поверх тела из толстых лоз.\n4\tСетей, обломков, абордажных крючьев и рыболовных снастей.\n5\tЧастей огромных мягких игрушек или манекенов.\n6\tРжавых доспехов и пыточных орудий.\n7\tГоловы из мешковины и одежды, набитой соломой.\n8\tСвадебного наряда, который ни разу не надели."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "medium",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "27 (6d8)",
+    "hit_dice":  "6d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  13,
+                           "constitution":  11,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  13
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  [
+                                   "к урону Огонь"
+                               ],
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "unconscious",
+                                 "frightened",
+                                 "exhaustion",
+                                 "petrified",
+                                 "poisoned",
+                                 "charmed",
+                                 "paralyzed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пугающие когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 6 (2к4 + 1) Рубящего урона, и цель Испугана до конца следующего хода пугала."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ужасающий взор"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Мудрости: Сл 11, одно видимое пугалом существо в 30 футах. Провал: Цель Испугана до конца следующего хода пугала. Пока цель Испугана таким образом, она также Парализована."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "feywild"
+                    ],
+    "treasure":  "Инструментальные",
+    "equipment":  null
+}

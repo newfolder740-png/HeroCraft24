@@ -1,0 +1,120 @@
+{
+    "id":  "giant_ape",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Ape",
+                 "ru":  "Гигантская человекообразная обезьяна"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "168 (16d12 + 64)",
+    "hit_dice":  "16d12 + 64",
+    "initiative":  "+5 (15)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  40
+              },
+    "ability_scores":  {
+                           "strength":  23,
+                           "dexterity":  14,
+                           "constitution":  18,
+                           "intelligence":  5,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "athletics":  9,
+                   "survival":  4,
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  7,
+    "xp":  2900,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Обезьяна совершает две атаки Кулаком."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Кулак"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 10 фт. Попадание: 22 (3к10 + 6) Дробящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Бросок булыжника (Перезарядка 6)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Обезьяна запускает булыжник в видимую ей точку в 90 футах. Спасбросок Ловкости: Сл 17, каждое существо в 5-футовой Сфере с центром в этой точке. Провал: 24 (7к6) Дробящего урона. Если цель — существо Большого размера или меньше, она становится Опрокинутой. Успех: Только половина урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Скачок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Обезьяна прыгает на расстояние вплоть до 30 футов, затрачивая 10 футов перемещения."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

@@ -1,0 +1,32 @@
+{
+  "id": "boon_of_desperate_resilience",
+  "type": "feat",
+  "format_version": 1,
+  "name": {
+    "en": "Boon of Desperate Resilience",
+    "ru": "Дар отчаянного упорства"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете следующие преимущества:\n\nПовышение характеристики. Увеличьте значение вашей Силы или Телосложения на 1, но не выше 30.\n\nЗащита тела и разума. Пока вы Окровавлены, вы обладаете Сопротивлением всему урону, кроме Силового урона."
+  },
+  "source": {
+    "book": {
+      "en": "Forgotten Realms: Heroes of the Frontier",
+      "ru": "Забытые королевства: Герои фронтира"
+    },
+    "abbreviation": "FR:HoF"
+  },
+  "tags": [
+    "feat"
+  ],
+  "category": "epic_boon",
+  "prerequisite": {
+    "en": "",
+    "ru": "19 уровень"
+  },
+  "repeatable": false,
+  "benefits": [
+    
+  ]
+}

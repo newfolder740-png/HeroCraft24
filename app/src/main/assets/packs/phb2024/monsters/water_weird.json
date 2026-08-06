@@ -1,0 +1,118 @@
+{
+    "id":  "water_weird",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Water Weird",
+                 "ru":  "Водная аномалия"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Водная аномалия\nСлуга первозданной магии\n\nВодные аномалии — змееподобные духи природы, которые охраняют пруды, фонтаны и магические водоёмы. Когда эти существа погружены в воду, их невозможно отличить от окружающей жидкости. Но стоит нарушить их границы — и они поднимаются в виде ожившего водяного столба, слегка напоминающего змею или дракона. Как правило, одного их появления достаточно, чтобы обратить врагов в бегство. Если же дело доходит до боя, водные аномалии обвиваются вокруг жертвы и сжимают её своими водяными кольцами.\n\nВодные аномалии могут веками охранять одно и то же место и узнать многое об окружающем мире. Некоторых из них считают оракулами, которые отвечают на вопросы, заданные на первичном языке. Водные аномалии не говорят, но могут общаться с помощью всплесков воды или погружённых в водоём предметов."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "large",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "65 (10d10 + 10)",
+    "hit_dice":  "10d10 + 10",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  60
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  16,
+                           "constitution":  13,
+                           "intelligence":  11,
+                           "wisdom":  10,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "fire"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "unconscious",
+                                 "exhaustion",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "понимает Первичный, но не говорит",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Невидимость в воде"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Водная аномалия Невидима, пока полностью погружена в воду."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Связь с водой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Водная аномалия умирает, если покидает воду, к которой привязана, или если эту воду уничтожить."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Прилив"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 10 фт. Попадание: 13 (3к6 + 3) урона Холодом. Если цель Среднего размера или меньше, она становится Схваченной (Сл высвобождения от захвата 13); пока захват не окончен, она также Опутана."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban",
+                        "underdark"
+                    ],
+    "treasure":  "Любые",
+    "equipment":  null
+}

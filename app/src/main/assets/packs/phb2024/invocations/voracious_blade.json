@@ -1,0 +1,16 @@
+{
+    "id":  "voracious_blade",
+    "name":  {
+                 "en":  "Voracious Blade",
+                 "ru":  "Пожирающий клинок"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ваше воззвание «Жаждущий клинок» дарует вам две дополнительные атаки, а не одну."
+                    },
+    "level":  12,
+    "requirements":  {
+                         "warlock_level":  12,
+                         "invocation_id":  "thirsting_blade"
+                     }
+}

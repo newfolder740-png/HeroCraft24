@@ -1,0 +1,47 @@
+{
+  "id": "shield_of_faith",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Shield of Faith",
+    "ru": "Щит веры"
+  },
+  "description": {
+    "en": "",
+    "ru": "Мерцающее поле окружает выбранное вами в пределах дистанции существо, на время действия заклинания даруя ему бонус +2 к КЗ"
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "abjuration",
+  "casting_time": "Бонусное действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "свиток с молитвой",
+  "duration": "Концентрация, вплоть до 10 минут",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:cleric",
+    "phb2024:paladin"
+  ],
+  "subclasses": [
+    "Домен войны",
+    "Клятва преданности"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "animal_friendship",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Animal Friendship",
+    "ru": "Дружба с животными"
+  },
+  "description": {
+    "en": "",
+    "ru": "Выберите Зверя, видимого вами в пределах дистанции. Цель должна преуспеть в спасброске Мудрости, иначе получит состояние Очарованный на время действия заклинания. Если вы или ваш союзник наносите цели урон, заклинание заканчивается."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "enchantment",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "30 футов"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "кусочек пищи",
+  "duration": "24 часа",
+  "concentration": false,
+  "ritual": false,
+  "higher_levels": {
+    "en": "",
+    "ru": "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одного дополнительного Зверя за каждый уровень ячейки выше 1-го."
+  },
+  "classes": [
+    "phb2024:bard",
+    "phb2024:druid",
+    "phb2024:ranger"
+  ]
+}

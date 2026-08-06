@@ -1,0 +1,121 @@
+{
+    "id":  "swarm_of_ravenous_insects",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Ravenous Insects",
+                 "ru":  "Рой прожорливых насекомых"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Рои насекомых\nПлотоядные паразиты\n\nМало что сравнится по жути с участью пасть жертвой паразитических или прожорливых роёв насекомых, что таятся в зловещих местах и проклятых подземельях.\n\nРои прожорливых насекомых стремительно одолевают крупных существ. Убитые этими роями съедаются быстро и целиком."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "39 (6d8 + 12)",
+    "hit_dice":  "6d8 + 12",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  3,
+                           "dexterity":  15,
+                           "constitution":  14,
+                           "intelligence":  1,
+                           "wisdom":  12,
+                           "charisma":  1
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Пожирание без остатка"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Если рой начинает свой ход в одном пространстве с трупом Большого размера или меньше, труп уничтожается и оставляет после себя только то, что носил или нёс."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для Крошечного существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Прожорливые укусы"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 20 (4к8 + 2) Колющего урона — или 11 (2к8 + 2) Колющего урона, если рой Окровавлен, — и цель Отравлена на 1 минуту, пока насекомые вгрызаются вглубь её тела. Это состояние оканчивается преждевременно, если заклинание или схожий эффект восстанавливает Хиты цели. Отравленная таким образом цели получает 4 (1к8) Колющего урона в начале каждого своего хода. Если этот урон уменьшает Хиты существа до 0, оно умирает."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp",
+                        "urban",
+                        "forest",
+                        "grassland",
+                        "coastal"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

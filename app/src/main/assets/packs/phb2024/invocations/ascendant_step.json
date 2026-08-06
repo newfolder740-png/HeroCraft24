@@ -1,0 +1,15 @@
+{
+    "id":  "ascendant_step",
+    "name":  {
+                 "en":  "Ascendant Step",
+                 "ru":  "Восходящий шаг"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Левитация на себя без траты ячеек заклинаний."
+                    },
+    "level":  5,
+    "requirements":  {
+                         "warlock_level":  5
+                     }
+}

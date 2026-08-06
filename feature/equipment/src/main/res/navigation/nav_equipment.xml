@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_equipment"
+    app:startDestination="@id/equipmentList">
+
+    <fragment
+        android:id="@+id/equipmentList"
+        android:name="com.herocraft24.feature.equipment.EquipmentListFragment"
+        android:label="Снаряжение" />
+
+    <fragment
+        android:id="@+id/equipmentDetail"
+        android:name="com.herocraft24.feature.equipment.EquipmentDetailFragment"
+        android:label="EquipmentDetail">
+        <argument
+            android:name="itemId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/equipmentSpellDetail"
+        android:name="com.herocraft24.feature.spells.SpellDetailFragment"
+        android:label="SpellReferenceDetail">
+        <argument
+            android:name="spellId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/equipmentConditionDetail"
+        android:name="com.herocraft24.feature.spells.ConditionReferenceFragment"
+        android:label="ConditionReferenceDetail">
+        <argument
+            android:name="conditionId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

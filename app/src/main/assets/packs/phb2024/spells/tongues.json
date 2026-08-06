@@ -1,0 +1,45 @@
+{
+  "id": "tongues",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Tongues",
+    "ru": "Языки"
+  },
+  "description": {
+    "en": "",
+    "ru": "Это заклинание дарует существу, которого вы касаетесь, способность понимать все речевые и жестовые языки, которые оно слышит или видит. Более того, когда цель говорит или использует жестовый язык, все существа, знающие хотя бы один язык, и слышащие речь или видящие жесты цели, понимают, что она сказала."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 3,
+  "school": "divination",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "M"
+  ],
+  "material": "миниатюрный зиккурат",
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:cleric",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ]
+}

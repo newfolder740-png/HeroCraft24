@@ -1,0 +1,15 @@
+{
+    "id":  "witch_sight",
+    "name":  {
+                 "en":  "Witch Sight",
+                 "ru":  "Ведьмачий взор"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы получаете Истинное зрение дальностью 30 футов."
+                    },
+    "level":  15,
+    "requirements":  {
+                         "warlock_level":  15
+                     }
+}

@@ -1,0 +1,92 @@
+{
+    "id":  "giant_elk",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Elk",
+                 "ru":  "Гигантский лось"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "celestial"
+             ],
+    "size":  "huge",
+    "creature_type":  "celestial",
+    "subtype":  null,
+    "alignment":  "neutral good",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "42 (5d12 + 10)",
+    "hit_dice":  "5d12 + 10",
+    "initiative":  "+6 (16)",
+    "speed":  {
+                  "walk":  60
+              },
+    "ability_scores":  {
+                           "strength":  19,
+                           "dexterity":  18,
+                           "constitution":  14,
+                           "intelligence":  7,
+                           "wisdom":  14,
+                           "charisma":  10
+                       },
+    "saving_throws":  {
+                          "strength":  6,
+                          "dexterity":  6
+                      },
+    "skills":  {
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "radiant",
+                               "necrotic"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "Небесный, знает Общий, Эльфийский и Сильван, но не говорит",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Таран"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 11 (2к6 + 4) Дробящего урона плюс 5 (2к4) урона Излучением. Если цель — существо Огромного размера или меньше, а лось переместился к ней по прямой хотя бы на 20 футов сразу перед попаданием, цель получает 5 (2к4) дополнительного Дробящего урона и состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

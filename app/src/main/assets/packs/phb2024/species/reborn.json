@@ -1,0 +1,79 @@
+{
+  "id": "reborn",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Reborn",
+    "ru": "Возрождённый"
+  },
+  "description": {
+    "en": "Reborn are those who have died — yet for some inexplicable reason still live. Some reborn bear scars from fatal wounds, burned flesh, veins through which no blood flows: their appearance unmistakably tells that they have been in the hands of death. However, there are other reborn; miracles of science or magic, perhaps stitched together from pieces of entirely different creatures or bearing their mysterious consciousness in an artificial body. However a reborn came to new life, in it they seek anew life experience and answers to questions.",
+    "ru": "Возрождёнными называют тех, кто умер — но по необъяснимой причине всё же живёт. На некоторых из возрождённых можно увидеть шрамы от смертельных ранений, сгоревшую плоть, вены, по которым не бежит кровь: их вид безусловно говорит, что они были в руках смерти. Однако есть и другие возрождённые; чудеса науки или магии, может быть, сшитые из кусков тел совсем разных существ или вовсе несущие таинственное своё сознание в искусственном теле. Как бы возрождённый не пришёл к новой жизни, в ней они заново ищут жизненный опыт и ответы на вопросы."
+  },
+  "source": {
+    "book": {
+      "en": "Ravenloft: The Witchlight",
+      "ru": "Равенлофт: Ведьмин свет"
+    },
+    "abbreviation": "RTW"
+  },
+  "tags": [
+    "undead",
+    "deathless"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Deathless Nature",
+        "ru": "Избежаши Смерти"
+      },
+      "description": {
+        "en": "You have Advantage on Death saving throws.",
+        "ru": "Вы совершаете с Преимуществом спасброски от Смерти."
+      }
+    },
+    {
+      "name": {
+        "en": "Undying",
+        "ru": "Небренный"
+      },
+      "description": {
+        "en": "You don't gain Exhaustion levels from dehydration, suffocation, or malnutrition. You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend that time without movement or activity. During this time, you appear inert, but you remain conscious.",
+        "ru": "Вы не получаете уровней Истощения от обезвоживания, удушения или недоедания. Вам не нужно спать, и магия не может погрузить вас в сон. Вы можете завершить Долгий отдых за 4 часа, если проводите это время без движения и активности. В течение этого времени вы выглядите недвижимо, но сохраняете сознание."
+      }
+    },
+    {
+      "name": {
+        "en": "Knowledge from a Past Life",
+        "ru": "Знание прошлой жизни"
+      },
+      "description": {
+        "en": "You gain proficiency in one skill of your choice.\n\nIn addition, you can temporarily glimpse into the past to gain help in the present. When you fail an ability check, you can roll 1d6 and add the result to the check, potentially turning the failure into a success. You can do this a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
+        "ru": "Вы получаете владение одним навыком на ваш выбор.\n\nКроме того, вы можете на время заглянуть в прошлое, чтобы получить помощь в настоящем. Когда вы проваливаете проверку характеристики, вы можете бросить 1к6 и добавить результат броска к результату проверки, что может изменить результат на успех. Вы можете сделать это количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
+      }
+    },
+    {
+      "name": {
+        "en": "Supernatural Resilience",
+        "ru": "Сверхъестественная устойчивость"
+      },
+      "description": {
+        "en": "You have Resistance to one of the following damage types of your choice: Necrotic damage, Cold damage, or Poison damage.",
+        "ru": "Вы обладаете Сопротивлением одному из следующих типов урона на ваш выбор: Некротический урон, урон Холодом или урон Ядом."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

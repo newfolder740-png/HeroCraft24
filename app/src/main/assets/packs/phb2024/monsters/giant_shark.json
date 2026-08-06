@@ -1,0 +1,106 @@
+{
+    "id":  "giant_shark",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Shark",
+                 "ru":  "Гигантская акула"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "92 (8d12 + 40)",
+    "hit_dice":  "8d12 + 40",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  60
+              },
+    "ability_scores":  {
+                           "strength":  23,
+                           "dexterity":  11,
+                           "constitution":  21,
+                           "intelligence":  1,
+                           "wisdom":  10,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  5,
+    "xp":  1800,
+    "proficiency_bonus":  3,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гигантская акула может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Акула совершает две атаки Укусом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9 (с Преимуществом, если у цели неполные Хиты), досягаемость 5 фт. Попадание: 22 (3к10 + 6) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

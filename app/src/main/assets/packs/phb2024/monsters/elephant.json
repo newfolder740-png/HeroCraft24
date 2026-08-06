@@ -1,0 +1,105 @@
+{
+    "id":  "elephant",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Elephant",
+                 "ru":  "Слон"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "76 (8d12 + 24)",
+    "hit_dice":  "8d12 + 24",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  22,
+                           "dexterity":  9,
+                           "constitution":  17,
+                           "intelligence":  3,
+                           "wisdom":  11,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Слон совершает две атаки Пронзанием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пронзание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +8, досягаемость 5 фт. Попадание: 15 (2к8 + 6) Колющего урона. Если цель — существо Огромного размера или меньше, а слон переместился к ней по прямой хотя бы на 20 футов сразу перед попаданием, цель становится Опрокинутой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Топтание"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Спасбросок Ловкости: Сл 16, одно Опрокинутое существо в 5 футах. Провал: 17 (2к10 + 6) Дробящего урона. Успех: Половина урона."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

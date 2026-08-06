@@ -1,0 +1,1 @@
+{"id":"monk_l3_otrazhenie_atak","level":3,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Отражение атак"},"description":{"en":"","ru":"Реакцией уменьшите урон атаки на 1к10 + Лов + уровень Монаха. При снижении до 0, потратите 1 Очко, чтобы перенаправить мощь на существо, заставив его совершить спасбросок Ловкости."},"is_subclass_choice":false,"format_version":1}

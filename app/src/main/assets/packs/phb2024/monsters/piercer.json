@@ -1,0 +1,106 @@
+{
+    "id":  "piercer",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Piercer",
+                 "ru":  "Пронзатель"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "aberration"
+             ],
+    "size":  "medium",
+    "creature_type":  "aberration",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "22 (3d8 + 9)",
+    "hit_dice":  "3d8 + 9",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  5,
+                  "climb":  15
+              },
+    "ability_scores":  {
+                           "strength":  13,
+                           "dexterity":  13,
+                           "constitution":  16,
+                           "intelligence":  1,
+                           "wisdom":  7,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Паучье лазание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пронзатель может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 5 (1к8 + 1) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Падение"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Пронзатель падает. Спасбросок Ловкости: Сл 11, одно существо непосредственно под пронзателем. Провал: 10 (3к6) Колющего урона. Провал или успех: Пронзатель уменьшает любой полученный им урон от падения на 20."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Личные",
+    "equipment":  null
+}

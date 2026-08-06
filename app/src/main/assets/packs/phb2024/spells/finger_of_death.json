@@ -1,0 +1,42 @@
+{
+  "id": "finger_of_death",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Finger of Death",
+    "ru": "Перст смерти"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы выпускаете негативную энергию в видимое вами в пределах дистанции существо. Цель должна совершить спасбросок Телосложения, получая 7к8 + 30 Некротического урона при провале или половину этого урона при успехе.\n\nГуманоид, убитый этим заклинанием, в начале вашего следующего хода восстаёт как Зомби, подчиняющийся вашим словесным приказам."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 7,
+  "school": "necromancy",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "exhaustion",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Exhaustion", "ru": "Истощение" },
+  "description": {
+    "en": "While you have the Exhaustion condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Истощения, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["debuff", "stacking"],
+  "effects": [
+    { "en": "This condition is cumulative. Each time you receive it, your Exhaustion level increases by 1. If your Exhaustion level reaches 6, you die.", "ru": "Уровни истощения. Это состояние складывается само с собой. Каждый раз, когда вы получаете это состояние, уровень Истощения увеличивается на 1. Когда уровень Истощения становится 6, вы умираете." },
+    { "en": "When you make a d20 Test, the roll is reduced by twice your Exhaustion level.", "ru": "Влияние на тесты к20. Когда вы совершаете Тест к20, результат броска уменьшается на уровень Истощения, умноженный на 2." },
+    { "en": "Your Speed is reduced by 5 feet times your Exhaustion level.", "ru": "Снижение скорости. Ваша Скорость снижается на уровень Истощения, умноженный на 5." },
+    { "en": "When you finish a Long Rest, your Exhaustion level decreases by 1. When your Exhaustion level reaches 0, the condition ends on you.", "ru": "Снятие уровней истощения. Когда вы завершаете Долгий отдых, уровень Истощения снижается на 1. Когда уровень Истощения снижается до 0, состояние на вас заканчивается." }
+  ],
+  "mechanical": true
+}

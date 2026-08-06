@@ -1,0 +1,91 @@
+{
+  "id": "khoravar",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Khoravar",
+    "ru": "Кхоравар"
+  },
+  "description": {
+    "en": "For centuries, the descendants of unions between humans and elves have created their own distinct communities and traditions in Khorvaire. This culture especially developed with the rise of House Lyrandar and House Medani. Members of these communities dislike the name \"half-elves,\" so they call themselves khoravar, which in Elvish means \"children of Khorvaire.\"\n\nMany khoravar embrace the idea of \"bridge between,\" believing that their calling is to foster communication and cooperation between members of different cultures or species. Khoravar who follow this philosophy often become bards, diplomats, mediators, or translators. Others, inspired by their albeit distant connection to the fey, seek to build bridges between the material world and the Fey Realm of Thelanis. These khoravar often become druids or warlocks serving archfey.",
+    "ru": "На протяжении столетий потомки союзов людей и эльфов создавали в Кхорваире свои отдельные сообщества и традиции. Эта культура особо развилась с возвышением Дома Лирандар и Дома Медани. Членам этих сообществ не нравится название \"полуэльфы\", поэтому они называют себя кхораварами, что в переводе с эльфийского означает \"дети Кхорваира\".\n\nМногие кхоравары поддерживают идею \"моста между\", полагая, что их призвание - способствовать общению и сотрудничеству между представителями разных культур или видов. Кхоравары, следующие этой философии, часто становятся бардами, дипломатами, посредниками или переводчиками. Другие, вдохновлённые своей пусть и отдаленной связью с феями, стремятся построить мосты между материальным миром и Царством Фей Теланиса. Эти хоравары часто становятся друидами или колдунами, служащими архифеям."
+  },
+  "source": {
+    "book": {
+      "en": "Eberron: Forgotten Ages",
+      "ru": "Эберрон: Забытые эпохи"
+    },
+    "abbreviation": "EFA"
+  },
+  "tags": [
+    "half-elf",
+    "eberron",
+    "fey",
+    "diplomat"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "Вы обладаете Тёмным зрением дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Fey Ancestry",
+        "ru": "Наследие фей"
+      },
+      "description": {
+        "en": "You have Advantage on saving throws to avoid or end the Charmed condition.",
+        "ru": "Вы совершаете с Преимуществом спасброски на избежание или окончание состояния Очарованный."
+      }
+    },
+    {
+      "name": {
+        "en": "Fey Gift",
+        "ru": "Дар фей"
+      },
+      "description": {
+        "en": "You know the Friends cantrip. Each time you finish a Long Rest, you can replace this cantrip with another cantrip from the Wizard, Druid, or Cleric spell list. The spellcasting ability for the cantrip you gain from this trait is Intelligence, Wisdom, or Charisma; choose it when you choose this species.",
+        "ru": "Вы знаете заговор Дружба. Каждый раз, когда вы завершаете Долгий отдых, вы можете заменить этот заговор другим заговором из списка заклинаний Волшебника, Друида или Жреца. Заклинательная характеристика для заговора, полученного вами от этой особенности — Интеллект, Мудрость или Харизма; выберите её при выборе этого вида."
+      }
+    },
+    {
+      "name": {
+        "en": "Lethargy Resistance",
+        "ru": "Сопротивление летаргии"
+      },
+      "description": {
+        "en": "When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can't use it again until you finish 1d4 Long Rests.",
+        "ru": "Когда вы проваливаете спасбросок на избежание или окончание состояния Бессознательный, можете вместо провала преуспеть. Как только вы используете эту особенность, вы не можете сделать это снова, пока не завершите 1к4 Долгих отдыхов."
+      }
+    },
+    {
+      "name": {
+        "en": "Versatile Skills",
+        "ru": "Универсальные умения"
+      },
+      "description": {
+        "en": "You gain proficiency in one skill or tool of your choice. Each time you finish a Long Rest, you can replace this proficiency with another skill or tool proficiency.",
+        "ru": "Вы получаете владение одним навыком или инструментом на ваш выбор. Каждый раз, когда вы завершаете Долгий отдых, можете заменить это владение другим владением навыком или инструментом."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

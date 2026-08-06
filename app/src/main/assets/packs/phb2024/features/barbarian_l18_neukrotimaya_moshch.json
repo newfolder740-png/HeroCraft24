@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l18_neukrotimaya_moshch",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Неукротимая мощь"},
+  "description": {"en": "", "ru": "Если результат вашей проверки Силы или спасброска Силы меньше, чем значение вашей Силы, вы можете использовать это значение в качестве итогового результата."},
+  "level": 18,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

@@ -1,0 +1,86 @@
+{
+    "id":  "guard",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Guard",
+                 "ru":  "Страж"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Стражи\nЧасовые и караульные\n\nСтражи охраняют живых существ, места и ценности — будь то за плату или из чувства долга. Службу они могут нести как бдительно, так и спустя рукава. Одни поднимают тревогу при первом же признаке опасности и защищают вверенное им до последней капли крови. Другие же, если награда не соразмерна нависшей угрозе, без оглядки пускаются в бегство.\n\nСтражи весьма наблюдательны, однако немногие из них обладают серьёзной боевой выучкой. Среди них встречаются обычные вышибалы, соглядатаи, члены городского дозора и прочие зоркие воители."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  13,
+                           "dexterity":  12,
+                           "constitution":  12,
+                           "intelligence":  10,
+                           "wisdom":  11,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Копьё"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +3, досягаемость 5 фт. или дистанция 20/60 фт. Попадание: 4 (1к6 + 1) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Кольчужная рубаха, Копьё, Щит"
+}

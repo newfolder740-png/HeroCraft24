@@ -1,0 +1,18 @@
+{
+  "id": "condition",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Condition", "ru": "Состояние" },
+  "description": {
+    "en": "A condition is a temporary game status. The description of a condition specifies what effect it has on its recipient. Conditions of the same type don't stack: you either have a condition or you don't. The Exception is the Exhaustion condition.",
+    "ru": "Состояние — это временный игровой статус. Описание состояния указывает, какой эффект оно оказывает на получившего это состояние. Состояния одного типа не складываются: у вас либо есть то или иное состояние, либо нет. Исключением является состояние Истощение."
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 363
+  },
+  "tags": ["core", "reference"],
+  "effects": [],
+  "mechanical": false
+}

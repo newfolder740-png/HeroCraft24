@@ -1,0 +1,120 @@
+{
+    "id":  "saber_toothed_tiger",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Saber-Toothed Tiger",
+                 "ru":  "Саблезубый тигр"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "52 (7d10 + 14)",
+    "hit_dice":  "7d10 + 14",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  17,
+                           "constitution":  15,
+                           "intelligence":  3,
+                           "wisdom":  12,
+                           "charisma":  8
+                       },
+    "saving_throws":  {
+                          "strength":  6,
+                          "dexterity":  5
+                      },
+    "skills":  {
+                   "perception":  5,
+                   "stealth":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Прыжок с разбега"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "После разбега в 10 футов тигр может прыгнуть в длину на расстояние до 25 футов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Тигр совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 11 (2к6 + 4) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Ловкий побег"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Саблезубый тигр совершает действие Затаивание или Отход."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

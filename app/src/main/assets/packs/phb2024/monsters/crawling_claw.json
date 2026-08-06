@@ -1,0 +1,94 @@
+{
+    "id":  "crawling_claw",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Crawling Claw",
+                 "ru":  "Ползающая рука"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ползающие руки\nОтсечённые конечности, ведомые злой волей\n\nПолзающие руки — это отрубленные кисти рук, что движутся и действуют по собственной убийственной воле. Эти немёртвые конечности могут оживать из отсечённых рук убийц и злодеев, а зловещие заклинатели порой обращают ползающие руки в гнусных прислужников. Обличья их многообразны: от гниющих кистей Гуманоидов до свежих конечностей зверей и чудовищ.\n\nОдиночные ползающие руки могут продолжать кровавую жатву, которой предавались при жизни. Одни безоглядно набрасываются на живых, другие же преследуют строго определённых жертв. В редких случаях ползающая рука сеет хаос, покуда остальное тело ещё живёт, — и сам владелец тела может даже не подозревать о злодеяниях собственной отсечённой длани."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "undead"
+             ],
+    "size":  "tiny",
+    "creature_type":  "undead",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "2 (1d4)",
+    "hit_dice":  "1d4",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  20,
+                  "climb":  20
+              },
+    "ability_scores":  {
+                           "strength":  13,
+                           "dexterity":  14,
+                           "constitution":  11,
+                           "intelligence":  5,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "necrotic",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "incapacitated",
+                                 "poisoned",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "понимает Общий, но не говорит",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Удар"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 2 Некротического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

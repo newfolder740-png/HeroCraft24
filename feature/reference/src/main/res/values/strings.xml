@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_reference">Справочник</string>
+    <string name="reference_quick_info">Быстрая информация</string>
+    <string name="reference_class_tab">Класс</string>
+    <string name="reference_description">Описание</string>
+    <string name="reference_bonus_actions">Бонусные действия</string>
+    <string name="reference_reactions">Реакции</string>
+    <string name="reference_legendary_actions">Легендарные действия</string>
+    <string name="reference_mythic_actions">Мифические действия</string>
+    <string name="reference_lair_actions">Действия логова</string>
+    <string name="reference_invocations">Воззвания</string>
+    <string name="reference_metamagic">Метамагия</string>
+    <string name="reference_wild_magic">Дикая магия</string>
+    <string name="reference_source">Источник</string>
+    <string name="reference_features">Умения</string>
+    <string name="reference_traits">Черты вида</string>
+    <string name="reference_ability_score_increases">Увеличение характеристик</string>
+    <string name="background_asi_choice">Выберите: увеличить одну из характеристик (%1$s) на +2, другую на +1, либо все три на +1.</string>
+    <string name="reference_skills">Навыки</string>
+    <string name="reference_feature">Черта</string>
+    <string name="reference_benefits">Преимущества</string>
+    <string name="reference_effects">Эффекты</string>
+    <string name="reference_related">Связанное</string>
+    <string name="reference_quick_stats">Быстрые характеристики</string>
+    <string name="reference_ability_scores">Характеристики</string>
+    <string name="reference_actions">Действия</string>
+    <string name="reference_subclass">Подкласс</string>
+    <string name="reference_subclass_level">Уровень подкласса</string>
+    <string name="reference_spellcasting">Заклинания</string>
+    <string name="reference_progression_table">Таблица прогрессии</string>
+    <string name="reference_key_attributes">Ключевые атрибуты</string>
+    <string name="reference_acquisition">Получение класса</string>
+    <string name="reference_starting_equipment">Начальное снаряжение</string>
+    <string name="reference_not_found">Объект не найден</string>
+    <string name="subcategory_label">Подкатегория</string>
+    <string name="cost_label">Стоимость</string>
+    <string name="weight_label">Вес</string>
+    <string name="damage_label">Урон</string>
+    <string name="properties_label">Свойства</string>
+    <string name="armor_class_label">Класс брони</string>
+    <string name="attunement_label">Настройка</string>
+    <string name="magic_item_label">Магический предмет</string>
+    <string name="strength_requirement_label">Требование Силы</string>
+    <string name="stealth_disadvantage_label">Помеха Скрытности</string>
+    <string name="effects_label">Эффекты</string>
+    <string name="yes">Да</string>
+    <string name="required">Требуется</string>
+    <string name="type_label">Тип</string>
+    <string name="size_label">Размер</string>
+    <string name="speed_label">Скорость</string>
+    <string name="darkvision_label">Тёмное зрение</string>
+    <string name="feet">футов</string>
+    <string name="category_label">Категория</string>
+    <string name="rarity_label">Редкость</string>
+
+    <!-- Sizes -->
+    <string name="size_tiny">Крошечный</string>
+    <string name="size_small">Маленький</string>
+    <string name="size_medium">Средний</string>
+    <string name="size_large">Большой</string>
+    <string name="size_huge">Огромный</string>
+    <string name="size_gargantuan">Громадный</string>
+
+    <!-- Creature types -->
+    <string name="type_humanoid">Гуманоид</string>
+    <string name="type_fey">Фея</string>
+    <string name="type_fiend">Исчадие</string>
+    <string name="type_undead">Нежить</string>
+    <string name="type_monstrosity">Чудовище</string>
+    <string name="type_aberration">Аберрация</string>
+    <string name="type_celestial">Небожитель</string>
+    <string name="type_elemental">Элементаль</string>
+    <string name="type_construct">Конструкт</string>
+    <string name="type_dragon">Дракон</string>
+    <string name="type_giant">Великан</string>
+    <string name="type_ooze">Слизь</string>
+    <string name="type_plant">Растение</string>
+    <string name="type_beast">Зверь</string>
+
+    <!-- Ability scores -->
+    <string name="ability_strength">Сила</string>
+    <string name="ability_dexterity">Ловкость</string>
+    <string name="ability_constitution">Телосложение</string>
+    <string name="ability_intelligence">Интеллект</string>
+    <string name="ability_wisdom">Мудрость</string>
+    <string name="ability_charisma">Харизма</string>
+
+    <!-- Skills (common) -->
+    <string name="skill_acrobatics">Акробатика</string>
+    <string name="skill_animal_handling">Уход за животными</string>
+    <string name="skill_arcana">Магия</string>
+    <string name="skill_athletics">Атлетика</string>
+    <string name="skill_deception">Обман</string>
+    <string name="skill_history">История</string>
+    <string name="skill_insight">Проницательность</string>
+    <string name="skill_intimidation">Запугивание</string>
+    <string name="skill_investigation">Расследование</string>
+    <string name="skill_medicine">Медицина</string>
+    <string name="skill_nature">Природа</string>
+    <string name="skill_perception">Восприятие</string>
+    <string name="skill_performance">Выступление</string>
+    <string name="skill_persuasion">Убеждение</string>
+    <string name="skill_religion">Религия</string>
+    <string name="skill_sleight_of_hand">Ловкость рук</string>
+    <string name="skill_stealth">Скрытность</string>
+    <string name="skill_survival">Выживание</string>
+</resources>

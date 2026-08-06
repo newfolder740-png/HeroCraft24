@@ -1,0 +1,43 @@
+{
+  "id": "blur",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Blur",
+    "ru": "Размытый образ"
+  },
+  "description": {
+    "en": "",
+    "ru": "Ваше тело становится размытым на вид. Пока заклинание действует, все существа совершают броски атаки по вам с Помехой. Этот эффект не действует на атакующего, если он видит вас с помощью Слепого зрения или Истинного зрения."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "illusion",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "Концентрация, вплоть до 1 минуты",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Круг земли"
+  ]
+}

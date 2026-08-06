@@ -1,0 +1,99 @@
+{
+    "id":  "bulette_pup",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bulette Pup",
+                 "ru":  "Щенок панцирницы"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Панцирницы\nНенасытные сухопутные акулы\n\nПанцирницы, или «сухопутные акулы», — целеустремлённые хищники, которые в погоне за добычей могут рыть тоннели, перепрыгивать препятствия и даже пробивать их будто тараны. Они стремительно зарываются под землю, оставаясь при этом близко к поверхности. Как только панцирница чувствует движение, она мгновенно выпрыгивает из-под земли, смыкая на добыче свои огромные челюсти.\n\nДетёнышей панцирницы называют щенками. Они путешествуют небольшими группами и используют численное преимущество, чтобы побеждать более крупных противников. Их прибытие часто предвещает появление взрослой панцирницы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d8 + 18)",
+    "hit_dice":  "6d8 + 18",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  8,
+                           "constitution":  17,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 14 (2к10 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Прыжок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "После разбега в 10 футов щенок панцирницы может прыгнуть на расстояние до 30 футов."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "grassland",
+                        "hills"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

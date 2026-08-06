@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l6_umenie_podklassa",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Умение подкласса"},
+  "description": {"en": "", "ru": ""},
+  "level": 6,
+  "is_placeholder": true,
+  "is_subclass_choice": true
+}

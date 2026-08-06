@@ -1,0 +1,21 @@
+{
+  "id": "blinded",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Blinded", "ru": "Ослеплённый" },
+  "description": {
+    "en": "While you have the Blinded condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Ослеплённый, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 363
+  },
+  "tags": ["senses", "disadvantage", "combat"],
+  "effects": [
+    { "en": "You can't see and automatically fail any ability check that requires sight.", "ru": "Не можете видеть. Вы не можете видеть и автоматически проваливаете проверки характеристик, требующие зрения." },
+    { "en": "Your attack rolls have Disadvantage, and attack rolls against you have Advantage.", "ru": "Влияние на атаки. Ваши броски атаки совершаются с Помехой, а броски атаки по вам совершаются с Преимуществом." }
+  ],
+  "mechanical": true
+}

@@ -1,0 +1,97 @@
+{
+    "id":  "darkmantle",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Darkmantle",
+                 "ru":  "Тёмная мантия"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "aberration"
+             ],
+    "size":  "small",
+    "creature_type":  "aberration",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "22 (5d6 + 5)",
+    "hit_dice":  "5d6 + 5",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  30
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  12,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сдавливание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Дробящего урона, и тёмная мантия прикрепляется к цели. Если цель — существо Среднего размера или меньше, и тёмная мантия совершала эту атаку с Преимуществом, тёмная мантия облепляет голову цели; пока мантия облепляет её голову, цель получает состояние Ослеплённый и задыхается. Пока тёмная мантия прикреплена к цели, она может атаковать только эту цель, но совершает броски атаки с Преимуществом. Скорость тёмной мантии снижается до 0; она не может получать бонусы к Скорости и перемещается вместе с целью. Существо может действием совершить проверку Силы (Атлетика) Сл 13, чтобы в случае успеха открепить тёмную мантию от себя. Тёмная мантия может открепиться самостоятельно, потратив 5 футов перемещения."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Аура тьмы (1/день)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Магическая Темнота заполняет 15-футовую Эманацию, исходящую от тёмной мантии. Этот эффект длится до тех пор, пока тёмная мантия концентрируется на нём (вплоть до 10 минут). Тёмное зрение не может видеть сквозь эту тьму, и никакой свет не может осветить эту область."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

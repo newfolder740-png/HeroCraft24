@@ -1,0 +1,15 @@
+{
+    "id":  "whispers_of_the_grave",
+    "name":  {
+                 "en":  "Whispers of the Grave",
+                 "ru":  "Могильный шёпот"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Разговор с мёртвыми без траты ячеек заклинаний."
+                    },
+    "level":  7,
+    "requirements":  {
+                         "warlock_level":  7
+                     }
+}

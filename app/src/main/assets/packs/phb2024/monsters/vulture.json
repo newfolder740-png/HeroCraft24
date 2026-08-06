@@ -1,0 +1,96 @@
+{
+    "id":  "vulture",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Vulture",
+                 "ru":  "Гриф"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "medium",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  10,
+    "armor_class_description":  null,
+    "hit_points":  "5 (1d8 + 1)",
+    "hit_dice":  "1d8 + 1",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  50
+              },
+    "ability_scores":  {
+                           "strength":  7,
+                           "dexterity":  10,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Тактика стаи"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гриф совершает с Преимуществом броски атаки по существам, если его союзник, не имеющий состояния Недееспособный, находится в пределах 5 футов от цели."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Клюв"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +2, досягаемость 5 фт. Попадание: 2 (1к4) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

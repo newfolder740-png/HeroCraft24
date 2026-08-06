@@ -1,0 +1,85 @@
+{
+    "id":  "giant_bat",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Bat",
+                 "ru":  "Гигантская летучая мышь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "22 (4d10)",
+    "hit_dice":  "4d10",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  60
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  16,
+                           "constitution":  11,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

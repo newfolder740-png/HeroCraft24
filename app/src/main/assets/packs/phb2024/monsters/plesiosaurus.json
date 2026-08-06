@@ -1,0 +1,97 @@
+{
+    "id":  "plesiosaurus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Plesiosaurus",
+                 "ru":  "Плезиозавр"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "68 (8d10 + 24)",
+    "hit_dice":  "8d10 + 24",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  20,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  15,
+                           "constitution":  16,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3,
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Задержка дыхания"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Плезиозавр может задержать дыхание на 1 час."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 11 (2к6 + 4) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

@@ -1,0 +1,87 @@
+{
+    "id":  "giant_venomous_snake",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Venomous Snake",
+                 "ru":  "Гигантская ядовитая змея"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "medium",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+4 (14)",
+    "speed":  {
+                  "walk":  40,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  18,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 6 (1к4 + 4) Колющего урона плюс 4 (1к8) урона Ядом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

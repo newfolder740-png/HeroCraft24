@@ -1,0 +1,107 @@
+{
+    "id":  "swarm_of_bats",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Bats",
+                 "ru":  "Рой летучих мышей"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d10)",
+    "hit_dice":  "2d10",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  5,
+                  "fly":  30
+              },
+    "ability_scores":  {
+                           "strength":  5,
+                           "dexterity":  15,
+                           "constitution":  10,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для Крошечной летучей мыши. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укусы"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 5 (2к4) Колющего урона, или 2 (1к4) Колющего урона, если рой Окровавлен."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

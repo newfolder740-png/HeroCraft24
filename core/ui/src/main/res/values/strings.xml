@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading">Загрузка…</string>
+    <string name="retry">Повторить</string>
+    <string name="error_default_title">Что-то пошло не так</string>
+    <string name="error_default_subtitle">Попробуйте ещё раз или проверьте подключение</string>
+    <string name="empty_default_title">Здесь пока ничего нет</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="ok">OK</string>
+    <string name="search_hint">Поиск…</string>
+    <string name="clear_filters">Сбросить фильтры</string>
+    
+    <!-- Dialog strings for AppDialogs.kt -->
+    <string name="delete_title">Удалить %1$s?</string>
+    <string name="delete_message">Вы уверены, что хотите удалить %1$s? Это действие нельзя отменить.</string>
+    <string name="discard_title">Отменить изменения?</string>
+    <string name="discard_message">У вас есть несохранённые изменения. Вы уверены, что хотите отменить их?</string>
+    <string name="discard_confirm">Отменить</string>
+</resources>

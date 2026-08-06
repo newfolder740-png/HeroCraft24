@@ -1,0 +1,20 @@
+{
+  "id": "poisoned",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Poisoned", "ru": "Отравленный" },
+  "description": {
+    "en": "While you have the Poisoned condition, you experience the following effect.",
+    "ru": "Пока у вас есть состояние Отравленный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["debuff", "combat"],
+  "effects": [
+    { "en": "You have Disadvantage on attack rolls and ability checks.", "ru": "Влияние на атаки и проверки характеристик. Вы совершаете с Помехой броски атаки и проверки характеристик." }
+  ],
+  "mechanical": true
+}

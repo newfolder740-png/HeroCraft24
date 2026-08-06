@@ -1,0 +1,134 @@
+{
+    "id":  "rust_monster",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Rust Monster",
+                 "ru":  "Ржавник"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "33 (6d8 + 6)",
+    "hit_dice":  "6d8 + 6",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  13,
+                           "dexterity":  12,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  13,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Нюх на металл"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Ржавник может определить местонахождение содержащего железо металла в пределах 30 футов от себя."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Ржавник совершает одну атаку Укусом и дважды использует Антенны."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 5 (1к8 + 1) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Антенны"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Ржавник нацеливается на один немагический металлический объект в виде доспеха или оружия, который несёт или носит существо, в пределах 5 футов от себя. Спасбросок Ловкости: Сл 11, существо с этим объектом. Провал: Объект получает штраф -1 к КЗ, который он предоставляет (доспех), или к броскам атаки (оружие). Доспех уничтожается, если штраф уменьшает КЗ до 10, а оружие уничтожается, если штраф достиг -5. Этот штраф может быть убран сотворением заклинания Починка на доспехе или оружии."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Уничтожение металла"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Ржавник касается немагического металлического объекта в пределах 5 футов от себя, который никто не носит и не несёт. Это прикосновение уничтожает 1-футовый Куб этого объекта."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Рефлекторные антенны"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: По ржавнику попадают атакой. Эффект: Ржавник использует Антенны."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

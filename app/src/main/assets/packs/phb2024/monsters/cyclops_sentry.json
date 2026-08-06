@@ -1,0 +1,120 @@
+{
+    "id":  "cyclops_sentry",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Cyclops Sentry",
+                 "ru":  "Циклоп дозорный"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Циклопы\nОдноглазые хранители предначертанного\n\nЦиклопы — исполинские одноглазые потомки богов. Обращаясь к своему мистическому взору, они способны прозревать, каким образом скорее всего развернутся грядущие события.\n\nБольшинство циклопов дозорных служат своим божественным прародителям и противостоят всякому, кто дерзнёт вмешаться в предначертания судьбы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "huge",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "138 (12d12 + 60)",
+    "hit_dice":  "12d12 + 60",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  22,
+                           "dexterity":  11,
+                           "constitution":  20,
+                           "intelligence":  8,
+                           "wisdom":  6,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "Великаний",
+    "challenge_rating":  6,
+    "xp":  2300,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Циклоп совершает две атаки Каменной дубиной или Валуном в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Каменная дубина"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 10 фт. Попадание: 16 (3к6 + 6) Дробящего урона. Если цель — существо Огромного размера или меньше, она становится Опрокинутой."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Валун"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +9, дистанция 30/120 фт. Попадание: 22 (3к10 + 6) Дробящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Ограниченное предвидение (Перезарядка 6)"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: По циклопу совершает бросок атаки видимое им существо. Эффект: Этот бросок атаки совершается с Помехой, а циклоп получает Преимущество на броски атаки против цели до конца следующего хода циклопа."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "grassland",
+                        "coastal",
+                        "underdark",
+                        "desert",
+                        "hills"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

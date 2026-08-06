@@ -1,0 +1,108 @@
+{
+    "id":  "mammoth",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Mammoth",
+                 "ru":  "Мамонт"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "126 (11d12 + 55)",
+    "hit_dice":  "11d12 + 55",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  24,
+                           "dexterity":  9,
+                           "constitution":  21,
+                           "intelligence":  3,
+                           "wisdom":  11,
+                           "charisma":  6
+                       },
+    "saving_throws":  {
+                          "strength":  10,
+                          "constitution":  8
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  6,
+    "xp":  2300,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Мамонт совершает две атаки Пронзанием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пронзание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +10, досягаемость 10 фт. Попадание: 18 (2к10 + 7) Колющего урона. Если цель — существо Огромного размера или меньше, а мамонт переместился к ней хотя бы на 20 футов по прямой сразу перед попаданием, цель становится Опрокинутой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Топтание"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Спасбросок Ловкости: Сл 18, одно Опрокинутое существо в 5 футах. Провал: 29 (4к10 + 7) Дробящего урона. Успех: Только половина урона."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

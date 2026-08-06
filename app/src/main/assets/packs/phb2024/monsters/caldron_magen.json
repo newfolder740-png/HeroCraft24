@@ -1,0 +1,137 @@
+{
+    "id":  "caldron_magen",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Caldron Magen",
+                 "ru":  "Маген-котельник"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Магены\nСотворённые из магии универсальные слуги\n\nМагены — это человекоподобные существа, созданные при помощи магии и без колебаний исполняющие приказы своих создателей. Тела магенов состоят из чистой магической энергии, но вполне материальны. Кровь их напоминает ртуть, а после гибели они рассыпаются в прах.\n\nМагены-котельники — могучие телохранители. Защищая подопечных, они вытягивают конечности на невероятную длину и плюются кислотой."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "medium",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  20,
+    "armor_class_description":  null,
+    "hit_points":  "67 (9d8 + 27)",
+    "hit_dice":  "9d8 + 27",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  13,
+                           "constitution":  16,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "acid",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "deafened",
+                                 "petrified",
+                                 "blinded",
+                                 "poisoned",
+                                 "charmed",
+                                 "paralyzed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "знает Общий плюс два других языка, но не говорит",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Распад"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Если маген умирает, он распадается в пыль, роняя всё, что он носил или нёс."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Маген совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Маген совершает две атаки Выдвижным кулаком или Кислотным плевком в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Выдвижной кулак"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 15 фт. Попадание: 8 (1к8 + 4) Дробящего урона плюс 5 (1к10) урона Кислотой. Если цель — существо Среднего размера или меньше, она становится Схваченной (Сл освобождения от захвата 14) одним из двух кулаков."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Кислотный плевок"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +6, дистанция 60 фт. Попадание: 13 (2к8 + 4) урона Кислотой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

@@ -1,0 +1,70 @@
+{
+  "id": "human",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Human",
+    "ru": "Человек"
+  },
+  "description": {
+    "en": "Found throughout the multiverse, humans are as diverse as they are numerous, and they strive to achieve as much as possible in the years allotted to them. Their ambition and resourcefulness inspire praise, respect, and dread in many worlds.\n\nHumans are as varied in appearance as the people of Earth, and they have many gods. Scholars debate the origin of humanity, but one of the earliest known gatherings of humans is said to have occurred in Sigil, the torus-shaped city at the center of the multiverse, the place where the Common tongue was born. From there, humans may have spread across the multiverse, carrying the cosmopolitanism of the City of Doors with them.",
+    "ru": "Встречающиеся по всей мультивселенной люди столь же разнообразны, сколь и многочисленны, и они стремятся достичь как можно большего за отведенные им годы жизни. Их честолюбие и находчивость вызывают похвалу, уважение и ужас во многих мирах.\n\nЛюди так же разнообразны внешне, как и жители Земли, и у них много богов. Ученые спорят о происхождении человечества, но считается, что одно из самых ранних известных собраний людей произошло в Сигиле, городе в форме тороида в центре мультивселенной, в месте, где родился Общий язык. Возможно, оттуда люди распространились по всей мультивселенной, неся с собой космополитизм Города Дверей."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "versatile",
+    "adaptable",
+    "common"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Resourceful",
+        "ru": "Находчивый"
+      },
+      "description": {
+        "en": "You gain Heroic Inspiration whenever you finish a Long Rest.",
+        "ru": "Вы получаете Героическое вдохновение каждый раз, когда завершаете Долгий отдых."
+      }
+    },
+    {
+      "name": {
+        "en": "Skillful",
+        "ru": "Умелый"
+      },
+      "description": {
+        "en": "You gain proficiency in one skill of your choice.",
+        "ru": "Вы получаете владение одним навыком на ваш выбор."
+      }
+    },
+    {
+      "name": {
+        "en": "Versatile",
+        "ru": "Гибкий"
+      },
+      "description": {
+        "en": "You gain an Origin feat of your choice. Skilled is recommended.",
+        "ru": "Вы получаете черту Происхождения на ваш выбор. Рекомендуется Одарённый."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

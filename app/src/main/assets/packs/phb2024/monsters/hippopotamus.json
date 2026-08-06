@@ -1,0 +1,108 @@
+{
+    "id":  "hippopotamus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Hippopotamus",
+                 "ru":  "Гиппопотам"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "82 (11d10 + 22)",
+    "hit_dice":  "11d10 + 22",
+    "initiative":  "-2 (8)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  21,
+                           "dexterity":  7,
+                           "constitution":  15,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  4
+                       },
+    "saving_throws":  {
+                          "strength":  7
+                      },
+    "skills":  {
+                   "perception":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "нет",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Задержка дыхания"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гиппопотам может задержать дыхание на 10 минут."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Гиппопотам совершает две атаки Укусом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 16 (2к10 + 5) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

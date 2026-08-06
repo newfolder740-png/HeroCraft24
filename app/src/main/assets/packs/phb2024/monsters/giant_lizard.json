@@ -1,0 +1,96 @@
+{
+    "id":  "giant_lizard",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Lizard",
+                 "ru":  "Гигантская ящерица"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "19 (3d10 + 3)",
+    "hit_dice":  "3d10 + 3",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  40,
+                  "climb":  40
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  12,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  5
+                       },
+    "saving_throws":  {
+                          "dexterity":  3
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Паучье лазание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гигантская ящерица может лазать по сложным поверхностям, включая потолки, без совершения проверок характеристик."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 6 (1к8 + 2) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

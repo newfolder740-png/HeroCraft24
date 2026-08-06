@@ -1,0 +1,106 @@
+{
+    "id":  "noggle_ransacker",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Noggle Ransacker",
+                 "ru":  "Ноггл-грабитель"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ногглы\nОслоподобные любители хаоса\n\nНогглы — двуногие, похожие на ослов Феи, которые обожают воровство и проказы. Они крадут у других существ не из нужды, а из принципа. Принцип этот можно выразить расхожим сильванским присловьем, которое примерно переводится как «это моё!». Водятся ноглы только в Шэдоумуре, где бродят и сеют хаос.\n\nНогглы не обворовывают — они разграбляют. Несмотря на всю свою бесцеремонность, многие ногглы при этом носят маски, банданы или нелепые личины, чтобы скрывать своё настоящее лицо."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "small",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "13 (3d6 + 3)",
+    "hit_dice":  "3d6 + 3",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  15,
+                           "constitution":  13,
+                           "intelligence":  8,
+                           "wisdom":  10,
+                           "charisma":  12
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий, Сильван",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Осадное чудовище"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Ноггл наносит двойной урон объектам и постройкам."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Замах саботажника"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 6 (1к8 + 2) Рубящего урона. Если цель носит доспех, она подвергается следующему эффекту. Спасбросок Ловкости: Сл 12. Провал: Доспех получает штраф –1 к своему КЗ. Цель может действием убрать штраф со своих доспехов."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Ловкий побег"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Ноггл совершает действие Затаивание или Отход."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "feywild"
+                    ],
+    "treasure":  "Личные",
+    "equipment":  null
+}

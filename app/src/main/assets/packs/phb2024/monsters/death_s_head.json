@@ -1,0 +1,104 @@
+{
+    "id":  "death_s_head",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Death’s Head",
+                 "ru":  "Мёртвая голова"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Мёртвые головы\nЛетающие немёртвые головы\n\nМёртвые головы — это отделённые от тела летающие головы, оживлённые злой магией. Эти полные ненависти головы различаются по виду и степени разложения, а некоторые обладают сверхъестественными силами, связанными с теми существами, которыми они когда-то были. Совершите два броска по таблице «Облик мёртвой головы» для вдохновения или определите сами внешний вид мёртвой головы.\n\nОблик мёртвой головы\nк10\tГолова принадлежит…\tИ выделяется…\n1\tМедведю\tНалитыми кровью глазами\n2\tОбгоревшему трупу\tКровавой пеной на губах\n3\tКарге\tЛишней парой глаз\n4\tГуманоиду\tБоевой раскраской на лице\n5\tМедузе\tЖелезной маской\n6\tСвежевателю разума\tВытянутым языком\n7\tНотику\tДлинными волосами\n8\tАкуле\tЗаострёнными зубами\n9\tВолку\tДеревянной челюстью\n10\tЛосю\tОбнажённой костью\nСамый обычный вид мёртвой головы возникает от Гуманоида или животного — возможно, после несправедливой казни или смерти от рук охотника за головами — такого как, например, дуллахан. Летая и кусая, мёртвая голова терзает своих жертв, пока её не уничтожат."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "undead"
+             ],
+    "size":  "tiny",
+    "creature_type":  "undead",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "17 (5d4 + 5)",
+    "hit_dice":  "5d4 + 5",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  5,
+                  "fly":  30,
+                  "hover":  true
+              },
+    "ability_scores":  {
+                           "strength":  8,
+                           "dexterity":  13,
+                           "constitution":  12,
+                           "intelligence":  5,
+                           "wisdom":  14,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "necrotic"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "exhaustion",
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Облёт"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Мёртвая голова не Провоцирует атак, когда вылетает из вражеской досягаемости."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 3 (1к4 + 1) Колющего урона плюс 7 (2к6) Некротического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp",
+                        "urban",
+                        "forest"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

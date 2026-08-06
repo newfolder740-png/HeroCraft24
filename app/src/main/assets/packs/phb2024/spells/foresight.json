@@ -1,0 +1,45 @@
+{
+  "id": "foresight",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Foresight",
+    "ru": "Предвидение"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь согласного существа, даруя ограниченную способность предвидеть будущее. Пока заклинание действует, цель совершает с Преимуществом Тесты к20, а другие существа совершают с Помехой броски атаки по ней. Это заклинание оканчивается раньше, если вы сотворите его ещё раз."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 9,
+  "school": "divination",
+  "casting_time": "1 минута",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "перо колибри",
+  "duration": "8 часов",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:druid",
+    "phb2024:warlock"
+  ]
+}

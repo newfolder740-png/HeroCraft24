@@ -1,0 +1,15 @@
+{
+    "id":  "master_of_myriad_forms",
+    "name":  {
+                 "en":  "Master of Myriad Forms",
+                 "ru":  "Мастер бесчисленных обликов"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Смена обличия без траты ячеек заклинаний."
+                    },
+    "level":  5,
+    "requirements":  {
+                         "warlock_level":  5
+                     }
+}

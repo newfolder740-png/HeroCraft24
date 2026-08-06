@@ -1,0 +1,140 @@
+{
+    "id":  "shadow",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Shadow",
+                 "ru":  "Тень"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "undead"
+             ],
+    "size":  "medium",
+    "creature_type":  "undead",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "27 (5d8 + 5)",
+    "hit_dice":  "5d8 + 5",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  6,
+                           "dexterity":  14,
+                           "constitution":  13,
+                           "intelligence":  6,
+                           "wisdom":  10,
+                           "charisma":  8
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  6
+               },
+    "damage_vulnerabilities":  [
+                                   "к солнечному свету. Находясь под солнечным светом",
+                                   "Тень совершает с Помехой Тесты К20."
+                               ],
+    "damage_resistances":  [
+                               "thunder",
+                               "acid",
+                               "fire",
+                               "cold",
+                               "lightning"
+                           ],
+    "damage_immunities":  [
+                              "necrotic",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "unconscious",
+                                 "frightened",
+                                 "exhaustion",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Аморфность"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Тень может перемещаться через пространства шириной хотя бы 1 дюйм, и она не затрачивает на это дополнительного перемещения."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Уязвимость к солнечному свету"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Находясь под солнечным светом, Тень совершает с Помехой Тесты К20."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Высасывающий взмах"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 5 (1к6 + 2) Некротического урона, и показатель Силы цели уменьшается на 1к4. Если при этом показатель Силы уменьшается до 0, цель умирает. Если Гуманоид умирает от этой атаки, через 1к4 часов из трупа поднимается новая Тень."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Теневая скрытность"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Тень совершает действие Затаивание, если находится в области Тусклого света или Темноты."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban",
+                        "underdark",
+                        "shadowfell"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

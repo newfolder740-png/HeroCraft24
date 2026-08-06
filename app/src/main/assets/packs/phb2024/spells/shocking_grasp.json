@@ -1,0 +1,48 @@
+{
+  "id": "shocking_grasp",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Shocking Grasp",
+    "ru": "Электрошок"
+  },
+  "description": {
+    "en": "",
+    "ru": "Молния спрыгивает с вашей руки на существо, которого вы пытаетесь коснуться. Совершите рукопашную атаку заклинанием по цели; при попадании она получает 1к8 урона Электричеством и до начала своего следующего хода не может совершать Провоцированных атак."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 0,
+  "school": "evocation",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "higher_levels": {
+    "en": "",
+    "ru": "Усиление заговора. Урон увеличивается на 1к8, когда вы достигаете 5-го (2к8), 11-го (3к8) и 17-го (4к8) уровней."
+  },
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Круг земли"
+  ]
+}

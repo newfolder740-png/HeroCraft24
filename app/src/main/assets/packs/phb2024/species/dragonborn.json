@@ -1,0 +1,363 @@
+{
+  "id": "dragonborn",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Dragonborn",
+    "ru": "Драконорождённый"
+  },
+  "description": {
+    "en": "The ancestors of dragonborn hatched from the eggs of chromatic and metallic dragons. One story holds that these eggs were blessed by the dragon gods, Bahamut and Tiamat, who wanted to populate the multiverse in their image. Another claims that dragons created the first dragonborn without the blessing of gods. Whatever their origin, dragonborn have spread across the Material Plane.\n\nDragonborn look like wingless, bipedal dragons — scaly, bright-eyed, thick-boned, with horns on their heads — and their coloration and other features resemble their draconic ancestors.",
+    "ru": "Предки драконорождённых вылупились из яиц хроматических и металлических драконов. Одна версия гласит, что эти яйца получили благословение драконьих божеств, Бахамута и Тиамат, которые хотели заселить мультивселенную по своему образу и подобию. Другая утверждает, что драконы создали первого драконорождённого без благословения богов. Каким бы ни было их происхождение, драконорождённые расселились на Материальном плане.\n\nДраконорождённые выглядят как бескрылые двуногие драконы — чешуйчатые, ясноглазые, ширококостные, с рожками на головах — а их окраска и другие особенности напоминают их драконьих предков."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "dragon",
+    "elemental",
+    "breath weapon"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Draconic Ancestry",
+        "ru": "Наследие драконов"
+      },
+      "description": {
+        "en": "You are descended from a draconic ancestor. Choose a dragon type from the following table. This choice affects both your appearance and the Breath Weapon and Damage Resistance traits.\n\nDragon - Damage Type\nBlack - Acid\nBlue - Lightning\nBrass - Fire\nBronze - Lightning\nCopper - Acid\nGold - Fire\nGreen - Poison\nRed - Fire\nSilver - Cold\nWhite - Cold",
+        "ru": "Вы ведёте свой род от прародителя-дракона. Выберите вид дракона из следующей таблицы. Этот выбор влияет как на ваш внешний вид, так и на особенности Оружие дыхания и Сопротивление урону.\n\nДракон - Тип урона\nБелый - Холод\nБронзовый - Электричество\nЗелёный - Яд\nЗолотой - Огонь\nКрасный - Огонь\nЛатунный - Огонь\nМедный - Кислота\nСеребряный - Холод\nСиний - Электричество\nЧёрный - Кислота"
+      },
+      "is_placeholder": true
+    },
+    {
+      "name": {
+        "en": "Breath Weapon",
+        "ru": "Оружие дыхания"
+      },
+      "description": {
+        "en": "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (your choice each time). Each creature in the area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus). On a failed save, a creature takes 1d10 damage; the type is determined by your Draconic Ancestry trait. On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10).\n\nYou can use your Breath Weapon a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
+        "ru": "Когда в ваш ход вы совершаете действие Атака, можете заменить одну из ваших атак выдохом магической энергии либо в виде 15-футового Конуса, либо в виде 30-футовой Линии шириной 5 футов (на ваш выбор при каждом применении). Каждое существо в области действия должно пройти спасбросок Ловкости (Сл 8 + ваши модификатор Телосложения и Бонус владения). При провале существо получает 1к10 урона; его тип определяется вашей особенностью Наследие дракона. При успехе существо получает половину этого урона. Этот урон увеличивается на 1к10, когда вы достигаете 5-го (2к10), 11го (3к10) и 17-го (4к10) уровней персонажа.\n\nВы можете использовать Оружие дыхания количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования после завершения Долгого отдыха."
+      }
+    },
+    {
+      "name": {
+        "en": "Damage Resistance",
+        "ru": "Сопротивление урону"
+      },
+      "description": {
+        "en": "You have Resistance to the damage type determined by your Draconic Ancestry trait.",
+        "ru": "У вас есть Сопротивление типу урона, определяемому вашей особенностью Наследие драконов."
+      }
+    },
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Draconic Flight",
+        "ru": "Драконий полёт"
+      },
+      "description": {
+        "en": "At character level 5, you can use draconic magic to temporarily send yourself into flight. As a Bonus Action, you sprout spectral wings from your back, which last for 10 minutes or until you retract them (no action required) or you have the Incapacitated condition. During this time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest.",
+        "ru": "Достигнув 5-го уровня персонажа, вы можете использовать драконью магию, чтобы временно отправить себя в полёт. Бонусным действием вы выпускаете из спины призрачные крылья, которые сохраняются в течение 10 минут или до тех пор, пока вы не уберёте их (действий не требуется) или не получите состояние Недееспособный. В течение этого времени у вас есть Cкорость полёта, равная вашей Скорости. Ваши крылья выглядят состоящими из той же энергии, что и ваше Оружие дыхания. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  },
+  "subspecies": [
+    {
+      "id": "black",
+      "name": {
+        "en": "Black Dragon Ancestry",
+        "ru": "Чёрный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Black Dragon Ancestry",
+            "ru": "Наследие чёрного дракона"
+          },
+          "description": {
+            "en": "You have Black Dragon ancestry. Your Breath Weapon deals Acid damage, and you have Resistance to Acid damage.",
+            "ru": "Вы ведёте свой род от чёрного дракона. Ваше Оружие дыхания наносит урон Кислотой, а у вас есть Сопротивление урону Кислотой."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "blue",
+      "name": {
+        "en": "Blue Dragon Ancestry",
+        "ru": "Синий дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Blue Dragon Ancestry",
+            "ru": "Наследие синего дракона"
+          },
+          "description": {
+            "en": "You have Blue Dragon ancestry. Your Breath Weapon deals Lightning damage, and you have Resistance to Lightning damage.",
+            "ru": "Вы ведёте свой род от синего дракона. Ваше Оружие дыхания наносит урон Электричеством, а у вас есть Сопротивление урону Электричеством."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "brass",
+      "name": {
+        "en": "Brass Dragon Ancestry",
+        "ru": "Латунный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Brass Dragon Ancestry",
+            "ru": "Наследие латунного дракона"
+          },
+          "description": {
+            "en": "You have Brass Dragon ancestry. Your Breath Weapon deals Fire damage, and you have Resistance to Fire damage.",
+            "ru": "Вы ведёте свой род от латунного дракона. Ваше Оружие дыхания наносит урон Огнём, а у вас есть Сопротивление урону Огнём."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "bronze",
+      "name": {
+        "en": "Bronze Dragon Ancestry",
+        "ru": "Бронзовый дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Bronze Dragon Ancestry",
+            "ru": "Наследие бронзового дракона"
+          },
+          "description": {
+            "en": "You have Bronze Dragon ancestry. Your Breath Weapon deals Lightning damage, and you have Resistance to Lightning damage.",
+            "ru": "Вы ведёте свой род от бронзового дракона. Ваше Оружие дыхания наносит урон Электричеством, а у вас есть Сопротивление урону Электричеством."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "copper",
+      "name": {
+        "en": "Copper Dragon Ancestry",
+        "ru": "Медный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Copper Dragon Ancestry",
+            "ru": "Наследие медного дракона"
+          },
+          "description": {
+            "en": "You have Copper Dragon ancestry. Your Breath Weapon deals Acid damage, and you have Resistance to Acid damage.",
+            "ru": "Вы ведёте свой род от медного дракона. Ваше Оружие дыхания наносит урон Кислотой, а у вас есть Сопротивление урону Кислотой."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "gold",
+      "name": {
+        "en": "Gold Dragon Ancestry",
+        "ru": "Золотой дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Gold Dragon Ancestry",
+            "ru": "Наследие золотого дракона"
+          },
+          "description": {
+            "en": "You have Gold Dragon ancestry. Your Breath Weapon deals Fire damage, and you have Resistance to Fire damage.",
+            "ru": "Вы ведёте свой род от золотого дракона. Ваше Оружие дыхания наносит урон Огнём, а у вас есть Сопротивление урону Огнём."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "green",
+      "name": {
+        "en": "Green Dragon Ancestry",
+        "ru": "Зелёный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Green Dragon Ancestry",
+            "ru": "Наследие зелёного дракона"
+          },
+          "description": {
+            "en": "You have Green Dragon ancestry. Your Breath Weapon deals Poison damage, and you have Resistance to Poison damage.",
+            "ru": "Вы ведёте свой род от зелёного дракона. Ваше Оружие дыхания наносит урон Ядом, а у вас есть Сопротивление урону Ядом."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "red",
+      "name": {
+        "en": "Red Dragon Ancestry",
+        "ru": "Красный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Red Dragon Ancestry",
+            "ru": "Наследие красного дракона"
+          },
+          "description": {
+            "en": "You have Red Dragon ancestry. Your Breath Weapon deals Fire damage, and you have Resistance to Fire damage.",
+            "ru": "Вы ведёте свой род от красного дракона. Ваше Оружие дыхания наносит урон Огнём, а у вас есть Сопротивление урону Огнём."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "silver",
+      "name": {
+        "en": "Silver Dragon Ancestry",
+        "ru": "Серебряный дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Silver Dragon Ancestry",
+            "ru": "Наследие серебряного дракона"
+          },
+          "description": {
+            "en": "You have Silver Dragon ancestry. Your Breath Weapon deals Cold damage, and you have Resistance to Cold damage.",
+            "ru": "Вы ведёте свой род от серебряного дракона. Ваше Оружие дыхания наносит урон Холодом, а у вас есть Сопротивление урону Холодом."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "white",
+      "name": {
+        "en": "White Dragon Ancestry",
+        "ru": "Белый дракон"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "White Dragon Ancestry",
+            "ru": "Наследие белого дракона"
+          },
+          "description": {
+            "en": "You have White Dragon ancestry. Your Breath Weapon deals Cold damage, and you have Resistance to Cold damage.",
+            "ru": "Вы ведёте свой род от белого дракона. Ваше Оружие дыхания наносит урон Холодом, а у вас есть Сопротивление урону Холодом."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    }
+  ]
+}

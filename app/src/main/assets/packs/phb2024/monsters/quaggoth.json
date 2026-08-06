@@ -1,0 +1,111 @@
+{
+    "id":  "quaggoth",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Quaggoth",
+                 "ru":  "Кваггот"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Квагготы\nНепредсказуемые подземные ловчие\n\nКвагготы — свирепые охотники, обитающие в Подземье, которые с трудом выживают в мрачных глубинах. Там, среди едких лишайников и ядовитых грибов, они с яростью нападают на всё, что можно употребить в пищу: от гигантских пауков до путешественников. Иногда злодеи из Подземья используют квагготов в качестве грубой силы.\n\nЧаще всего квагготы сбиваются в небольшие стаи, вожаками которых становятся самые бесстрашные из них. Эти группы заносчивы и обидчивы — любой, кто причинит вред квагготу или будет заподозрен в этом, навлечёт на себя гнев всей его стаи вне зависимости от первопричины. Порой они затаивают обиды на целые поселения, и в течение десятков лет целые поколения квагготов ищут возможность отомстить их жителям. Только вожак стаи может положить конец всем претензиям.\n\nКаждая битва для квагготов будто последняя. Они сражаются с невероятной яростью и делают всё, чтобы выжить."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d8 + 18)",
+    "hit_dice":  "6d8 + 18",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  12,
+                           "constitution":  16,
+                           "intelligence":  6,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "athletics":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "Подземный",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Окровавленная ярость"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока кваггот Окровавлен, он совершает с Преимуществом броски атаки."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Кваггот совершает две атаки Когтями."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Рубящего урона, или 13 (3к6 + 3) Рубящего урона, если кваггот Окровавлен."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark",
+                        "desert"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

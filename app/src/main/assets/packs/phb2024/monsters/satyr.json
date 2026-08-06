@@ -1,0 +1,108 @@
+{
+    "id":  "satyr",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Satyr",
+                 "ru":  "Сатир"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Сатиры\nГуляки с рогами и копытами\n\nСатиры воплощают собой необузданные радости дикой природы. Они безудержно предаются кутежам и гульбе: пьют, едят, пляшут, дерутся и дурачатся напропалую.\n\nСатиры охотно выставляют свои крепкие тела напоказ во всевозможных состязаниях, выдворяют прочь нарушителей веселья и обороняют владения Фей."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "medium",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "31 (7d8)",
+    "hit_dice":  "7d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  16,
+                           "constitution":  11,
+                           "intelligence":  12,
+                           "wisdom":  10,
+                           "charisma":  14
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "performance":  6,
+                   "perception":  2,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "Общий, Сильван, Эльфийский",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Сатир совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Копыта"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Дробящего урона. Если цель — существо Среднего размера или меньше, сатир отталкивает её от себя по прямой на расстояние вплоть до 10 футов."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Насмешка"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Мудрости: Сл 12, одно видимое сатиром существо в 90 футах. Провал: 5 (1к6 + 2) Психического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "feywild"
+                    ],
+    "treasure":  "Инструментальные",
+    "equipment":  null
+}

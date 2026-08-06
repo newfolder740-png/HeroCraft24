@@ -1,0 +1,87 @@
+{
+    "id":  "eagle",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Eagle",
+                 "ru":  "Орёл"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "small",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "4 (1d6 + 1)",
+    "hit_dice":  "1d6 + 1",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  60
+              },
+    "ability_scores":  {
+                           "strength":  6,
+                           "dexterity":  15,
+                           "constitution":  12,
+                           "intelligence":  2,
+                           "wisdom":  14,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  6
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "16"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 4 (1к4 + 2) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

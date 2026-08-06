@@ -1,0 +1,21 @@
+{
+  "id": "charmed",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Charmed", "ru": "Очарованный" },
+  "description": {
+    "en": "While you have the Charmed condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Очарованный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["debuff", "combat", "social"],
+  "effects": [
+    { "en": "You can't attack the charmer or target it with harmful abilities or magical effects.", "ru": "Не можете вредить очаровавшему. Вы не можете атаковать очаровавшее вас существо или нацеливать на него наносящие урон способности и магические эффекты." },
+    { "en": "The charmer has Advantage on ability checks to interact socially with you.", "ru": "Социальное преимущество. Очаровавшее вас существо совершает с Преимуществом проверки характеристик при социальном взаимодействии с вами." }
+  ],
+  "mechanical": true
+}

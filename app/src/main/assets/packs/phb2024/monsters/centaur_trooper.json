@@ -1,0 +1,119 @@
+{
+    "id":  "centaur_trooper",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Centaur Trooper",
+                 "ru":  "Кентавр-кавалерист"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Кентавры\nЗащитники Страны Фей\n\nКентавры — защитники лесов, равнин и мест сосредоточения первозданной силы. Эти существа с туловищем коня, но головой и грудью человека вступают в сражение со всеми, кто хочет навредить их союзникам.\n\nКентавры-кавалеристы — стражи лесов, издалека похожие на скачущих рыцарей. Многие из них доверяют только другим Феям."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "large",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "neutral good",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d10 + 12)",
+    "hit_dice":  "6d10 + 12",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  14,
+                           "constitution":  14,
+                           "intelligence":  9,
+                           "wisdom":  13,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "athletics":  6,
+                   "perception":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "Сильван, Эльфийский",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Кентавр совершает две атаки Пикой или Длинным луком в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пика"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 9 (1к10 + 4) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Длинный лук"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +4, дистанция 150/600 фт. Попадание: 6 (1к8 + 2) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Затаптывание (Перезарядка 5–6)"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Кентавр перемещается на расстояние вплоть до значения его Скорости, не вызывая Провоцированных атак, и может перемещаться сквозь пространство существ Среднего размера или меньше. Каждое существо, в чьё пространство входит кентавр, становится целью следующего эффекта. Спасбросок Силы: Сл 14. Провал: 7 (1к6 + 4) Дробящего урона, и цель Опрокидывается."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban",
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  "Длинный лук, Кираса, Пика"
+}

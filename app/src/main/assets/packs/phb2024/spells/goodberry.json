@@ -1,0 +1,43 @@
+{
+  "id": "goodberry",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Goodberry",
+    "ru": "Добряника"
+  },
+  "description": {
+    "en": "",
+    "ru": "В вашей руке появляется десять ягод. На время действия заклинания эти ягоды наполнены магией. Существо может Бонусным действием съесть одну ягоду. Съеденная ягода восстанавливает 1 Хит, и она настолько питательна, что насыщает существо на один день.\n\nНесъеденные ягоды исчезают, когда заклинание заканчивается."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "conjuration",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "веточка омелы",
+  "duration": "24 часа",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:druid",
+    "phb2024:ranger"
+  ]
+}

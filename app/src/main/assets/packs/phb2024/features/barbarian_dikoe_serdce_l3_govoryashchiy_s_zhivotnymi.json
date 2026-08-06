@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_dikoe_serdce_l3_govoryashchiy_s_zhivotnymi",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Говорящий с животными"},
+  "description": {"en": "", "ru": "Вы можете сотворять заклинания Животные чувства и Разговор с животными, но только как Ритуал. Вашей заклинательной характеристикой для них является Мудрость."},
+  "level": 3,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

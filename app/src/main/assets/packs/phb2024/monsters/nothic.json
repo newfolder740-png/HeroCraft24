@@ -1,0 +1,109 @@
+{
+    "id":  "nothic",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Nothic",
+                 "ru":  "Нотик"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Нотик\nСвидетель чертовщины\n\nЖажда запретных знаний превратила нотиков в проклятых охотников за тайнами и секретами, которые никто не должен знать. Бывшие учёные, они превратились в существ с искажёнными чужеродными телами и одним гигантским немигающим глазом. Нотики не помнят ничего о своей прошлой жизни. Теперь их разум поглощён бесконечным поиском мистических тайн и невероятных истин. Они ищут откровения среди забытых развалин, и в этом им помогает сверхъестественный взгляд, с помощью которого они могут видеть сквозь магические иллюзии, разлагать плоть врагов и красть секреты тех, кто мешает их поискам.\n\nЛишь немногие нотики пытаются избавиться от проклятия, превратившего их в причудливых монстров. Другие даже не подозревают о своём состоянии, а большинству уже всё равно."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "aberration"
+             ],
+    "size":  "medium",
+    "creature_type":  "aberration",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d8 + 18)",
+    "hit_dice":  "6d8 + 18",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  16,
+                           "constitution":  16,
+                           "intelligence":  13,
+                           "wisdom":  10,
+                           "charisma":  8
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "arcana":  3,
+                   "perception":  4,
+                   "stealth":  5,
+                   "insight":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "Подземный",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Нотик совершает две атаки Когтями."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 8 (1к10 + 3) Рубящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Разлагающий взгляд"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Телосложения: Сл 13, одно видимое нотиком существо в 120 футах. Провал: 17 (5к6) Некротического урона. Успех: Только половина урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

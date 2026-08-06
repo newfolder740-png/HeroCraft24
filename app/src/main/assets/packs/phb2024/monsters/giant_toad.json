@@ -1,0 +1,114 @@
+{
+    "id":  "giant_toad",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Toad",
+                 "ru":  "Гигантская жаба"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "39 (6d10 + 6)",
+    "hit_dice":  "6d10 + 6",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  13,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Амфибия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гигантская жаба может дышать как воздухом, так и под водой."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Прыжок с места"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гигантская жаба может совершать Прыжок в длину до 20 футов и Прыжок в высоту до 10 футов с разбегом или без него."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 5 (1к6 + 2) Колющего урона плюс 5 (2к4) урона Ядом. Если цель Среднего размера или меньше, она получает состояние Схваченный (Сл освобождения от захвата 12)."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Проглатывание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Жаба проглатывает Схваченную ей цель Среднего размера или меньше. Пока цель проглочена, она считается не Схваченной, но имеющей состояния Ослеплённый и Опутанный, и имеющей Полное укрытие против атак и прочих эффектов, исходящих снаружи жабы. Кроме того, цель получает 10 (3к6) урона Кислотой в конце каждого хода жабы. Жаба может держать проглоченной только одну цель одновременно; пока жаба держит цель проглоченной, она не может использовать Укус. Если жаба умирает, проглоченное существо теряет состояние Опутанный, и может высвободиться из трупа, используя 5 футов перемещения и на выходе также получая состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l7_instinktivnyy_pryzhok",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Инстинктивный прыжок"},
+  "description": {"en": "", "ru": "Частью Бонусного действия, которым вы впадаете в Ярость, вы можете переместиться на расстояние вплоть до половины вашей Скорости."},
+  "level": 7,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

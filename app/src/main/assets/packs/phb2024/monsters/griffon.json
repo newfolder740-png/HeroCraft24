@@ -1,0 +1,101 @@
+{
+    "id":  "griffon",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Griffon",
+                 "ru":  "Грифон"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Грифон\nВеличественный охотник на земле и в небе\n\nГрифоны представляют собой помесь хищных птиц и больших кошек — в основном орлов и львов — и унаследовали их точность и свирепость. У более редких пород встречаются черты кондоров, пантер, ястребов и тигров. Грифоны часто ассоциируются с королевскими домами и повсеместно считаются «царями зверей».\n\nО грифонах сложено несчётное число легенд и песен. Совершите бросок по таблице «Сказание о грифонах» для вдохновения или выберите сами интересные факты.\n\nСказание о грифонах\n1к6\tЛегенды гласят, что грифоны…\n1\tНападают на всё летающее рядом со их логовами.\n2\tНакладывают проклятие на своих убийц, которые столкнутся с гневом всего животного мира.\n3\tНесут яйца с замечательными целебными свойствами.\n4\tПредпочитают охотиться на лошадей.\n5\tБудут слушаться существа, которое они увидят сразу после вылупления.\n6\tНе нападают на тех, в ком течёт кровь королей."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "59 (7d10 + 21)",
+    "hit_dice":  "7d10 + 21",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "fly":  80
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  15,
+                           "constitution":  16,
+                           "intelligence":  2,
+                           "wisdom":  13,
+                           "charisma":  8
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Грифон совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 8 (1к8 + 4) Колющего урона. Если цель Среднего размера или меньше, она получает состояние Схваченный (Сл освобождения от захвата 14) обеими передними лапами грифона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "arctic",
+                        "mountains",
+                        "grassland",
+                        "coastal",
+                        "hills"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

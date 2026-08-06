@@ -1,0 +1,91 @@
+{
+  "id": "warforged",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Warforged",
+    "ru": "Кованый"
+  },
+  "description": {
+    "en": "Warforged are mechanical beings created as weapons for the Last War. As a completely unexpected consequence of a change in technology, instead of mindless automatons, sentient beings emerged, made of wood and metal, yet nevertheless capable of feeling pain and emotions.\n\nWarforged are composed of both organic and inorganic materials. Their muscles are root-like cords infused with alchemical compounds, wrapping around a framework of steel, darkwood, or stone. Armored plates form a protective outer shell and cover the joints. The more a warforged develops their personality, the more they tend to modify their body, turning to artisans and artificers to alter their face or the appearance of their limbs and armor.",
+    "ru": "Кованые — это механические существа, созданные как оружие для Последней войны. В результате совершенно неожиданного следствия изменения технологии вместо бездумных автоматонов появились разумные существа, созданные из дерева и металла, но тем не менее способные испытывать боль и эмоции.\n\nКованые состоят как из органических, так и неорганических материалов. Мускулами им служат похожие на корневища тросы, пропитанные алхимическими составами, оплетающие каркас из стали, темного дерева или камня. Бронированные пластины образуют защитную внешнюю оболочку и прикрывают суставы. Чем больше кованый развивает свою личность, тем больше он склонен изменять своё тело, обращаясь к мастерам и артефакторам, чтобы изменить своё лицо или внешний вид конечностей и брони."
+  },
+  "source": {
+    "book": {
+      "en": "Eberron: Forgotten Ages",
+      "ru": "Эберрон: Забытые эпохи"
+    },
+    "abbreviation": "EFA"
+  },
+  "tags": [
+    "construct",
+    "eberron",
+    "mechanical",
+    "living construct"
+  ],
+  "creature_type": "construct",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Constructed Resilience",
+        "ru": "Устойчивость конструкта"
+      },
+      "description": {
+        "en": "You have Resistance to Poison damage, and you have Advantage on saving throws to avoid or end the Poisoned condition.",
+        "ru": "Вы обладаете Сопротивлением урону Ядом, а также совершаете с Преимуществом спасброски на избежание и окончание состояния Отравленный."
+      }
+    },
+    {
+      "name": {
+        "en": "Integrated Protection",
+        "ru": "Встроенная защита"
+      },
+      "description": {
+        "en": "You have a +1 bonus to AC. In addition, armor you don can't be removed from you against your will while you are alive.",
+        "ru": "Вы обладаете бонусом +1 к КЗ. Кроме того, доспех, который вы надели на себя, нельзя снять с вас против вашей воли, пока вы живы."
+      }
+    },
+    {
+      "name": {
+        "en": "Sentry's Rest",
+        "ru": "Отдых часового"
+      },
+      "description": {
+        "en": "You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 6 hours if you spend that time without movement or activity. During this time, you appear inert, but you remain conscious.",
+        "ru": "Вам не требуется сон, и магия не может усыпить вас. Вы можете завершить Долгий отдых за 6 часов, если проводите это время без движения и активности. В течение этого времени вы выглядите недвижимо, но сохраняете сознание."
+      }
+    },
+    {
+      "name": {
+        "en": "Specialized Design",
+        "ru": "Специальная сборка"
+      },
+      "description": {
+        "en": "You gain proficiency in one skill and one tool of your choice.",
+        "ru": "Вы получаете владение одним навыком и одним инструментом на ваш выбор."
+      }
+    },
+    {
+      "name": {
+        "en": "Tireless",
+        "ru": "Неустанность"
+      },
+      "description": {
+        "en": "You don't gain Exhaustion levels from dehydration, malnutrition, or suffocation.",
+        "ru": "Вы не получаете уровней Истощения от обезвоживания, недоедания и удушения."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

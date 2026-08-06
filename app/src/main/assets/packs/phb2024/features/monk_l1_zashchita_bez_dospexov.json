@@ -1,0 +1,1 @@
+{"id":"monk_l1_zashchita_bez_dospexov","level":1,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Защита без доспехов"},"description":{"en":"","ru":"Пока вы не носите ни доспехов, ни Щита, ваш базовый Класс Защиты равен 10 + модификаторы Ловкости и Мудрости."},"is_subclass_choice":false,"format_version":1}

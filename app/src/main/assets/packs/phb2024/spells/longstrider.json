@@ -1,0 +1,49 @@
+{
+  "id": "longstrider",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Longstrider",
+    "ru": "Скороход"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь существа. Пока заклинание действует, Скорость этого существа увеличена на 10 футов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "transmutation",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "щепоть грязи",
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "higher_levels": {
+    "en": "",
+    "ru": "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень ячейки выше 1-го."
+  },
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:druid",
+    "phb2024:ranger"
+  ]
+}

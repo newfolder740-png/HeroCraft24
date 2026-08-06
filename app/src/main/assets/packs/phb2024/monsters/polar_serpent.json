@@ -1,0 +1,122 @@
+{
+    "id":  "polar_serpent",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Polar Serpent",
+                 "ru":  "Полярный змей"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Полярный змей\nЭфемерный элементаль, вытягивающий тепло\n\nПолярные змеи — крупные белые змеи, сотканные из тумана и холода, что таятся в заснеженных уголках мира. Сквозь метели и мглу они преследуют теплокровную добычу, обвивают жертву и вытягивают из неё тепло."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "large",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "58 (9d10 + 9)",
+    "hit_dice":  "9d10 + 9",
+    "initiative":  "+4 (14)",
+    "speed":  {
+                  "walk":  40,
+                  "fly":  40
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  19,
+                           "constitution":  12,
+                           "intelligence":  4,
+                           "wisdom":  12,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  3,
+                   "stealth":  6
+               },
+    "damage_vulnerabilities":  [
+                                   "к урону Огонь"
+                               ],
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "cold"
+                          ],
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "знает Первичный, но не говорит",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Туманное скольжение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Змей может проходить через пространство шириной всего 1 дюйм, не тратя на это дополнительное перемещение."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Змей совершает две атаки Укусом и использует Сдавливание."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 8 (1к8 + 4) Колющего урона плюс 3 (1к6) урона Холодом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сдавливание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Силы: Сл 14, одно видимое змеем существо Среднего размера или меньше в 10 футах. Провал: 3 (1к6) Дробящего урона плюс 7 (2к6) урона Холодом. Цель становится Схваченной (Сл освобождения от захвата 14); пока захват не окончен, она также Опутана."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "arctic",
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

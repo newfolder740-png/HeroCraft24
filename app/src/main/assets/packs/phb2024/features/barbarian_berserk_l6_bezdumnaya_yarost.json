@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_berserk_l6_bezdumnaya_yarost",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Бездумная ярость"},
+  "description": {"en": "", "ru": "Пока ваша Ярость действует, у вас есть Иммунитет к состояниям Очарованный и Испуганный. Если у вас есть состояния Очарованный или Испуганный, когда вы впадаете в Ярость, эти состояния на вас оканчиваются."},
+  "level": 6,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

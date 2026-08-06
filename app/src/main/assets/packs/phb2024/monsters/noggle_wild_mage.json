@@ -1,0 +1,116 @@
+{
+    "id":  "noggle_wild_mage",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Noggle Wild Mage",
+                 "ru":  "Ноггл-дикий маг"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ногглы\nОслоподобные любители хаоса\n\nНогглы — двуногие, похожие на ослов Феи, которые обожают воровство и проказы. Они крадут у других существ не из нужды, а из принципа. Принцип этот можно выразить расхожим сильванским присловьем, которое примерно переводится как «это моё!». Водятся ноглы только в Шэдоумуре, где бродят и сеют хаос.\n\nНекоторые ногглы обладают сильной связью со странной магией, пропитавшей мир Лорвин-Шэдоумур. Такие дикие маги держатся на отшибе ногглского общества среди изгоев и бродяг. Их врождённая магия становится сильнее, когда им приходится туже всего — например в разгар битвы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "small",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "22 (4d6 + 8)",
+    "hit_dice":  "4d6 + 8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  16,
+                           "constitution":  14,
+                           "intelligence":  10,
+                           "wisdom":  12,
+                           "charisma":  17
+                       },
+    "saving_throws":  {
+                          "constitution":  4,
+                          "charisma":  5
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "Общий, Сильван",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Окровавленная дикая магия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока ноггл Окровавлен, он обладает Скоростью полёта 30 футов, а тип любого наносимого им урона может быть Силовым."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Ноггл совершает две атаки Палкой-ноггалкой или Одуряющим лучом в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Палка-ноггалка"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Дробящего урона плюс 2 (1к4) Психического урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Одуряющий луч"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +5, дистанция 60 фт. Попадание: 6 (1к6 + 3) Психического урона, и цель вычитает 1к4 из следующего спасброска, который совершает до конца следующего хода ноггла."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "feywild"
+                    ],
+    "treasure":  "Личные",
+    "equipment":  null
+}

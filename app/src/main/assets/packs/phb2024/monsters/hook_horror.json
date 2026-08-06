@@ -1,0 +1,99 @@
+{
+    "id":  "hook_horror",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Hook Horror",
+                 "ru":  "Крюкастый ужас"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Крюкастый ужас\nОхотник за звуками из Подземья\n\nКрюкастые ужасы — хищники с клювом и похожими на крюки передними лапами. Эти существа обитают в лабиринтах пещер Подземья среди глубоких ущелий и сталактитовых лесов, висящих над непроглядной тьмой. Там они стремительно носятся по гротам и ловко раскачиваются под потолками.\n\nКрюкастые ужасы не особо разборчивы в пище: они поедают растения, грибы и любых существ, оказавшихся в пределе досягаемости их крюков.\n\nОни ориентируются в пространстве с помощью эхолокации, производя разнообразный шум: от ударов по скалам и собственному телу до странных звуков, похожих на клёкот, вопли или щелчки. Значение этих звуков известно лишь сами чудовищам, но, к сожалению, многие существа, путешествующие по Подземью или живущие вблизи глубоких пещер, становились жертвами голодных крюкастых ужасов, отправившись на поиски источника подобного шума."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "75 (10d10 + 20)",
+    "hit_dice":  "10d10 + 20",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  30,
+                  "climb":  30
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  10,
+                           "constitution":  15,
+                           "intelligence":  6,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  {
+                          "constitution":  4
+                      },
+    "skills":  {
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "Язык Крюкастых ужасов",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Крюкастый ужас совершает две атаки Крюком."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Крюк"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 10 фт. Попадание: 11 (2к6 + 4) Колющего урона. Если цель — существо Большого размера или меньше, крюкастый ужас перемещает цель к себе или от себя по прямой на 5 футов."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

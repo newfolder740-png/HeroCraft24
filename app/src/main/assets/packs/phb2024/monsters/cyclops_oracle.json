@@ -1,0 +1,136 @@
+{
+    "id":  "cyclops_oracle",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Cyclops Oracle",
+                 "ru":  "Циклоп оракул"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Циклопы\nОдноглазые хранители предначертанного\n\nЦиклопы — исполинские одноглазые потомки богов. Обращаясь к своему мистическому взору, они способны прозревать, каким образом скорее всего развернутся грядущие события.\n\nЦиклопы оракулы проницают взглядом анналы истории, дабы постичь сокрытые истины. Многие из них делятся этими тайнами с теми, кто помогает им исправить ошибки минувшего."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "huge",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "chaotic",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "207 (18d12 + 90)",
+    "hit_dice":  "18d12 + 90",
+    "initiative":  "+8 (18)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  22,
+                           "dexterity":  11,
+                           "constitution":  20,
+                           "intelligence":  16,
+                           "wisdom":  18,
+                           "charisma":  10
+                       },
+    "saving_throws":  {
+                          "constitution":  9,
+                          "wisdom":  8
+                      },
+    "skills":  {
+                   "perception":  12,
+                   "history":  11
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "22"
+               },
+    "languages":  "Великаний",
+    "challenge_rating":  10,
+    "xp":  5900,
+    "proficiency_bonus":  4,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Циклоп совершает три атаки Лучистым ударом или Вспышкой света в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Лучистый удар"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +10, досягаемость 10 фт. Попадание: 22 (3к10 + 6) урона Излучением."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Вспышка света"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +10, дистанция 120 фт. Попадание: 17 (2к10 + 6) урона Излучением, и цель совершает с Помехой броски атаки до конца следующего хода циклопа."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Циклоп оракул сотворяет одно из следующих заклинаний, не нуждаясь в Материальных компонентах (заклинательная характеристика — Мудрость, Сл спасброска заклинаний 16):\n2/день каждое: Магический глаз, Обнаружение магии, Поиск объекта\n1/день: Знание легенд"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Предзнаменование (Перезарядка 4–6)"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: Циклоп или видимый им союзник совершает Тест к20. Эффект: Циклоп бросает 1к20 и решает, использовать ли новый бросок вместо прежнего результата для Теста к20."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "grassland",
+                        "coastal",
+                        "underdark",
+                        "desert",
+                        "hills"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

@@ -1,0 +1,119 @@
+{
+    "id":  "bulette",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bulette",
+                 "ru":  "Панцирница"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Панцирницы\nНенасытные сухопутные акулы\n\nПанцирницы, или «сухопутные акулы», — целеустремлённые хищники, которые в погоне за добычей могут рыть тоннели, перепрыгивать препятствия и даже пробивать их будто тараны. Они стремительно зарываются под землю, оставаясь при этом близко к поверхности. Как только панцирница чувствует движение, она мгновенно выпрыгивает из-под земли, смыкая на добыче свои огромные челюсти.\n\nУ панцирниц широкий ареал обитания. Эти существа часто нападают на стада животных и могут полностью разорить фермерские общины."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  17,
+    "armor_class_description":  null,
+    "hit_points":  "94 (9d10 + 45)",
+    "hit_dice":  "9d10 + 45",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  19,
+                           "dexterity":  11,
+                           "constitution":  21,
+                           "intelligence":  2,
+                           "wisdom":  10,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  6
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "16"
+               },
+    "languages":  "нет",
+    "challenge_rating":  5,
+    "xp":  1800,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Панцирница совершает две атаки Укусом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 17 (2к12 + 4) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Смертоносный прыжок"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Панцирница тратит 5 футов перемещения, чтобы прыгнуть в пространство в пределах 15 футов, занятое одним или несколькими существами Большого размера или меньше. Спасбросок Ловкости: Сл 15, каждое существо в целевом пространстве панцирницы. Провал: 19 (3к12) Дробящего урона, и цель Опрокидывается. Успех: Половина урона, и цель отталкивается от панцирницы на расстояние до 5 футов по прямой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Прыжок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Панцирница может прыгнуть на расстояние вплоть до 30 футов, затратив 10 футов перемещения."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "grassland",
+                        "hills"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

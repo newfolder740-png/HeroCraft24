@@ -1,0 +1,71 @@
+{
+  "id": "shifter",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Shifter",
+    "ru": "Шифтер"
+  },
+  "description": {
+    "en": "Shifters — sometimes called \"weretouched\" — are descended from humans who contracted full or partial lycanthropy. Shifters are humanoids with clearly noticeable animal traits; they cannot fully change their form, but they can temporarily enhance their animalistic traits in a process they call \"shifting.\"\n\nShifters resemble humans in height and build, but are on average more flexible and agile. Their facial features are often beast-like, frequently with large eyes and pointed ears; most shifters have prominent fangs. Their hair is fur-like and grows on almost all parts of the body. Although to an outside observer a shifter's appearance may resemble an animal, even in their wildest state a shifter is clearly recognizable as a Humanoid.",
+    "ru": "Шифтер — иногда называемые \"переворотнями\" - происходят от людей, заразившихся полной или частичной ликантропией. Шифтеры — гуманоиды с явно заметным животными чертами, они не могут полностью изменить свою форму, но могут временно усилить свои животные черты в процессе, который они называют \"переворотом\".\n\nШифтеры похожи на людей по росту и телосложению, но в среднем более гибкие и подвижные. Их черты лица нередко похожи на звериные, зачастую у них большие глаза и заострённые уши; у большинства шифтеров можно встретить выдающиеся клыки. Их волосы похожи на шерсть и растут почти на всех частях тела. Хотя стороннему наблюдателю облик шифтера может напоминать животное, но даже в самом диком состоянии шифтер явно узнаваем как Гуманоид."
+  },
+  "source": {
+    "book": {
+      "en": "Eberron: Forgotten Ages",
+      "ru": "Эберрон: Забытые эпохи"
+    },
+    "abbreviation": "EFA"
+  },
+  "tags": [
+    "lycanthrope",
+    "beast",
+    "eberron",
+    "shapeshifter"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Bestial Instincts",
+        "ru": "Звериные инстинкты"
+      },
+      "description": {
+        "en": "Through the beast within you, you have proficiency in one skill of your choice from the following list: Acrobatics, Athletics, Intimidation, Survival.",
+        "ru": "Через зверя внутри вас вы владеете одним навыком на ваш выбор из следующего списка: Акробатика, Атлетика, Выживание, Запугивание."
+      }
+    },
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "Вы обладаете Тёмным зрением дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Shifting",
+        "ru": "Переворот"
+      },
+      "description": {
+        "en": "You can use a Bonus Action to transform, assuming a bestial form. This transformation lasts for 1 minute or until you use a Bonus Action to return to your normal form. When you assume the bestial form, you gain Temporary Hit Points equal to your Proficiency Bonus multiplied by 2. You can assume this form a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n\nEach time you assume this form, you gain one of the following sets of benefits (choose when you choose this species):\n\nBeasthide. When you assume the bestial form, you gain 1d6 additional Temporary Hit Points. While in this form, you have a +1 bonus to AC.\n\nLongtooth. When you assume the bestial form and as a Bonus Action on your subsequent turns while in this form, you can use your lengthened fangs to make an Unarmed Strike. If you choose to deal damage with this Unarmed Strike and hit, you can deal Piercing damage equal to 1d6 + your Strength modifier instead of the normal Unarmed Strike damage.\n\nSwiftstride. While in this form, your Speed increases by 10 feet. In addition, when a creature ends its turn within 5 feet of you, you can use your Reaction to move up to 10 feet; this movement doesn't provoke Opportunity Attacks.\n\nWildhunt. While in this form, you have Advantage on Wisdom checks. In addition, no creature can make an attack roll with Advantage against you while you don't have the Incapacitated condition, if it is within 30 feet of you.",
+        "ru": "Вы можете Бонусным действием перевоплотиться, принимая звероподобный облик. Это перевоплощение длится 1 минуту или пока вы Бонусным действием не вернётесь в ваш обычный облик. Когда вы принимаете звероподобный облик, вы получаете Временные хиты, равные вашему Бонусу владения, умноженному на 2. Вы можете принимать этот облик количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха.\n\nКаждый раз, когда вы принимаете этот облик, вы получаете один из следующих наборов преимуществ (выберите при выборе этого вида):\n\nЗвериная шкура. Принимая звероподобный облик, вы получаете 1к6 дополнительных Временных хитов. Пока вы находитесь в этом облике, вы обладаете бонусом +1 к КЗ.\n\nДлинные зубы. Когда вы принимаете звероподобный облик, а также Бонусным действием в ваши последующие ходы, пока вы находитесь в этом облике, можете использовать ваши удлинённые клыки, чтобы совершить Безоружный удар. Если вы выбираете нанесение урона этим Безоружным ударом и попадаете, можете нанести вместо обычного урона Безоружного удара Колющий урон, равный 1к6 + ваш модификатор Силы.\n\nБыстрая поступь. Пока вы находитесь в этом облике, ваша Скорость увеличена на 10 футов. Кроме того, когда существо заканчивает свой ход в пределах 5 футов от вас, вы можете Реакцией переместиться на расстояние вплоть до 10 футов; это перемещение не вызывает Провоцированных атак.\n\nДикая охота. Пока вы находитесь в этом облике, вы совершаете с Преимуществом проверки Мудрости. Кроме того, никакое существо не может совершать атаку по вам с Преимуществом, если оно находится в пределах 30 футов от вас, а у вас нет состояния Недееспособный."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "glibness",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Glibness",
+    "ru": "Находчивость"
+  },
+  "description": {
+    "en": "",
+    "ru": "Пока заклинание действует, вы при совершении вами проверок Харизмы можете заменять выпавший на кости результат на «15». Кроме того, что бы вы ни говорили, определяющая правдивость магия считает, что вы говорите правду."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 8,
+  "school": "enchantment",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:warlock"
+  ]
+}

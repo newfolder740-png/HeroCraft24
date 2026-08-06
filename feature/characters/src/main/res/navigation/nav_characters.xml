@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_characters"
+    app:startDestination="@id/characterList">
+
+    <fragment
+        android:id="@+id/characterList"
+        android:name="com.herocraft24.feature.characters.CharacterListFragment"
+        android:label="Персонажи" />
+
+    <fragment
+        android:id="@+id/characterCreate"
+        android:name="com.herocraft24.feature.characters.CharacterCreateFragment"
+        android:label="Create" />
+
+    <fragment
+        android:id="@+id/characterSheet"
+        android:name="com.herocraft24.feature.characters.CharacterSheetFragment"
+        android:label="Sheet">
+        <argument android:name="characterId" app:argType="string" />
+    </fragment>
+
+</navigation>

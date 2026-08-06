@@ -1,0 +1,70 @@
+{
+  "id": "hexblood",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Hexblood",
+    "ru": "Ведьмовская кровь"
+  },
+  "description": {
+    "en": "Hexbloods are individuals infused with fey magic, the result of otherworldly influence or mysterious witchcraft. Many become hexbloods through a pact with a powerful hag, but exposure to other alien forces can also lead to the birth of a hexblood. Fey magic manifests as supernatural foresight and charm.",
+    "ru": "Ведьмовской кровью называют тех, в чьих жилах бурлит фейская магия, результат воздействия потусторонней энергии или таинственного колдовства. Многие из них стали такими, заключив сделку с могущественной каргой, но и воздействие иных чуждых сил может привести к рождению Ведьмовской крови. Магия фей проявляет себя сверхъестественным предвидением и очарованием."
+  },
+  "source": {
+    "book": {
+      "en": "Ravenloft: The Witchlight",
+      "ru": "Равенлофт: Ведьмин свет"
+    },
+    "abbreviation": "RTW"
+  },
+  "tags": [
+    "fey",
+    "hag",
+    "witchcraft"
+  ],
+  "creature_type": "fey",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "Вы обладаете Тёмным зрением дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Eerie Token",
+        "ru": "Мистический маркер"
+      },
+      "description": {
+        "en": "You can use a Bonus Action to create a magical token by harmlessly cutting a lock of hair, a fingernail, or a similar method. While the token exists, you gain the following benefits:\n\nDistant Message. As a Magic action, you can send a telepathic message of up to 25 words to the creature carrying or wearing the token, if that creature is within 10 miles of you.\n\nObservation. If you are within 10 miles of the token, you can use a Magic action to perceive the area around the token using your senses; you can do so for up to 1 minute, until you become Incapacitated, or until you end this perception (no action required). During this time, you see and hear through the token as if you were in its space. When this effect ends, the token is harmlessly destroyed.\n\nUnless destroyed earlier, the token lasts until you finish a Long Rest. Once you create an Eerie Token with this trait, you can't do so again until you finish a Long Rest.",
+        "ru": "Вы можете Бонусным действием создать магический маркер, безвредно отрезая локон волос, ноготь или аналогичным методом. Пока этот маркер существует, вы обладаете следующими преимуществами:\n\nДальнее послание. Действием Магия вы можете послать существу, носящему или несущему маркер, телепатическое послание не более 25 слов длиной, если это существо находится в пределах 10 миль от вас.\n\nНаблюдение. Если вы находитесь в пределах 10 миль от маркера, вы можете действием Магия воспринимать окружение вокруг маркера, используя ваши чувства; вы можете делать это в течение 1 минуты, пока не станете Недееспособны или пока не окончите это восприятие (действий не требуется). В течение этого времени вы видите и слышите через маркер, как если бы находились там же, где и знак. По окончанию этого эффекта маркер безвредно уничтожается.\n\nЕсли маркер не уничтожается раньше, он существует, пока вы не завершите Долгий отдых. Создав мистический маркер с помощью этой особенности, вы не можете сделать этого снова, пока не завершите Долгий отдых."
+      }
+    },
+    {
+      "name": {
+        "en": "Hex Magic",
+        "ru": "Ведьмовская магия"
+      },
+      "description": {
+        "en": "You always have the Disguise Self and Hex spells prepared. You can cast each of these spells once without a spell slot, and you regain the ability to do so when you finish a Long Rest. You can also cast these spells using any spell slots you have of the appropriate level. Your spellcasting ability for these spells is Intelligence, Wisdom, or Charisma; you choose the ability when you choose this species.",
+        "ru": "У вас всегда подготовлены заклинания Маскировка и Сглаз. Вы можете сотворить каждое из них без ячейки заклинаний, и вы восстанавливаете возможность сотворить это заклинание таким образом снова по завершении Долгого отдыха. Вы также можете сотворять эти заклинания, используя имеющиеся у вас ячейки подходящих уровней. Ваша заклинательная характеристика для этих заклинаний — Интеллект, Мудрость или Харизма; вы выбираете заклинательную характеристику, когда выбираете этот вид."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

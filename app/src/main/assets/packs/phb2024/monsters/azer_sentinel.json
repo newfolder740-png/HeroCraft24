@@ -1,0 +1,111 @@
+{
+    "id":  "azer_sentinel",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Azer Sentinel",
+                 "ru":  "Эйзер страж"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Эйзеры\nОгненные кователи из живого металла\n\nЭйзеры — это созданный из живой бронзы народ, что трудятся средь первозданных стихий бытия, выковывая оружие и магические диковины в самых исполинских горнилах и пеклах мультивселенной.\n\nЭйзеры стражи защищают кузнецов своих общин и окутывают оружие собственным пламенем."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "medium",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "lawful",
+    "armor_class":  17,
+    "armor_class_description":  null,
+    "hit_points":  "39 (6d8 + 12)",
+    "hit_dice":  "6d8 + 12",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  12,
+                           "constitution":  15,
+                           "intelligence":  12,
+                           "wisdom":  13,
+                           "charisma":  10
+                       },
+    "saving_throws":  {
+                          "constitution":  4
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "fire",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "Первичный (Игнан)",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Аура огня"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "В конце каждого хода эйзера каждое существо (по его выбору) в 5-футовой Эманации, исходящей от эйзера, получает 5 (1к10) урона Огнём, если только у него нет состояния Недееспособный."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Свечение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Эйзер излучает Яркий свет в радиусе 10 футов и Тусклый свет ещё на 10 футов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пылающий молот"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 8 (1к10 + 3) Дробящего урона плюс 3 (1к6) урона Огнём."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "elemental fire"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  null
+}

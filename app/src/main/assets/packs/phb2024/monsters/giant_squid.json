@@ -1,0 +1,130 @@
+{
+    "id":  "giant_squid",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Squid",
+                 "ru":  "Гигантский кальмар"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "120 (16d12 + 16)",
+    "hit_dice":  "16d12 + 16",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  80
+              },
+    "ability_scores":  {
+                           "strength":  23,
+                           "dexterity":  14,
+                           "constitution":  12,
+                           "intelligence":  5,
+                           "wisdom":  11,
+                           "charisma":  4
+                       },
+    "saving_throws":  {
+                          "strength":  9,
+                          "dexterity":  5
+                      },
+    "skills":  {
+                   "perception":  6
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "16"
+               },
+    "languages":  "нет",
+    "challenge_rating":  6,
+    "xp":  2300,
+    "proficiency_bonus":  3,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Кальмар может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Кальмар совершает одну атаку Укусом и одну атаку Щупальцем."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 5 фт. Попадание: 28 (4к10 + 6) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Щупальце"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 15 фт. Попадание: 19 (3к8 + 6) Дробящего урона. Если цель — существо Огромного размера или меньше, она становится Схваченной (Сл освобождения от захвата 16) одним из двух щупальцев, и кальмар может подтянуть цель к себе на расстояние до 10 футов по прямой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Чернильное облако (1/день)"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: Кальмар получает урон, находясь под водой. Эффект: Кальмар выпускает чернила, заполняющие 15-футовый Куб с центром на себе, и перемещается на расстояние вплоть до своей Скорости плавания. Куб — Сильно заслонённая местность в течение 1 минуты или пока чернила не рассеет сильное течение или схожий эффект."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

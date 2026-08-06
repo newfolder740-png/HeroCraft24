@@ -1,0 +1,40 @@
+{
+  "id": "divine_favor",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Divine Favor",
+    "ru": "Божественное благоволение"
+  },
+  "description": {
+    "en": "",
+    "ru": "Пока заклинание действует, ваши атаки оружием при попадании наносят 1к4 дополнительного урона Излучением."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "transmutation",
+  "casting_time": "Бонусное действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "1 минута",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:paladin"
+  ]
+}

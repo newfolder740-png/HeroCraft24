@@ -1,0 +1,133 @@
+{
+    "id":  "quasit",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Quasit",
+                 "ru":  "Квазит"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "tiny",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "25 (10d4)",
+    "hit_dice":  "10d4",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  5,
+                           "dexterity":  17,
+                           "constitution":  10,
+                           "intelligence":  7,
+                           "wisdom":  10,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "fire",
+                               "cold",
+                               "lightning"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий, Бездны",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Квазит совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Рубящего урона, и цель становится Отравленной до начала следующего хода квазита."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Невидимость"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Квазит сотворяет заклинание Невидимость на себя, не нуждаясь в компонентах (заклинательная характеристика — Харизма)."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Испуг (1/день)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Мудрости: Сл 10, одно существо в 20 футах. Провал: Цель становится Испуганной. Она повторяет этот спасбросок в конце каждого своего хода, оканчивая этот эффект при успехе. Спустя 1 минуту цель автоматически преуспевает."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Перевоплощение"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Квазит либо перевоплощается в летучую мышь (Скорость 10 фт., Полёта 40 фт.), многоножку (Скорость 40 фт., Лазания 40 фт.) или жабу (Скорость 40 фт., Плавания 40 фт.), либо возвращается к своему истинному облику. Его статистика, кроме размера, не меняется в зависимости от формы. Снаряжение, которое он носит или несёт, не трансформируется."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "abyss"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

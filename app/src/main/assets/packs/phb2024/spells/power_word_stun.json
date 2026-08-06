@@ -1,0 +1,42 @@
+{
+  "id": "power_word_stun",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Power Word Stun",
+    "ru": "Слово силы: ошеломление"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы подавляете разум одного видимого вами в пределах дистанции существа. Если у цели 150 Хитов или меньше, она получает состояние Ошеломлённый; иначе её Скорость падает до 0 до начала вашего следующего хода.\n\nПолучившая состояние Ошеломлённый цель в конце каждого своего хода совершает спасбросок Телосложения, при успехе оканчивая на себе это состояние."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 8,
+  "school": "enchantment",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "60 футов"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "true_seeing",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "True Seeing",
+    "ru": "Истинный взор"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь согласного существа; пока действует заклинание, это существо обладает Истинным зрением дальностью 120 футов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 6,
+  "school": "divination",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "грибной порошок стоимостью не менее 25 ЗМ, расходуемый заклинанием",
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:cleric",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ]
+}

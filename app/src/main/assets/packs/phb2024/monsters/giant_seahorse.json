@@ -1,0 +1,105 @@
+{
+    "id":  "giant_seahorse",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Seahorse",
+                 "ru":  "Гигантский морской конёк"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "16 (3d10)",
+    "hit_dice":  "3d10",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  12,
+                           "constitution":  11,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "11"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Морской конёк может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Таран"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 9 (2к6 + 2) Дробящего урона, или морской конёк наносит 11 (2к8 + 2) Дробящего урона, если он переместился по крайней мере на 20 футов по прямой к цели непосредственно перед попаданием."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Пузырьковый рывок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Находясь под водой, морской конек перемещается на расстояние вплоть до половины его Скорости плавания, не вызывая Провоцированных атак."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

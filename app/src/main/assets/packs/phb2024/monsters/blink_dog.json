@@ -1,0 +1,99 @@
+{
+    "id":  "blink_dog",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Blink Dog",
+                 "ru":  "Мерцающий пёс"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "medium",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "lawful good",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "22 (4d8 + 4)",
+    "hit_dice":  "4d8 + 4",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  17,
+                           "constitution":  12,
+                           "intelligence":  10,
+                           "wisdom":  13,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "понимает Эльфийский и Сильван, но не говорит, Язык Мерцающих псов",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 5 (1к4 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Телепортация (Перезарядка 4-6)"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Пёс телепортируется в видимое им в пределах 40 футов незанятое пространство."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "feywild"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

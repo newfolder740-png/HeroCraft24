@@ -1,0 +1,43 @@
+{
+  "id": "barkskin",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Barkskin",
+    "ru": "Дубовая кожа"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь согласного существа. Пока заклинание действует, кожа цели становится грубой и похожей внешне на кору дуба, а если КЗ цели меньше 17, то КЗ равен 17."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "transmutation",
+  "casting_time": "Бонусное действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "пригоршня коры",
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:druid",
+    "phb2024:ranger"
+  ]
+}

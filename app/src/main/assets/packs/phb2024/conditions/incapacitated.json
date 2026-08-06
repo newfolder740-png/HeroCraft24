@@ -1,0 +1,23 @@
+{
+  "id": "incapacitated",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Incapacitated", "ru": "Недееспособный" },
+  "description": {
+    "en": "While you have the Incapacitated condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Недееспособный, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["control", "combat"],
+  "effects": [
+    { "en": "You can't take Actions, Bonus Actions, or Reactions.", "ru": "Бездействие. Вы не можете совершать действия, Бонусные действия и Реакции." },
+    { "en": "You can't Concentrate.", "ru": "Без концентрации. Вы не можете Концентрироваться." },
+    { "en": "You can't speak.", "ru": "Безмолвие. Вы не можете говорить." },
+    { "en": "If you take the Initiate roll with the Incapacitated condition, you do so with Disadvantage.", "ru": "Потрясение. Если вы совершаете бросок Инициативы с состоянием Недееспособный, то делаете это с Помехой." }
+  ],
+  "mechanical": true
+}

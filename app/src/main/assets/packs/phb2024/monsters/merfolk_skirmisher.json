@@ -1,0 +1,95 @@
+{
+    "id":  "merfolk_skirmisher",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Merfolk Skirmisher",
+                 "ru":  "Мерфолк застрельщик"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "medium",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  10,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  13,
+                           "constitution":  12,
+                           "intelligence":  11,
+                           "wisdom":  14,
+                           "charisma":  12
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "Общий, Первичный (Акван)",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Амфибия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Мерфолк может дышать как воздухом, так и под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Копьё океана"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +2, досягаемость 5 фт. или дистанция 20/60 фт. Попадание: 3 (1к6) Колющего урона плюс 2 (1к4) урона Холодом. Если цель — существо, её Скорость уменьшается на 10 футов до начала её следующего хода. Промах или попадание: Копьё магическим образом возвращается в руку мерфолка сразу после совершения дальнобойной атаки.\nМерфолки\nПод толщей волн обитают мерфолки — загадочные создания, в чьём облике сплелись черты людей и морских существ. Одни из них с любопытством взирают на обитателей суши, другие же встречают пришельцев с глухим недоверием.\nМерфолки застрельщики защищают свои дома от подводных чудовищ и незваных гостей с поверхности."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "coastal",
+                        "underwater"
+                    ],
+    "treasure":  "Личные",
+    "equipment":  null
+}

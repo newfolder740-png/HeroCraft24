@@ -1,0 +1,108 @@
+{
+    "id":  "gnoll_warrior",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Gnoll Warrior",
+                 "ru":  "Гнолл-воитель"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Гноллы\nДикие плотоядные бестии\n\nПервые гноллы произошли от гиен, которые питались плотью, испорченной Бездной. Демонический владыка Йеногу был в восторге от их порочности и жестокости, поэтому способствовал росту их численности и помог им расселиться по всей мультивселенной. С тех пор гноллы стали злорадными слугами этого повелителя демонов и живут, чтобы сеять разрушения и пировать на руинах.\n\nГноллы-воители наслаждаются бесконечной бойней, но быстро теряют интерес к убитой добыче и награбленным сокровищам. Однако их охватывает ярость при мысли, что кто-то другой может завладеть тем, что предназначено для них.\n\nПоэтому они разрушают и уничтожают всё, что не могут забрать с собой."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "medium",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "27 (6d8)",
+    "hit_dice":  "6d8",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  12,
+                           "constitution":  11,
+                           "intelligence":  6,
+                           "wisdom":  10,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Гноллий",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 5 (1к6 + 2) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Костяной лук"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +3, дистанция 150/600 фт. Попадание: 6 (1к10 + 1) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Буйство (1/день)"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Сразу после нанесения урона Окровавленному существу гнолл перемещается на расстояние вплоть до половины своей Скорости и совершает одну атаку Раздиранием."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "desert",
+                        "hills"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  null
+}

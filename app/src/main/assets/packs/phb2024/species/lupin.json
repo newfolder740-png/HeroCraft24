@@ -1,0 +1,80 @@
+{
+  "id": "lupin",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Lupin",
+    "ru": "Волколак"
+  },
+  "description": {
+    "en": "Possessing bristling fur and snarling maws, lupins are among the shadows to be wary of in the Mists. Lupins often emerge from encounters with werewolves, when the curse of lycanthropy fails to fully take hold. Unlike true werewolves, lupins cannot transform into a wolf or human; they remain forever in the hybrid form of half-human, half-wolf. Transformed by the curse, their wolf-like bodies grant lupins bestial power, keen senses, and a howl that chills the blood.",
+    "ru": "Обладатели топорчащейся шерсти и рычащих пастей, волколаки — одни из тех теней, которых в Туманах стоит опасаться. Волколаки зачастую выходят из столкновений с верволками, если проклятие ликантропии не вполне набирает свою силу. В отличие от настоящих верволков, волколаки не могут перекидываться в волка или человека; они навсегда остаются в гибридной форме получеловека-полуволка. Преображённые проклятием волкоподобные тела даруют волколакам звериную мощь, острые чувства и вой, от которого кровь стынет в жилах."
+  },
+  "source": {
+    "book": {
+      "en": "Ravenloft: The Witchlight",
+      "ru": "Равенлофт: Ведьмин свет"
+    },
+    "abbreviation": "RTW"
+  },
+  "tags": [
+    "lycanthrope",
+    "beast",
+    "ravenloft"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "Вы обладаете Тёмным зрением дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Savage Assault",
+        "ru": "Звериный наскок"
+      },
+      "description": {
+        "en": "Your Unarmed Strikes deal Slashing damage instead of Bludgeoning. In addition, when you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can apply both the Damage and Shove options of the Unarmed Strike at once. You can use this benefit only once per turn.",
+        "ru": "Ваши Безоружные удары наносят Рубящий урон вместо Дробящего. Кроме того, когда в ваш ход в рамках действия Атака вы попадаете Безоружным ударом по существу,вы можете применить сразу варианты Урон и Толчок Безоружного удара. Вы можете воспользоваться этим преимуществом только один раз за ход."
+      }
+    },
+    {
+      "name": {
+        "en": "Howl",
+        "ru": "Вой"
+      },
+      "description": {
+        "en": "As a Bonus Action, you let out an otherworldly howl. Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw (DC 8 plus your Proficiency Bonus and Constitution modifier) or have Disadvantage on attack rolls and saving throws until the start of your next turn.\n\nYou can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
+        "ru": "Бонусным действием вы издаёте потусторонний вой. Каждое существо на ваш выбор из находящихся в пределах 15 футов от вас должно преуспеть в спасброске Мудрости (Сл 8 + ваши Бонус владения и модификатор Телосложения), иначе будет совершать с Помехой броски атаки и спасброски до начала вашего следующего хода.\n\nВы можете использовать эту особенность количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
+      }
+    },
+    {
+      "name": {
+        "en": "Bestial Instincts",
+        "ru": "Инстинкты оборотня"
+      },
+      "description": {
+        "en": "You gain proficiency in Perception, Survival, or Stealth.",
+        "ru": "Вы получаете владение навыком Восприятия, Выживания или Скрытности."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

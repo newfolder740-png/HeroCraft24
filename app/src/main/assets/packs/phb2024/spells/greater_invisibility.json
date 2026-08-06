@@ -1,0 +1,49 @@
+{
+  "id": "greater_invisibility",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Greater Invisibility",
+    "ru": "Высшая невидимость"
+  },
+  "description": {
+    "en": "",
+    "ru": "Существо, которого вы коснулись, получает состояние Невидимый на время действия заклинания."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 4,
+  "school": "illusion",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "Концентрация, вплоть до 1 минуты",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Бронник",
+    "Архифея",
+    "Нежить",
+    "Сумрачный охотник",
+    "Теневое чародейство"
+  ]
+}

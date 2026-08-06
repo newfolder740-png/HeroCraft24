@@ -1,0 +1,44 @@
+{
+  "id": "continual_flame",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Continual Flame",
+    "ru": "Вечный огонь"
+  },
+  "description": {
+    "en": "",
+    "ru": "Из объекта, которого вы коснулись, исходит пламя. Это пламя испускает Яркий свет в пределах 20 футов и Тусклый свет ещё на 20 футов. Оно выглядит как обычное пламя, но не создаёт тепла и не потребляет топлива. Вечный огонь можно накрыть или спрятать, но не потушить."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "evocation",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "порошок рубина стоимостью не менее 50 ЗМ, расходуемый заклинанием",
+  "duration": "Пока не рассеяно",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:druid",
+    "phb2024:cleric"
+  ]
+}

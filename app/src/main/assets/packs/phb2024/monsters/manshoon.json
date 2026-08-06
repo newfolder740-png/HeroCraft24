@@ -1,0 +1,146 @@
+{
+    "id":  "manshoon",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Manshoon",
+                 "ru":  "Маншун"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "lawful evil",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "214 (33d8 + 66)",
+    "hit_dice":  "33d8 + 66",
+    "initiative":  "+7 (17)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  14,
+                           "constitution":  14,
+                           "intelligence":  23,
+                           "wisdom":  15,
+                           "charisma":  16
+                       },
+    "saving_throws":  {
+                          "intelligence":  11,
+                          "wisdom":  7
+                      },
+    "skills":  {
+                   "history":  11,
+                   "arcana":  11,
+                   "insight":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "psychic"
+                          ],
+    "condition_immunities":  [
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "Общий, Драконий, Инфернальный, Подземный",
+    "challenge_rating":  13,
+    "xp":  10000,
+    "proficiency_bonus":  5,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Маншун совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Маншун совершает три атаки Волшебным всплеском. Он может заменить две атаки одним использованием Сотворения заклинаний."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Волшебный всплеск"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +11, досягаемость 5 фт., или дистанция 120 фт. Попадание: 32 (4к12 + 6) Силового урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Маншун сотворяет одно из следующих заклинаний (заклинательная характеристика — Интеллект, Сл спасброска заклинаний 19):\nНеограниченно: Волшебная рука, Доспехи мага (уже включено в КЗ), Молния (версия 4-го уровня), Обнаружение магии, Обнаружение мыслей, Свет, Фокусы\n2/день каждое: Наблюдение, Послание, Силовая стена\n1/день каждое: Клон, Перст смерти, Помутнение разума, Симулякр, Сокрытие разума (сотворяется до сражения)"
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Туманный шаг"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Маншун сотворяет Туманный шаг (заклинательная характеристика — та же, что для Сотворения заклинаний)."
+                                              }
+                          }
+                      ],
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Защитная магия"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Маншун сотворяет Контрзаклинание или Щит в ответ на условие этого заклинания (заклинательная характеристика — та же, что для Сотворения заклинаний)."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  "Мешочек с компонентами"
+}

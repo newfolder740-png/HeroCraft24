@@ -1,0 +1,94 @@
+{
+    "id":  "piranha",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Piranha",
+                 "ru":  "Пиранья"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "tiny",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "1 (1d4 - 1)",
+    "hit_dice":  "1d4 - 1",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  2,
+                           "dexterity":  16,
+                           "constitution":  9,
+                           "intelligence":  1,
+                           "wisdom":  7,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пиранья может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5 (с Преимуществом, если у цели неполные Хиты), досягаемость 5 фт. Попадание: 1 Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

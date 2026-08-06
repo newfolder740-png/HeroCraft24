@@ -1,0 +1,108 @@
+{
+    "id":  "homunculus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Homunculus",
+                 "ru":  "Гомункул"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "tiny",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "4 (1d4 + 2)",
+    "hit_dice":  "1d4 + 2",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  20,
+                  "fly":  40
+              },
+    "ability_scores":  {
+                           "strength":  4,
+                           "dexterity":  15,
+                           "constitution":  14,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  7
+                       },
+    "saving_throws":  {
+                          "wisdom":  2,
+                          "charisma":  0
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "poisoned",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "понимает Общий и ещё один язык, но не говорит",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Телепатическая связь"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока гомункул находится на том же плане бытия, что и его хозяин, они оба могут телепатически общаться друг с другом."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 1 Колющего урона, и цель подвергается следующему эффекту. Спасбросок Телосложения: Сл 12. Провал: Цель Отравлена до конца следующего хода гомункула. Провал на 5 и больше: Цель Отравлена на 1 минуту. Отравленная таким образом цель также имеет состояние Бессознательный, которое оканчивается раньше, если цель получит урон."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "forest",
+                        "grassland",
+                        "underdark",
+                        "desert",
+                        "hills",
+                        "acheron"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  null
+}

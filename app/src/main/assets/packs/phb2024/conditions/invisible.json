@@ -1,0 +1,22 @@
+{
+  "id": "invisible",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Invisible", "ru": "Невидимый" },
+  "description": {
+    "en": "While you have the Invisible condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Невидимый, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["stealth", "combat", "utility"],
+  "effects": [
+    { "en": "If you take the Initiate roll with the Invisible condition, you do so with Advantage.", "ru": "Внезапность. Если вы совершаете бросок Инициативы с состоянием Невидимый, то делаете это с Преимуществом." },
+    { "en": "No effect can affect you unless its creator can somehow see you. Everything you are wearing and carrying is also hidden.", "ru": "Скрытость. На вас не может влиять никакой эффект, требующий, чтобы его цель была видна, если только создатель такого эффекта не может каким-либо образом видеть вас. Всё несомое и носимое вами снаряжение также скрывается." },
+    { "en": "Attack rolls against you have Disadvantage, and your attack rolls have Advantage, unless the creature can somehow see you.", "ru": "Влияние на атаки. Броски атаки по вам совершаются с Помехой, а ваши броски атаки совершаются с Преимуществом, если только существо не может каким-либо образом видеть вас." }
+  ],
+  "mechanical": true
+}

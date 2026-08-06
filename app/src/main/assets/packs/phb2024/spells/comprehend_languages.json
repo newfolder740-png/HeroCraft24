@@ -1,0 +1,45 @@
+{
+  "id": "comprehend_languages",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Comprehend Languages",
+    "ru": "Понимание языков"
+  },
+  "description": {
+    "en": "",
+    "ru": "Пока заклинание активно, вы понимаете буквальный смысл услышанной и увиденной жестовой речи на любом языке. Вы также понимаете письмена на любом языке, но для этого должны касаться поверхности, на которой записаны слова. Чтобы прочитать одну страницу текста, требуется около 1 минуты. Это заклинание не расшифровывает особые знаки или тайные послания."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 1,
+  "school": "divination",
+  "casting_time": "Действие или Ритуал",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "щепотка сажи и соли",
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": true,
+  "classes": [
+    "phb2024:bard",
+    "phb2024:wizard",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ]
+}

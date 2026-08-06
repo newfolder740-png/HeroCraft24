@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_spells"
+    app:startDestination="@id/spellList">
+
+    <fragment
+        android:id="@+id/spellList"
+        android:name="com.herocraft24.feature.spells.SpellListFragment"
+        android:label="Заклинания" />
+
+    <fragment
+        android:id="@+id/spellDetail"
+        android:name="com.herocraft24.feature.spells.SpellDetailFragment"
+        android:label="SpellDetail">
+        <argument
+            android:name="spellId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/spellConditionDetail"
+        android:name="com.herocraft24.feature.spells.ConditionReferenceFragment"
+        android:label="ConditionReferenceDetail">
+        <argument
+            android:name="conditionId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

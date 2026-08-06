@@ -1,0 +1,98 @@
+{
+    "id":  "aarakocra_skirmisher",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Aarakocra Skirmisher",
+                 "ru":  "Ааракокра застрельщик"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ааракокра\nКрылатые защитники неба\n\nАаракокра — похожий на птиц народ, который парит в небесах бесчисленных миров и бескрайних просторах Стихийного плана Воздуха. Внешне они обычно схожи с теми птицами, что распространены в тех краях, где обитают: некоторые напоминают ястребов или кондоров, другие же похожи на колибри или археоптериксов. Во многих землях ааракокра рассказывают о славных древних временах, когда они сражались с проклятой Королевой Хаоса бок о бок с таинственными Воздушными герцогами Ааки.\n\nАаракокры- застрельщики искусны в борьбе с летающими в облаках врагами. Они часто атакуют цели на земле, совершая пикирующие удары."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "medium",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  20,
+                  "fly":  50
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  14,
+                           "constitution":  12,
+                           "intelligence":  11,
+                           "wisdom":  12,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "Первичный (Ауран), Язык Ааракокра",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 футов Попадание: 4 (1к4+2) Рубящего урона или 9 (3к4+2) Рубящего урона, если ааракокра переместился как минимум на 30 футов по прямой к цели непосредственно перед попаданием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пилум ветра"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +4, досягаемость 5 футов или дистанция 30/120футов Попадание: 5 (1к6+2) Колющего урона плюс 2(1к4) урона Звуком. Промах или попадание: Пилум магическим образом возвращается в руку ааракокры сразу после совершения дальнобойной атаки."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "elemental air"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  null
+}

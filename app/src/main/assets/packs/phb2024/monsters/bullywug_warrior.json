@@ -1,0 +1,117 @@
+{
+    "id":  "bullywug_warrior",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bullywug Warrior",
+                 "ru":  "Жаболюд-воитель"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Жаболюды\nПознавшие болота и топи амфибии\n\nЖаболюды — это Феи, воплощающие суть болот. Они охраняют мрачные, дикие места и верят, что в этом и есть цель их существования. Эти существа размером с человека напоминают жаб или лягушек и тесно связаны с другими обитателями болот.\n\nЖаболюды-воители умело перемещаются по болотам и устраивают засады на незваных гостей.\n\nОни нередко действуют совместно с группами дрессированных гигантских лягушек."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "medium",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  14,
+                           "constitution":  13,
+                           "intelligence":  7,
+                           "wisdom":  10,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий, Язык Жаболюдов",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Амфибия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Жаболюд воин может дышать как воздухом, так и под водой."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Разговор с лягушками и жабами"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Жаболюд может обмениваться простыми понятиями с лягушками и жабами, когда говорит на языке Жаболюдов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Насекомообразная рапира"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 6 (1к8 + 2) Колющего урона плюс 2 (1к4) урона Ядом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Прыжок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Жаболюд прыгает на расстояние до 30 футов, затрачивая 10 футов перемещения."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  null
+}

@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_berserk_l10_otvetnyy_udar",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Ответный удар"},
+  "description": {"en": "", "ru": "Когда вы получаете урон от существа, находящегося в пределах 5 футов от вас, вы можете Реакцией совершить по этому существу одну рукопашную атаку, оружием или Безоружным ударом."},
+  "level": 10,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

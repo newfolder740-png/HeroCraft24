@@ -1,0 +1,95 @@
+{
+    "id":  "pegasus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Pegasus",
+                 "ru":  "Пегас"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пегас\nНеуловимый крылатый скакун\n\nПегасы — это крылатые разумные кони благородных пород, которые столь же величавы, сколь и неуловимы. Многие пегасы сторонятся дел прочих созданий, предпочитая обитать средь идиллических пастбищ, парящих островов или на иных планах бытия. Иногда они служат божествам Страны Фей и Верхних планов, приходя на помощь героям в час нужды. В редких случаях пегасы могут сдружиться с добродетельными людьми и стать им верными спутниками и скакунами.\n\nНа пегасов охотятся прислужники зла, отчего многие из этих крылатых коней при виде чужаков тотчас обращаются в бегство. Совершите бросок по таблице «Подношения пегасам» или определите сами, как можно выказать добрые намерения настороженному пегасу.\n\nПодношения пегасам\nк4\tПегас не улетит от того, кто…\n1\tНесёт при себе снаряжение героя, которому пегас когда-то помогал.\n2\tПредлагает волшебный плод или воду из святого источника.\n3\tПоёт песнь на небесном, друидическом языке или сильване.\n4\tНосит облачение древнего героического ордена."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "celestial"
+             ],
+    "size":  "large",
+    "creature_type":  "celestial",
+    "subtype":  null,
+    "alignment":  "chaotic good",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "59 (7d10 + 21)",
+    "hit_dice":  "7d10 + 21",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  60,
+                  "fly":  90
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  15,
+                           "constitution":  16,
+                           "intelligence":  10,
+                           "wisdom":  15,
+                           "charisma":  13
+                       },
+    "saving_throws":  {
+                          "dexterity":  4,
+                          "constitution":  5,
+                          "wisdom":  4,
+                          "charisma":  3
+                      },
+    "skills":  {
+                   "perception":  6
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "16"
+               },
+    "languages":  "знает Небесный, Общий, Эльфийский и Сильван, но не говорит",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Копыта"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 7 (1к6 + 4) Дробящего урона plus 5 (2к4) урона Излучением."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "hills",
+                        "upper planes"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

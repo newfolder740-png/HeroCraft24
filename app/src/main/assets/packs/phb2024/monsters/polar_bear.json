@@ -1,0 +1,100 @@
+{
+    "id":  "polar_bear",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Polar Bear",
+                 "ru":  "Белый медведь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "42 (5d10 + 15)",
+    "hit_dice":  "5d10 + 15",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  40,
+                  "swim":  40
+              },
+    "ability_scores":  {
+                           "strength":  20,
+                           "dexterity":  14,
+                           "constitution":  16,
+                           "intelligence":  2,
+                           "wisdom":  13,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5,
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "cold"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Медведь совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 9 (1к8 + 5) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

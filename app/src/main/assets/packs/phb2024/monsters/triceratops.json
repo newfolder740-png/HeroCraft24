@@ -1,0 +1,94 @@
+{
+    "id":  "triceratops",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Triceratops",
+                 "ru":  "Трицератопс"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "huge",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "114 (12d12 + 36)",
+    "hit_dice":  "12d12 + 36",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  22,
+                           "dexterity":  9,
+                           "constitution":  17,
+                           "intelligence":  2,
+                           "wisdom":  11,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "нет",
+    "challenge_rating":  5,
+    "xp":  1800,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Трицератопс совершает две атаки Боданием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Бодание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 5 фт. Попадание: 19 (2к12 + 6) Колющего урона. Если цель Огромного размера или меньше, а трицератопс переместился к ней по прямой хотя бы на 20 футов сразу перед попаданием, цель получает 9 (2к8) дополнительного Колющего урона и состояние Опрокинутый."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

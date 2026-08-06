@@ -1,0 +1,102 @@
+{
+    "id":  "lemure",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Lemure",
+                 "ru":  "Лемур"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Лемуры\nДьяволы агонии и отчаяния\n\nЛемуры — самые слабые из всех дьяволов, которые появляются из злых душ, начисто лишённых воспоминаний о прошлой жизни. Из этих сгустков адской протоматерии проступают лишь неясные формы конечностей и черты измученных лиц.\n\nЛемуры мучают более слабых существ, однако в Девяти Преисподних таких почти нет. Поэтому им приходится повиноваться приказам более могущественных дьяволов, чтобы самим избежать больших страданий."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "medium",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "lawful evil",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "9 (2d8)",
+    "hit_dice":  "2d8",
+    "initiative":  "-3 (7)",
+    "speed":  {
+                  "walk":  20
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  5,
+                           "constitution":  11,
+                           "intelligence":  1,
+                           "wisdom":  11,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "cold"
+                           ],
+    "damage_immunities":  [
+                              "fire",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "poisoned",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "понимает Инфернальный, но не говорит",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Адское возрождение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Лемур, умерший в Девяти Преисподних, возвращается к жизни с полными Хитами через 1к10 дней, если только он не был убит существом, находящимся под действием заклинания Благословение, и если его останки не были сбрызнуты Святой водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мерзкая слизь"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +2, досягаемость 5 фт. Попадание: 2 (1к4) урона Ядом."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "nine hells"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

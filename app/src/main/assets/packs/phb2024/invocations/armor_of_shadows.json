@@ -1,0 +1,13 @@
+{
+    "id":  "armor_of_shadows",
+    "name":  {
+                 "en":  "Armor of Shadows",
+                 "ru":  "Доспех теней"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Доспех мага на себя без траты ячеек заклинаний."
+                    },
+    "level":  1,
+    "requirements":  null
+}

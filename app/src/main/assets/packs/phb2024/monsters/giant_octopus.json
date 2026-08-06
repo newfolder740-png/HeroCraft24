@@ -1,0 +1,108 @@
+{
+    "id":  "giant_octopus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Octopus",
+                 "ru":  "Гигантский осьминог"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "45 (7d10 + 7)",
+    "hit_dice":  "7d10 + 7",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  10,
+                  "swim":  60
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  13,
+                           "constitution":  13,
+                           "intelligence":  5,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гигантский осьминог может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Щупальца"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 10 фт. Попадание: 10 (2к6 + 3) Дробящего урона. Если цель Среднего размера или меньше, она получает состояние Схваченный (Сл освобождения от захвата 13) от всех восьми щупалец. Пока у неё есть это состояние, у неё есть также состояние Опутанный."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Чернильное облако (1/день)"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: Осьминог получает урон, находясь под водой. Эффект: Осьминог выпускает чернила, заполняющие 10-футовый Куб с центром на себе, после чего перемещается на расстояние вплоть до своей Скорости плавания. Этот Куб — Сильно заслонённая местность на 1 минуту или пока чернила не будут рассеяны сильным течением или аналогичным эффектом."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

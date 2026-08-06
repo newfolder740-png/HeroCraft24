@@ -1,0 +1,32 @@
+{
+  "id": "skilled",
+  "type": "feat",
+  "format_version": 1,
+  "name": {
+    "en": "Skilled",
+    "ru": "Одарённый"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете владение тремя навыками или инструментами в любой комбинации на ваш выбор.\n\nПовторяемость. Вы можете взять эту черту более одного раза"
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "feat"
+  ],
+  "category": "origin",
+  "prerequisite": {
+    "en": "",
+    "ru": ""
+  },
+  "repeatable": false,
+  "benefits": [
+    
+  ]
+}

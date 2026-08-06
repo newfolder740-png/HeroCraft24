@@ -1,0 +1,122 @@
+{
+    "id":  "gnoll_fang_of_yeenoghu",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Gnoll Fang of Yeenoghu",
+                 "ru":  "Гнолл, клык Йеногу"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Гноллы\nДикие плотоядные бестии\n\nПервые гноллы произошли от гиен, которые питались плотью, испорченной Бездной. Демонический владыка Йеногу был в восторге от их порочности и жестокости, поэтому способствовал росту их численности и помог им расселиться по всей мультивселенной. С тех пор гноллы стали злорадными слугами этого повелителя демонов и живут, чтобы сеять разрушения и пировать на руинах.\n\nКлыки Йеногу — управляющие хаосом гноллы, в которых вселились демонические духи Повелителя Гноллов. В своих странствиях эти фанатики ищут зловещие знамения Йеногу и пытаются разгадать ужасные замыслы демонического владыки."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fiend"
+             ],
+    "size":  "medium",
+    "creature_type":  "fiend",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "71 (11d8 + 22)",
+    "hit_dice":  "11d8 + 22",
+    "initiative":  "+4 (14)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  15,
+                           "constitution":  15,
+                           "intelligence":  10,
+                           "wisdom":  11,
+                           "charisma":  13
+                       },
+    "saving_throws":  {
+                          "constitution":  4,
+                          "wisdom":  2,
+                          "charisma":  3
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Бездны, Гноллий",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Гнолл совершает одну атаку Укусом и две атаки Костяным цепом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 6 (1к6 + 3) Колющего урона плюс 7 (2к6) урона Ядом, и цель становится Отравлена до начала следующего хода гнолла."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Костяной цеп"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 10 фт. Попадание: 7 (1к8 + 3) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Буйство (2/день)"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Сразу после нанесения урона Окровавленному существу гнолл перемещается на расстояние вплоть до половины своей Скорости и совершает одну атаку Укусом."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "desert",
+                        "hills"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  null
+}

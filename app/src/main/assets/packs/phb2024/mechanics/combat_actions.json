@@ -1,0 +1,20 @@
+{
+  "id": "combat_actions",
+  "type": "mechanic",
+  "format_version": 1,
+  "name": { "en": "Attack", "ru": "Атака" },
+  "description": {
+    "en": "With the Attack action, you make one weapon attack or one Unarmed Strike.\n\nEquipping and Unequipping Weapons. You can either equip or unequip one weapon when you make an attack as part of this action. You do so either before or after the attack. If you equip a weapon before you make an attack, you don't have to use that weapon for your attack.\n\nEquipping a weapon includes drawing it from a sheath or picking it up. Unequipping a weapon includes sheathing, stowing, or dropping it.\n\nMoving Between Attacks. If you have a feature or ability that grants you more than one attack as part of the Attack action (such as the Extra Attack feature), you can use some or all of your movement between the attacks of that action.",
+    "ru": "Действием Атака вы можете совершить один бросок атаки оружием или Безоружный удар.\n\nВооружение и убирание оружия. Вы можете вооружиться одним оружием или убрать одно оружие, когда совершаете атаку в рамках этого действия. Вы можете сделать это до или после совершения атаки. Если вы вооружаетесь оружием до совершения атаки, то атака не обязательно должна совершаться этим оружием.\n\nВооружение включает в себя вынимание оружия из ножен или поднимание брошенного. Убирание оружия включает в себя убирание в ножны, укладку или бросание.\n\nДвижение между атаками. Если у вас есть умение или особенность, позволяющие вам совершать в рамках действия Атака более одной атаки (такое, как Дополнительная атака), вы можете использовать часть или всё своё перемещение между атаками этого действия."
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 361
+  },
+  "tags": ["combat", "actions", "core", "reference"],
+  "category": "combat",
+  "subcategory": "actions",
+  "references": [],
+  "related": []
+}

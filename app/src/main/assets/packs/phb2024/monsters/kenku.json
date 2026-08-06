@@ -1,0 +1,110 @@
+{
+    "id":  "kenku",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Kenku",
+                 "ru":  "Кенку"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "13 (3d8)",
+    "hit_dice":  "3d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  10,
+                           "dexterity":  16,
+                           "constitution":  10,
+                           "intelligence":  11,
+                           "wisdom":  10,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2,
+                   "deception":  4,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "Общий, Первичный (Ауран)",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подражание звукам"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Кенку может имитировать услышанные им звуки, включая голоса. Слушатель может распознать подделку, успешно пройдя проверку Мудрости (Проницательность) Сл 14."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Теневой клинок"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +5, досягаемость 5 фт. или дистанция 60 фт. Попадание: 6 (1к6 + 3) Некротического урона. Промах или попадание: Клинок магическим образом возвращается в руку кенку сразу после дальнобойной атаки."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Мистический фонарь (Перезарядка 4–6)"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Кенку сотворяет Огонь фей, используя Интеллект как заклинательную характеристику (Сл спасброска заклинаний 10)."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban",
+                        "forest",
+                        "shadowfell"
+                    ],
+    "treasure":  "Личные , Инструментальные",
+    "equipment":  null
+}

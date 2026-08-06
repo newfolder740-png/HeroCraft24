@@ -1,0 +1,120 @@
+{
+    "id":  "thri_kreen_marauder",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Thri-kreen Marauder",
+                 "ru":  "Три-крин мародёр"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Три-крины\nБогомолоподобные псионики и выживальщики\n\nТри-крины — это похожие на богомолов скитальцы, которые для выживания полагаются на врождённый камуфляж и психические силы. Разные группы три-кринов обладают отличными друг от друга хитиновыми покровами: от каменистых оттенков у обитателей пустынь до ярких красок у жителей цветущих лесов. Хотя их язык и несёт в себе отчётливое насекомое звучание, для общения три-крины часто прибегают к телепатии; целые отряды способны стремительно обмениваться обилием подробной информации, не издавая при этом ни звука.\n\nТри-крины мародёры пользуются оружием, изготовленным из камня и кости, — а именно копьеподобными гитками и метательными клинками, зовущимися чаткча."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "33 (6d8 + 6)",
+    "hit_dice":  "6d8 + 6",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  15,
+                           "constitution":  13,
+                           "intelligence":  8,
+                           "wisdom":  12,
+                           "charisma":  7
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "survival":  3,
+                   "perception":  3,
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "13"
+               },
+    "languages":  "Три-кринский, Телепатия 60 фт.",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Три-крин совершает две атаки Гиткой или Чаткчей в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Гитка"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 5 (1к8 + 1) Рубящего урона плюс 2 (1к4) урона Ядом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Чаткча"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +4, дистанция 30/120 фт. Попадание: 5 (1к6 + 2) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Скачок"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Три-крин прыгает на расстояние до 15 футов, затрачивая 5 футов перемещения."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "grassland",
+                        "desert"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

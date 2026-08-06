@@ -1,0 +1,135 @@
+{
+    "id":  "questing_knight",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Questing Knight",
+                 "ru":  "Странствующий рыцарь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Рыцари\nНесравненные бойцы и странствующие герои\n\nРыцари — это умелые воители, обученные ратному делу и закалённые в сражениях. Многие из них поступают на службу правителям земель, божествам или орденам, посвятившим себя какому-то высокому делу.\n\nСтранствующие рыцари пускаются в путь во имя некой цели: сразить злодея, одолеть чудовище, вернуть утраченный Артефакт или восстановить поруганную честь."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  18,
+    "armor_class_description":  null,
+    "hit_points":  "202 (27d8 + 81)",
+    "hit_dice":  "27d8 + 81",
+    "initiative":  "+7 (17)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  20,
+                           "dexterity":  16,
+                           "constitution":  16,
+                           "intelligence":  11,
+                           "wisdom":  12,
+                           "charisma":  18
+                       },
+    "saving_throws":  {
+                          "strength":  9,
+                          "constitution":  7,
+                          "wisdom":  5,
+                          "charisma":  8
+                      },
+    "skills":  {
+                   "athletics":  9,
+                   "persuasion":  8,
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  12,
+    "xp":  8400,
+    "proficiency_bonus":  4,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Аура отваги"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Существа по выбору рыцаря в 30-футовой Эманации, исходящей от него, обладают Иммунитетом к состояниям Испуганный и Очарованный, пока остаются в пределах Эманации."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Рыцарь совершает три атаки Двуручным мечом или Длинным луком в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Двуручный меч"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +9, досягаемость 5 фт. Попадание: 12 (2к6 + 5) Рубящего урона плюс 22 (5к8) урона Излучением."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Длинный лук"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +7, дистанция 150/600 фт. Попадание: 12 (2к8 + 3) Колющего урона плюс 22 (5к8) урона Излучением."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Рыцарь сотворяет одно из следующих заклинаний (заклинательная характеристика — Харизма, Сл спасброска заклинаний 16):\n1/день каждое: Высшее восстановление, Дневной свет, Призрачный скакун, Рассеивание зла и добра"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Двуручный меч, Длинный лук, Латный доспех"
+}

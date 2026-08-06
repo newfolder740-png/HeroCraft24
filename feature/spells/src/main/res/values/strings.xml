@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_spells">Заклинания</string>
+    <string name="spell_quick_info">Быстрая информация</string>
+    <string name="spell_level">Уровень</string>
+    <string name="spell_cantrip">Заговор</string>
+    <string name="spell_school">Школа</string>
+    <string name="spell_casting_time">Время накладывания</string>
+    <string name="spell_duration">Длительность</string>
+    <string name="spell_range">Дистанция</string>
+    <string name="spell_components">Компоненты</string>
+    <string name="spell_material">Материал</string>
+    <string name="spell_concentration">Концентрация</string>
+    <string name="spell_ritual">Ритуал</string>
+    <string name="spell_comp_verbal">Вербальный (В)</string>
+    <string name="spell_comp_somatic">Соматический (С)</string>
+    <string name="spell_comp_material">Материальный (М)</string>
+    <string name="spell_badge_concentration">Конц.</string>
+    <string name="spell_badge_ritual">Ритуал</string>
+    <string name="spell_saving_throw">Спасбросок</string>
+    <string name="spell_attack_type">Тип атаки</string>
+    <string name="spell_area">Область</string>
+    <string name="spell_description">Описание</string>
+    <string name="spell_at_higher_levels">На более высоких уровнях</string>
+    <string name="spell_damage">Урон</string>
+    <string name="spell_damage_per_slot">По уровню ячейки</string>
+    <string name="spell_damage_per_character_level">По уровню персонажа</string>
+    <string name="spell_classes">Классы</string>
+    <string name="spell_source">Источник</string>
+    <string name="spell_not_found">Заклинание не найдено</string>
+    <string name="school_abjuration">Ограждение</string>
+    <string name="school_conjuration">Призыв</string>
+    <string name="school_divination">Прорицание</string>
+    <string name="school_enchantment">Очарование</string>
+    <string name="school_evocation">Воплощение</string>
+    <string name="school_illusion">Иллюзия</string>
+    <string name="school_necromancy">Некромантия</string>
+    <string name="school_transmutation">Преобразование</string>
+    <string name="spell_yes">Да</string>
+    <string name="spell_no">Нет</string>
+</resources>

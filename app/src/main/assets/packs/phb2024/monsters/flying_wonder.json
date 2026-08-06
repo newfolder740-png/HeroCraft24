@@ -1,0 +1,121 @@
+{
+    "id":  "flying_wonder",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Flying Wonder",
+                 "ru":  "Диво летающее"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "tiny",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "2 (1d4)",
+    "hit_dice":  "1d4",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  5,
+                  "fly":  30
+              },
+    "ability_scores":  {
+                           "strength":  2,
+                           "dexterity":  15,
+                           "constitution":  10,
+                           "intelligence":  3,
+                           "wisdom":  10,
+                           "charisma":  1
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "exhaustion",
+                                 "poisoned"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "знает Общий, но не говорит",
+    "challenge_rating":  0,
+    "xp":  0,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Увеличенная грузоподъёмность"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Диво может нести вплоть до 100 фунтов."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Завод"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Диво Бессознательно, пока другое существо не потратит 1 минуту, чтобы завести его уникальным для этого дива ключом. Заведённое диво функционирует в течение 24 часов или пока существо действием Использование не деактивирует его, коснувшись уникальным для этого дива ключом. Деактивированное диво вновь Бессознательно, пока его не заведут."
+                                       }
+                   }
+               ],
+    "actions":  [
+
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Перезвон"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Диво играет весёлую мелодию с выверенным тактом. Оно выбирает одного видимого им в пределах 60 футов союзника; до начала следующего хода дива этот союзник получает Преимущество на следующую проверку характеристики с Музыкальным инструментом или Инструментами ремонтника."
+                                              }
+                          },
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Ускорение"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Диво совершает действие Рывок."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

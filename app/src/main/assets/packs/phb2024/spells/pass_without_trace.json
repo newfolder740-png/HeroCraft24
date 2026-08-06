@@ -1,0 +1,47 @@
+{
+  "id": "pass_without_trace",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Pass without Trace",
+    "ru": "Бесследное передвижение"
+  },
+  "description": {
+    "en": "",
+    "ru": "На время действия заклинания от вас 30-футовой Эманацией исходит сокрывающий покров. Вы и существа в Эманации по вашему выбору получаете бонус +10 к проверкам Ловкости (Скрытность) и не оставляете за собой следов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "abjuration",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V",
+    "S",
+    "M"
+  ],
+  "material": "пепел омелы",
+  "duration": "Концентрация, вплоть до 1 часа",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:druid",
+    "phb2024:ranger"
+  ],
+  "subclasses": [
+    "Домен обмана",
+    "Теневое чародейство"
+  ]
+}

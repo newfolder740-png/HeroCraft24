@@ -1,0 +1,81 @@
+{
+  "id": "kalashtar",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Kalashtar",
+    "ru": "Калаштар"
+  },
+  "description": {
+    "en": "Kalashtar originate from the union of humanity and renegade spirits from the plane of dreams, known as quori. Kalashtar look like humans, but their spiritual connection affects them in various ways. They have symmetrical, slightly angular features, and their eyes often glow when they concentrate or express strong emotions.\n\nKalashtar cannot directly communicate with their quori spirits, but when a kalashtar sleeps, they can unconsciously draw from the spirits' memories, then experiencing them as a source of instinct and inspiration. This connection gives kalashtar minor psionic abilities, as well as protection from psionic attacks.",
+    "ru": "Калаштары происходят от союза человечества и мятежных духов с плана снов, называемых куори. Калаштары выглядят как люди, но их духовная связь различными способами влияет на них. У них симметричные, слегка угловатые черты лица, а их глаза часто светятся, когда они концентрируются или выражают сильные эмоции.\n\nКалаштары не могут напрямую общаться со своими духами-куори, но когда калаштар спит, он может бессознательно черпать из воспоминаний духов, затем ощущая их как источник инстинктов и вдохновения. Эта связь дает калаштарам небольшие псионические способности, а также защиту от псионических атак."
+  },
+  "source": {
+    "book": {
+      "en": "Eberron: Forgotten Ages",
+      "ru": "Эберрон: Забытые эпохи"
+    },
+    "abbreviation": "EFA"
+  },
+  "tags": [
+    "psionic",
+    "dream",
+    "eberron",
+    "quori"
+  ],
+  "creature_type": "aberration",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 0,
+  "traits": [
+    {
+      "name": {
+        "en": "Dual Mind",
+        "ru": "Двойственность разума"
+      },
+      "description": {
+        "en": "You have Advantage on Wisdom and Charisma saving throws.",
+        "ru": "Вы совершаете с Преимуществом спасброски Мудрости и Харизмы."
+      }
+    },
+    {
+      "name": {
+        "en": "Mental Discipline",
+        "ru": "Ментальная дисциплина"
+      },
+      "description": {
+        "en": "You have Resistance to Psychic damage.",
+        "ru": "Вы обладаете Сопротивлением Психическому урону."
+      }
+    },
+    {
+      "name": {
+        "en": "Mind Link",
+        "ru": "Связь разумов"
+      },
+      "description": {
+        "en": "You have telepathy with a range equal to your level multiplied by 10 feet. When you use this trait to telepathically communicate with a creature, you can use a Magic action to allow that creature to telepathically communicate with you for 1 hour or until you end this effect with another Magic action.",
+        "ru": "Вы обладаете телепатией дальностью, равной вашему уровню, умноженному на 10 футов. Когда вы используете эту особенность, чтобы телепатически общаться с существом, вы можете действием Магия дать этому существу телепатически общаться с вами в течение 1 часа или пока вы ещё одним действием Магия не окончите этот эффект."
+      }
+    },
+    {
+      "name": {
+        "en": "Severed from Dreams",
+        "ru": "Отделённый от снов"
+      },
+      "description": {
+        "en": "The Dream spell can't target you. In addition, when you finish a Long Rest, you gain proficiency in one skill of your choice. This proficiency lasts until you finish your next Long Rest.",
+        "ru": "Заклинание Грёзы не может быть нацелено на вас. Кроме того, когда вы завершаете Долгий отдых, вы получаете владение одним навыком на ваш выбор. Это владение длится до тех пор, пока вы не завершите следующий Долгий отдых."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

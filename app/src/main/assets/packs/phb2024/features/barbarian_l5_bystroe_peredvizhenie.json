@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l5_bystroe_peredvizhenie",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Быстрое передвижение"},
+  "description": {"en": "", "ru": "Пока вы не носите Тяжёлых доспехов, ваша Скорость увеличивается на 10 футов."},
+  "level": 5,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

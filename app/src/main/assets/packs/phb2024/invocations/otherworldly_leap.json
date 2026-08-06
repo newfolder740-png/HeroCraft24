@@ -1,0 +1,15 @@
+{
+    "id":  "otherworldly_leap",
+    "name":  {
+                 "en":  "Otherworldly Leap",
+                 "ru":  "Потусторонний прыжок"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Прыжок на себя без траты ячеек заклинаний."
+                    },
+    "level":  2,
+    "requirements":  {
+                         "warlock_level":  2
+                     }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "misty_step",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Misty Step",
+    "ru": "Туманный шаг"
+  },
+  "description": {
+    "en": "",
+    "ru": "Окутавшись серебристым туманом, вы телепортируетесь в видимое вами в пределах 30 футов незанятое пространство."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "conjuration",
+  "casting_time": "Бонусное действие",
+  "range": {
+    "type": "range",
+    "text": "На себя?"
+  },
+  "components": [
+    "V"
+  ],
+  "duration": "Мгновенная",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:wizard",
+    "phb2024:warlock",
+    "phb2024:sorcerer"
+  ],
+  "subclasses": [
+    "Круг земли",
+    "Архифея",
+    "Клятва возмездия",
+    "Клятва древних",
+    "Странник фей"
+  ]
+}

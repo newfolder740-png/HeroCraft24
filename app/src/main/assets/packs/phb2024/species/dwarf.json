@@ -1,0 +1,81 @@
+{
+  "id": "dwarf",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Dwarf",
+    "ru": "Дварф"
+  },
+  "description": {
+    "en": "In ancient times, dwarves were raised from the earth by a deity of the forge. Known by different names in different worlds — Moradin, Reorx, and others — this deity gifted dwarves with an affinity for stone and metal and for life underground. It also made them as enduring as mountains; dwarves live about 350 years.\n\nStocky, often bearded, the first dwarves carved cities and fortresses into mountainsides and underground. Their oldest legends tell of clashes with monsters of the mountain peaks and the Underdark, enormous giants, and subterranean horrors. Inspired by these stories, dwarves of any culture often sing of valiant deeds — especially of the small defeating the mighty.\n\nIn some worlds of the multiverse, the first dwarven settlements were built in hills or mountains, and the families that trace their ancestry to those settlements call themselves hill dwarves and mountain dwarves respectively. This is true, for example, for the Greyhawk and Dragonlance settings.",
+    "ru": "В древние времена дварфы были подняты из земли божеством кузни. В разных мирах называемое по-разному — Морадин, Реоркс и другие — это божество наделило дварфов сродством к камню и металлу и к жизни под землёй. Оно также сделало их устойчивыми, как горы; дварфы живут около 350 лет.\n\nПриземистые, зачастую бородатые, первые дварфы высекали города и крепости на склонах гор и под землёй. Их древнейшие легенды повествуют о столкновениях с чудовищами горных вершин и Подземья, громадными великанами и подземными ужасами. Вдохновленные этими историями, дварфы любой культуры часто поют о доблестных деяниях — особенно о том, как маленькие побеждают сильных.\n\nВ некоторых мирах мультивселенной первые поселения дварфов были построены на холмах или в горах, и семьи, которые ведут свою родословную от этих поселений, называют себя холмовыми и горными дварфами соответственно. Это верно, например, для сеттингов \"Серого ястреба\" и \"Саги о копье\"."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "mountain",
+    "underground",
+    "forge",
+    "stone"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 120,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 120 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 120 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Dwarven Resilience",
+        "ru": "Дварфийская устойчивость"
+      },
+      "description": {
+        "en": "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition.",
+        "ru": "У вас есть Сопротивление урону Ядом. Вы также совершаете с Преимуществом спасброски на избежание или окончание состояния Отравленный."
+      }
+    },
+    {
+      "name": {
+        "en": "Dwarven Toughness",
+        "ru": "Дварфийская крепость"
+      },
+      "description": {
+        "en": "Your Hit Point maximum increases by 1, and it increases by 1 again whenever you gain a level.",
+        "ru": "Ваш максимум Хитов увеличивается на 1, и он увеличивается ещё на 1 каждый раз, когда вы получаете уровень."
+      }
+    },
+    {
+      "name": {
+        "en": "Stonecunning",
+        "ru": "Знание камня"
+      },
+      "description": {
+        "en": "As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. To use this Tremorsense, you must be on a stone surface or touching a stone surface. The stone can be either worked or unworked. You can use this trait a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
+        "ru": "Бонусным действием вы на 10 минут получаете Чувство вибрации дальностью 60 футов. Чтобы использовать это Чувство вибрации, вы должны находиться на каменной поверхности или прикасаться к каменной поверхности. Камень может быть как обработанным, так и необработанным. Вы можете использовать эту особенность количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

@@ -1,0 +1,119 @@
+{
+    "id":  "gray_ooze",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Gray Ooze",
+                 "ru":  "Серая слизь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Серые слизи\nНенасытные сгустки и последствия магических провалов\n\nСерые слизи — это массы хищной едкой субстанции, что терпеливо поджидают добычу, сливаясь с каменным окружением.\n\nСерые слизи возникают там, где пространство затронуто хаотичной, необузданной магией. Заклинатели, потерпевшие неудачу в попытках привязать элементальных духов к телам Конструктов, также рискуют ненароком сотворить эти аморфные порождения."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "ooze"
+             ],
+    "size":  "medium",
+    "creature_type":  "ooze",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "22 (3d8 + 9)",
+    "hit_dice":  "3d8 + 9",
+    "initiative":  "-2 (8)",
+    "speed":  {
+                  "walk":  10,
+                  "climb":  10
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  6,
+                           "constitution":  16,
+                           "intelligence":  1,
+                           "wisdom":  6,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "acid",
+                               "fire",
+                               "cold"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "deafened",
+                                 "prone",
+                                 "restrained",
+                                 "blinded",
+                                 "charmed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Аморфность"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Слизь может проходить через пространство шириной всего 1 дюйм, не тратя на это дополнительное перемещение."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Разъедающее тело"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Немагические боеприпасы, попадающие по слизи, уничтожаются сразу после причинения урона. Любое немагическое оружие, касающееся слизи, получает накопительный штраф –1 к броскам атаки и урона сразу после причинения урона. Оружие уничтожается, если штраф достигает –5. Этот штраф может быть убран сотворением заклинания Починка на оружие.\nСлизь может разъесть 2 дюйма немагического металла или древесины за 1 раунд."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ложноножка"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 10 (2к8 + 1) урона Кислотой. Немагический доспех, носимый целью, получает штраф –1 к своему КЗ. Доспех уничтожается, если штраф снижает КЗ до 10. Этот штраф может быть убран сотворением заклинания Починка на доспех."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "abyss"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

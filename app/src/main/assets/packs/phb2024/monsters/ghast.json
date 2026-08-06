@@ -1,0 +1,115 @@
+{
+    "id":  "ghast",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Ghast",
+                 "ru":  "Вурдалак"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вурдалаки\nТираны среди трупов\n\nВурдалаки — зловонные бессмертные трупы, близкие родственники упырей. Их тяга к порокам, которыми они предавались при жизни, столь же сильна, как и жажда разлагающейся плоти.\n\nКак правило, вурдалаки возглавляют стаи грабящих склепы упырей."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "undead"
+             ],
+    "size":  "medium",
+    "creature_type":  "undead",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "36 (8d8)",
+    "hit_dice":  "8d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  17,
+                           "constitution":  10,
+                           "intelligence":  11,
+                           "wisdom":  10,
+                           "charisma":  8
+                       },
+    "saving_throws":  {
+                          "wisdom":  2
+                      },
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "necrotic"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "exhaustion",
+                                 "poisoned",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Смрад"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Спасбросок Телосложения: Сл 10, любое существо, которое начинает свой ход в 5-футовой Эманации, исходящей от вурдалака. Провал: Цель становится Отравлена до начала своего следующего хода. Успех: Цель становится невосприимчива к Смраду этого вурдалака на 24 часа."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 7 (1к8 + 3) Колющего урона плюс 9 (2к8) Некротического урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Когти"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 10 (2к6 + 3) Рубящего урона. Если цель — существо, кроме Нежити, оно подвергается воздействию следующего эффекта: Спасбросок Телосложения: Сл 10. Провал: Цель Парализована до конца своего следующего хода."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp",
+                        "urban",
+                        "underdark"
+                    ],
+    "treasure":  "Любые",
+    "equipment":  null
+}

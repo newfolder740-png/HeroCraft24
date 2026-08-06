@@ -1,0 +1,30 @@
+{
+  "id": "phb2024:warlock_great_old_one",
+  "features": [
+    "phb2024:warlock_great_old_one_l3_spells",
+    "phb2024:warlock_great_old_one_l3_awakened_mind",
+    "phb2024:warlock_great_old_one_l3_psychic_spells",
+    "phb2024:warlock_great_old_one_l6_visionary_warrior",
+    "phb2024:warlock_great_old_one_l10_mystic_hex",
+    "phb2024:warlock_great_old_one_l10_mental_shield",
+    "phb2024:warlock_great_old_one_l14_enslavement"
+  ],
+  "name": {
+    "en": "",
+    "ru": "Великий древний"
+  },
+  "type": "subclass",
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "description": {
+    "en": "",
+    "ru": "Раскройте запретные знания неописуемых существ\n\nКогда вы выбираете этот подкласс вы можете связать себя договором с неописуемой сущностью из Дальнего предела или древним богом — сущностью такой, как Тариздун, Скованный Бог; Заргон Вечный; Хадар, Тёмный Голод; или Великий Ктулху. Вы также можете воззвать сразу к нескольким сущностям, не сковывая себя ярмом договора лишь с одним. Мотивы этих сущностей непостижимы, и Великий древний может быть равнодушен к вашему существованию, но открытые вами тайны, тем не менее, позволяют вам направлять странную его магию."
+  },
+  "format_version": 1,
+  "class_id": "phb2024:warlock"
+}

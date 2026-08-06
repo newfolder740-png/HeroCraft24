@@ -1,0 +1,132 @@
+{
+    "id":  "swarm_of_dretches",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Dretches",
+                 "ru":  "Рой дретчей"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Дретчи\nМордовороты и задиры\n\nДретчи — слуги и жертвы высших демонов, которые воплощают в себе низменные побуждениям, хаотичные поступки и насилие. В глубине Бездны обитает бесчисленное число этих существ, собирающихся в вонючие орды.\n\nИногда стаи дретчей сбегают из Бездны на другие планы бытия или становятся частью демонического вторжения. Без руководства эти злобные демоны с жестоким энтузиазмом предаются разрушению и опустошению."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "45 (6d10 + 12)",
+    "hit_dice":  "6d10 + 12",
+    "initiative":  "+0 (10)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  14,
+                           "dexterity":  11,
+                           "constitution":  14,
+                           "intelligence":  5,
+                           "wisdom":  8,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing",
+                               "fire",
+                               "cold",
+                               "lightning"
+                           ],
+    "damage_immunities":  [
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "poisoned",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "9"
+               },
+    "languages":  "Бездны, Телепатия 60 фт. (работает только с существами, понимающими язык Бездны)",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Зловонная аура"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Спасбросок Телосложения: Сл 12, любое существо, начинающее свой ход в 10-футовой Эманации, исходящей от стаи. Провал: Цель становится Отравлена до начала своего следующего хода. Пока цель Отравлена таким образом, она не может использовать Реакции и может в свой ход использовать либо Действие, либо Бонусное действие, но не оба."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для существа Маленького размера. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Рой совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 12 (3к6 + 2) Рубящего урона, или 9 (3к4 + 2) Рубящего урона, если рой Окровавлен."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "abyss"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

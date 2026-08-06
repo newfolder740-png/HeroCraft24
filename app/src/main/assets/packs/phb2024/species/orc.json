@@ -1,0 +1,70 @@
+{
+  "id": "orc",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Orc",
+    "ru": "Орк"
+  },
+  "description": {
+    "en": "Orcs trace their creation to Gruumsh, a powerful god who roamed the wide expanses of the Material Plane. Gruumsh equipped his children with gifts to help them wander the great plains, vast caverns, and churning seas, and to survive encounters with the monsters dwelling there. Even when orcs turn their devotion to other gods, they retain Gruumsh's gifts: endurance, determination, and the ability to see in the dark.\n\nOrcs are typically tall and broad-shouldered. They have gray skin, sharply pointed ears, and prominent lower canines resembling small tusks. In some worlds, young orcs are told of the great journeys and hardships of their ancestors. Inspired by these tales, many of these orcs wonder when Gruumsh will call them to repeat the heroic deeds of antiquity, and whether they will prove worthy of his favor. Some orcs are happy to leave the old tales in the past and seek their own path.",
+    "ru": "Орки ведут своё сотворение от Груумша, могущественного бога, который бродил по широким просторам Материального плана. Груумш снабдил своих детей дарами, помогающими им бродить по великим равнинам, обширным пещерам и бурлящим морям, и выживать во встречах с чудовищами, там обитающими. Даже когда орки обращают свою преданность к другим богам, они сохраняют дары Груумша: выносливость, решительность, способность видеть в темноте.\n\nОрки обычно высокие и широкоплечие. У них серая кожа, сильно заострённые уши и выступающие нижние клыки, напоминающие небольшие бивни. В некоторых мирах молоди орков рассказывают о великих путешествиях и невзгодах их предков. Вдохновлённые этими рассказами, многие из этих орков задаются вопросом, когда Груумш призовёт их повторить героические деяния древности, и окажутся ли они достойны его благосклонности. Некоторые из орков рады оставить старые сказки в прошлом и искать свой собственный путь."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "savage",
+    "gruumsh",
+    "tribal"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 120,
+  "traits": [
+    {
+      "name": {
+        "en": "Adrenaline Rush",
+        "ru": "Выброс адреналина"
+      },
+      "description": {
+        "en": "You can use a Bonus Action to take the Dash action. When you do so, you gain Temporary Hit Points equal to your Proficiency Bonus. You can use this trait a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Short or Long Rest.",
+        "ru": "Вы можете Бонусным действием совершить действие Рывок. Когда вы делаете это, вы получаете Временные хиты в количестве, равном вашему Бонусу владения. Вы можете использовать эту особенность количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Короткого или Долгого отдыха."
+      }
+    },
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 120 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 120 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Relentless Endurance",
+        "ru": "Непоколебимая стойкость"
+      },
+      "description": {
+        "en": "When your Hit Points are reduced to 0 but you are not killed outright, you can instead drop to 1 Hit Point. Once you use this trait, you can't use it again until you finish a Long Rest.",
+        "ru": "Когда ваши Хиты снижаются до 0, но вы не убиты мгновенно, вы можете вместо этого опустить ваши Хиты только до 1. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

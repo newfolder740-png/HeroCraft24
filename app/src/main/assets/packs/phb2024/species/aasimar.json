@@ -1,0 +1,89 @@
+{
+  "id": "aasimar",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Aasimar",
+    "ru": "Аасимар"
+  },
+  "description": {
+    "en": "Aasimar are mortals who carry a spark of the Upper Planes within their souls. Whether descended from an angelic being or infused with celestial power, they can fan that spark to bring light, healing, and celestial fury.\n\nAasimar can arise among any mortal community. They resemble their parents, but live up to 160 years and have features that hint at their celestial heritage — such as metallic freckles, glowing eyes, a halo, or an angelic skin color (silver, opalescent green, or copper-red). These features begin subtle and become obvious when an aasimar fully reveals their celestial nature.",
+    "ru": "Аасимары — это смертные, которые несут в своих душах искру Верхних Планов. Независимо от того, произошли они от ангельского существа или наделены силой небожителя, они могут раздуть эту искру, чтобы нести свет, исцеление и небесную ярость.\n\nАасимар может появиться в любой общине смертных. Они похожи на своих родителей, но живут до 160 лет и обладают особенностями, указывающими на их небесное наследие — такими как металлические веснушки, светящиеся глаза, нимб или ангельский цвет кожи (серебристый, опалесцирующий зеленый или медно-красный). Эти особенности поначалу проявляются едва уловимо и становятся очевидными, когда аасимар полностью раскрывает свою природу небожителя."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "celestial",
+    "upper planes"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Celestial Resistance",
+        "ru": "Небесное сопротивление"
+      },
+      "description": {
+        "en": "You have Resistance to Necrotic damage and Radiant damage.",
+        "ru": "У вас есть Сопротивление Некротическому урону и урону Излучением."
+      }
+    },
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Healing Hands",
+        "ru": "Исцеляющие руки"
+      },
+      "description": {
+        "en": "As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest.",
+        "ru": "Действием Магия вы касаетесь существа и бросаете к4 в количестве, равном вашему Бонусу владения. Существо восстанавливает количество Хитов, равное сумме бросков. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
+      }
+    },
+    {
+      "name": {
+        "en": "Light Bearer",
+        "ru": "Несущий свет"
+      },
+      "description": {
+        "en": "You know the Light cantrip. Your spellcasting ability for it is Charisma.",
+        "ru": "Вы знаете заговор Свет. Ваша заклинательная характеристика для него — Харизма."
+      }
+    },
+    {
+      "name": {
+        "en": "Celestial Revelation",
+        "ru": "Небесное откровение"
+      },
+      "description": {
+        "en": "When you reach character level 3, you can transform as a Bonus Action using one of the options below (you choose the option each time you transform). The transformation lasts for 1 minute or until you end it (no action required). Once you use this trait, you can't use it again until you finish a Long Rest.\n\nWhile the transformation lasts, once on each of your turns when you deal damage to a target with an attack or a spell, you can deal extra damage to the target equal to your Proficiency Bonus. The extra damage is Necrotic for Necrotic Shroud and Radiant for Celestial Wings and Radiant Soul.\n\nYou choose the transformation from the following options:\n\nCelestial Wings. Two spectral wings sprout from your back temporarily. While the transformation lasts, you have a Fly Speed equal to your Speed.\n\nRadiant Soul. Searing light temporarily radiates from your eyes and mouth. While the transformation lasts, you shed Bright Light in a 10-foot radius and Dim Light for an additional 10 feet, and at the end of each of your turns, each creature within 10 feet of you takes Radiant damage equal to your Proficiency Bonus.\n\nNecrotic Shroud. Your eyes briefly become pools of darkness, and flightless wings sprout from your back temporarily. Creatures other than your allies within 10 feet of you must succeed on a Charisma saving throw (DC 8 plus your Charisma modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn.",
+        "ru": "По достижению 3-го уровня персонажа вы можете Бонусным действием преобразиться, согласно одному из приведенных ниже вариантов (вы выбираете при каждом преобразовании). Преобразование длится 1 минуту или до тех пор, пока вы её не завершите (действий не требуется). Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых.\n\nПока преобразование длится, когда вы наносите цели урон атакой или заклинанием, можете нанести ей дополнительный урон, равный вашему Бонусу владения. Для Савана смерти это Некротический урон, а для Небесных крыльев и Сияющей души — урон Излучением. Вы можете нанести этот дополнительный урон только раз в каждый ваш ход.\n\nВы выбираете преобразование из следующих вариантов:\n\nНебесные крылья. Два призрачных крыла временно вырастают из вашей спины. Пока преобразование длится, у вас есть Скорость полёта, равная вашей Скорости.\n\nСияющая душа. Обжигающий свет временно исходит из ваших глаз и рта. Пока преобразование длится, вы излучаете Яркий свет в радиусе 10 футов и Тусклый свет ещё на 10 футов, и в конце каждого из ваших ходов каждое существо в пределах 10 футов от вас получает урон Излучением, равный вашему Бонусу владения.\n\nСаван смерти. Ваши глаза на мгновение превращаются в озера тьмы, а из вашей спины временно вырастают нелетающие крылья. Все существа в пределах 10 футов от вас, кроме ваших союзников, должны преуспеть в спасброске Харизмы (Сл 8 + ваши модификатор Харизмы и Бонус владения), иначе получат состояние Испуганный до конца вашего следующего хода."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

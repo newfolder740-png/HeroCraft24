@@ -1,0 +1,44 @@
+{
+  "id": "guidance",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Guidance",
+    "ru": "Наставление"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь согласного существа и выбираете навык. Пока заклинание активно, это существо добавляет 1к4 ко всем проверкам характеристики с выбранным навыком."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 0,
+  "school": "divination",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "Концентрация, вплоть до 1 минуты",
+  "concentration": true,
+  "ritual": false,
+  "classes": [
+    "phb2024:druid",
+    "phb2024:cleric"
+  ],
+  "subclasses": [
+    "Круг звёзд"
+  ]
+}

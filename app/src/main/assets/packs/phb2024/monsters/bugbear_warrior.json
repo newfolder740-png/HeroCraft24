@@ -1,0 +1,109 @@
+{
+    "id":  "bugbear_warrior",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bugbear Warrior",
+                 "ru":  "Медвежатник-воин"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "medium",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "33 (6d8 + 6)",
+    "hit_dice":  "6d8 + 6",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  14,
+                           "constitution":  13,
+                           "intelligence":  8,
+                           "wisdom":  11,
+                           "charisma":  9
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  6,
+                   "survival":  2
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий, Гоблинский",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Похищение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Медвежатник может не тратить дополнительные футы перемещения при перемещении Схваченного им существа."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Захват"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 10 фт. Попадание: 9 (2к6 + 2) Дробящего урона. Если цель Среднего размера или меньше, она получает состояние Схваченный (Сл высвобождения из захвата 12)."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Лёгкий молот"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +4 (с Преимуществом, если цель Схвачена этим медвежатником), досягаемость 10 фт. или дистанция 20/60 фт. Попадание: 9 (3к4 + 2) Дробящего урона.\nМедвежатники\nМедвежатники — воплощение страха перед дикими землями и опасностью, затаившейся в тени чащоб. Они славятся своей незаметностью, и враги, осмелившиеся ступить на их землю, часто исчезают без следа.\nМедвежатники-воины готовы служить тем, кто предложит им сокровища, пищу или шанс поохотиться на опасную добычу."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "underdark",
+                        "feywild"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Лёгкий молот x3, Шкурный доспех"
+}

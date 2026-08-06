@@ -1,0 +1,21 @@
+{
+  "id": "prone",
+  "type": "condition",
+  "format_version": 1,
+  "name": { "en": "Prone", "ru": "Опрокинутый" },
+  "description": {
+    "en": "While you have the Prone condition, you experience the following effects.",
+    "ru": "Пока у вас есть состояние Опрокинутый, на вас действуют следующие эффекты:"
+  },
+  "source": {
+    "book": { "en": "Player's Handbook (2024)", "ru": "Книга игрока (2024)" },
+    "abbreviation": "PHB 2024",
+    "page": 364
+  },
+  "tags": ["movement", "combat", "control"],
+  "effects": [
+    { "en": "You can only move by crawling or expend an amount of movement equal to half your Speed (round down) to stand up, ending this condition on yourself. You can't stand up if your Speed is 0.", "ru": "Ограниченное перемещение. Вы можете перемещаться только ползком, или вы можете потратить перемещение в размере, равном половине вашей Скорости (округляя вниз), чтобы подняться и таким образом окончить на себе это состояние. Вы не можете подняться, если ваша Скорость равна 0." },
+    { "en": "Your attack rolls have Disadvantage. Attack rolls against you have Advantage if the attacker is within 5 feet of you; they have Disadvantage if the attacker is more than 5 feet away.", "ru": "Влияние на атаки. Вы совершаете с Помехой броски атаки. Броски атаки по вам совершаются с Преимуществом, если атакующий находится в пределах 5 футов от вас; броски атаки по вам совершаются с Помехой, если атакующий находится далее 5 футов от вас." }
+  ],
+  "mechanical": true
+}

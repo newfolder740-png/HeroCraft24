@@ -1,0 +1,98 @@
+{
+    "id":  "constrictor_snake",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Constrictor Snake",
+                 "ru":  "Удав"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "large",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "13 (2d10 + 2)",
+    "hit_dice":  "2d10 + 2",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  14,
+                           "constitution":  12,
+                           "intelligence":  1,
+                           "wisdom":  10,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2,
+                   "stealth":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 6 (1к8 + 2) Колющего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сжимание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Силы: Сл 12, одно существо Среднего размера или меньше, видимое удавом в пределах 5 футов. Провал: 7 (3к4) Дробящего урона, и цель становится Схваченной (Сл освобождения от захвата Сл 12)."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

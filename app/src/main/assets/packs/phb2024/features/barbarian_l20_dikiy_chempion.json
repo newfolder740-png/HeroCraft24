@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_l20_dikiy_chempion",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Дикий чемпион"},
+  "description": {"en": "", "ru": "Вы становитесь воплощением первобытной силы. Значения ваших Силы и Телосложения увеличиваются на 4, но не выше 25."},
+  "level": 20,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

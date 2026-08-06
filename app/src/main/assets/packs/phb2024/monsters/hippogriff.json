@@ -1,0 +1,108 @@
+{
+    "id":  "hippogriff",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Hippogriff",
+                 "ru":  "Гиппогриф"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Гиппогриф\nПутешествующий по миру охотник и скакун\n\nВеличественные гиппогрифы — наполовину хищные птицы, наполовину лошади, которые готовы сожрать во время своей миграции любую добычу, нередко нападая на одиноких странников и домашний скот. В обмен на корм или другую помощь они готовы взять попутчиков в своё путешествие. Некоторые мудрецы научились точно предсказывать маршруты миграций гиппогрифов, которые порой занимают месяцы и даже годы.\n\nСовершите бросок по таблице «Место прибытия гиппогрифа» для вдохновения или выберите сами, куда направляется гиппогриф.\n\nМесто прибытия гиппогрифа\n1к6\tГиппогриф направляется...\n1\tК затерянным среди облаков или туманов развалинам.\n2\tК низко висящей луне, звезде или другому небесному телу.\n3\tК магическому саду на парящем в воздухе острове.\n4\tК вершине горы, с которой виден гигантский геоглиф.\n5\tК своему гнезду на вершине пика.\n6\tК порталу в Страну Фей или на Верхние планы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "large",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  11,
+    "armor_class_description":  null,
+    "hit_points":  "26 (4d10 + 4)",
+    "hit_dice":  "4d10 + 4",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  40,
+                  "fly":  60
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  13,
+                           "constitution":  13,
+                           "intelligence":  2,
+                           "wisdom":  12,
+                           "charisma":  8
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Облёт"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гиппогриф не вызывает Провоцированных атак, когда вылетает из вражеской досягаемости."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Гиппогриф совершает две атаки Раздиранием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Раздирание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 7 (1к8 + 3) Рубящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "mountains",
+                        "grassland",
+                        "hills"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

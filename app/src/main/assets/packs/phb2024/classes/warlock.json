@@ -1,0 +1,286 @@
+{
+  "id": "warlock",
+  "type": "class",
+  "format_version": 1,
+  "name": {
+    "en": "Warlock",
+    "ru": "Колдун"
+  },
+  "short_description": {
+    "en": "",
+    "ru": ""
+  },
+  "description": {
+    "en": "",
+    "ru": "Колдуны — искатели знаний, что вплетены в полотно мультивселенной. Свои поиски магической силы они нередко начинают, зарываясь в фолианты запретных знаний, погружаясь в таинственные ритуалы, призывающие силы экстрапланарных сущностей, или разыскивая места силы, где можно ощутить их влияние. Не успев оглянуться, каждый Колдун обнаруживает себя заключившим договор с могущественным покровителем. Изыскивая древние знания у таких существ как ангелы, архифеи, демоны, дьяволы, карги и внеземные существа с Дальнего предела, Колдуны собирают по кусочкам магические секреты, усиливающие их собственную мощь.\n\nКолдуны рассматривают своих покровителей как ресурс, как средство достижения магической силы. Некоторые Колдуны уважают, почитают или даже любят своих покровителей; некоторые служат своим покровителям неохотно; другие же ищут способы уничтожить своего покровителя, используя ту же силу, что даёт им покровитель.\n\nЗаключив договор, Колдун уже не может утолить свою жажду знаний и силы обычной учёбой: большинство Колдунов проводят свои дни в поисках большей силы и более глубоких знаний, что обычно означает необходимость участия в тех или иных приключениях."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "arcane",
+    "spellcaster",
+    "charisma",
+    "pact-magic"
+  ],
+  "hit_die": 8,
+  "primary_ability": "charisma",
+  "saving_throws": [
+    "wisdom",
+    "charisma"
+  ],
+  "skills": {
+    "count": 2,
+    "from": [
+      "intimidation",
+      "history",
+      "deception",
+      "nature",
+      "investigation",
+      "religion",
+      "arcana"
+    ]
+  },
+  "starting_proficiencies": {
+    "armor": ["light"],
+    "weapons": ["simple"],
+    "tools": [],
+    "saving_throws": [],
+    "skills": []
+  },
+  "starting_equipment": [
+    {
+      "description": {
+        "en": "Choose A or B",
+        "ru": "Выберите А или Б:"
+      },
+      "count": 1,
+      "options": [
+        {
+          "description": {
+            "en": "A",
+            "ru": "А"
+          },
+          "options": [
+            {
+              "item_id": "phb2024:leather_armor",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:sickle",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:dagger",
+              "quantity": 2
+            },
+            {
+              "item_id": "phb2024:arcane_focus",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:book",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:scholar_s_pack",
+              "quantity": 1
+            },
+            {
+              "description": {
+                "en": "15 gp",
+                "ru": "15 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "description": {
+            "en": "B",
+            "ru": "Б"
+          },
+          "options": [
+            {
+              "description": {
+                "en": "100 gp",
+                "ru": "100 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "subclass_title": {
+    "en": "Otherworldly Patron",
+    "ru": "Инопланарный покровитель"
+  },
+  "subclass_level": 3,
+  "features": [
+    "phb2024:warlock_l1_mystic_invocations",
+    "phb2024:warlock_l1_pact_magic",
+    "phb2024:warlock_l2_magical_proficiency",
+    "phb2024:warlock_l3_warlock_subclass",
+    "phb2024:warlock_l4_ability_score_improvement",
+    "phb2024:warlock_l6_subclass_feature",
+    "phb2024:warlock_l8_ability_score_improvement",
+    "phb2024:warlock_l9_contact_patron",
+    "phb2024:warlock_l10_subclass_feature",
+    "phb2024:warlock_l11_mystic_arcanum",
+    "phb2024:warlock_l12_ability_score_improvement",
+    "phb2024:warlock_l13_mystic_arcanum",
+    "phb2024:warlock_l14_subclass_feature",
+    "phb2024:warlock_l15_mystic_arcanum",
+    "phb2024:warlock_l16_ability_score_improvement",
+    "phb2024:warlock_l17_mystic_arcanum",
+    "phb2024:warlock_l19_epic_boon",
+    "phb2024:warlock_l20_mystic_master"
+  ],
+  "subclasses": [
+    "phb2024:warlock_great_old_one",
+    "phb2024:warlock_archfey",
+    "phb2024:warlock_fiend",
+    "phb2024:warlock_celestial",
+    "phb2024:warlock_undying"
+  ],
+  "class_table": {
+    "columns": [
+      {
+        "key": "level",
+        "name": {
+          "en": "Level",
+          "ru": "Уровень"
+        }
+      },
+      {
+        "key": "proficiency_bonus",
+        "name": {
+          "en": "Prof. Bonus",
+          "ru": "БМ"
+        }
+      },
+      {
+        "key": "invocations",
+        "name": {
+          "en": "Invocations",
+          "ru": "Таинственные воззвания"
+        }
+      },
+      {
+        "key": "cantrips",
+        "name": {
+          "en": "Cantrips",
+          "ru": "Заговоры"
+        }
+      },
+      {
+        "key": "prepared",
+        "name": {
+          "en": "Prepared",
+          "ru": "Подготовленные"
+        }
+      },
+      {
+        "key": "spell_slots",
+        "name": {
+          "en": "Spell Slots",
+          "ru": "Ячейки"
+        }
+      },
+      {
+        "key": "slot_level",
+        "name": {
+          "en": "Slot Level",
+          "ru": "Уровень ячеек"
+        }
+      }
+    ],
+    "rows": [
+      {"level": 1, "values": {"proficiency_bonus": "+2", "invocations": "1", "cantrips": "2", "prepared": "2", "spell_slots": "1", "slot_level": "1"}},
+      {"level": 2, "values": {"proficiency_bonus": "+2", "invocations": "3", "cantrips": "2", "prepared": "3", "spell_slots": "2", "slot_level": "1"}},
+      {"level": 3, "values": {"proficiency_bonus": "+2", "invocations": "3", "cantrips": "2", "prepared": "4", "spell_slots": "2", "slot_level": "2"}},
+      {"level": 4, "values": {"proficiency_bonus": "+2", "invocations": "3", "cantrips": "3", "prepared": "5", "spell_slots": "2", "slot_level": "2"}},
+      {"level": 5, "values": {"proficiency_bonus": "+3", "invocations": "5", "cantrips": "3", "prepared": "6", "spell_slots": "2", "slot_level": "3"}},
+      {"level": 6, "values": {"proficiency_bonus": "+3", "invocations": "5", "cantrips": "3", "prepared": "7", "spell_slots": "2", "slot_level": "3"}},
+      {"level": 7, "values": {"proficiency_bonus": "+3", "invocations": "6", "cantrips": "3", "prepared": "8", "spell_slots": "2", "slot_level": "4"}},
+      {"level": 8, "values": {"proficiency_bonus": "+3", "invocations": "6", "cantrips": "3", "prepared": "9", "spell_slots": "2", "slot_level": "4"}},
+      {"level": 9, "values": {"proficiency_bonus": "+4", "invocations": "7", "cantrips": "3", "prepared": "10", "spell_slots": "2", "slot_level": "5"}},
+      {"level": 10, "values": {"proficiency_bonus": "+4", "invocations": "7", "cantrips": "4", "prepared": "10", "spell_slots": "2", "slot_level": "5"}},
+      {"level": 11, "values": {"proficiency_bonus": "+4", "invocations": "7", "cantrips": "4", "prepared": "11", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 12, "values": {"proficiency_bonus": "+4", "invocations": "8", "cantrips": "4", "prepared": "11", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 13, "values": {"proficiency_bonus": "+5", "invocations": "8", "cantrips": "4", "prepared": "12", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 14, "values": {"proficiency_bonus": "+5", "invocations": "8", "cantrips": "4", "prepared": "12", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 15, "values": {"proficiency_bonus": "+5", "invocations": "9", "cantrips": "4", "prepared": "13", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 16, "values": {"proficiency_bonus": "+5", "invocations": "9", "cantrips": "4", "prepared": "13", "spell_slots": "3", "slot_level": "5"}},
+      {"level": 17, "values": {"proficiency_bonus": "+6", "invocations": "9", "cantrips": "4", "prepared": "14", "spell_slots": "4", "slot_level": "5"}},
+      {"level": 18, "values": {"proficiency_bonus": "+6", "invocations": "10", "cantrips": "4", "prepared": "14", "spell_slots": "4", "slot_level": "5"}},
+      {"level": 19, "values": {"proficiency_bonus": "+6", "invocations": "10", "cantrips": "4", "prepared": "15", "spell_slots": "4", "slot_level": "5"}},
+      {"level": 20, "values": {"proficiency_bonus": "+6", "invocations": "10", "cantrips": "4", "prepared": "15", "spell_slots": "4", "slot_level": "5"}}
+    ]
+  },
+  "acquisition": {
+    "first_class": {
+      "en": "",
+      "ru": "Получите все атрибуты из таблицы «Ключевые атрибуты Колдуна».\nПолучите умения Колдуна 1-го уровня; они перечислены в таблице «Умения Колдуна»."
+    },
+    "multiclass": {
+      "en": "",
+      "ru": "Получите Кость хитов и тренированность с Лёгкими доспехами из таблицы «Ключевые атрибуты Колдуна».\nПолучите умения Колдуна 1-го уровня; они перечислены в таблице «Умения Колдуна». Ознакомьтесь с правилами мультиклассирования, чтобы определить доступные вам ячейки заклинаний."
+    }
+  },
+  "key_attributes": {
+    "Основная характеристика": "Харизма",
+    "Кость хитов": "К8 за уровень Колдуна",
+    "Хиты за уровень": "1к8 (или 5) + ваш модификатор Телосложения (суммарно минимум 1)",
+    "Владение спасбросками": "Мудрость и Харизма",
+    "Владение навыками": "Выберите два: Запугивание, История, Обман, Природа, Расследование, Религия или Тайная магия",
+    "Владение оружием": "Простое оружие",
+    "Тренированность с доспехами": "Лёгкие доспехи",
+    "Начальное снаряжение": "Выберите А или Б:"
+  },
+  "spellcasting": {
+    "ability": "charisma",
+    "type": "pact"
+  },
+  "multiclass_requirements": {
+    "ability_scores": {
+      "charisma": 13
+    }
+  },
+    "invocations": [
+    "phb2024:pact_of_the_tome",
+    "phb2024:pact_of_the_blade",
+    "phb2024:pact_of_the_chain",
+    "phb2024:armor_of_shadows",
+    "phb2024:mystic_mind",
+    "phb2024:devil_s_sight",
+    "phb2024:mask_of_many_faces",
+    "phb2024:mystic_spear",
+    "phb2024:fiendish_vigor",
+    "phb2024:agonizing_blast",
+    "phb2024:repelling_blast",
+    "phb2024:otherworldly_leap",
+    "phb2024:misty_visions",
+    "phb2024:lessons_of_the_first_ones",
+    "phb2024:gaze_of_two_minds",
+    "phb2024:ascendant_step",
+    "phb2024:gift_of_the_depths",
+    "phb2024:thirsting_blade",
+    "phb2024:master_of_myriad_forms",
+    "phb2024:mystic_smite",
+    "phb2024:investiture_of_the_chain_master",
+    "phb2024:one_with_shadows",
+    "phb2024:whispers_of_the_grave",
+    "phb2024:visions_of_distant_realms",
+    "phb2024:gift_of_the_protectors",
+    "phb2024:lifedrinker",
+    "phb2024:voracious_blade",
+    "phb2024:witch_sight"
+  ]
+}

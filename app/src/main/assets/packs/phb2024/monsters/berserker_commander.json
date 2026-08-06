@@ -1,0 +1,133 @@
+{
+    "id":  "berserker_commander",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Berserker Commander",
+                 "ru":  "Предводитель берсерков"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Берсерки\nСвирепые захватчики и пылкие воители\n\nОхваченные азартом сражения берсерки превращаются в отчаянных захватчиков, гладиаторов и других неустрашимых воинов.\n\nОтмеченные боевыми шрамами предводители берсерков заряжают своих воинов смертоносным фанатизмом и обращаются к первозданной магии, чтобы преумножить свою мощь."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "136 (16d8 + 64)",
+    "hit_dice":  "16d8 + 64",
+    "initiative":  "+5 (15)",
+    "speed":  {
+                  "walk":  40
+              },
+    "ability_scores":  {
+                           "strength":  19,
+                           "dexterity":  14,
+                           "constitution":  19,
+                           "intelligence":  10,
+                           "wisdom":  14,
+                           "charisma":  9
+                       },
+    "saving_throws":  {
+                          "strength":  7,
+                          "constitution":  7
+                      },
+    "skills":  {
+                   "athletics":  7,
+                   "perception":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "15"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  8,
+    "xp":  3900,
+    "proficiency_bonus":  3,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Окровавленное бешенство"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пока предводитель Окровавлен, он совершает с Преимуществом броски атаки и спасброски."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Предводитель совершает три атаки Двуручным топором или Метательным копьём в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Двуручный топор"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +7, досягаемость 5 фт. Попадание: 10 (1к12 + 4) Рубящего урона плюс 10 (3к6) урона Звуком по цели или другому существу в пределах 5 футов от цели."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пилум"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +7, досягаемость 5 фт. или дистанция 30/120 фт. Попадание: 18 (4к6 + 4) Колющего урона, и Скорость цели снижается на 5 футов до начала следующего хода берсерка."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Бешеный натиск"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Каждый союзник предводителя в пределах 30 футов от него может Реакцией переместиться на расстояние вплоть до половины своей Скорости, не Провоцируя атак. Сам предводитель также может переместиться на расстояние вплоть до своей Скорости, не Провоцируя атак."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Личные , Оружейные",
+    "equipment":  "Метательное копьё x6, Секира"
+}

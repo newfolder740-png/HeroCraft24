@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_reference"
+    app:startDestination="@id/referenceHome">
+
+    <fragment
+        android:id="@+id/referenceHome"
+        android:name="com.herocraft24.feature.reference.ReferenceHomeFragment"
+        android:label="Справочник" />
+
+    <fragment
+        android:id="@+id/referenceList"
+        android:name="com.herocraft24.feature.reference.ReferenceListFragment"
+        android:label="{categoryLabel}">
+        <argument
+            android:name="categoryKey"
+            app:argType="string" />
+        <argument
+            android:name="categoryLabel"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/referenceDetail"
+        android:name="com.herocraft24.feature.reference.ReferenceDetailFragment"
+        android:label="{objectName}">
+        <argument
+            android:name="objectId"
+            app:argType="string" />
+        <argument
+            android:name="categoryKey"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

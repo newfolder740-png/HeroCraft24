@@ -1,0 +1,94 @@
+{
+    "id":  "bandit",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Bandit",
+                 "ru":  "Бандит"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Бандиты\nПреступники и негодяи\n\nС помощью угроз бандиты получают всё, что захотят. К этим преступникам относятся члены банд, головорезы и наёмники вне закона. Однако не всеми бандитами движет жадность. Некоторые из них стали вести такую жизнь из-за несправедливых законов, безысходности своего положения или под принуждением безжалостных главарей.\n\nСовершите бросок по таблице «Мотив бандита» или выберите сами, почему бандит совершает преступления.\n\nМотив бандита\n1к6\tБандит…\n1\tБорется с угнетателями.\n2\tБыл солдатом. Брошенный своим народом, теперь он берёт сам то, что ему обещали.\n3\tСостоит в банде, для которой все остальные — враги.\n4\tС неохотой служит злобному главарю.\n5\tТайно выполняет задание правительства или местного правителя с целью посеять хаос.\n6\tПросто пытается выжить.\nОбыкновенные бандиты — неопытные шестёрки на побегушках у боссов банды."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "11 (2d8 + 2)",
+    "hit_dice":  "2d8 + 2",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  12,
+                           "constitution":  12,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  10
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий, Воровской жаргон",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Скимитар"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 4 (1к6 + 1) Рубящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Лёгкий арбалет"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +3, дистанция 80/320 фт. Попадание: 5 (1к8 + 1) Колющего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Любые",
+    "equipment":  "Кожаный доспех, Лёгкий арбалет, Скимитар"
+}

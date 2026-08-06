@@ -1,0 +1,132 @@
+{
+    "id":  "dire_worg",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Dire Worg",
+                 "ru":  "Лютый ворг"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Ворги\nЗлобные волкоподобные хищники\n\nВорги — беспощадные охотники, которых иногда принимают за гигантских волков. Эти разумные хищники могут говорить и часто издеваются над жертвой, наслаждаясь страхом своей добычи.\n\nЛютые ворги крупнее своих сородичей и умеют издавать невероятно жуткий вой. Они часто охотятся совместно с эттинами, ограми и троллями."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "huge",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "147 (14d12 + 56)",
+    "hit_dice":  "14d12 + 56",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  22,
+                           "dexterity":  14,
+                           "constitution":  18,
+                           "intelligence":  7,
+                           "wisdom":  16,
+                           "charisma":  8
+                       },
+    "saving_throws":  {
+                          "dexterity":  6,
+                          "wisdom":  7
+                      },
+    "skills":  {
+                   "perception":  11
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "21"
+               },
+    "languages":  "Гоблинский, Сильван",
+    "challenge_rating":  10,
+    "xp":  5900,
+    "proficiency_bonus":  4,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Лютый ворг совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Ворг совершает три атаки Укусом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +10, досягаемость 5 фт. Попадание: 15 (2к8 + 6) Колющего урона плюс 7 (2к6) урона Ядом, и цель становится Отравлена до начала следующего хода ворга. Пока цель Отравлена, она не может восстанавливать Хиты."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ужасающий вой (Перезарядка 5–6)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Мудрости: Сл 16, каждое существо, кроме воргов, в пределах 30 футов. Провал: 36 (8к8) Психического урона, и цель становится Испугана до начала следующего хода ворга. Успех: Только половина урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Шаг через пространство"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Ворг и существо по его выбору в пределах 5 футов от него телепортируются на расстояние до 30футов в видимое воргом незанятое пространство."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "grassland",
+                        "hills",
+                        "feywild"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

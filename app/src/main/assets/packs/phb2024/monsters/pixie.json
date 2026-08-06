@@ -1,0 +1,108 @@
+{
+    "id":  "pixie",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Pixie",
+                 "ru":  "Пикси"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пикси\nДрузья леса\n\nПикси — ростом не выше тридцати сантиметров — напоминают крошечных эльфов с крылышками насекомых. Невидимые для чужих глаз, они наблюдают за теми, кто ступает в их лесные владения, и открываются лишь тем, чьи намерения мирны и доброжелательны. Те же, кто приходит с враждой в сердце, быстро становятся мишенью для проказ пикси.\n\nДни пикси проходят в играх, танцах и бесконечных странствиях по чащобам; они избегают прямых столкновения, когда это возможно."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "fey"
+             ],
+    "size":  "tiny",
+    "creature_type":  "fey",
+    "subtype":  null,
+    "alignment":  "neutral good",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "9 (6d4 - 6)",
+    "hit_dice":  "6d4 - 6",
+    "initiative":  "+5 (15)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  30
+              },
+    "ability_scores":  {
+                           "strength":  2,
+                           "dexterity":  20,
+                           "constitution":  8,
+                           "intelligence":  10,
+                           "wisdom":  14,
+                           "charisma":  15
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4,
+                   "stealth":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "Сильван",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Пикси совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Пыльца феи"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +4, досягаемость 5 фт. или дистанция 60 фт. Попадание: 1 урона Излучением, и цель получает состояние Очарованный или Отравленный (по выбору пикси) до конца следующего хода пикси."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Пикси сотворяет одно из следующих заклинаний, не нуждаясь в Материальных компонентах (заклинательная характеристика — Харизма, Сл спасброска заклинаний 12):\nНеограниченно: Искусство друидов, Невидимость (только на себя), Пляшущие огоньки\n1/день каждое: Обнаружение мыслей, Полёт, Усыпление"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "forest",
+                        "feywild"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

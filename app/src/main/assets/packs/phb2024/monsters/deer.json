@@ -1,0 +1,95 @@
+{
+    "id":  "deer",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Deer",
+                 "ru":  "Олень"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "medium",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  13,
+    "armor_class_description":  null,
+    "hit_points":  "4 (1d8)",
+    "hit_dice":  "1d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  50
+              },
+    "ability_scores":  {
+                           "strength":  11,
+                           "dexterity":  16,
+                           "constitution":  11,
+                           "intelligence":  2,
+                           "wisdom":  14,
+                           "charisma":  5
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  4
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Проворство"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Олень не вызывает Провоцированных атак, когда выходит из вражеской досягаемости."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Таран"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +2, досягаемость 5 фт. Попадание: 2 (1к4) Дробящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

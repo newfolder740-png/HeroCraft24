@@ -1,0 +1,241 @@
+{
+  "id": "elf",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Elf",
+    "ru": "Эльф"
+  },
+  "description": {
+    "en": "Created by the god Corellon, the first elves could change their form at will. They lost this ability when Corellon cursed them for conspiring with the deity Lolth, who had attempted to usurp Corellon's power and failed. After Lolth was banished to the Abyss, most elves renounced her and earned Corellon's forgiveness, but what Corellon took from them was lost forever.\n\nNo longer able to change form at will, the elves retreated to the Feywild, whose influence further deepened their sorrow. In time, curiosity led many of them to explore other planes of existence, including the worlds of the Material Plane.\n\nElves have pointed ears and lack facial and body hair. They live about 750 years and don't sleep, instead entering a trance for rest. In this state, they remain aware of their surroundings while immersing themselves in memories and meditation.\n\nOver millennia, the environment subtly transforms elves, imbuing them with certain kinds of magic. Thus, for example, high elves, drow, and wood elves were formed.\n\nDrow. Drow have been influenced by the Underdark, where they typically dwell. Individual drow and entire communities avoid the Underdark, yet still possess its magic. For example, in the Eberron setting, drow dwell in the tropical forests and cyclopean ruins of the continent of Xen'drik.\n\nHigh Elves. High elves have absorbed the magic of the crossroads between the Feywild and the Material Plane. In some worlds, they call themselves by other names. For example, in the Forgotten Realms they call themselves sun or moon elves, they are also the Silvanesti and Qualinesti in the Dragonlance setting, and the Aereni in the Eberron setting.\n\nWood Elves. Wood elves carry the magic of primeval forests. They are known by many other names, such as wild, green, or sylvan elves. The Grugach are reclusive wood elves from the Greyhawk setting, and the Kagonesti and Tairnadal are wood elves from the Dragonlance and Eberron settings, respectively.",
+    "ru": "Созданные богом Кореллоном, первые эльфы могли неограниченно менять свой облик. Они утратили эту способность, когда Кореллон проклял их за сговор с божеством Лолс, пытавшейся узурпировать власть Кореллона и потерпевшей неудачу. После изгнания Лолс в Бездну большинство эльфов отреклись от неё и заслужили прощение Кореллона, но то, что Кореллон отнял у них, было потеряно навсегда.\n\nНеспособные больше неограниченно менять облик, эльфы ушли в Страну Фей, влияние которой ещё усилило их печаль. Со временем любопытство привело многих из них к исследованию других Планов бытия, включая миры Материального плана.\n\nУ эльфов заострённые уши и отсутствуют волосы на лице и теле. Они живут около 750 лет и не спят, вместо этого для отдыха впадая в транс. В этом состоянии они по-прежнему осознают свое окружение, одновременно погружаясь в воспоминания и медитации.\n\nЗа тысячелетия окружающая среда незаметно преображает эльфов, наделяя их определёнными видами магии. Таким образом, например, сформировались высшие эльфы, дроу и лесные эльфы.\n\nДроу. На Дроу повлияло Подземье, где они обычно и обитают. Отдельные дроу и целые их общины избегают Подземья, но все же обладают его магией. Например, в сеттинге \"Эберрон\" дроу обитают в тропических лесах и циклопических руинах на континенте Зендрик.\n\nВысшие эльфы. Высшие эльфы впитали магию перекрёстков между Страной Фей и Материальным планом. В некоторых мирах они называют себя другими именами. Например, в Забытых королевствах они называют себя солнечными или лунными эльфами, они же — Сильванести и Квалинести в сеттинге \"Саги о копье\" и Эрени в сеттинге \"Эберрон\".\n\nЛесные эльфы. Лесные эльфы несут в себе магию первобытных лесов. Они известны под многими другими именами, такими, как дикие, зелёных или древесные эльфы. Гругачи — лесные эльфы-затворники из сеттинга Серого ястреба, а Кагонести и Тайрнадал — лесные эльфы из Саги о копьях и Эберрона сеттинга, соответственно."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "fey",
+    "long-lived",
+    "magic",
+    "trance"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Elven Lineage",
+        "ru": "Эльфийский род"
+      },
+      "description": {
+        "en": "You belong to an ancient lineage, which grants you unusual abilities. Choose a lineage from the Elven Lineages table. You gain the 1st-level benefit of that lineage.\n\nWhen you reach character levels 3 and 5, you learn a spell each, as shown in the table. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest. You can also cast it using any spell slots you have of the appropriate level.\n\nYour spellcasting ability for these spells is Intelligence, Wisdom, or Charisma (choose with the lineage).\n\nElven Lineages:\nLineage - 1st Level - 3rd Level - 5th Level\nHigh Elves - You learn the Prestidigitation cantrip. Whenever you finish a Long Rest, you can replace this cantrip with another cantrip from the Wizard spell list. - Detect Magic - Misty Step\nDrow - The range of your Darkvision increases to 120 feet. You also learn the Dancing Lights cantrip. - Faerie Fire - Darkness\nWood Elves - Your Speed increases to 35 feet. You learn the Druidcraft cantrip. - Longstrider - Pass without Trace",
+        "ru": "Вы принадлежите к древнему роду, что даёт вам необычные способности. Выберите род из таблицы Эльфийские рода. Вы получаете преимущество 1-го уровня этого рода.\n\nКогда вы достигаете 3-го и 5-го уровней персонажа, вы изучаете по заклинанию, как показано в таблице. У вас всегда подготовлено это заклинание. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха. Вы также можете сотворять его с помощью имеющихся у вас ячеек заклинаний подходящего уровня.\n\nВашей заклинательной характеристикой для этих заклинаний является Интеллект, Мудрость или Харизма (вы выбираете вместе с выбором рода).\n\nЭльфийские рода:\nРод - 1-й уровень - 3-й уровень - 5-й уровень\nВысшие эльфы - Вы узнаёте заговор Фокусы. Всякий раз, когда вы завершаете Долгий отдых, вы можете заменить этот заговор на другой заговор из списка заклинаний Волшебника. - Обнаружение магии - Туманный шаг\nДроу - Дальность вашего Тёмного зрения увеличивается до 120 футов. Вы также узнаёте заговор Пляшущие огоньки. - Огонь фей - Тьма\nЛесные эльфы - Ваша Скорость увеличивается до 35 футов. Вы узнаёте заговор Искусство друидов. - Скороход - Бесследное передвижение"
+      },
+      "is_placeholder": true
+    },
+    {
+      "name": {
+        "en": "Fey Ancestry",
+        "ru": "Наследие фей"
+      },
+      "description": {
+        "en": "You have Advantage on saving throws to avoid or end the Charmed condition.",
+        "ru": "Вы совершаете с Преимуществом спасброски на избежание или окончание состояния Очарованный."
+      }
+    },
+    {
+      "name": {
+        "en": "Keen Senses",
+        "ru": "Обострённые чувства"
+      },
+      "description": {
+        "en": "You have proficiency in one skill: Insight, Perception, or Survival.",
+        "ru": "Вы владеете одним навыком: Восприятие, Выживание или Проницательность."
+      }
+    },
+    {
+      "name": {
+        "en": "Trance",
+        "ru": "Транс"
+      },
+      "description": {
+        "en": "You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend them in meditation, similar to a trance, during which you remain conscious.",
+        "ru": "Вам не нужно спать, и вас невозможно усыпить магически. Вы можете завершить Долгий отдых за 4 часа, если проведёте их в медитации, подобной трансу, во время которой вы остаётесь в сознании."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  },
+  "subspecies": [
+    {
+      "id": "high_elf",
+      "name": {
+        "en": "High Elf",
+        "ru": "Высший эльф"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "High Elf Magic",
+            "ru": "Магия высших эльфов"
+          },
+          "description": {
+            "en": "You learn the Prestidigitation cantrip. Whenever you finish a Long Rest, you can replace this cantrip with another cantrip from the Wizard spell list.",
+            "ru": "Вы узнаёте заговор Фокусы. Всякий раз, когда вы завершаете Долгий отдых, вы можете заменить этот заговор на другой заговор из списка заклинаний Волшебника."
+          },
+          "level": 1
+        },
+        {
+          "name": {
+            "en": "Detect Magic",
+            "ru": "Обнаружение магии"
+          },
+          "description": {
+            "en": "You always have Detect Magic prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Обнаружение магии. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 3
+        },
+        {
+          "name": {
+            "en": "Misty Step",
+            "ru": "Туманный шаг"
+          },
+          "description": {
+            "en": "You always have Misty Step prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Туманный шаг. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 5
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "drow",
+      "name": {
+        "en": "Drow",
+        "ru": "Дроу"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Drow Magic",
+            "ru": "Магия дроу"
+          },
+          "description": {
+            "en": "The range of your Darkvision increases to 120 feet. You also learn the Dancing Lights cantrip.",
+            "ru": "Дальность вашего Тёмного зрения увеличивается до 120 футов. Вы также узнаёте заговор Пляшущие огоньки."
+          },
+          "level": 1
+        },
+        {
+          "name": {
+            "en": "Faerie Fire",
+            "ru": "Огонь фей"
+          },
+          "description": {
+            "en": "You always have Faerie Fire prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Огонь фей. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 3
+        },
+        {
+          "name": {
+            "en": "Darkness",
+            "ru": "Тьма"
+          },
+          "description": {
+            "en": "You always have Darkness prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Тьма. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 5
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "wood_elf",
+      "name": {
+        "en": "Wood Elf",
+        "ru": "Лесной эльф"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Wood Elf Magic",
+            "ru": "Магия лесных эльфов"
+          },
+          "description": {
+            "en": "Your Speed increases to 35 feet. You learn the Druidcraft cantrip.",
+            "ru": "Ваша Скорость увеличивается до 35 футов. Вы узнаёте заговор Искусство друидов."
+          },
+          "level": 1
+        },
+        {
+          "name": {
+            "en": "Longstrider",
+            "ru": "Скороход"
+          },
+          "description": {
+            "en": "You always have Longstrider prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Скороход. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 3
+        },
+        {
+          "name": {
+            "en": "Pass without Trace",
+            "ru": "Бесследное передвижение"
+          },
+          "description": {
+            "en": "You always have Pass without Trace prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
+            "ru": "У вас всегда подготовлено заклинание Бесследное передвижение. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
+          },
+          "level": 5
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    }
+  ]
+}

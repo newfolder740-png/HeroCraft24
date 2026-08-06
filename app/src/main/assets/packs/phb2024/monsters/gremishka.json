@@ -1,0 +1,118 @@
+{
+    "id":  "gremishka",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Gremishka",
+                 "ru":  "Гремишка"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Гремишка\nЧувствительная к магии бестия-магоборец\n\nГремишки — магически нестабильные творения заблудших заклинателей. Эти ходячие катастрофы наслаждаются, мучая заклинателей, и стремятся уничтожить всё, что с ними связано, особенно книги заклинаний, магические компоненты и фамильяров. Подвергнувшись воздействию магии, одинокая гремишка взрывается разрушительным роем своих двойников."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "tiny",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "chaotic evil",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "31 (7d4 + 14)",
+    "hit_dice":  "7d4 + 14",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  14,
+                           "constitution":  15,
+                           "intelligence":  11,
+                           "wisdom":  14,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  [
+                              "(только в форме роя)"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "понимает Общий, но не говорит",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Гремишка совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой (только в форме роя)"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для Крошечного существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Кишащие укусы (только в форме роя)"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 12 (3к6 + 2) Колющего урона — или 9 (3к4 + 2) Колющего урона, если рой Окровавлен, — плюс 7 (2к6) Силового урона. Если цель настроена на магические предметы, одна из её Настроек оканчивается (на выбор Мастера)."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

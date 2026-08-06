@@ -1,0 +1,118 @@
+{
+    "id":  "octopus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Octopus",
+                 "ru":  "Осьминог"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "small",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "3 (1d6)",
+    "hit_dice":  "1d6",
+    "initiative":  "+2 (12)",
+    "speed":  {
+                  "walk":  5,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  4,
+                           "dexterity":  15,
+                           "constitution":  11,
+                           "intelligence":  3,
+                           "wisdom":  10,
+                           "charisma":  4
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "perception":  2,
+                   "stealth":  6
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "12"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0,
+    "xp":  10,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Уплотнение"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Осьминог может проходить через пространство шириной всего 1 дюйм, не тратя на это дополнительное перемещение."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Подводное дыхание"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Осьминог может дышать только под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Щупальца"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 1 Дробящего урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Чернильное облако (1/день)"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: Существо оканчивает свой ход в пределах 5 футов от осьминога, находящегося под водой. Эффект: Осьминог выпускает чернила, которые заполняют 5-футовый Куб с центром на себе, после чего осьминог перемещается на расстояние, не превышающее его Скорость плавания. Этот Куб — Сильно заслонённая местность на 1 минуту или пока чернила не рассеет сильное течение или аналогичный эффект."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

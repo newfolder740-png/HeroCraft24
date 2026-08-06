@@ -1,0 +1,125 @@
+{
+    "id":  "lizardfolk_sovereign",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Lizardfolk Sovereign",
+                 "ru":  "Верховный людоящер"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Людоящеры\nЗащищающие свои земли рептилии\n\nЛюдоящеры обитают в дикой местности, наполненной первозданной магией. Хотя большинство людоящеров обладают различными навыками и считаются Гуманоидами, некоторые из них вступают в могущественный союз со Стихийным планом Земли и обретают магическую связь с циклом роста и перерождения.\n\nВерховные людоящеры проходят магические ритуалы, которые наделяют их невообразимой силой и магией Стихийного плана Земли, но также могут и пробудить в них первобытную жестокость."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "elemental"
+             ],
+    "size":  "medium",
+    "creature_type":  "elemental",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "78 (12d8 + 24)",
+    "hit_dice":  "12d8 + 24",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  12,
+                           "constitution":  15,
+                           "intelligence":  11,
+                           "wisdom":  11,
+                           "charisma":  15
+                       },
+    "saving_throws":  {
+                          "constitution":  4,
+                          "wisdom":  2
+                      },
+    "skills":  {
+                   "perception":  4,
+                   "stealth":  5
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened"
+                             ],
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "Драконий, Первичный (Терран)",
+    "challenge_rating":  4,
+    "xp":  1100,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Людоящер совершает одну атаку Укусом и одну атаку Земляным молотом."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Укус"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 8 (1к10 + 3) Колющего урона. Если цель — существо, кроме Конструктов и Нежити, то людоящер получает Временные хиты, равные нанесённому урону."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Земляной молот"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 10 (2к6 + 3) Дробящего урона. Если цель — существо Среднего размера или меньше, она становится Опрокинутой."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Налёт"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Людоящер перемещается по прямой на расстояние вплоть до значения его Скорости или Скорости плавания к видимой ему цели."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp",
+                        "forest"
+                    ],
+    "treasure":  "Личные",
+    "equipment":  null
+}

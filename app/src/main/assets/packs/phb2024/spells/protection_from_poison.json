@@ -1,0 +1,43 @@
+{
+  "id": "protection_from_poison",
+  "type": "spell",
+  "format_version": 1,
+  "name": {
+    "en": "Protection from Poison",
+    "ru": "Защита от яда"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы касаетесь существа и снимаете с него состояние Отравленный. Пока заклинание действует, цель обладает Сопротивлением урону Ядом и совершает с Преимуществом спасброски для избежания или окончания состояния Отравленный."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB 2024"
+  },
+  "tags": [
+    "spell"
+  ],
+  "level": 2,
+  "school": "abjuration",
+  "casting_time": "Действие",
+  "range": {
+    "type": "range",
+    "text": "Касание"
+  },
+  "components": [
+    "V",
+    "S"
+  ],
+  "duration": "1 час",
+  "concentration": false,
+  "ritual": false,
+  "classes": [
+    "phb2024:druid",
+    "phb2024:cleric",
+    "phb2024:paladin",
+    "phb2024:ranger"
+  ]
+}

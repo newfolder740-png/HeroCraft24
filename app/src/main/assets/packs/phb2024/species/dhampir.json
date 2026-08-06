@@ -1,0 +1,80 @@
+{
+  "id": "dhampir",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Dhampir",
+    "ru": "Дампир"
+  },
+  "description": {
+    "en": "Dhampirs are alive, yet possess both the abilities of vampires and their terrible hunger. Most dhampirs thirst for blood, but some feed on dreams, life energy, or other sources. Each dhampir must choose whether to try to keep their hunger under control — or to give in to predatory desires.\n\nA new dhampir typically arises after an encounter with a vampire. Some are descendants of powerful vampires, while others are only partially transformed by a vampire's bite. Horrific bargains and necromantic rituals can also produce a new dhampir. However a dhampir became a dhampir, all are distinguished by various manifestations of their vampiric nature, including greater speed and life-draining bites.",
+    "ru": "Дампиры живы, но обладают как способностями вампиров, так и их ужасным голодом. Большинство дампиров жаждут крови, но некоторые питаются снами, жизненной энергией или из других источников. Каждый дампир должен выбрать, будет ли он пытаться держать свой голод под контролем — или поддаться хищническим желаниям.\n\nНовый дампир, как правило, появляется после встречи с вампиром. Часть из них — это потомки могущественных вампиров, часть — лишь частично превращены при укусе вампира. Из ужасающих сделок и ритуалов некромантов тоже может выйти новый дампир. Каким бы образом дампир ни стал дампиром, всех их отличают различные проявления их вампирской натуры, включая большую скорость и высасывающие жизнь укусы."
+  },
+  "source": {
+    "book": {
+      "en": "Ravenloft: The Witchlight",
+      "ru": "Равенлофт: Ведьмин свет"
+    },
+    "abbreviation": "RTW"
+  },
+  "tags": [
+    "vampire",
+    "undead",
+    "gothic"
+  ],
+  "creature_type": "humanoid",
+  "size": "medium",
+  "speed": 35,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "Вы обладаете Тёмным зрением дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Spider Climb",
+        "ru": "Паучье лазание"
+      },
+      "description": {
+        "en": "You have a Climb Speed equal to your Speed. At character level 3, you can move up, down, and across vertical surfaces and ceilings without using your hands.",
+        "ru": "Вы обладаете Скоростью лазания, равной вашей Скорости. Достигнув 3-го уровня персонажа, вы можете перемещаться вверх, вниз и по горизонтали на вертикальных поверхностях и потолках, не требуя для этого рук."
+      }
+    },
+    {
+      "name": {
+        "en": "Un-life Trail",
+        "ru": "След не-жизни"
+      },
+      "description": {
+        "en": "You have Resistance to Necrotic damage.",
+        "ru": "Вы обладаете Сопротивлением Некротическому урону."
+      }
+    },
+    {
+      "name": {
+        "en": "Vampiric Bite",
+        "ru": "Укус вампира"
+      },
+      "description": {
+        "en": "When you make an Unarmed Strike and deal damage with it, you can deal the damage as a bite with your fangs. In that case, instead of the normal Unarmed Strike damage, you deal Piercing damage equal to 1d4 + your Constitution modifier.\n\nIn addition, when you make such a bite against a creature, and that creature isn't a Construct or Undead, you can empower yourself, choosing from the following options:\n\nDrain. You regain Hit Points equal to the Piercing damage dealt by the bite.\n\nEmpower. You gain a bonus to the next attack roll or ability check you make within the next minute; this bonus equals the Piercing damage dealt by the bite.\n\nYou can empower yourself this way a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
+        "ru": "Когда вы совершаете Безоружный удар и наносите им урон, вы можете нанести этот урон укусом вашими клыками. В таком случае вместо обычного урона Безоружного удара вы наносите Колющий урон, равный 1к4 + ваш модификатор Телосложения.\n\nКроме того, когда вы совершаете такой укус по существу, и это существо не Конструкт и не Нежить, вы можете укрепить себя, выбирая из следующих вариантов:\n\nВытягивание. Вы восстанавливаете Хиты в количестве, равном нанесённому укусом Колющему урону.\n\nУсиление. Вы получаете бонус к следующему вашему броску атаки или проверке характеристики, совершаемым в течение следующей минуты; этот бонус равен нанесённому укусом Колющему урону.\n\nВы можете укрепить себя таким образом количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
+      }
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  }
+}

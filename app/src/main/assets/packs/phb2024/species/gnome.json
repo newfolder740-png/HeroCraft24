@@ -1,0 +1,128 @@
+{
+  "id": "gnome",
+  "type": "species",
+  "format_version": 1,
+  "name": {
+    "en": "Gnome",
+    "ru": "Гном"
+  },
+  "description": {
+    "en": "Gnomes are a magical folk created by the gods of invention, illusion, and underground life. The first gnomes were rarely seen due to their secretive nature and tendency to live in forests and burrows. Small in size, they made up for it with cleverness. They confounded predators with traps and labyrinthine tunnels. They learned magic from gods such as Garl Glittergold, Baervan Wildwanderer, and Baravar Cloakshadow, who visited them incognito. This magic eventually distinguished the lineages of forest gnomes and rock gnomes.\n\nGnomes are diminutive folk with large eyes and pointed ears, who live about 425 years. Many gnomes enjoy the feeling of a roof overhead, even if that \"roof\" is just a hat.",
+    "ru": "Гномы — волшебный народ, созданный богами изобретательства, иллюзий и подземной жизни. Первых гномов мало кто видел из-за их скрытной природы и склонности жить в лесах и норах. Невеликие размером, они возмещали это умом. Они запутывали хищников с толку ловушками и лабиринтами туннелей. Они учились магии у таких богов, как Гарл Златоблеск, Бэрван Дикий Странник и Баравар Теневой Плащ, которые посещали их инкогнито. Эта магия со временем выделила роды лесных гномов и скальных гномов.\n\nГномы — миниатюрный народец с большими глазами и заострёнными ушами, который живет порядка 425 лет. Многим гномам нравится ощущение крыши над головой, даже если эта \"крыша\" - всего лишь шляпа."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "fey",
+    "magic",
+    "underground",
+    "forest"
+  ],
+  "creature_type": "humanoid",
+  "size": "small",
+  "speed": 30,
+  "darkvision": 60,
+  "traits": [
+    {
+      "name": {
+        "en": "Darkvision",
+        "ru": "Тёмное зрение"
+      },
+      "description": {
+        "en": "You have Darkvision with a range of 60 feet.",
+        "ru": "У вас есть Тёмное зрение дальностью 60 футов."
+      }
+    },
+    {
+      "name": {
+        "en": "Gnomish Cunning",
+        "ru": "Гномья хитрость"
+      },
+      "description": {
+        "en": "You have Advantage on Intelligence, Wisdom, and Charisma saving throws.",
+        "ru": "Вы совершаете с Преимуществом спасброски Интеллекта, Мудрости и Харизмы."
+      }
+    },
+    {
+      "name": {
+        "en": "Gnomish Lineage",
+        "ru": "Гномий род"
+      },
+      "description": {
+        "en": "You belong to a gnomish lineage that grants you unusual abilities. Choose one of the following options; whichever you choose, Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you choose the lineage):",
+        "ru": "Вы принадлежите к гномьему роду, что наделяет вас необычными способностями. Выберите один из следующих вариантов; какой бы из них вы ни выбрали, Интеллект, Мудрость или Харизма — ваша заклинательная характеристика для заклинаний, сотворяемых вами с этой особенностью (выберите характеристику при выборе рода):"
+      },
+      "is_placeholder": true
+    }
+  ],
+  "ability_score_increases": [
+    
+  ],
+  "languages": {
+    "count": 1,
+    "default": [
+      "common"
+    ]
+  },
+  "subspecies": [
+    {
+      "id": "forest_gnome",
+      "name": {
+        "en": "Forest Gnome",
+        "ru": "Лесной гном"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Forest Gnome Magic",
+            "ru": "Магия лесных гномов"
+          },
+          "description": {
+            "en": "You know the Minor Illusion cantrip. In addition, you always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also cast this spell using any spell slots you have.",
+            "ru": "Вы знаете заговор Малая иллюзия. Кроме того, у вас всегда подготовлено заклинание Разговор с животными. Вы можете сотворять его без ячейки заклинаний количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха. Вы также можете сотворять это заклинание, используя любые имеющиеся у вас ячейки заклинаний."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    },
+    {
+      "id": "rock_gnome",
+      "name": {
+        "en": "Rock Gnome",
+        "ru": "Скальный гном"
+      },
+      "description": {
+        "en": "",
+        "ru": ""
+      },
+      "traits": [
+        {
+          "name": {
+            "en": "Rock Gnome Ingenuity",
+            "ru": "Изобретательность скальных гномов"
+          },
+          "description": {
+            "en": "You know the Mending and Prestidigitation cantrips. In addition, you can spend 10 minutes casting Prestidigitation to create a Tiny clockwork device (AC 5, 1 HP), such as a toy, a lighter, or a music box. When you create the device, you determine its function by choosing one of Prestidigitation's effects; the device produces that effect whenever you or another creature touches it and activates it as a Bonus Action. If the chosen effect has options, you choose the option when you create the device. You can have no more than three such devices at a time; each one falls apart 8 hours after creation or if you dismantle it by touching it and using a Utilize action.",
+            "ru": "Вы знаете заговоры Починка и Фокусы. Кроме того, вы можете потратить 10 минут, сотворяя Фокусы, чтобы создать Крошечное заводное устройство (КЗ 5, 1 Хит), такое как игрушка, зажигалка или музыкальная шкатулка. Когда вы создаете устройство, вы определяете его функцию, выбирая один из эффектов Фокусов; устройство создаёт этот эффект всякий раз, когда вы или другое существо Бонусным действием активируете его прикосновением. Если выбранный эффект вариативен, вы выбираете вариант при создании устройства. Вы можете иметь не более чем три таких устройства одновременно; каждое из них разваливается через 8 часов после создания или если вы демонтируете его, касаясь, действием Использование."
+          },
+          "level": 1
+        }
+      ],
+      "ability_score_increases": [
+        
+      ]
+    }
+  ]
+}

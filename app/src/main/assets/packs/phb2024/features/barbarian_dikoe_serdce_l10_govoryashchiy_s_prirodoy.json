@@ -1,0 +1,10 @@
+{
+  "id": "barbarian_dikoe_serdce_l10_govoryashchiy_s_prirodoy",
+  "type": "feature",
+  "format_version": 1,
+  "name": {"en": "", "ru": "Говорящий с природой"},
+  "description": {"en": "", "ru": "Вы можете сотворять заклинание Общение с природой, но только как Ритуал. Вашей заклинательной характеристикой для него является Мудрость."},
+  "level": 10,
+  "is_placeholder": false,
+  "is_subclass_choice": false
+}

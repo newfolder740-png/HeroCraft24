@@ -1,0 +1,117 @@
+{
+    "id":  "thri_kreen_psion",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Thri-kreen Psion",
+                 "ru":  "Три-крин псион"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Три-крины\nБогомолоподобные псионики и выживальщики\n\nТри-крины — это похожие на богомолов скитальцы, которые для выживания полагаются на врождённый камуфляж и психические силы. Разные группы три-кринов обладают отличными друг от друга хитиновыми покровами: от каменистых оттенков у обитателей пустынь до ярких красок у жителей цветущих лесов. Хотя их язык и несёт в себе отчётливое насекомое звучание, для общения три-крины часто прибегают к телепатии; целые отряды способны стремительно обмениваться обилием подробной информации, не издавая при этом ни звука.\n\nТри-крины псионы обращают свои психические силы на то, чтобы избегать опасностей и управлять предметами на расстоянии."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  16,
+    "armor_class_description":  null,
+    "hit_points":  "149 (23d8 + 46)",
+    "hit_dice":  "23d8 + 46",
+    "initiative":  "+6 (16)",
+    "speed":  {
+                  "walk":  40,
+                  "fly":  20,
+                  "hover":  true
+              },
+    "ability_scores":  {
+                           "strength":  18,
+                           "dexterity":  15,
+                           "constitution":  14,
+                           "intelligence":  19,
+                           "wisdom":  12,
+                           "charisma":  11
+                       },
+    "saving_throws":  {
+                          "strength":  7,
+                          "dexterity":  5,
+                          "constitution":  5,
+                          "intelligence":  7
+                      },
+    "skills":  {
+                   "perception":  4,
+                   "stealth":  8
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "psychic"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "14"
+               },
+    "languages":  "Три-кринский, Телепатия 120 фт.",
+    "challenge_rating":  8,
+    "xp":  3900,
+    "proficiency_bonus":  3,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Три-крин совершает три атаки Психическим копьём."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Психическое копьё"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной или дальнобойной атаки: +7, досягаемость 10 фт. или дистанция 120 фт. Попадание: 18 (4к6 + 4) Психического урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Три-крин псион сотворяет одно из следующих заклинаний (заклинательная характеристика — Интеллект, Сл спасброска заклинаний 15):\nНеограниченно: Волшебная рука (рука Невидима)\n1/день каждое: Обнаружение мыслей, Послание, Синаптический разряд"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "grassland",
+                        "desert"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

@@ -1,0 +1,99 @@
+{
+    "id":  "violet_fungus",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Violet Fungus",
+                 "ru":  "Фиолетовый сморчок"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Грибы\nСмертоносные споры и хищные полипы\n\nСырое и лишённое солнца Подземье — идеальное место для размножения странных и опасных грибов.\n\nФиолетовые сморчки — медленные, но способные передвигаться грибы, разлагающие любую плоть, к которой прикасаются своими извивающимися усиками."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "plant"
+             ],
+    "size":  "medium",
+    "creature_type":  "plant",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  5,
+    "armor_class_description":  null,
+    "hit_points":  "18 (4d8)",
+    "hit_dice":  "4d8",
+    "initiative":  "-5 (5)",
+    "speed":  {
+                  "walk":  5
+              },
+    "ability_scores":  {
+                           "strength":  3,
+                           "dexterity":  1,
+                           "constitution":  10,
+                           "intelligence":  1,
+                           "wisdom":  3,
+                           "charisma":  1
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "deafened",
+                                 "blinded",
+                                 "charmed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "6"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.25,
+    "xp":  50,
+    "proficiency_bonus":  2,
+    "traits":  [
+
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Сморчок совершает две атаки Разлагающим касанием."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Разлагающее касание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +2, досягаемость 10 фт. Попадание: 4 (1к8) Некротического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "underdark"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

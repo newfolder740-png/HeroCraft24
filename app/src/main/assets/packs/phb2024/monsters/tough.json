@@ -1,0 +1,103 @@
+{
+    "id":  "tough",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Tough",
+                 "ru":  "Громила"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "humanoid"
+             ],
+    "size":  "medium",
+    "creature_type":  "humanoid",
+    "subtype":  null,
+    "alignment":  "neutral",
+    "armor_class":  12,
+    "armor_class_description":  null,
+    "hit_points":  "32 (5d8 + 10)",
+    "hit_dice":  "5d8 + 10",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  15,
+                           "dexterity":  12,
+                           "constitution":  14,
+                           "intelligence":  10,
+                           "wisdom":  10,
+                           "charisma":  11
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "Общий",
+    "challenge_rating":  0.5,
+    "xp":  100,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Тактика стаи"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Громила совершает с Преимуществом броски атаки по существу, если его союзник, не имеющий состояния Недееспособный, находится в пределах 5 футов от этого существа."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Булава"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +4, досягаемость 5 фт. Попадание: 5 (1к6 + 2) Дробящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Тяжёлый арбалет"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +3, дистанция 100/400 фт. Попадание: 6 (1к10 + 1) Колющего урона.\nГромилы\nГромилы — это телохранители, задиры и простые трудяги, которые полагаются на грубую силу, чтобы запугивать противников. Среди них встречаются бывалые уголовники, шумные завсегдатаи таверн, чернорабочие и другие, привыкшие добиваться своего кулаками.\nГромилы могут действовать сообща под началом предводителя или в одиночку, принуждая слабых им подчиняться."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  "Булава, Кожаный доспех, Тяжёлый арбалет"
+}

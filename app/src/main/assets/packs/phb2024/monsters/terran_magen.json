@@ -1,0 +1,151 @@
+{
+    "id":  "terran_magen",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Terran Magen",
+                 "ru":  "Маген-земельник"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Магены\nСотворённые из магии универсальные слуги\n\nМагены — это человекоподобные существа, созданные при помощи магии и без колебаний исполняющие приказы своих создателей. Тела магенов состоят из чистой магической энергии, но вполне материальны. Кровь их напоминает ртуть, а после гибели они рассыпаются в прах.\n\nМагены-земельники наделены магией для выполнения тяжёлой физической работы. Обычно они занимаются домашним хозяйством и возведением построек."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "medium",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  21,
+    "armor_class_description":  null,
+    "hit_points":  "121 (22d8 + 22)",
+    "hit_dice":  "22d8 + 22",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  30,
+                  "fly":  20,
+                  "hover":  true
+              },
+    "ability_scores":  {
+                           "strength":  16,
+                           "dexterity":  10,
+                           "constitution":  12,
+                           "intelligence":  10,
+                           "wisdom":  18,
+                           "charisma":  10
+                       },
+    "saving_throws":  {
+                          "wisdom":  7
+                      },
+    "skills":  {
+                   "perception":  7
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  [
+                              "thunder",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "deafened",
+                                 "petrified",
+                                 "blinded",
+                                 "poisoned",
+                                 "charmed",
+                                 "paralyzed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "17"
+               },
+    "languages":  "знает Общий плюс два других языка, но не говорит",
+    "challenge_rating":  8,
+    "xp":  3900,
+    "proficiency_bonus":  3,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Распад"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Если маген умирает, он распадается в пыль, роняя всё, что он носил или нёс."
+                                       }
+                   },
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Сопротивление магии"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Маген совершает с Преимуществом спасброски от заклинаний и прочих магических эффектов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Маген совершает две атаки Кулаком-молотом или Громовым раскатом в любой комбинации."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Кулак-молот"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +6, досягаемость 5 фт. Попадание: 16 (3к8 + 3) Дробящего урона плюс 13 (3к8) Силового урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Громовой раскат"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +7, дистанция 60 фт. Попадание: 28 (8к6) урона Звуком."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Сотворение заклинаний"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Маген-земельник сотворяет одно из следующих заклинаний, не нуждаясь в Материальных компонентах (заклинательная характеристика — Мудрость, Сл спасброска заклинаний 15):\nНеограниченно: Волшебная рука, Починка, Фокусы\n1/день каждое: Движение почвы, Дезинтеграция, Изменение формы камня"
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "any"
+                    ],
+    "treasure":  "Магические",
+    "equipment":  null
+}

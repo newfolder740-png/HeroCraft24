@@ -1,0 +1,114 @@
+{
+    "id":  "swarm_of_stirges",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Swarm of Stirges",
+                 "ru":  "Рой кровопийц"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Кровопийцы\nИзвестные приставучие пиявки\n\nКровопийцы — паразиты размером не больше летучей мыши и с хоботками длиной с кинжал, которыми они присасываются к другим существам и вытягивают из них всю кровь и жизнь. Они наиболее активны по ночам, а днём прячутся в тёмных местах. Будучи потревоженными, они улетают или защищают себя. Совершите бросок по таблице «Гнездовье кровопийцы» для вдохновения или сами выберите место, где скрываются кровопийцы.\n\nГнездовье кровопийцы\n1к4\tДо и после охоты кровопийца прячется…\n1\tНа чердаке или в мебели разрушенного здания.\n2\tВнутри пещеры или узкой расщелины.\n3\tВ дупле дерева или зарослях растений.\n4\tВнутри останков гигантского мёртвого существа.\nИногда на болотах и в пещерах Подземья сбивается целая стая кровопийц. Они нападают на домашний скот и любых других существ, у которых не получается убежать от них."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "monstrosity"
+             ],
+    "size":  "medium",
+    "creature_type":  "monstrosity",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "36 (8d8)",
+    "hit_dice":  "8d8",
+    "initiative":  "+3 (13)",
+    "speed":  {
+                  "walk":  10,
+                  "fly":  40
+              },
+    "ability_scores":  {
+                           "strength":  4,
+                           "dexterity":  16,
+                           "constitution":  11,
+                           "intelligence":  2,
+                           "wisdom":  8,
+                           "charisma":  6
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "petrified",
+                                 "prone",
+                                 "restrained",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "9"
+               },
+    "languages":  "нет",
+    "challenge_rating":  2,
+    "xp":  450,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Рой"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Рой может занимать пространство другого существа и наоборот, а также рой может проходить через отверстия, которые достаточно велики для Крошечного существа. Рой не может восстанавливать Хиты или получать Временные хиты."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Рой хоботков"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 14 (2к10 + 3) Колющего урона, или 8 (1к10 + 3) Колющего урона, если рой Окровавлен. Если цель — существо Среднего размера или меньше в пространстве стаи, она Схвачена (Сл высвобождения от захвата 13). Пока длится захват, цель получает 7 (2к6) Некротического урона в конце каждого своего хода."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "swamp",
+                        "urban",
+                        "mountains",
+                        "forest",
+                        "grassland",
+                        "underdark",
+                        "desert",
+                        "hills"
+                    ],
+    "treasure":  "Отсутствуют",
+    "equipment":  null
+}

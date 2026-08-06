@@ -1,0 +1,15 @@
+{
+    "id":  "visions_of_distant_realms",
+    "name":  {
+                 "en":  "Visions of Distant Realms",
+                 "ru":  "Видения дальних земель"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы можете сотворять заклинание Магический глаз без траты ячеек заклинаний."
+                    },
+    "level":  9,
+    "requirements":  {
+                         "warlock_level":  9
+                     }
+}

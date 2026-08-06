@@ -1,0 +1,131 @@
+{
+    "id":  "psychic_gray_ooze",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Psychic Gray Ooze",
+                 "ru":  "Психическая серая слизь"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Серые слизи\nНенасытные сгустки и последствия магических провалов\n\nСерые слизи — это массы хищной едкой субстанции, что терпеливо поджидают добычу, сливаясь с каменным окружением.\n\nПсихические серые слизи наделены мощными псионическими способностями. Эти существа порой возникают из экспериментов, когда заклинатель терпит крах, пытаясь призвать или создать существ, связанных со Стихийным планом Земли — будь то горгульи или гомункулы."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "ooze"
+             ],
+    "size":  "medium",
+    "creature_type":  "ooze",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  9,
+    "armor_class_description":  null,
+    "hit_points":  "37 (5d8 + 15)",
+    "hit_dice":  "5d8 + 15",
+    "initiative":  "-1 (9)",
+    "speed":  {
+                  "walk":  10,
+                  "climb":  10
+              },
+    "ability_scores":  {
+                           "strength":  12,
+                           "dexterity":  8,
+                           "constitution":  16,
+                           "intelligence":  10,
+                           "wisdom":  6,
+                           "charisma":  2
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  [
+                               "acid",
+                               "fire",
+                               "psychic",
+                               "cold"
+                           ],
+    "damage_immunities":  null,
+    "condition_immunities":  [
+                                 "frightened",
+                                 "exhaustion",
+                                 "deafened",
+                                 "prone",
+                                 "restrained",
+                                 "blinded",
+                                 "charmed",
+                                 "grappled"
+                             ],
+    "senses":  {
+                   "passive_perception":  "8"
+               },
+    "languages":  "нет",
+    "challenge_rating":  1,
+    "xp":  200,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Аморфность"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Слизь может проходить через пространство шириной всего 1 дюйм, не тратя на это дополнительное перемещение."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ложноножка"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 11 (3к6 + 1) урона Кислотой, и цель получает Помеху на спасброски Интеллекта до конца следующего хода слизи."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Психическое сдавливание"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Спасбросок Интеллекта: Сл 10, одно видимое слизью существо в 60 футах. Провал: 13 (3к8) Психического урона."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  [
+                      {
+                          "name":  {
+                                       "en":  "",
+                                       "ru":  "Разъедание разума"
+                                   },
+                          "description":  {
+                                              "en":  "",
+                                              "ru":  "Условие: Слизь проваливает спасбросок против заклинания или другого магического эффекта, исходящего от существа. Эффект: Вызвавшее ответ существо получает 3 (1к6) Психического урона."
+                                          }
+                      }
+                  ],
+    "legendary_actions":  null,
+    "environment":  [
+                        "abyss"
+                    ],
+    "treasure":  "Оружейные",
+    "equipment":  null
+}

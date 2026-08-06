@@ -1,0 +1,96 @@
+{
+    "id":  "giant_crab",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Giant Crab",
+                 "ru":  "Гигантский краб"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  ""
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "beast"
+             ],
+    "size":  "medium",
+    "creature_type":  "beast",
+    "subtype":  null,
+    "alignment":  "unaligned",
+    "armor_class":  15,
+    "armor_class_description":  null,
+    "hit_points":  "13 (3d8)",
+    "hit_dice":  "3d8",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30,
+                  "swim":  30
+              },
+    "ability_scores":  {
+                           "strength":  13,
+                           "dexterity":  13,
+                           "constitution":  11,
+                           "intelligence":  1,
+                           "wisdom":  9,
+                           "charisma":  3
+                       },
+    "saving_throws":  null,
+    "skills":  {
+                   "stealth":  3
+               },
+    "damage_vulnerabilities":  null,
+    "damage_resistances":  null,
+    "damage_immunities":  null,
+    "condition_immunities":  null,
+    "senses":  {
+                   "passive_perception":  "9"
+               },
+    "languages":  "нет",
+    "challenge_rating":  0.125,
+    "xp":  25,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Амфибия"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Краб может дышать как воздухом, так и под водой."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Клешня"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +3, досягаемость 5 фт. Попадание: 4 (1к6 + 1) Дробящего урона. Если цель — существо Среднего размера или меньше, она получает состояние Схваченный (Сл освобождения от захвата 11) от одной из двух клешней."
+                                        }
+                    }
+                ],
+    "bonus_actions":  null,
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+
+                    ],
+    "treasure":  null,
+    "equipment":  null
+}

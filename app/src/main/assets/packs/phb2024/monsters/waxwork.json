@@ -1,0 +1,144 @@
+{
+    "id":  "waxwork",
+    "type":  "monster",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Waxwork",
+                 "ru":  "Восковик"
+             },
+    "short_description":  {
+                              "en":  "",
+                              "ru":  ""
+                          },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Восковик\nКровожадный восковой двойник\n\nВосковики — реалистичные гуманоидные изваяния, стремящиеся убить и заменить собою тех, по образу и подобию кого их изготовили. Обычно эти создания верят, что они и есть подлинные живые существа, а вовсе не копии. Любой восковик, которому предъявят доказательства его истинной природы, впадает в неистовство и не успокоится, пока либо сам, либо его двойник не будет уничтожен.\n\nВ редких случаях восковик может жить так, словно он и есть настоящий оригинал. Подобные личности, как правило, бездушны и тщеславны. Некоторые из них стремятся создавать новых восковиков, чтобы подменить своим видом ещё больше людей."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Monster Manual (2025)",
+                                "ru":  "Бестиарий (2025)"
+                            },
+                   "abbreviation":  "MM 2025",
+                   "page":  null
+               },
+    "tags":  [
+                 "construct"
+             ],
+    "size":  "medium",
+    "creature_type":  "construct",
+    "subtype":  null,
+    "alignment":  "neutral evil",
+    "armor_class":  14,
+    "armor_class_description":  null,
+    "hit_points":  "52 (7d8 + 21)",
+    "hit_dice":  "7d8 + 21",
+    "initiative":  "+1 (11)",
+    "speed":  {
+                  "walk":  30
+              },
+    "ability_scores":  {
+                           "strength":  17,
+                           "dexterity":  13,
+                           "constitution":  16,
+                           "intelligence":  1,
+                           "wisdom":  10,
+                           "charisma":  1
+                       },
+    "saving_throws":  null,
+    "skills":  null,
+    "damage_vulnerabilities":  [
+                                   "к урону Огонь"
+                               ],
+    "damage_resistances":  [
+                               "bludgeoning",
+                               "piercing",
+                               "slashing"
+                           ],
+    "damage_immunities":  [
+                              "psychic",
+                              "poison"
+                          ],
+    "condition_immunities":  [
+                                 "unconscious",
+                                 "frightened",
+                                 "exhaustion",
+                                 "deafened",
+                                 "petrified",
+                                 "blinded",
+                                 "poisoned",
+                                 "charmed",
+                                 "stunned",
+                                 "paralyzed"
+                             ],
+    "senses":  {
+                   "passive_perception":  "10"
+               },
+    "languages":  "знает Общий, но не говорит",
+    "challenge_rating":  3,
+    "xp":  700,
+    "proficiency_bonus":  2,
+    "traits":  [
+                   {
+                       "name":  {
+                                    "en":  "",
+                                    "ru":  "Лепкий"
+                                },
+                       "description":  {
+                                           "en":  "",
+                                           "ru":  "Если восковик получает урон Огнём, до конца своего следующего хода он совершает спасброски с Помехой, а его Скорость снижается на 20 футов."
+                                       }
+                   }
+               ],
+    "actions":  [
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Мультиатака"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Восковик совершает две атаки Резцом скульптора."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Резец скульптора"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок рукопашной атаки: +5, досягаемость 5 фт. Попадание: 10 (2к6 + 3) Рубящего урона."
+                                        }
+                    },
+                    {
+                        "name":  {
+                                     "en":  "",
+                                     "ru":  "Ком воска"
+                                 },
+                        "description":  {
+                                            "en":  "",
+                                            "ru":  "Бросок дальнобойной атаки: +5, дистанция 20/60 фт. Попадание: 8 (2к4 + 3) Дробящего урона, и Скорость цели снижается на 10 футов до конца её следующего хода."
+                                        }
+                    }
+                ],
+    "bonus_actions":  [
+                          {
+                              "name":  {
+                                           "en":  "",
+                                           "ru":  "Перевоплощение"
+                                       },
+                              "description":  {
+                                                  "en":  "",
+                                                  "ru":  "Восковик либо перевоплощается в Гуманоида своего размера, либо возвращается в истинную форму. Его параметры не меняются в зависимости от формы. Любое снаряжение, которое он носит или несёт, не трансформируется."
+                                              }
+                          }
+                      ],
+    "reactions":  null,
+    "legendary_actions":  null,
+    "environment":  [
+                        "urban"
+                    ],
+    "treasure":  "Инструментальные",
+    "equipment":  null
+}
