@@ -1,5 +1,7 @@
 package com.herocraft24.feature.equipment
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -70,9 +72,56 @@ class EquipmentListFragment : Fragment() {
             }
         })
 
-        binding.chipSort.visibility = View.VISIBLE
-        binding.chipSort.setOnClickListener { showSortDialog() }
-        binding.chipFilter.setOnClickListener { showFilterDialog() }
+        // Set sort button to always have transparent background (never changes)
+        val theme = requireContext().theme
+        val typedValue = android.util.TypedValue()
+        val colorOnSurface = if (theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnSurface, typedValue, true
+            )
+        ) {
+            typedValue.data
+        } else {
+            Color.BLACK
+        }
+
+        binding.btnSort.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        binding.btnSort.strokeColor = ColorStateList.valueOf(colorOnSurface)
+        binding.btnSort.setTextColor(colorOnSurface)
+
+        // Update filter button appearance when filters are applied
+        lifecycleScope.launch {
+            vm.filters.collectLatest { filters ->
+                val active = filters.isActive
+
+                val colorPrimary = if (theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorPrimary, typedValue, true
+                    )
+                ) {
+                    typedValue.data
+                } else {
+                    Color.BLUE
+                }
+
+                val colorOnPrimary = if (theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorOnPrimary, typedValue, true
+                    )
+                ) {
+                    typedValue.data
+                } else {
+                    Color.WHITE
+                }
+
+                binding.btnFilter.backgroundTintList =
+                    ColorStateList.valueOf(if (active) colorPrimary else Color.TRANSPARENT)
+                binding.btnFilter.strokeColor =
+                    ColorStateList.valueOf(if (active) colorPrimary else colorOnSurface)
+                binding.btnFilter.setTextColor(if (active) colorOnPrimary else colorOnSurface)
+                binding.btnClearFilters.alpha = if (active) 1f else 0f
+            }
+        }
+
+        binding.btnSort.setOnClickListener { showSortDialog() }
+        binding.btnFilter.setOnClickListener { showFilterDialog() }
         binding.btnClearFilters.setOnClickListener { vm.setFilters(EquipmentFilters()) }
 
         lifecycleScope.launch {

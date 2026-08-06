@@ -1,5 +1,7 @@
 package com.herocraft24.feature.reference
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -66,11 +68,26 @@ class ReferenceListFragment : Fragment() {
 
         val showSearchAndFilter = categoryKey in listOf("feats", "species", "backgrounds", "items", "spells", "monsters")
         binding.searchBar.visibility = if (showSearchAndFilter) View.VISIBLE else View.GONE
-        binding.chipFilter.visibility = if (showSearchAndFilter) View.VISIBLE else View.GONE
+        binding.btnFilter.visibility = if (showSearchAndFilter) View.VISIBLE else View.GONE
         binding.btnClearFilters.visibility = if (showSearchAndFilter) View.VISIBLE else View.GONE
         val showSort = categoryKey in listOf("species", "backgrounds", "feats", "monsters")
-        binding.chipSort.visibility = if (showSort) View.VISIBLE else View.GONE
+        binding.btnSort.visibility = if (showSort) View.VISIBLE else View.GONE
 
+        // Set sort button to always have transparent background (never changes)
+        val theme = requireContext().theme
+        val typedValue = android.util.TypedValue()
+        val colorOnSurface = if (theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnSurface, typedValue, true
+            )
+        ) {
+            typedValue.data
+        } else {
+            Color.BLACK
+        }
+
+        binding.btnSort.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        binding.btnSort.strokeColor = ColorStateList.valueOf(colorOnSurface)
+        binding.btnSort.setTextColor(colorOnSurface)
 
         // Show loading state initially
         stateViewBinder.showLoading()
@@ -82,21 +99,28 @@ class ReferenceListFragment : Fragment() {
             if (_binding == null) return@launch
             allItems = items
             applyFilters()
+            updateFilterButtonAppearance()
         }
 
         if (showSearchAndFilter) {
             binding.searchBar.setOnQueryListener { query ->
                 currentSearchQuery = query
                 applyFilters()
+                updateFilterButtonAppearance()
             }
-            binding.chipFilter.setOnClickListener { showFilterDialog() }
+            binding.btnFilter.setOnClickListener {
+                showFilterDialog()
+            }
             binding.btnClearFilters.setOnClickListener {
                 clearSearchAndFilters()
                 binding.searchBar.clear()
+                updateFilterButtonAppearance()
             }
         }
         if (showSort) {
-            binding.chipSort.setOnClickListener { showSortDialog() }
+            binding.btnSort.setOnClickListener {
+                showSortDialog()
+            }
         }
 
         // System back: if search/filters are active, clear them instead of leaving the tab.
@@ -112,6 +136,88 @@ class ReferenceListFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun hasActiveFilters(): Boolean =
+        currentFilterCategories.isNotEmpty() ||
+        currentFilterSources.isNotEmpty() ||
+        currentFilterArmorTypes.isNotEmpty() ||
+        currentFilterRarities.isNotEmpty() ||
+        currentFilterMaterials.isNotEmpty() ||
+        currentMonsterSizes.isNotEmpty() ||
+        currentMonsterTypes.isNotEmpty() ||
+        currentMonsterChallenge.isNotEmpty() ||
+        currentMonsterEnvironments.isNotEmpty()
+
+    private fun updateFilterButtonAppearance() {
+        val theme = requireContext().theme
+        val typedValue = android.util.TypedValue()
+        val active = hasActiveFilters()
+
+        val colorPrimary = if (theme.resolveAttribute(
+                com.google.android.material.R.attr.colorPrimary, typedValue, true
+            )
+        ) {
+            typedValue.data
+        } else {
+            Color.BLUE
+        }
+
+        val colorOnPrimary = if (theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnPrimary, typedValue, true
+            )
+        ) {
+            typedValue.data
+        } else {
+            Color.WHITE
+        }
+
+        val colorOnSurface = if (theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnSurface, typedValue, true
+            )
+        ) {
+            typedValue.data
+        } else {
+            Color.BLACK
+        }
+
+        binding.btnFilter.backgroundTintList =
+            ColorStateList.valueOf(if (active) colorPrimary else Color.TRANSPARENT)
+        binding.btnFilter.strokeColor =
+            ColorStateList.valueOf(if (active) colorPrimary else colorOnSurface)
+        binding.btnFilter.setTextColor(if (active) colorOnPrimary else colorOnSurface)
+        binding.btnClearFilters.alpha = if (active) 1f else 0f
+    }
+
+    private fun setupFilterDialogCallbacks(sheet: FilterBottomSheet) {
+        sheet.setCallbacks(
+            onApply = { result ->
+                currentFilterCategories = result["category"] ?: emptySet()
+                currentFilterSources = result["source"] ?: emptySet()
+                currentFilterRarities = result["rarity"] ?: emptySet()
+                currentFilterArmorTypes = result["armor_type"] ?: emptySet()
+                currentFilterMaterials = result["material"] ?: emptySet()
+                currentMonsterSizes = result["monster_size"] ?: emptySet()
+                currentMonsterTypes = result["monster_type"] ?: emptySet()
+                currentMonsterChallenge = result["monster_challenge"] ?: emptySet()
+                currentMonsterEnvironments = result["monster_environment"] ?: emptySet()
+                applyFilters()
+                updateFilterButtonAppearance()
+            },
+            onReset = {
+                currentFilterCategories = emptySet()
+                currentFilterSources = emptySet()
+                currentFilterRarities = emptySet()
+                currentFilterArmorTypes = emptySet()
+                currentFilterMaterials = emptySet()
+                currentMonsterSizes = emptySet()
+                currentMonsterTypes = emptySet()
+                currentMonsterChallenge = emptySet()
+                currentMonsterEnvironments = emptySet()
+                applyFilters()
+                updateFilterButtonAppearance()
+            }
+        )
     }
 
     private fun hasActiveSearchOrFilters(): Boolean =
@@ -467,32 +573,7 @@ class ReferenceListFragment : Fragment() {
             "monster_challenge" to currentMonsterChallenge,
             "monster_environment" to currentMonsterEnvironments
         ))
-        sheet.setCallbacks(
-            onApply = { result ->
-                currentFilterCategories = result["category"] ?: emptySet()
-                currentFilterSources = result["source"] ?: emptySet()
-                currentFilterRarities = result["rarity"] ?: emptySet()
-                currentFilterArmorTypes = result["armor_type"] ?: emptySet()
-                currentFilterMaterials = result["material"] ?: emptySet()
-                currentMonsterSizes = result["monster_size"] ?: emptySet()
-                currentMonsterTypes = result["monster_type"] ?: emptySet()
-                currentMonsterChallenge = result["monster_challenge"] ?: emptySet()
-                currentMonsterEnvironments = result["monster_environment"] ?: emptySet()
-                applyFilters()
-            },
-            onReset = {
-                currentFilterCategories = emptySet()
-                currentFilterSources = emptySet()
-                currentFilterRarities = emptySet()
-                currentFilterArmorTypes = emptySet()
-                currentFilterMaterials = emptySet()
-                currentMonsterSizes = emptySet()
-                currentMonsterTypes = emptySet()
-                currentMonsterChallenge = emptySet()
-                currentMonsterEnvironments = emptySet()
-                applyFilters()
-            }
-        )
+        setupFilterDialogCallbacks(sheet)
         sheet.show(childFragmentManager, FilterBottomSheet.TAG)
     }
 

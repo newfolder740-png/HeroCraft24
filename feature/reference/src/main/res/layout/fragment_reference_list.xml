@@ -17,13 +17,17 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_sort"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sort"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Сортировка"
-                style="@style/Widget.Material3.Chip.Suggestion"
-                android:layout_marginStart="4dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:text="Сорт."
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:checkable="false"
+                app:rippleColor="@android:color/transparent"
                 android:visibility="gone" />
 
             <TextView
@@ -32,27 +36,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:maxLines="1" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Фильтр"
-                style="@style/Widget.Material3.Chip.Suggestion"
-                android:visibility="gone" />
-
             <ImageView
                 android:id="@+id/btn_clear_filters"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:contentDescription="Сбросить фильтры"
                 android:padding="6dp"
-                android:layout_marginEnd="4dp"
+                android:alpha="0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_filter"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_marginEnd="8dp"
+                android:text="Фильтр"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:checkable="false"
+                app:rippleColor="@android:color/transparent"
                 android:visibility="gone" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
