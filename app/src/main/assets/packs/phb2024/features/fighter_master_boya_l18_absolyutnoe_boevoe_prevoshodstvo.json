@@ -1,0 +1,16 @@
+{
+  "id": "fighter_master_boya_l18_absolyutnoe_boevoe_prevoshodstvo",
+  "level": 18,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Абсолютное боевое превосходство"
+  },
+  "description": {
+    "en": "",
+    "ru": "Ваши Кости превосходства становятся к12."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

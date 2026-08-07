@@ -1,0 +1,16 @@
+{
+  "id": "fighter_chempion_l3_uluchshennye_kriticheskie_popadaniya",
+  "level": 3,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Улучшенные критические попадания"
+  },
+  "description": {
+    "en": "",
+    "ru": "Ваши броски атаки, с оружием и Безоружные удары, считаются Критическим попаданием при выпадении «19» или «20» на к20 атаки."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

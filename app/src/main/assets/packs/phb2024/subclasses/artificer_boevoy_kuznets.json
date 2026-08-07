@@ -1,0 +1,30 @@
+{
+  "id": "phb2024:artificer_boevoy_kuznets",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Battle Smith",
+    "ru": "Боевой кузнец"
+  },
+  "description": {
+    "en": "",
+    "ru": "Управляйте защитником-конструктом\n\nБоевой кузнец — это и защитник, и медик, эксперт по защите других и восстановлению как живых, так и механических союзников. В работе Боевым кузнецам помогают Стальные защитники, компаньоны-охранники, которых они создают себе сами."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+    "phb2024:artificer_boevoy_kuznets_l3_instrumenty_spetsializatsii",
+    "phb2024:artificer_boevoy_kuznets_l3_boevaya_gotovnost",
+    "phb2024:artificer_boevoy_kuznets_l3_stalnoy_zaschitnik",
+    "phb2024:artificer_boevoy_kuznets_l3_zaklinaniya_boevogo_kuznetsa",
+    "phb2024:artificer_boevoy_kuznets_l5_dopolnitelnaya_ataka",
+    "phb2024:artificer_boevoy_kuznets_l9_magicheskaya_vstryaska",
+    "phb2024:artificer_boevoy_kuznets_l15_uluchshennyy_zaschitnik"
+  ]
+}

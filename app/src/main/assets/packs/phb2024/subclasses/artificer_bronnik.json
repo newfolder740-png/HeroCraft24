@@ -1,0 +1,30 @@
+{
+  "id": "phb2024:artificer_bronnik",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Armorer",
+    "ru": "Бронник"
+  },
+  "description": {
+    "en": "",
+    "ru": "Создавайте магические доспехи и защитные конструкции"
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+    "phb2024:artificer_bronnik_l3_instrumenty_spetsializatsii",
+    "phb2024:artificer_bronnik_l3_arkannyy_dospeh",
+    "phb2024:artificer_bronnik_l3_model_dospeha",
+    "phb2024:artificer_bronnik_l3_zaklinaniya_bronnika",
+    "phb2024:artificer_bronnik_l5_dopolnitelnaya_ataka",
+    "phb2024:artificer_bronnik_l9_luchshiy_bronnik",
+    "phb2024:artificer_bronnik_l15_idealnyy_dospeh"
+  ]
+}

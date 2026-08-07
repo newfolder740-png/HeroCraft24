@@ -1,0 +1,292 @@
+{
+  "id": "fighter",
+  "type": "class",
+  "format_version": 1,
+  "name": {
+    "en": "Fighter",
+    "ru": "Воин"
+  },
+  "short_description": {
+    "en": "",
+    "ru": ""
+  },
+  "description": {
+    "en": "",
+    "ru": "Воины сияют на многих полях сражений. Рыцари на задании, королевские защитники, элитные солдаты и закалённые наемники — все они, как Воины, разделяют непревзойденное мастерство владения оружием и доспехами. Все они хорошо знакомы и со смертью — посылая к ней других и бросая ей вызов лично.\n\nВоины овладевают различными оружейными приёмами, и хорошо экипированный Воин всегда имеет под рукой подходящий инструмент для любой боевой ситуации. Точно так же Воин прекрасно тренирован со всеми видами доспехов. Но и это только начальный уровень подготовки Воинов, и каждый из них специализируется на определённом стиле боя. Кто-то сосредотачивается на стрельбе из лука, кто-то на сражении сразу двумя оружиями, а кто-то — на усилении своих боевых навыков с помощью магии. Такое сочетание обширных возможностей и широких специализаций делает Воинов исключительными бойцами."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "martial",
+    "fighter",
+    "strength",
+    "dexterity"
+  ],
+  "hit_die": 10,
+  "primary_ability": "strength",
+  "saving_throws": [
+    "strength",
+    "constitution"
+  ],
+  "skills": {
+    "count": 2,
+    "from": [
+      "acrobatics",
+      "athletics",
+      "perception",
+      "survival",
+      "intimidation",
+      "history",
+      "animal_handling",
+      "insight",
+      "persuasion"
+    ]
+  },
+  "starting_proficiencies": {
+    "armor": [
+      "light_armor",
+      "medium_armor",
+      "heavy_armor",
+      "shields"
+    ],
+    "weapons": [
+      "simple",
+      "martial"
+    ],
+    "tools": [],
+    "saving_throws": [
+      "strength",
+      "constitution"
+    ],
+    "skills": []
+  },
+  "starting_equipment": [
+    {
+      "description": {
+        "en": "Choose A, B or C",
+        "ru": "Выберите А, Б или В:"
+      },
+      "count": 1,
+      "options": [
+        {
+          "description": {
+            "en": "A",
+            "ru": "А"
+          },
+          "options": [
+            {
+              "item_id": "phb2024:chain_mail",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:greataxe",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:chain",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:javelin",
+              "quantity": 8
+            },
+            {
+              "item_id": "phb2024:dungeoneer_s_pack",
+              "quantity": 1
+            },
+            {
+              "description": {
+                "en": "4 gp",
+                "ru": "4 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "description": {
+            "en": "B",
+            "ru": "Б"
+          },
+          "options": [
+            {
+              "item_id": "phb2024:leather_armor",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:scimitar",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:short_sword",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:longbow",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:arrows",
+              "quantity": 20
+            },
+            {
+              "item_id": "phb2024:quiver",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:dungeoneer_s_pack",
+              "quantity": 1
+            },
+            {
+              "description": {
+                "en": "11 gp",
+                "ru": "11 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "description": {
+            "en": "C",
+            "ru": "В"
+          },
+          "options": [
+            {
+              "description": {
+                "en": "155 gp",
+                "ru": "155 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "subclass_title": {
+    "en": "Martial Archetype",
+    "ru": "Подкласс Воина"
+  },
+  "subclass_level": 3,
+  "features": [
+  "phb2024:fighter_l1_boevoy_stil",
+  "phb2024:fighter_l1_vtoroe_dyhanie",
+  "phb2024:fighter_l1_oruzheynoe_masterstvo",
+  "phb2024:fighter_l2_vsplesk_deystviy",
+  "phb2024:fighter_l2_takticheskoe_myshlenie",
+  "phb2024:fighter_l3_podklass_voina",
+  "phb2024:fighter_l4_uvelichenie_harakteristik",
+  "phb2024:fighter_l5_dopolnitelnaya_ataka",
+  "phb2024:fighter_l5_takticheskoe_smeschenie",
+  "phb2024:fighter_l6_uvelichenie_harakteristik",
+  "phb2024:fighter_l7_umenie_podklassa",
+  "phb2024:fighter_l8_uvelichenie_harakteristik",
+  "phb2024:fighter_l9_neukrotimyy",
+  "phb2024:fighter_l9_takticheskoe_reshenie",
+  "phb2024:fighter_l10_umenie_podklassa",
+  "phb2024:fighter_l11_dve_dopolnitelnye_ataki",
+  "phb2024:fighter_l12_uvelichenie_harakteristik",
+  "phb2024:fighter_l13_neukrotimyy",
+  "phb2024:fighter_l13_izuchayuschie_vypady",
+  "phb2024:fighter_l14_uvelichenie_harakteristik",
+  "phb2024:fighter_l15_umenie_podklassa",
+  "phb2024:fighter_l16_uvelichenie_harakteristik",
+  "phb2024:fighter_l17_neukrotimyy",
+  "phb2024:fighter_l17_vsplesk_deystviy",
+  "phb2024:fighter_l18_umenie_podklassa",
+  "phb2024:fighter_l19_epicheskiy_dar",
+  "phb2024:fighter_l20_tri_dopolnitelnye_ataki"
+],
+  "subclasses": [
+    "phb2024:fighter_master_boya",
+    "phb2024:fighter_mystical_knight",
+    "phb2024:fighter_psi_warrior",
+    "phb2024:fighter_champion",
+    "phb2024:fighter_banneret"
+  ],
+  "class_table": {
+    "columns": [
+      {"key": "proficiency_bonus", "name": {"en": "Prof. Bonus", "ru": "БМ"}},
+      {"key": "second_wind", "name": {"en": "Second Wind", "ru": "Второе дыхание"}},
+      {"key": "martial_arts", "name": {"en": "Martial Arts", "ru": "Оружейное мастерство"}}
+    ],
+    "rows": [
+      {"level": 1, "values": {"proficiency_bonus": "+2", "second_wind": "2", "martial_arts": "3"}},
+      {"level": 2, "values": {"proficiency_bonus": "+2", "second_wind": "2", "martial_arts": "3"}},
+      {"level": 3, "values": {"proficiency_bonus": "+2", "second_wind": "2", "martial_arts": "3"}},
+      {"level": 4, "values": {"proficiency_bonus": "+2", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 5, "values": {"proficiency_bonus": "+3", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 6, "values": {"proficiency_bonus": "+3", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 7, "values": {"proficiency_bonus": "+3", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 8, "values": {"proficiency_bonus": "+3", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 9, "values": {"proficiency_bonus": "+4", "second_wind": "3", "martial_arts": "4"}},
+      {"level": 10, "values": {"proficiency_bonus": "+4", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 11, "values": {"proficiency_bonus": "+4", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 12, "values": {"proficiency_bonus": "+4", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 13, "values": {"proficiency_bonus": "+5", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 14, "values": {"proficiency_bonus": "+5", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 15, "values": {"proficiency_bonus": "+5", "second_wind": "4", "martial_arts": "5"}},
+      {"level": 16, "values": {"proficiency_bonus": "+5", "second_wind": "4", "martial_arts": "6"}},
+      {"level": 17, "values": {"proficiency_bonus": "+6", "second_wind": "4", "martial_arts": "6"}},
+      {"level": 18, "values": {"proficiency_bonus": "+6", "second_wind": "4", "martial_arts": "6"}},
+      {"level": 19, "values": {"proficiency_bonus": "+6", "second_wind": "4", "martial_arts": "6"}},
+      {"level": 20, "values": {"proficiency_bonus": "+6", "second_wind": "4", "martial_arts": "6"}}
+    ]
+  },
+  "acquisition": {
+    "first_class": {
+      "en": "",
+      "ru": "Получите все атрибуты из таблицы «Ключевые атрибуты Воина».
+Получите умения Воина 1-го уровня; они перечислены в таблице «Умения Воина»."
+    },
+    "multiclass": {
+      "en": "",
+      "ru": "Получите следующие атрибуты из таблицы «Ключевые атрибуты Воина»: Кость хитов, владение Воинским оружием и тренированность с Лёгкими и Средними доспехами и Щитами.
+Получите умения Воина 1-го уровня; они перечислены в таблице «Умения Воина»."
+    }
+  },
+  "key_attributes": {
+    "Основная характеристика": "Сила или Ловкость",
+    "Кость хитов": "К10 за уровень Воина",
+    "Хиты за уровень": "1к10 (или 6) + ваш модификатор Телосложения (суммарно минимум 1)",
+    "Владение спасбросками": "Сила и Телосложение",
+    "Владение навыками": "Выберите два: Акробатика, Атлетика, Восприятие, Выживание, Запугивание, История, Обращение с животными, Проницательность или Убеждение",
+    "Владение оружием": "Простое и Воинское оружие",
+    "Тренированность с доспехами": "Лёгкие, Средние и Тяжёлые доспехи и Щиты",
+    "Начальное снаряжение": "Выберите А, Б или В:"
+  },
+  "multiclass_requirements": {
+    "ability_scores": {
+      "strength": 13,
+      "dexterity": 13
+    }
+  },
+    "maneuvers": [
+    "phb2024:maneuver_aktivnoe_uklonenie",
+    "phb2024:maneuver_ataka_s_fintom",
+    "phb2024:maneuver_ataka_s_manevrom",
+    "phb2024:maneuver_ataka_s_ugrozoy",
+    "phb2024:maneuver_ataka_s_vypadom",
+    "phb2024:maneuver_komandirskiy_napor",
+    "phb2024:maneuver_obezoruzhivayuschaya_ataka",
+    "phb2024:maneuver_oprokidyvayuschaya_ataka",
+    "phb2024:maneuver_otvetnyy_udar",
+    "phb2024:maneuver_otvlekayuschiy_udar",
+    "phb2024:maneuver_parirovanie",
+    "phb2024:maneuver_podmena",
+    "phb2024:maneuver_provotsiruyuschaya_ataka",
+    "phb2024:maneuver_rassekayuschaya_ataka",
+    "phb2024:maneuver_splochenie",
+    "phb2024:maneuver_takticheskaya_otsenka",
+    "phb2024:maneuver_tochnaya_ataka",
+    "phb2024:maneuver_tolkayuschaya_ataka",
+    "phb2024:maneuver_udar_komanduyuschego",
+    "phb2024:maneuver_zasada"
+  ]
+}

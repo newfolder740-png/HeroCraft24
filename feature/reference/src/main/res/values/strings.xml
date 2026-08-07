@@ -10,6 +10,8 @@
     <string name="reference_mythic_actions">Мифические действия</string>
     <string name="reference_lair_actions">Действия логова</string>
     <string name="reference_invocations">Воззвания</string>
+    <string name="reference_maneuvers">Приёмы</string>
+    <string name="reference_schems">Схемы</string>
     <string name="reference_metamagic">Метамагия</string>
     <string name="reference_wild_magic">Дикая магия</string>
     <string name="reference_source">Источник</string>
@@ -53,7 +55,8 @@
     <string name="feet">футов</string>
     <string name="category_label">Категория</string>
     <string name="rarity_label">Редкость</string>
-
+    <string name="maneuvers">Приёмы</string>
+    <string name="schems">Схемы</string>
     <!-- Sizes -->
     <string name="size_tiny">Крошечный</string>
     <string name="size_small">Маленький</string>

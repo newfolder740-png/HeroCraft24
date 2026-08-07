@@ -1,0 +1,16 @@
+{
+  "id": "fighter_master_boya_maneuver_tochnaya_ataka",
+  "level": 3,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Точная атака"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда вы промахиваетесь броском атаки, можете потратить одну Кость превосходства и добавить бросок этой кости к броску атаки, что может изменить результат на попадание."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

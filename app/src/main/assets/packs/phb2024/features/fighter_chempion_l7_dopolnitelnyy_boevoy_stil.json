@@ -1,0 +1,16 @@
+{
+  "id": "fighter_chempion_l7_dopolnitelnyy_boevoy_stil",
+  "level": 7,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Дополнительный боевой стиль"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете ещё одну черту из категории Боевых стилей на ваш выбор.\nУровень 10"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:fighter_master_boya",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Battle Master",
+    "ru": "Мастер боя"
+  },
+  "description": {
+    "en": "",
+    "ru": "Освойте изощрённые боевые приёмы\n\nМастера боя изучают искусство боя; они осваивают боевые приёмы, передаваемые из поколения в поколение. Наиболее выдающиеся Мастера боя — это всесторонне развитые личности, которые сочетают свои тщательно отточенные боевые навыки с академическими исследованиями в области истории, теории и искусств."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:fighter",
+  "features": [
+    "phb2024:fighter_master_boya_l3_boevoe_prevoshodstvo",
+    "phb2024:fighter_master_boya_l3_izuchayuschiy_voynu",
+    "phb2024:fighter_master_boya_l7_poznay_svoego_vraga",
+    "phb2024:fighter_master_boya_l10_uluchshennoe_boevoe_prevoshodstvo",
+    "phb2024:fighter_master_boya_l15_neutomimost",
+    "phb2024:fighter_master_boya_l18_absolyutnoe_boevoe_prevoshodstvo"
+  ]
+}

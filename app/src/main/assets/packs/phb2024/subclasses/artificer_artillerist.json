@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:artificer_artillerist",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Artillerist",
+    "ru": "Артиллерист"
+  },
+  "description": {
+    "en": "",
+    "ru": "Несите разрушение с безопасного расстояния\n\nСпециализация Артиллеристов — это применение магии для обрушивания на поле боя стихий, снарядов и взрывов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+    "phb2024:artificer_artillerist_l3_instrumenty_spetsializatsii",
+    "phb2024:artificer_artillerist_l3_misticheskaya_pushka",
+    "phb2024:artificer_artillerist_l3_zaklinaniya_artillerista",
+    "phb2024:artificer_artillerist_l5_magostrelnoe_oruzhie",
+    "phb2024:artificer_artillerist_l9_vzryvnaya_pushka",
+    "phb2024:artificer_artillerist_l15_ukreplennaya_pozitsiya"
+  ]
+}

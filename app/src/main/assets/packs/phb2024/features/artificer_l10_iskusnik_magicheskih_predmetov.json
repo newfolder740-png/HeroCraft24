@@ -1,0 +1,16 @@
+{
+  "id": "artificer_l10_iskusnik_magicheskih_predmetov",
+  "level": 10,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Искусник магических предметов"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы можете настроиться одновременно сразу на четыре магических предмета."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l17_vsplesk_deystviy",
+  "level": 17,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Всплеск действий"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы можете использовать Всплеск действий дважды до завершения отдыха, но только один раз за ход."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

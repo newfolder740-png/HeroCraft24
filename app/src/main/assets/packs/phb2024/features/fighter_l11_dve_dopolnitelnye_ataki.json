@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l11_dve_dopolnitelnye_ataki",
+  "level": 11,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Две дополнительные атаки"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда в ваш ход вы совершаете действие Атака, вы можете совершить не одну, а три атаки."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

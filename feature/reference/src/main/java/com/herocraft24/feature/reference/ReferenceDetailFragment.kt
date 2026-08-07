@@ -171,6 +171,13 @@ class ReferenceDetailFragment : Fragment() {
             tabs.add(getString(R.string.reference_metamagic) to { renderClassMetamagicTab(obj) })
         }
 
+        if (obj.maneuvers.isNotEmpty()) {
+            tabs.add(getString(R.string.reference_maneuvers) to { renderClassManeuversTab(obj) })
+        }
+        if (obj.schems.isNotEmpty()) {
+            tabs.add(getString(R.string.reference_schems) to { renderClassSchemsTab(obj) })
+        }
+
         if (obj.wild_magic.isNotEmpty()) {
             tabs.add(getString(R.string.reference_wild_magic) to { renderClassWildMagicTab(obj) })
         }
@@ -363,6 +370,25 @@ class ReferenceDetailFragment : Fragment() {
         }
     }
 
+    private fun renderClassManeuversTab(obj: GameClass) {
+        addSection(getString(R.string.reference_maneuvers)) {
+            val maneuvers = obj.maneuvers.mapNotNull { viewModel.getManeuvers(it) }
+            val maneuversById = maneuvers.associateBy { it.id }
+            maneuvers.forEach { maneuvers ->
+                addView(createManeuversCard(maneuvers))
+            }
+        }
+    }
+    private fun renderClassSchemsTab(obj: GameClass) {
+        addSection(getString(R.string.reference_schems)) {
+            val schems = obj.schems.mapNotNull { viewModel.getSchems(it) }
+            val schemsById = schems.associateBy { it.id }
+            schems.forEach { schems ->
+                addView(createSchemsCard(schems))
+            }
+        }
+    }
+
     private fun renderClassMetamagicTab(obj: GameClass) {
         addSection(getString(R.string.reference_metamagic)) {
             val metamagics = obj.metamagics.mapNotNull { viewModel.getMetamagic(it) }
@@ -406,6 +432,83 @@ class ReferenceDetailFragment : Fragment() {
         inner.addView(body)
 
         body.addView(buildRichLinkedTextView(metamagic.description.get()))
+
+        card.setOnClickListener { body.isVisible = !body.isVisible }
+        return card
+    }
+
+    private fun createManeuversCard(maneuvers: Maneuvers): MaterialCardView {
+        val card = MaterialCardView(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, dpToPx(12))
+            }
+            radius = dpToPx(12).toFloat()
+            cardElevation = dpToPx(2).toFloat()
+        }
+
+        val inner = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
+        }
+        card.addView(inner)
+
+
+        val titleText = maneuvers.name.get()
+
+        inner.addView(TextView(requireContext()).apply {
+            text = titleText
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+            setTypeface(null, Typeface.BOLD)
+        })
+
+        val body = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            isVisible = false
+        }
+        inner.addView(body)
+
+        body.addView(buildRichLinkedTextView(maneuvers.description.get()))
+
+        card.setOnClickListener { body.isVisible = !body.isVisible }
+        return card
+    }
+    private fun createSchemsCard(schems: Schems): MaterialCardView {
+        val card = MaterialCardView(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, dpToPx(12))
+            }
+            radius = dpToPx(12).toFloat()
+            cardElevation = dpToPx(2).toFloat()
+        }
+
+        val inner = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
+        }
+        card.addView(inner)
+
+
+        val titleText = schems.name.get()
+
+        inner.addView(TextView(requireContext()).apply {
+            text = titleText
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+            setTypeface(null, Typeface.BOLD)
+        })
+
+        val body = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            isVisible = false
+        }
+        inner.addView(body)
+
+        body.addView(buildRichLinkedTextView(schems.description.get()))
 
         card.setOnClickListener { body.isVisible = !body.isVisible }
         return card

@@ -1,0 +1,16 @@
+{
+  "id": "fighter_master_boya_maneuver_aktivnoe_uklonenie",
+  "level": 3,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Активное уклонение"
+  },
+  "description": {
+    "en": "",
+    "ru": "Бонусным действием вы можете потратить одну Кость превосходства и совершить действие Отход. Бросьте эту кость; до начала вашего следующего хода вы получаете бонус к вашему КЗ, равный результату броска."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

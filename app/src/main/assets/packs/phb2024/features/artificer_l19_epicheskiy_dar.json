@@ -1,0 +1,16 @@
+{
+  "id": "artificer_l19_epicheskiy_dar",
+  "level": 19,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Эпический дар"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете черту из категории Эпических даров или другую черту по вашему выбору, требованиям которой вы соответствуете. Рекомендуется Дар сопротивления энергии."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

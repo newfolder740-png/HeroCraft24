@@ -1,0 +1,16 @@
+{
+  "id": "fighter_chempion_l15_prevoshodnye_kriticheskie_popadaniya",
+  "level": 15,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Превосходные критические попадания"
+  },
+  "description": {
+    "en": "",
+    "ru": "Ваши броски атаки, с оружием и Безоружные удары, считаются Критическим попаданием при выпадении «18», «19» или «20» на к20 атаки.\nУровень 18"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

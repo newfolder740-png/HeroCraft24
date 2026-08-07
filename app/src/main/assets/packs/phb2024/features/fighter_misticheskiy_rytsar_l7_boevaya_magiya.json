@@ -1,0 +1,16 @@
+{
+  "id": "fighter_misticheskiy_rytsar_l7_boevaya_magiya",
+  "level": 7,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Боевая магия"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда в ваш ход вы совершаете действие Атака, можете заменить одну из атак сотворением одного из ваших заговоров Волшебника со временем сотворения в действие.\nУровень 10"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

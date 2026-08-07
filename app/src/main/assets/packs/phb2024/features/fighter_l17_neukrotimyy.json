@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l17_neukrotimyy",
+  "level": 17,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Неукротимый"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы можете использовать умение Неукротимый трижды до завершения Долгого отдыха."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

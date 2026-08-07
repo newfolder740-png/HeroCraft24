@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:fighter_banneret",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Banneret",
+    "ru": "Баннерет"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вдохновляющим лидерством сплотите героев вкруг себя\n\nБаннереты — это образцы доблести и лидерства, защищающие невинных и воодушевляющие союзников бороться за свободу и справедливость. Многие из Баннеретов — это рыцари, несущие службу в Кормире, Дамаре, Чессенте, Серебряных Кордонах и других землях по всему Фаеруну. Странствующими рыцарями они путешествуют по странам, сражаясь со злом и за пределами родного королевства.\n\nВ своих схватках с силами зла Баннереты опираются на правосудие, храбрость и верность рыцарскому кодексу. В одиночку Баннерет — это умелый боец, но встав во главе группы союзников, он может даже плоховооружённое ополчение превратить в свирепый отряд."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:fighter",
+  "features": [
+    "phb2024:fighter_banneret_l3_poslannik_rytsarstva",
+    "phb2024:fighter_banneret_l3_gruppovoe_ozdorovlenie",
+    "phb2024:fighter_banneret_l7_gruppovaya_taktika",
+    "phb2024:fighter_banneret_l10_voodushevlyayuschiy_vsplesk",
+    "phb2024:fighter_banneret_l15_ustoychivost_komandy",
+    "phb2024:fighter_banneret_l18_vdohnovlyayuschiy_komandir"
+  ]
+}

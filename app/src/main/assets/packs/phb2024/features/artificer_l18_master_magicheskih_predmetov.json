@@ -1,0 +1,16 @@
+{
+  "id": "artificer_l18_master_magicheskih_predmetov",
+  "level": 18,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Мастер магических предметов"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы можете настроиться одновременно сразу на шесть магических предметов."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

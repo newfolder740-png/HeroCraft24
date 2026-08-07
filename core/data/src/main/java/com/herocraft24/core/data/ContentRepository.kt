@@ -133,6 +133,8 @@ class ContentRepository private constructor(private val context: Context) {
     fun getSubclass(fullId: String): Subclass? = loadObject(fullId, "subclasses")
     fun getInvocation(fullId: String): Invocation? = loadObject(fullId, "invocations")
     fun getMetamagic(fullId: String): Metamagic? = loadObject(fullId, "metamagics")
+    fun getManeuvers(fullId: String): Maneuvers? = loadObject(fullId, "maneuvers")
+    fun getSchems(fullId: String): Schems? = loadObject(fullId, "schems")
 
     /**
      * Resolve any reference by ID — returns the object as a generic map

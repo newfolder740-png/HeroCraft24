@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l5_takticheskoe_smeschenie",
+  "level": 5,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Тактическое смещение"
+  },
+  "description": {
+    "en": "",
+    "ru": "Каждый раз, когда Бонусным действием вы используете ваше Второе дыхание, вы можете переместиться на расстояние вплоть до половины вашей Скорости, не вызывая Провоцированных атак."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

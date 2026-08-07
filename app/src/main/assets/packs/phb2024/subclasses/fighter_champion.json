@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:fighter_champion",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Champion",
+    "ru": "Чемпион"
+  },
+  "description": {
+    "en": "",
+    "ru": "Добивайтесь физического совершенства в бою\n\nЧемпион, в своём неослабевающем стремлении к победам, сосредотачивается на развитии воинской эффективности. Суровые тренировки и физическое превосходство Чемпионов — вот то, что позволяет им наносить сокрушительные удары, противостоять опасностям и собирать славу. Будь то спортивное состязание или кровавая битва, Чемпион стремится заполучить корону победителя."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:fighter",
+  "features": [
+    "phb2024:fighter_chempion_l3_uluchshennye_kriticheskie_popadaniya",
+    "phb2024:fighter_chempion_l3_vydayuschiysya_atlet",
+    "phb2024:fighter_chempion_l7_dopolnitelnyy_boevoy_stil",
+    "phb2024:fighter_chempion_l10_geroicheskiy_voin",
+    "phb2024:fighter_chempion_l15_prevoshodnye_kriticheskie_popadaniya",
+    "phb2024:fighter_chempion_l18_vyzov_smerti"
+  ]
+}

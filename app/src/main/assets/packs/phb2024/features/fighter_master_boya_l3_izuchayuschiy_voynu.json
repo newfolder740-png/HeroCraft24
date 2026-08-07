@@ -1,0 +1,16 @@
+{
+  "id": "fighter_master_boya_l3_izuchayuschiy_voynu",
+  "level": 3,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Изучающий войну"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете владение одним типом Ремесленных инструментов на ваш выбор и владение одним навыком на ваш выбор из навыков, доступных Воинам на 1-м уровне.\nУровень 7"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

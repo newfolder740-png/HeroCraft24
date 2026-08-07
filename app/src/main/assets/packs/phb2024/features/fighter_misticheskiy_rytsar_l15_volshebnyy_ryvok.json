@@ -1,0 +1,16 @@
+{
+  "id": "fighter_misticheskiy_rytsar_l15_volshebnyy_ryvok",
+  "level": 15,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Волшебный рывок"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда вы используете Всплеск действий, вы можете телепортироваться на расстояние до 30 футов в видимое вами незанятое пространство. Вы можете телепортироваться до или после дополнительного действия.\nУровень 18"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

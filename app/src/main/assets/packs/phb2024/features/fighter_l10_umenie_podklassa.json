@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l10_umenie_podklassa",
+  "level": 10,
+  "is_placeholder": true,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Умение подкласса"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы получаете все умения подкласса Воина 10-го уровня."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

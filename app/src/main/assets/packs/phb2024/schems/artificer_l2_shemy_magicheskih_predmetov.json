@@ -1,0 +1,35 @@
+{
+  "id": "artificer_l2_shemy_magicheskih_predmetov",
+  "name": {
+    "en": "",
+    "ru": "Схемы магических предметов (2-й уровень Артефактора и выше)"
+  },
+  
+"table": {
+"columns": [
+      {"key": "schems", "name": {"en": "Схема магического предмета", "ru": "Схема магического предмета"}},
+      {"key": "attunement", "name": {"en": "attunement", "ru": "Настройка"}}
+],
+"rows": [
+  {"values": {"schems": "Алхимический сосуд", "attunement": "нет"}},
+{"values": {"schems": "Верёвка лазания", "attunement": "нет"}},
+{"values": {"schems": "Возвращающееся оружие", "attunement": "нет"}},
+{"values": {"schems": "Волшебная палочка боевого мага +1", "attunement": "да"}},
+{"values": {"schems": "Волшебная палочка обнаружения магии", "attunement": "нет"}},
+{"values": {"schems": "Волшебная палочка секретов", "attunement": "нет"}},
+{"values": {"schems": "Камни послания", "attunement": "нет"}},
+{"values": {"schems": "Магический предмет Обычной редкости, за исключением Зелий, Свитков и проклятых ", "attunement": "-"}},
+{"values": {"schems": "Многообразный инструмент", "attunement": "да"}},
+{"values": {"schems": "Ночные очки", "attunement": "нет"}},
+{"values": {"schems": "Обмотки безоружной мощи +1", "attunement": "нет"}},
+{"values": {"schems": "Оружие +1", "attunement": "нет"}},
+{"values": {"schems": "Оружие повторного выстрела", "attunement": "да"}},
+{"values": {"schems": "Сумка хранения", "attunement": "нет"}},
+{"values": {"schems": "Шапка подводного дыхания", "attunement": "нет"}},
+{"values": {"schems": "Щит +1", "attunement": "нет"}}
+]},
+"description": {
+    "en": "",
+    "ru": "* вы можете выбирать этот вариант больше одного раза, и должны каждый раз выбирать новый предмет; каждый выбранный предмет считается отдельной схемой"
+  }
+}

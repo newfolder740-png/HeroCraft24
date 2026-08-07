@@ -84,7 +84,9 @@ class ReferenceViewModel(application: Application) : AndroidViewModel(applicatio
     fun getSubclass(fullId: String): Subclass? = repository.getSubclass(fullId)
     fun getSpell(fullId: String): Spell? = repository.getSpell(fullId)
     fun getInvocation(fullId: String): Invocation? = repository.getInvocation(fullId)
+    fun getManeuvers(fullId: String): Maneuvers? = repository.getManeuvers(fullId)
     fun getMetamagic(fullId: String): Metamagic? = repository.getMetamagic(fullId)
+    fun getSchems(fullId: String): Schems? = repository.getSchems(fullId)
 
     fun resolveName(fullId: String): String? = repository.resolveName(fullId)
     fun getEntryType(fullId: String): String? = repository.getEntryType(fullId)

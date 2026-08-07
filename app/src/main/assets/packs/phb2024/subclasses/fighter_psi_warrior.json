@@ -1,0 +1,28 @@
+{
+  "id": "phb2024:fighter_psi_warrior",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Psi Warrior",
+    "ru": "Пси-воин"
+  },
+  "description": {
+    "en": "",
+    "ru": "Умножайте физическую мощь псионической силой\n\nПси-воины пробуждают силу своего разума, и увеличивают ею свою физическую мощь. Освоив эту псионическую силу, они усиливают ей удары своего оружия, создают ментальные барьеры, хлещут телекинетической энергией."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:fighter",
+  "features": [
+    "phb2024:fighter_psi_voin_l3_psionicheskaya_sila",
+    "phb2024:fighter_psi_voin_l7_adept_telekinetik",
+    "phb2024:fighter_psi_voin_l10_zaschischennyy_razum",
+    "phb2024:fighter_psi_voin_l15_oplot_sily",
+    "phb2024:fighter_psi_voin_l18_master_telekineza"
+  ]
+}

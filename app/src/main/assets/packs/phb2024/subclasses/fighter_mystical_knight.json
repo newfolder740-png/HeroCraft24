@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:fighter_mystical_knight",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Mystic Knight",
+    "ru": "Мистический рыцарь"
+  },
+  "description": {
+    "en": "",
+    "ru": "Поддерживайте боевые навыки тайной магией\n\nМистические рыцари сочетают обычное для всех Воинов боевое мастерство с тщательным изучением магии.\n\nИх заклинания дополняют и расширяют боевые навыки, ещё сильнее укрепляя их доспехи и позволяя им поражать сразу многих врагов взрывной магией."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:fighter",
+  "features": [
+    "phb2024:fighter_misticheskiy_rytsar_l3_sotvorenie_zaklinaniy",
+    "phb2024:fighter_misticheskiy_rytsar_l3_svyaz_s_oruzhiem",
+    "phb2024:fighter_misticheskiy_rytsar_l7_boevaya_magiya",
+    "phb2024:fighter_misticheskiy_rytsar_l10_misticheskiy_udar",
+    "phb2024:fighter_misticheskiy_rytsar_l15_volshebnyy_ryvok",
+    "phb2024:fighter_misticheskiy_rytsar_l18_uluchshennaya_boevaya_magiya"
+  ]
+}

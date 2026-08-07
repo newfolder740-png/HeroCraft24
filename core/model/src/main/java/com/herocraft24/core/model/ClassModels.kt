@@ -35,7 +35,9 @@ data class GameClass(
     val multiclass_proficiencies: Proficiencies? = null,
     val invocations: List<String> = emptyList(),
     val metamagics: List<String> = emptyList(),
-    val wild_magic: List<WildMagicEntry> = emptyList()
+    val wild_magic: List<WildMagicEntry> = emptyList(),
+    val maneuvers: List<String> = emptyList(),
+    val schems: List<String> = emptyList()
 )
 
 @Serializable
@@ -139,6 +141,7 @@ data class ClassTable(
     val rows: List<ClassTableRow> = emptyList()
 )
 
+
 @Serializable
 data class ClassTableColumn(
     val key: String,
@@ -169,6 +172,19 @@ data class Invocation(
 data class InvocationRequirements(
     val warlock_level: Int? = null,
     val invocation_id: String? = null
+)
+
+@Serializable
+data class Maneuvers(
+    val id: String,
+    val name: LocalizedString,
+    val description: LocalizedString
+)
+@Serializable
+data class Schems(
+    val id: String,
+    val name: LocalizedString,
+    val description: LocalizedString
 )
 
 @Serializable

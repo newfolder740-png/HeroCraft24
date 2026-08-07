@@ -1,0 +1,16 @@
+{
+  "id": "artificer_reanimator_l9_uluchshennaya_reanimatsiya",
+  "level": 9,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Улучшенная реанимация"
+  },
+  "description": {
+    "en": "",
+    "ru": "Урон Взрыва смерти вашего спутника увеличивается до 4к4. Кроме того, наносимый спутником Некротический урон игнорирует Сопротивление."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

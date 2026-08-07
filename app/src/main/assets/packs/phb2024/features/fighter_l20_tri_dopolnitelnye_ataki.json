@@ -1,0 +1,16 @@
+{
+  "id": "fighter_l20_tri_dopolnitelnye_ataki",
+  "level": 20,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Три дополнительные атаки"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда в ваш ход вы совершаете действие Атака, вы можете совершить не одну, а четыре атаки.\nПодклассы:"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

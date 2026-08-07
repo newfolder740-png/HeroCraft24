@@ -1,0 +1,16 @@
+{
+  "id": "fighter_chempion_l10_geroicheskiy_voin",
+  "level": 10,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Героический воин"
+  },
+  "description": {
+    "en": "",
+    "ru": "Азарт битвы ведёт вас к победе. Во время боя вы можете дать себе Героическое вдохновение каждый раз, когда начинаете ваш ход без него.\nУровень 15"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

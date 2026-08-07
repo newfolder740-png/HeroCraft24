@@ -1,0 +1,16 @@
+{
+  "id": "fighter_banneret_l7_gruppovaya_taktika",
+  "level": 7,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Групповая тактика"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда вы используете Групповое оздоровление, каждый выбранный союзник совершает с Преимуществом все Тесты к20 до начала вашего следующего хода.\nУровень 10"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

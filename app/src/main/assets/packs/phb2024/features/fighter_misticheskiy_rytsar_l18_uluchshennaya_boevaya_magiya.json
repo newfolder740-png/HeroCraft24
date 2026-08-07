@@ -1,0 +1,16 @@
+{
+  "id": "fighter_misticheskiy_rytsar_l18_uluchshennaya_boevaya_magiya",
+  "level": 18,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Улучшенная боевая магия"
+  },
+  "description": {
+    "en": "",
+    "ru": "Когда в ваш ход вы совершаете действие Атака, можете заменить две атаки сотворением одного из ваших заклинаний Волшебника 1-го или 2-го уровня со временем сотворения в действие."
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

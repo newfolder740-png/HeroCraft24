@@ -1,0 +1,16 @@
+{
+  "id": "fighter_master_boya_l10_uluchshennoe_boevoe_prevoshodstvo",
+  "level": 10,
+  "is_placeholder": false,
+  "type": "feature",
+  "name": {
+    "en": "",
+    "ru": "Улучшенное боевое превосходство"
+  },
+  "description": {
+    "en": "",
+    "ru": "Ваши Кости превосходства становятся к10.\nУровень 15"
+  },
+  "is_subclass_choice": false,
+  "format_version": 1
+}

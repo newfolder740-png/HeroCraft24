@@ -1,0 +1,29 @@
+{
+  "id": "phb2024:artificer_alhimik",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Alchemist",
+    "ru": "Алхимик"
+  },
+  "description": {
+    "en": "",
+    "ru": "Создавайте магические зелья и эликсиры\n\nАлхимик — специалист по смешиванию реагентов для получения магических эффектов. Результаты работы алхимика могут как давать жизнь, так и забирать её."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook (2024)",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+  "phb2024:artificer_alhimik_l3_instrumenty_spetsializatsii",
+  "phb2024:artificer_alhimik_l3_zaklinaniya_alhimika",
+  "phb2024:artificer_alhimik_l3_eksperimentalnyy_eliksir",
+  "phb2024:artificer_alhimik_l5_uchenyy_alhimik",
+  "phb2024:artificer_alhimik_l9_vosstanavlivayuschie_reagenty",
+  "phb2024:artificer_alhimik_l15_masterstvo_alhimika"
+]
+}
