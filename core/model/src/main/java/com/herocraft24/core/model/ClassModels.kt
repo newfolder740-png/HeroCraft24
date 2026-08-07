@@ -37,7 +37,8 @@ data class GameClass(
     val metamagics: List<String> = emptyList(),
     val wild_magic: List<WildMagicEntry> = emptyList(),
     val maneuvers: List<String> = emptyList(),
-    val schems: List<String> = emptyList()
+    val schems: List<String> = emptyList(),
+    val description2: LocalizedString? = null
 )
 
 @Serializable
@@ -55,7 +56,8 @@ data class Subclass(
     val description: LocalizedString,
     val source: SourceInfo,
     val class_id: String,
-    val features: List<String> = emptyList()
+    val features: List<String> = emptyList(),
+    val description2: LocalizedString? = null
 )
 
 @Serializable
@@ -70,7 +72,8 @@ data class Feature(
     val requirements: LocalizedString? = null,
     val is_subclass_choice: Boolean = false,
     val is_placeholder: Boolean = false,
-    val references: List<Reference> = emptyList()
+    val references: List<Reference> = emptyList(),
+    val description2: LocalizedString? = null
 )
 
 @Serializable
@@ -93,7 +96,8 @@ data class EquipmentChoice(
     val description: LocalizedString? = null,
     val count: Int = 1,
     val options: List<EquipmentOption> = emptyList(),
-    val default: String? = null
+    val default: String? = null,
+    val description2: LocalizedString? = null,
 )
 
 @Serializable
@@ -103,7 +107,8 @@ data class EquipmentOption(
     val quantity: Int = 1,
     val options: List<EquipmentOption> = emptyList(),
     val gold: Int? = null,
-    val items: List<EquipmentOption> = emptyList()
+    val items: List<EquipmentOption> = emptyList(),
+    val description2: LocalizedString? = null,
 )
 
 @Serializable
@@ -165,7 +170,8 @@ data class Invocation(
     val name: LocalizedString,
     val description: LocalizedString,
     val level: Int? = null,
-    val requirements: InvocationRequirements? = null
+    val requirements: InvocationRequirements? = null,
+    val description2: LocalizedString? = null,
 )
 
 @Serializable
@@ -184,7 +190,29 @@ data class Maneuvers(
 data class Schems(
     val id: String,
     val name: LocalizedString,
-    val description: LocalizedString
+    val table: Table? = null, // Добавляем поле для таблицы
+    val description: LocalizedString? = null,
+    val source: SourceInfo? = null,
+    val tags: List<String> = emptyList(),
+    val references: List<Reference> = emptyList(),
+    val description2: LocalizedString? = null
+)
+
+@Serializable
+data class Table(
+    val columns: List<TableColumn>,
+    val rows: List<TableRow>
+)
+
+@Serializable
+data class TableColumn(
+    val key: String,
+    val name: LocalizedString
+)
+
+@Serializable
+data class TableRow(
+    val values: Map<String, String> // Ключ - это `key` из columns, значение - текст в ячейке
 )
 
 @Serializable
@@ -198,5 +226,6 @@ data class Metamagic(
 @Serializable
 data class WildMagicEntry(
     val range: String,
-    val description: LocalizedString
+    val description: LocalizedString,
+    val table: Table? = null, // Добавляем поле для таблицы
 )

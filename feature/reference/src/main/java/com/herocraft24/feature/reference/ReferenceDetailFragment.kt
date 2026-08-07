@@ -493,25 +493,120 @@ class ReferenceDetailFragment : Fragment() {
         }
         card.addView(inner)
 
-
-        val titleText = schems.name.get()
-
+        // Заголовок карточки
         inner.addView(TextView(requireContext()).apply {
-            text = titleText
+            text = schems.name.get()
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
             setTypeface(null, Typeface.BOLD)
         })
 
+        // Тело карточки (скрытое по умолчанию)
         val body = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             isVisible = false
         }
         inner.addView(body)
 
-        body.addView(buildRichLinkedTextView(schems.description.get()))
+        // Отображаем описание, если есть
+        schems.description?.let { desc ->
+            body.addView(buildRichLinkedTextView(desc.get()))
+        }
+
+        // Отображаем таблицу, если есть
+        schems.table?.let { table ->
+            body.addView(createTableView(table))
+        }
+
+        schems.description2?.let { desc ->
+            body.addView(buildRichLinkedTextView(desc.get()))
+        }
 
         card.setOnClickListener { body.isVisible = !body.isVisible }
         return card
+    }
+
+    private fun createTableView(table: Table): View {
+        val context = requireContext()
+        val surface = resolveColor(com.google.android.material.R.attr.colorSurface)
+        val surfaceVariant = resolveColor(com.google.android.material.R.attr.colorSurfaceVariant)
+        val onSurface = resolveColor(com.google.android.material.R.attr.colorOnSurface)
+
+        // Корневой контейнер с горизонтальной прокруткой
+        val scrollView = android.widget.HorizontalScrollView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isHorizontalScrollBarEnabled = false
+        }
+
+        // Контейнер для таблицы
+        val tableContainer = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        scrollView.addView(tableContainer)
+
+        // Создаём TableLayout
+        val tableLayout = android.widget.TableLayout(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isStretchAllColumns = false
+        }
+        tableContainer.addView(tableLayout)
+
+        // Заголовок таблицы
+        val headerRow = android.widget.TableRow(context).apply {
+            layoutParams = android.widget.TableLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setBackgroundColor(surfaceVariant)
+        }
+        table.columns.forEach { column ->
+            headerRow.addView(TextView(context).apply {
+                text = column.name.get()
+                setTextColor(onSurface)
+                setTypeface(null, Typeface.BOLD)
+                gravity = Gravity.CENTER
+                setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8))
+                setSingleLine(false)
+                maxLines = 2
+            })
+        }
+        tableLayout.addView(headerRow)
+
+        // Строки таблицы
+        table.rows.forEachIndexed { index, row ->
+            val rowView = android.widget.TableRow(context).apply {
+                layoutParams = android.widget.TableLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                setBackgroundColor(if (index % 2 == 0) surface else surfaceVariant)
+            }
+            table.columns.forEach { column ->
+                val cellValue = row.values[column.key] ?: "—"
+                // Используем buildRichLinkedTextView для ячеек таблицы
+                val textView = buildRichLinkedTextView(cellValue)
+                textView.apply {
+                    setTextColor(onSurface)
+                    gravity = Gravity.START
+                    setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8))
+                    setSingleLine(false)
+                    maxWidth = dpToPx(200)
+                }
+                rowView.addView(textView)
+            }
+            tableLayout.addView(rowView)
+        }
+
+        return scrollView
     }
 
     private fun renderClassWildMagicTab(obj: GameClass) {
