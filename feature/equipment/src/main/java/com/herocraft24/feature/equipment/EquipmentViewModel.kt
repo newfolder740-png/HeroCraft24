@@ -1,11 +1,11 @@
 package com.herocraft24.feature.equipment
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Item
 import com.herocraft24.core.model.Spell
+import com.herocraft24.core.ui.data.FavoritesStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -44,7 +44,7 @@ enum class EquipmentSortMode(val label: String) {
 class EquipmentViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = ContentRepository.get(application)
-    private val prefs = application.getSharedPreferences("equip_favs", Context.MODE_PRIVATE)
+    private val favoritesStore = FavoritesStore(application, "equip_favs")
 
     private val _searchQuery = MutableStateFlow("")
     private val _filters = MutableStateFlow(EquipmentFilters())
@@ -115,14 +115,9 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
 
     init {
         repository.initialize()
-        loadFavorites()
+        _favoriteIds.value = favoritesStore.load()
         recompute()
         _isLoading.value = false
-    }
-
-    private fun loadFavorites() {
-        val favs = prefs.getStringSet("ids", emptySet()) ?: emptySet()
-        _favoriteIds.value = favs
     }
 
     fun setSearchQuery(query: String) { _searchQuery.value = query; recompute() }
@@ -140,10 +135,7 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
         _searchQuery.value.isNotBlank() || _filters.value.isActive
 
     fun toggleFavorite(itemId: String) {
-        val cur = _favoriteIds.value.toMutableSet()
-        if (cur.contains(itemId)) cur.remove(itemId) else cur.add(itemId)
-        _favoriteIds.value = cur
-        prefs.edit().putStringSet("ids", cur).apply()
+        _favoriteIds.value = favoritesStore.toggle(itemId, _favoriteIds.value)
         recompute()
     }
 

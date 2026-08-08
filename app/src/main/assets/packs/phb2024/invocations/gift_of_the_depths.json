@@ -1,5 +1,7 @@
 {
     "id":  "gift_of_the_depths",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Gift of the Depths",
                  "ru":  "Дар глубин"

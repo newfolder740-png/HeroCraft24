@@ -34,7 +34,11 @@ data class ManifestObjects(
     val mechanics: List<ManifestEntry> = emptyList(),
     val glossary: List<ManifestEntry> = emptyList(),
     val features: List<ManifestEntry> = emptyList(),
-    val subclasses: List<ManifestEntry> = emptyList()
+    val subclasses: List<ManifestEntry> = emptyList(),
+    val invocations: List<ManifestEntry> = emptyList(),
+    val metamagics: List<ManifestEntry> = emptyList(),
+    val maneuvers: List<ManifestEntry> = emptyList(),
+    val schems: List<ManifestEntry> = emptyList()
 )
 
 @Serializable

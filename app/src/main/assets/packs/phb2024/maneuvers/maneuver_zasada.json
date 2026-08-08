@@ -1,5 +1,8 @@
 {
   "id": "maneuver_zasada",
+  "type": "maneuver",
+  "format_version": 1,
+  "cost": "1 Кость превосходства",
   "name": {
     "en": "",
     "ru": "Засада"

@@ -1,0 +1,91 @@
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 19, 20, 21, 22, 23
+
+19. Сохранять expanded state для SpeciesTraitCard
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: добавлено поле openSpeciesTraitIds, сохранение/восстановление в
+             onSaveInstanceState/onViewCreated, createSpeciesTraitCard теперь
+             открывает карточку если имя черты (trait.name.get()) есть в множестве,
+             click-listener обновляет множество.
+    Статус: ✅ выполнено
+
+20. Сохранять expanded state для ClassSubclassCard
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: добавлено поле openClassSubclassIds, сохранение/восстановление в
+             onSaveInstanceState/onViewCreated, createClassSubclassCard теперь
+             открывает карточку если subclass.id есть в множестве,
+             click-listener обновляет множество.
+    Статус: ✅ выполнено
+
+21. Вынести addSection/addRow/addText в CardBuilder
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt (новый)
+      - core/ui/build.gradle.kts
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: создан object CardBuilder с addSection, addRow, addText, addSourceSection;
+             core:ui получил зависимость project(":core:model");
+             приватные helpers в ReferenceDetailFragment делегируют работу CardBuilder.
+    Статус: ✅ выполнено
+
+22. Унифицировать localizeSchool через UiLocalizer
+    Файлы:
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+    Изменение: удалены локальные when-блоки localizeSchool, заменены на UiLocalizer.school();
+             убран лишний параметр Context в SpellListAdapter.
+    Статус: ✅ выполнено
+
+23. Удалить localizeSubcategory из ReferenceDetailFragment
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: удалён private fun localizeSubcategory(...);
+             использование заменено на UiLocalizer.subcategory(it).
+    Статус: ✅ выполнено
+
+=======================================
+
+Изменённые файлы (основные):
+- core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt
+- core/ui/build.gradle.kts
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+- core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt (неплановая правка синтаксической ошибки,
+  см. раздел "Дополнительно")
+
+Изменения API:
+- Kotlin/API: новых публичных методов/полей не добавлено.
+- CardBuilder.addSection/addRow/addText/addSourceSection — публичные методы в core:ui,
+  используются в ReferenceDetailFragment.
+
+Проверки выполнены:
+1. Проверка всех вызовов addSection/addRow/addText/addSourceSection в ReferenceDetailFragment —
+   делегируют CardBuilder, нет оставшихся when-блоков локализации школы/подкатегории.
+2. Поиск localizeSchool в feature/spells — остались только через UiLocalizer.school().
+3. Поиск localizeSubcategory в ReferenceDetailFragment — удалён, используется UiLocalizer.subcategory().
+
+Результат build/test:
+- ./gradlew assembleDebug — ✅ BUILD SUCCESSFUL
+- ./gradlew testDebugUnitTest — ✅ BUILD SUCCESSFUL (тестовые источники отсутствуют)
+
+Дополнительно:
+- При первой попытке сборки обнаружена синтаксическая ошибка в ContentRepository.kt
+  (лишняя точка в начале строки: `.        objects.features + ...`).
+  Ошибка блокировала компиляцию всех зависимых модулей, поэтому была исправлена.
+  Изменение не связано с логикой плановых пунктов 19–23, но необходимо для прохождения сборки.
+
+Обнаруженные проблемы:
+- Проблем в рамках пунктов 19–23 не обнаружено.
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе:
+  - открытие/закрытие карточек черт вида (SpeciesTraitCard) и подклассов (ClassSubclassCard)
+    с сохранением состояния при смене конфигурации/возврате назад;
+  - корректность локализации школ заклинаний в списке, деталях и сортировке;
+  - корректность отображения подкатегории предметов.
+- Продолжить выполнение оставшихся пунктов 06_low_risk_plan.txt.

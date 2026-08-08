@@ -9,6 +9,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.herocraft24.core.ui.R
+import com.herocraft24.core.ui.util.dp
+import com.herocraft24.core.ui.util.resolveColor
 
 data class FilterGroup(
     val key: String,
@@ -66,7 +68,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
         checkBoxes.clear()
         parentCheckBoxes.clear()
 
-        val onSurface = resolveColor(com.google.android.material.R.attr.colorOnSurface)
+        val onSurface = requireContext().resolveColor(com.google.android.material.R.attr.colorOnSurface)
 
         for (group in groups) {
             val groupSelected = selected[group.key] ?: emptySet()
@@ -75,7 +77,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
             val header = TextView(requireContext()).apply {
                 text = group.title
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelLarge)
-                setPadding(0, 16.dp, 0, 8.dp)
+                setPadding(0, 16.dp(requireContext()), 0, 8.dp(requireContext()))
                 setTextColor(onSurface)
             }
 
@@ -88,7 +90,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
                 val cb = CheckBox(requireContext()).apply {
                     text = option.label
                     isChecked = option.key in groupSelected
-                    setPadding(option.indent * 24.dp, 2.dp, 0, 2.dp)
+                    setPadding(option.indent * 24.dp(requireContext()), 2.dp(requireContext()), 0, 2.dp(requireContext()))
                     textSize = 14f
                     setTextColor(onSurface)
                     setOnCheckedChangeListener { _, checked ->
@@ -158,14 +160,6 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
             }
             toggleChildren(groupKey, parentKey, checked)
         }
-    }
-
-    private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
-
-    private fun resolveColor(attrRes: Int): Int {
-        val typedValue = android.util.TypedValue()
-        requireContext().theme.resolveAttribute(attrRes, typedValue, true)
-        return typedValue.data
     }
 
     companion object {

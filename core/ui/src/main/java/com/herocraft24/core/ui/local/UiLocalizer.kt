@@ -115,6 +115,7 @@ object UiLocalizer {
     fun costUnit(unit: String): String = when (unit.lowercase()) {
         "gp" -> "ЗМ"
         "sp" -> "СМ"
+        "ep" -> "ЭМ"
         "cp" -> "ММ"
         "pp" -> "ПМ"
         else -> unit.uppercase()
@@ -125,5 +126,163 @@ object UiLocalizer {
         "kg" -> "кг"
         "oz" -> "унц."
         else -> unit
+    }
+
+    // ─── Reference-detail-only localizers ───────────────────────────
+
+    fun sense(sense: String): String = when (sense.lowercase()) {
+        "darkvision" -> "Тёмное зрение"
+        "blindsight" -> "Слепое зрение"
+        "tremorsense" -> "Вибрационное чутьё"
+        "truesight" -> "Истинное зрение"
+        "passive_perception" -> "пассивное Восприятие"
+        else -> sense.replace('_', ' ').replaceFirstChar { it.uppercase() }
+    }
+
+    fun condition(condition: String): String = when (condition.lowercase()) {
+        "blinded" -> "Ослеплённый"
+        "charmed" -> "Очарованный"
+        "deafened" -> "Оглохший"
+        "frightened" -> "Испуганный"
+        "grappled" -> "Схваченный"
+        "incapacitated" -> "Недееспособный"
+        "invisible" -> "Невидимый"
+        "paralyzed" -> "Парализованный"
+        "petrified" -> "Окаменевший"
+        "poisoned" -> "Отравленный"
+        "prone" -> "Опрокинутый"
+        "restrained" -> "Опутанный"
+        "stunned" -> "Ошеломлённый"
+        "unconscious" -> "Без сознания"
+        "exhaustion" -> "Истощение"
+        else -> condition.replace('_', ' ').replaceFirstChar { it.uppercase() }
+    }
+
+    fun alignment(alignment: String): String {
+        val parts = alignment.trim().lowercase().split(" ")
+        val lawAxis = when (parts.firstOrNull()) {
+            "lawful" -> "Законно"
+            "neutral" -> "Нейтрально"
+            "chaotic" -> "Хаотично"
+            else -> null
+        }
+        val goodAxis = when (parts.getOrNull(1) ?: "") {
+            "good" -> "доброе"
+            "evil" -> "злое"
+            "neutral" -> "нейтральное"
+            else -> null
+        }
+        if (parts.size == 1) {
+            return when (parts[0]) {
+                "neutral" -> "Нейтральное"
+                "lawful" -> "Законноправное"
+                "chaotic" -> "Хаотичное"
+                "good" -> "Доброе"
+                "evil" -> "Злое"
+                "any" -> "Любое"
+                "unaligned" -> "Без мировоззрения"
+                else -> alignment.trim().replaceFirstChar { it.uppercase() }
+            }
+        }
+        return when {
+            lawAxis != null && goodAxis != null -> "$lawAxis-$goodAxis"
+            else -> alignment.trim().replaceFirstChar { it.uppercase() }
+        }
+    }
+
+    fun environment(environment: String): String = when (environment.lowercase()) {
+        "any" -> "Любая"
+        "arctic" -> "Арктика"
+        "coastal" -> "Прибрежье"
+        "desert" -> "Пустыня"
+        "forest" -> "Леса"
+        "grassland" -> "Луга"
+        "hills", "hill" -> "Холмы"
+        "mountains", "mountain" -> "Горы"
+        "underdark" -> "Подземье"
+        "swamp" -> "Болото"
+        "underwater" -> "Под водой"
+        "urban" -> "Город"
+        "astral plane" -> "Астральный план"
+        "upper planes" -> "Верхние планы"
+        "lower planes" -> "Нижние планы"
+        "acheron" -> "Ахерон"
+        "abyss" -> "Бездна"
+        "gehenna" -> "Геенна"
+        "nine hells" -> "Девять преисподних"
+        "beastlands" -> "Звериные земли"
+        "limbo" -> "Лимбо"
+        "mechanus" -> "Механус"
+        "elemental water" -> "Стихийный план воды"
+        "elemental fire" -> "Стихийный план огня"
+        "elemental earth" -> "Стихийный план земли"
+        "elemental air" -> "Стихийный план воздуха"
+        "elemental planes" -> "Стихийные планы"
+        "elemental chaos" -> "Стихийный хаос"
+        "feywild" -> "Страна фей"
+        "shadowfell" -> "Царство теней"
+        "ethereal plane" -> "Эфирный план"
+        "underground" -> "Подземелье"
+        else -> environment.replaceFirstChar { it.uppercase() }
+    }
+
+    fun size(size: String): String = when (size.lowercase()) {
+        "small" -> "Маленький"
+        "medium" -> "Средний"
+        "large" -> "Большой"
+        "huge" -> "Огромный"
+        "gargantuan" -> "Громадный"
+        "tiny" -> "Крошечный"
+        else -> size.replaceFirstChar { it.uppercase() }
+    }
+
+    fun monsterSizeDetail(size: String): String = when (size.lowercase()) {
+        "tiny" -> "Крошечный рой"
+        "small" -> "Маленький рой"
+        "medium" -> "Средний рой"
+        "large" -> "Большой рой"
+        "huge" -> "Огромный рой"
+        "gargantuan" -> "Громадный рой"
+        else -> "Рой"
+    }
+
+    fun type(type: String): String = when (type.lowercase()) {
+        "humanoid" -> "Гуманоид"
+        "fey" -> "Фея"
+        "fiend" -> "Исчадие"
+        "undead" -> "Нежить"
+        "monstrosity" -> "Чудовище"
+        "aberration" -> "Аберрация"
+        "celestial" -> "Небожитель"
+        "elemental" -> "Элементаль"
+        "construct" -> "Конструкт"
+        "dragon" -> "Дракон"
+        "giant" -> "Великан"
+        "ooze" -> "Желе"
+        "plant" -> "Растение"
+        "beast" -> "Зверь"
+        else -> type.replaceFirstChar { it.uppercase() }
+    }
+
+    fun skill(skill: String): String = when (skill.lowercase().replace(" ", "_")) {
+        "acrobatics" -> "Акробатика"
+        "animal_handling" -> "Уход за животными"
+        "arcana" -> "Магия"
+        "athletics" -> "Атлетика"
+        "deception" -> "Обман"
+        "history" -> "История"
+        "insight" -> "Проницательность"
+        "intimidation" -> "Запугивание"
+        "investigation" -> "Расследование"
+        "medicine" -> "Медицина"
+        "nature" -> "Природа"
+        "perception" -> "Восприятие"
+        "performance" -> "Выступление"
+        "persuasion" -> "Убеждение"
+        "religion" -> "Религия"
+        "sleight_of_hand" -> "Ловкость рук"
+        "stealth" -> "Скрытность"
+        "survival" -> "Выживание"
+        else -> skill.replaceFirstChar { it.uppercase() }
     }
 }

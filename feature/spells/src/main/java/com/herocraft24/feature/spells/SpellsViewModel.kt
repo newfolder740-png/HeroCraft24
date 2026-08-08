@@ -1,10 +1,12 @@
 package com.herocraft24.feature.spells
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Spell
+import com.herocraft24.core.ui.data.FavoritesStore
+import com.herocraft24.core.ui.local.UiLocalizer
+import com.herocraft24.core.ui.util.ItemLinkifier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -53,7 +55,7 @@ enum class SpellSortMode(val label: String) {
 class SpellsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = ContentRepository.get(application)
-    private val prefs = application.getSharedPreferences("spells_favs", Context.MODE_PRIVATE)
+    private val favoritesStore = FavoritesStore(application, "spells_favs")
 
     private val _searchQuery = MutableStateFlow("")
     private val _filters = MutableStateFlow(SpellFilters())
@@ -99,18 +101,9 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         repository.initialize()
-        loadFavorites()
+        _favoriteIds.value = favoritesStore.load()
         recompute()
         _isLoading.value = false
-    }
-
-    private fun loadFavorites() {
-        val favs = prefs.getStringSet("ids", emptySet()) ?: emptySet()
-        _favoriteIds.value = favs
-    }
-
-    private fun saveFavorites() {
-        prefs.edit().putStringSet("ids", _favoriteIds.value).apply()
     }
 
     fun setSearchQuery(query: String) {
@@ -139,11 +132,7 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
         _searchQuery.value.isNotBlank() || _filters.value.isActive
 
     fun toggleFavorite(spellId: String) {
-        val current = _favoriteIds.value.toMutableSet()
-        if (current.contains(spellId)) current.remove(spellId)
-        else current.add(spellId)
-        _favoriteIds.value = current
-        saveFavorites()
+        _favoriteIds.value = favoritesStore.toggle(spellId, _favoriteIds.value)
         recompute()
     }
 
@@ -175,6 +164,9 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
         }
         map
     }
+
+    /** Pre-built buckets for fast linkification of condition names in spell descriptions. */
+    val conditionBucketsCache by lazy { ItemLinkifier.BucketsCache(conditionNameToIdMap) }
 
     private fun recompute() {
         val all = allSpellsCache
@@ -221,22 +213,10 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
             SpellSortMode.LEVEL_DESC -> result.sortedWith(compareByDescending<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
             SpellSortMode.NAME_ASC -> result.sortedBy { it.name.lowercase() }
             SpellSortMode.NAME_DESC -> result.sortedByDescending { it.name.lowercase() }
-            SpellSortMode.SCHOOL_ASC -> result.sortedWith(compareBy<SpellSummary> { localizeSchool(it.school) }.thenBy { it.name.lowercase() })
+            SpellSortMode.SCHOOL_ASC -> result.sortedWith(compareBy<SpellSummary> { UiLocalizer.school(it.school) }.thenBy { it.name.lowercase() })
         }
 
         _filteredSpells.value = result
-    }
-
-    private fun localizeSchool(school: String): String = when (school.lowercase()) {
-        "abjuration" -> "Ограждение"
-        "conjuration" -> "Призыв"
-        "divination" -> "Прорицание"
-        "enchantment" -> "Очарование"
-        "evocation" -> "Воплощение"
-        "illusion" -> "Иллюзия"
-        "necromancy" -> "Некромантия"
-        "transmutation" -> "Преобразование"
-        else -> school.replaceFirstChar { it.uppercase() }
     }
 
     private fun matchesComponentFilter(

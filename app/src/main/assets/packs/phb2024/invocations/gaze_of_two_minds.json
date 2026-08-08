@@ -1,5 +1,7 @@
 {
     "id":  "gaze_of_two_minds",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Gaze of Two Minds",
                  "ru":  "Взор двух умов"

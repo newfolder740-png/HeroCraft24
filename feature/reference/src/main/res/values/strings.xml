@@ -35,6 +35,29 @@
     <string name="reference_acquisition">Получение класса</string>
     <string name="reference_starting_equipment">Начальное снаряжение</string>
     <string name="reference_not_found">Объект не найден</string>
+
+    <!-- Spell detail labels (ReferenceDetailFragment) -->
+    <string name="reference_spell_cantrip">Заговор</string>
+    <string name="reference_spell_level_label">Уровень</string>
+    <string name="reference_spell_level">Уровень %1$d</string>
+    <string name="reference_spell_school">Школа</string>
+    <string name="reference_spell_casting_time">Время сотворения</string>
+    <string name="reference_spell_duration">Длительность</string>
+    <string name="reference_spell_range">Дистанция</string>
+    <string name="reference_spell_components">Компоненты</string>
+    <string name="reference_spell_material">Материальный</string>
+    <string name="reference_spell_concentration">Концентрация</string>
+    <string name="reference_spell_ritual">Ритуал</string>
+    <string name="reference_spell_saving_throw">Спасбросок</string>
+    <string name="reference_spell_attack_type">Тип атаки</string>
+    <string name="reference_spell_area">Область</string>
+    <string name="reference_spell_table">Таблица</string>
+    <string name="reference_spell_higher_levels">Улучшения</string>
+    <string name="reference_spell_classes">Классы</string>
+    <string name="reference_spell_damage">Урон</string>
+    <string name="reference_spell_damage_per_slot">По уровню ячейки</string>
+    <string name="reference_spell_damage_per_character_level">По уровню персонажа</string>
+
     <string name="subcategory_label">Подкатегория</string>
     <string name="cost_label">Стоимость</string>
     <string name="weight_label">Вес</string>
@@ -47,6 +70,7 @@
     <string name="stealth_disadvantage_label">Помеха Скрытности</string>
     <string name="effects_label">Эффекты</string>
     <string name="yes">Да</string>
+    <string name="no">Нет</string>
     <string name="required">Требуется</string>
     <string name="type_label">Тип</string>
     <string name="size_label">Размер</string>

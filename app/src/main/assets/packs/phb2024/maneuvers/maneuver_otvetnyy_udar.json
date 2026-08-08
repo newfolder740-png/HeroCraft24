@@ -1,5 +1,7 @@
 {
   "id": "maneuver_otvetnyy_udar",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Ответный удар"

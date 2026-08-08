@@ -1,5 +1,7 @@
 {
     "id":  "misty_visions",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Misty Visions",
                  "ru":  "Туманные видения"

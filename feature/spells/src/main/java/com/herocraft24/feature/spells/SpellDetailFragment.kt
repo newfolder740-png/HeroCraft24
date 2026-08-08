@@ -20,6 +20,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.herocraft24.core.model.Spell
+import com.herocraft24.core.ui.local.UiLocalizer
+import com.herocraft24.core.ui.util.ItemLinkifier
 import com.herocraft24.feature.spells.databinding.FragmentSpellDetailBinding
 
 class SpellDetailFragment : Fragment() {
@@ -67,7 +69,7 @@ class SpellDetailFragment : Fragment() {
         addSection(getString(R.string.spell_quick_info)) {
             val levelStr = if (s.level == 0) getString(R.string.spell_cantrip) else "${getString(R.string.spell_level)} ${s.level}"
             addRow(getString(R.string.spell_level), levelStr)
-            addRow(getString(R.string.spell_school), localizeSchool(s.school))
+            addRow(getString(R.string.spell_school), UiLocalizer.school(s.school))
             addRow(getString(R.string.spell_casting_time), s.casting_time)
             addRow(getString(R.string.spell_duration), s.duration)
             addRow(getString(R.string.spell_range), s.range?.text ?: s.range?.type ?: "—")
@@ -125,18 +127,6 @@ class SpellDetailFragment : Fragment() {
         }
     }
 
-    private fun localizeSchool(school: String): String = when (school.lowercase()) {
-        "abjuration" -> getString(R.string.school_abjuration)
-        "conjuration" -> getString(R.string.school_conjuration)
-        "divination" -> getString(R.string.school_divination)
-        "enchantment" -> getString(R.string.school_enchantment)
-        "evocation" -> getString(R.string.school_evocation)
-        "illusion" -> getString(R.string.school_illusion)
-        "necromancy" -> getString(R.string.school_necromancy)
-        "transmutation" -> getString(R.string.school_transmutation)
-        else -> school.replaceFirstChar { it.uppercase() }
-    }
-
     private fun localizeComponent(component: String): String = when (component.trim().uppercase()) {
         "V" -> getString(R.string.spell_comp_verbal)
         "S" -> getString(R.string.spell_comp_somatic)
@@ -145,33 +135,21 @@ class SpellDetailFragment : Fragment() {
     }
 
     private fun buildLinkedTextView(text: String): TextView {
-        val marker = com.herocraft24.core.ui.util.ItemLinkifier.stripMarkers(text)
+        val marker = ItemLinkifier.stripMarkers(text)
         val spannable = SpannableStringBuilder(marker.text)
-        val links = viewModel.conditionNameToIdMap
-            .entries
-            .filter { it.key.isNotBlank() }
-            .sortedByDescending { it.key.length }
-        for ((name, fullId) in links) {
-            var idx = 0
-            while (idx <= spannable.length - name.length) {
-                val start = spannable.toString().indexOf(name, idx, ignoreCase = true)
-                if (start < 0) break
-                val end = start + name.length
-                if (marker.excludedRanges.none { it.first < end && start < it.last }) {
-                    spannable.setSpan(object : ClickableSpan() {
-                        override fun onClick(widget: View) {
-                            val b = Bundle().apply { putString("conditionId", fullId) }
-                            Navigation.findNavController(widget).navigate(R.id.spellConditionDetail, b)
-                        }
-                        override fun updateDrawState(ds: TextPaint) {
-                            super.updateDrawState(ds)
-                            ds.isUnderlineText = true
-                            ds.color = ds.linkColor
-                        }
-                    }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val matches = ItemLinkifier.findRanges(marker.text, viewModel.conditionBucketsCache, marker.excludedRanges)
+        for ((start, end, fullId) in matches) {
+            spannable.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val b = Bundle().apply { putString("conditionId", fullId) }
+                    Navigation.findNavController(widget).navigate(R.id.spellConditionDetail, b)
                 }
-                idx = end
-            }
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.isUnderlineText = true
+                    ds.color = ds.linkColor
+                }
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return TextView(requireContext()).apply {
             setText(spannable)

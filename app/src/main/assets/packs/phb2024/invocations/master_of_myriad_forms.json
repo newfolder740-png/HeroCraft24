@@ -1,5 +1,7 @@
 {
     "id":  "master_of_myriad_forms",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Master of Myriad Forms",
                  "ru":  "Мастер бесчисленных обликов"

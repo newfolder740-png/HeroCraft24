@@ -1,5 +1,7 @@
 {
   "id": "maneuver_aktivnoe_uklonenie",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Активное уклонение"

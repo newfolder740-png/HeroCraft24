@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.herocraft24.core.ui.local.UiLocalizer
+import com.herocraft24.core.ui.util.resolveColor
 import com.herocraft24.feature.spells.databinding.CardSpellBinding
 
 class SpellListAdapter(
@@ -59,19 +61,7 @@ class SpellListAdapter(
         } else {
             "${s.level} уровень"
         }
-        return "$levelStr • ${localizeSchool(s.school, context)}"
-    }
-
-    private fun localizeSchool(school: String, context: android.content.Context): String = when (school.lowercase()) {
-        "abjuration" -> context.getString(R.string.school_abjuration)
-        "conjuration" -> context.getString(R.string.school_conjuration)
-        "divination" -> context.getString(R.string.school_divination)
-        "enchantment" -> context.getString(R.string.school_enchantment)
-        "evocation" -> context.getString(R.string.school_evocation)
-        "illusion" -> context.getString(R.string.school_illusion)
-        "necromancy" -> context.getString(R.string.school_necromancy)
-        "transmutation" -> context.getString(R.string.school_transmutation)
-        else -> school.replaceFirstChar { it.uppercase() }
+        return "$levelStr • ${UiLocalizer.school(s.school)}"
     }
 
     private fun buildBadges(container: LinearLayout, s: SpellSummary) {
@@ -90,15 +80,9 @@ class SpellListAdapter(
             container.addView(TextView(ctx).apply {
                 text = badges.joinToString(" • ")
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
-                setTextColor(resolveColor(ctx, android.R.attr.textColorSecondary))
+                setTextColor(ctx.resolveColor(android.R.attr.textColorSecondary))
             })
         }
-    }
-
-    private fun resolveColor(context: android.content.Context, attrRes: Int): Int {
-        val typedValue = android.util.TypedValue()
-        context.theme.resolveAttribute(attrRes, typedValue, true)
-        return typedValue.data
     }
 
     private fun localizeComponent(context: android.content.Context, component: String): String =

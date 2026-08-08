@@ -1,5 +1,7 @@
 {
     "id":  "devil_s_sight",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Devil’s Sight",
                  "ru":  "Дьявольское зрение"

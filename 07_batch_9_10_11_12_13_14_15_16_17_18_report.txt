@@ -1,0 +1,136 @@
+Отчёт по выполнению пунктов плана 9–18
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+
+9. Добавить multiclass_requirements в monk.json
+   Файл: app/src/main/assets/packs/phb2024/classes/monk.json
+   Изменение: добавлен блок "multiclass_requirements":{"ability_scores":{"dexterity":13,"wisdom":13}}
+   Статус: ✅ выполнено
+
+10. Исправить category у scimitar/glaive
+    Файлы:
+      - app/src/main/assets/packs/phb2024/items/scimitar.json
+      - app/src/main/assets/packs/phb2024/items/glaive.json
+    Изменение: "category":"adventuring_gear" → "category":"weapon"
+    Статус: ✅ выполнено
+
+11. Убрать префикс phb2024: из id subclass-файлов
+    Файлы: 20 subclass JSON в app/src/main/assets/packs/phb2024/subclasses/
+            (artificer_*, fighter_*, sorcerer_*, warlock_*)
+    Изменение: "id":"phb2024:xxx" → "id":"xxx" + добавлен alias "full_id":"phb2024:xxx"
+    Статус: ✅ выполнено
+
+12. Исправить 5 дубликатов id в manifest.json
+    Файлы:
+      - app/src/main/assets/packs/phb2024/manifest.json
+      - app/src/main/assets/packs/phb2024/monsters/guard.json → guard_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/noble.json → noble_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/mist_wanderer.json → mist_wanderer_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/piercer.json → piercer_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/tough.json → tough_npc.json
+    Изменение: monster-id в manifest изменены на *_npc; соответствующие файлы переименованы.
+             Background/feat-записи с теми же id оставлены без изменений.
+    Статус: ✅ выполнено
+
+13. Убрать префикс phb2024: из 114 entry.id в manifest.json
+    Файл: app/src/main/assets/packs/phb2024/manifest.json
+    Изменение: все "id":"phb2024:..." в features/subclasses заменены на "id":"..."
+    Статус: ✅ выполнено
+
+14. Стандартизировать source.abbreviation
+    Файл: app/src/main/assets/packs/phb2024/manifest.json
+    Изменение: "PHB 2024" → "PHB2024" ("MM 2025" не тронут)
+    Статус: ✅ выполнено
+
+15. Стандартизировать source.book.en
+    Файлы: все JSON-файлы в app/src/main/assets/packs/phb2024/ (≈520 файлов)
+    Изменение: "Player's Handbook (2024)" и "Player\u0027s Handbook (2024)" → "Player's Handbook 2024"
+    Статус: ✅ выполнено
+
+16. Добавить type/format_version в 62 JSON-файла
+    Файлы: invocations (28), metamagics (10), maneuvers (20), schems (4)
+    Изменение: после "id" добавлены "type":"invocation"/"metamagic"/"maneuver"/"schem"
+             и "format_version":1
+    Статус: ✅ выполнено
+
+17. Заменить хардкод-русские строки на getString в renderSpell
+    Файлы:
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+      - feature/reference/src/main/res/values/strings.xml
+    Изменение: все русские метки в renderSpell() заменены на R.string.*; добавлены
+             reference_spell_*, yes/no и др.
+    Статус: ✅ выполнено
+
+18. Добавить damage-секцию в ReferenceDetailFragment.renderSpell
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: после блока higher_levels добавлена секция "Урон" с damage_type,
+             damage_at_slot_level, damage_at_character_level (аналогично SpellDetailFragment)
+    Статус: ✅ выполнено
+
+Изменённые файлы (основные группы):
+- app/src/main/assets/packs/phb2024/manifest.json
+- app/src/main/assets/packs/phb2024/classes/monk.json
+- app/src/main/assets/packs/phb2024/items/scimitar.json
+- app/src/main/assets/packs/phb2024/items/glaive.json
+- app/src/main/assets/packs/phb2024/subclasses/*.json (20 файлов)
+- app/src/main/assets/packs/phb2024/monsters/*.json (переименование 5 файлов)
+- app/src/main/assets/packs/phb2024/invocations/*.json (28)
+- app/src/main/assets/packs/phb2024/metamagics/*.json (10)
+- app/src/main/assets/packs/phb2024/maneuvers/*.json (20)
+- app/src/main/assets/packs/phb2024/schems/*.json (4)
+- Все остальные JSON-файлы PHB2024, где source.book.en содержал "Player's Handbook (2024)"
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- feature/reference/src/main/res/values/strings.xml
+
+Изменения API:
+- Kotlin/API: новых публичных методов/полей не добавлено.
+- JSON: появился новый поле "full_id" в 20 subclass-файлах (ignoreUnknownKeys, игнорируется моделью).
+- Ресурсы: в feature/reference добавлены string-ресурсы для отображения заклинаний (reference_spell_*).
+
+Проверки выполнены:
+1. Поиск использования entry.id в ContentRepository/Manifest — используется только
+   для построения entryIndex и getManifestIds, прямые зависимости от префикса устранены.
+2. Проверка subclass JSON: id без префикса, full_id сохранён.
+3. Проверка manifest: осталось 0 вхождений "id":"phb2024: и "PHB 2024".
+4. Проверка source.book.en: 0 вхождений "Player's Handbook (2024)" и escaped-формы.
+5. Проверка дубликатов: background-записи guard/noble/mist_wanderer остались прежними,
+   monster-записи переименованы в *_npc, файлы переименованы.
+6. Сборка Kotlin: ./gradlew :app:compileDebugKotlin — BUILD SUCCESSFUL.
+7. Валидация JSON: все JSON-файлы в app/src/main/assets/packs/phb2024/ прошли ConvertFrom-Json — OK.
+
+Результат build/test:
+- :app:compileDebugKotlin — ✅ SUCCESS
+- Unit-тесты в проекте отсутствуют.
+
+Обнаруженные проблемы:
+- Проблем при валидации не обнаружено. Все JSON корректны, сборка проходит.
+- При первой попытке автоматизации через PowerShell возникла ошибка парсинга из-за
+  не-ASCII символов внутри .ps1; после замены на ASCII-safe регулярные выражения
+  скрипт отработал корректно.
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе открытие Monk, Scimitar/Glaive фильтра,
+  subclass (Warlock/Sorcerer/Fighter/Artificer), monster (guard_npc и др.) и
+  damage-секции для заклинаний в Reference.
+- Выполнить оставшиеся пункты плана (локализация и UI-рендеринг).
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+Сейчас можно безопасно продолжать:
+- #19 — сохранение expanded state для SpeciesTraitCard
+- #20 — сохранение expanded state для ClassSubclassCard
+- #21 — вынести addSection/addRow/addText в CardBuilder (чистый рефакторинг)
+- #22–#26 — локализация через UiLocalizer (school, subcategory, cost, weight,
+  ref-detail-only локализаторы)
+
+После завершения #19–#26 (локализация и CardBuilder) станут безопасны:
+- #24–#29 — оставшиеся UI-рендеринг пункты (SourceSectionBuilder,
+  renderSpell getString/damage уже частично затронуты, SpeciesTraitCard/ClassSubclassCard
+  expanded state)
+
+Высокий/средний риск, оставить на последнюю очередь:
+- #30 — замена ручного indexOf-loop в SpellDetailFragment на ItemLinkifier
+  (требует отдельной ручной проверки ссылок на 3–5 заклинаниях)

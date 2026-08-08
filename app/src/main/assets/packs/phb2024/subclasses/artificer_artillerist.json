@@ -1,5 +1,5 @@
 {
-  "id": "phb2024:artificer_artillerist",
+  "id": "artificer_artillerist","full_id": "phb2024:artificer_artillerist",
   "type": "subclass",
   "format_version": 1,
   "name": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "book": {
-      "en": "Player's Handbook (2024)",
+      "en": "Player's Handbook 2024",
       "ru": "Книга игрока (2024)"
     },
     "abbreviation": "PHB2024"

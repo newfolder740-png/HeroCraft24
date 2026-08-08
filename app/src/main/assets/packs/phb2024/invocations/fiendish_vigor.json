@@ -1,5 +1,7 @@
 {
     "id":  "fiendish_vigor",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Fiendish Vigor",
                  "ru":  "Мощь Исчадия"

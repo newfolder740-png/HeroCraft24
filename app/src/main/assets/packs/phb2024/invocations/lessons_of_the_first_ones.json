@@ -1,5 +1,7 @@
 {
     "id":  "lessons_of_the_first_ones",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Lessons of the First Ones",
                  "ru":  "Уроки древних"

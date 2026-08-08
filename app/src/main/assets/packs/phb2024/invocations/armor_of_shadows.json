@@ -1,5 +1,7 @@
 {
     "id":  "armor_of_shadows",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Armor of Shadows",
                  "ru":  "Доспех теней"

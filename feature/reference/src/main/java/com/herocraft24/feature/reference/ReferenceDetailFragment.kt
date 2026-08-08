@@ -35,7 +35,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.herocraft24.core.model.*
 import com.herocraft24.core.ui.local.UiLocalizer
+import com.herocraft24.core.ui.render.CardBuilder
 import com.herocraft24.core.ui.util.ItemLinkifier
+import com.herocraft24.core.ui.util.dp
+import com.herocraft24.core.ui.util.resolveColor
 import com.herocraft24.feature.reference.databinding.FragmentReferenceDetailBinding
 
 class ReferenceDetailFragment : Fragment() {
@@ -64,6 +67,8 @@ class ReferenceDetailFragment : Fragment() {
     private var openSchemsIds = mutableSetOf<String>()
     private var openMetamagicIds = mutableSetOf<String>()
     private var openManeuversIds = mutableSetOf<String>()
+    private var openSpeciesTraitIds = mutableSetOf<String>()
+    private var openClassSubclassIds = mutableSetOf<String>()
 
     private val magicItemCategories = setOf("wand", "rod", "potion", "ring", "staff", "scroll", "wondrous_item")
 
@@ -114,6 +119,14 @@ class ReferenceDetailFragment : Fragment() {
             val maneuversArray = bundle.getStringArrayList("openManeuversIds")
             if (maneuversArray != null) {
                 openManeuversIds.addAll(maneuversArray)
+            }
+            val speciesTraitArray = bundle.getStringArrayList("openSpeciesTraitIds")
+            if (speciesTraitArray != null) {
+                openSpeciesTraitIds.addAll(speciesTraitArray)
+            }
+            val classSubclassArray = bundle.getStringArrayList("openClassSubclassIds")
+            if (classSubclassArray != null) {
+                openClassSubclassIds.addAll(classSubclassArray)
             }
             contentScrollPosition = bundle.getInt("contentScrollPosition", 0)
         }
@@ -376,7 +389,7 @@ class ReferenceDetailFragment : Fragment() {
 
         val body = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
-            isVisible = false
+            isVisible = subclass.id in openClassSubclassIds
         }
         inner.addView(body)
 
@@ -384,7 +397,10 @@ class ReferenceDetailFragment : Fragment() {
         subclass.table?.let { body.addView(createTableView(it)) }
         subclass.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openClassSubclassIds.add(subclass.id) else openClassSubclassIds.remove(subclass.id)
+        }
 
         return card
     }
@@ -1270,48 +1286,17 @@ class ReferenceDetailFragment : Fragment() {
 
     private fun localizeItemRarity(rarity: String?): String = UiLocalizer.rarity(rarity)
 
-    private fun localizeSubcategory(subcategory: String): String = when (subcategory.lowercase()) {
-        "simple_melee" -> "Простое рукопашное"
-        "simple_ranged" -> "Простое дальнобойное"
-        "martial_melee" -> "Воинское рукопашное"
-        "martial_ranged" -> "Воинское дальнобойное"
-        "light_armor" -> "Лёгкий доспех"
-        "medium_armor" -> "Средний доспех"
-        "heavy_armor" -> "Тяжёлый доспех"
-        "shield" -> "Щит"
-        "magic_item" -> "Волшебный предмет"
-        else -> subcategory.replace("_", " ").replaceFirstChar { it.uppercase() }
-    }
-
     private fun localizeDamageType(type: String): String = UiLocalizer.damageType(type)
 
     private fun localizeProperty(property: String): String = UiLocalizer.property(property)
 
-    private fun localizeCostUnit(unit: String): String = when (unit.lowercase()) {
-        "cp" -> "ММ"
-        "sp" -> "СМ"
-        "ep" -> "ЭМ"
-        "gp" -> "ЗМ"
-        "pp" -> "ПМ"
-        else -> unit.uppercase()
-    }
-
-    private fun localizeWeightUnit(unit: String): String = when (unit.lowercase()) {
-        "lb" -> "фунт."
-        "kg" -> "кг"
-        else -> unit
-    }
 
     private fun localizeWeapon(weapon: String): String = weapon.replace("_", " ").replaceFirstChar { it.uppercase() }
     private fun localizeArmor(armor: String): String = armor.replace("_", " ").replaceFirstChar { it.uppercase() }
 
-    private fun dpToPx(dp: Int): Int = (dp * requireContext().resources.displayMetrics.density).toInt()
+    private fun dpToPx(dp: Int): Int = dp.dp(requireContext())
 
-    private fun resolveColor(attrRes: Int): Int {
-        val typedValue = android.util.TypedValue()
-        requireContext().theme.resolveAttribute(attrRes, typedValue, true)
-        return typedValue.data
-    }
+    private fun resolveColor(attrRes: Int): Int = requireContext().resolveColor(attrRes)
 
     private fun linkColor(): Int = resolveColor(android.R.attr.colorAccent)
 
@@ -1319,8 +1304,8 @@ class ReferenceDetailFragment : Fragment() {
         val obj = viewModel.getSpecies(objectId) ?: return showNotFound()
         binding.toolbar.title = obj.name.get()
         addSection(getString(R.string.reference_quick_info)) {
-            addRow(getString(R.string.type_label), localizeType(obj.creature_type))
-            addRow(getString(R.string.size_label), localizeSize(obj.size))
+            addRow(getString(R.string.type_label), UiLocalizer.type(obj.creature_type))
+            addRow(getString(R.string.size_label), UiLocalizer.size(obj.size))
             addRow(getString(R.string.speed_label), "${obj.speed} ${getString(R.string.feet)}")
             val dv = obj.darkvision
             if (dv != null) addRow(getString(R.string.darkvision_label), "$dv ${getString(R.string.feet)}")
@@ -1439,9 +1424,10 @@ class ReferenceDetailFragment : Fragment() {
         }
         inner.addView(title)
 
+        val traitKey = trait.name.get()
         val body = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
-            isVisible = false
+            isVisible = traitKey in openSpeciesTraitIds
         }
         inner.addView(body)
 
@@ -1449,7 +1435,10 @@ class ReferenceDetailFragment : Fragment() {
         trait.table?.let { body.addView(createTableView(it)) }
         trait.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openSpeciesTraitIds.add(traitKey) else openSpeciesTraitIds.remove(traitKey)
+        }
 
         return card
     }
@@ -1471,7 +1460,7 @@ class ReferenceDetailFragment : Fragment() {
             }
         }
         if (obj.skill_proficiencies.isNotEmpty()) {
-            addSection(getString(R.string.reference_skills)) { addText(obj.skill_proficiencies.joinToString(", ") { localizeSkill(it) }) }
+            addSection(getString(R.string.reference_skills)) { addText(obj.skill_proficiencies.joinToString(", ") { UiLocalizer.skill(it) }) }
         }
         if (obj.tool_item_ids.isNotEmpty()) {
             addSection("Инструменты") { addLinkedIds(obj.tool_item_ids) }
@@ -1556,7 +1545,7 @@ class ReferenceDetailFragment : Fragment() {
             addRow(getString(R.string.category_label), localizeCategory(obj.category))
             if (obj.category !in magicItemCategories) {
                 if (obj.subcategory.isNotEmpty()) {
-                    addRow(getString(R.string.subcategory_label), obj.subcategory.joinToString(", ") { localizeSubcategory(it) })
+                    addRow(getString(R.string.subcategory_label), obj.subcategory.joinToString(", ") { UiLocalizer.subcategory(it) })
                 }
             }
             addRow(getString(R.string.rarity_label), localizeItemRarity(obj.rarity))
@@ -1565,8 +1554,8 @@ class ReferenceDetailFragment : Fragment() {
                 val attReq = obj.attunement_requirements?.get()?.takeIf { it.isNotBlank() }
                 addRow(getString(R.string.attunement_label), attReq ?: getString(R.string.required))
             }
-            obj.cost?.let { addRow(getString(R.string.cost_label), "${it.amount} ${localizeCostUnit(it.unit)}") }
-            obj.weight?.let { addRow(getString(R.string.weight_label), "${it.amount} ${localizeWeightUnit(it.unit)}") }
+            obj.cost?.let { addRow(getString(R.string.cost_label), "${it.amount} ${UiLocalizer.costUnit(it.unit)}") }
+            obj.weight?.let { addRow(getString(R.string.weight_label), "${it.amount} ${UiLocalizer.weightUnit(it.unit)}") }
             obj.damage?.let {
                 val damageText = buildString {
                     append(it.damage_dice)
@@ -1605,31 +1594,48 @@ class ReferenceDetailFragment : Fragment() {
         val spell = viewModel.getSpell(objectId) ?: return showNotFound()
         binding.toolbar.title = spell.name.get()
         addSection(getString(R.string.reference_quick_info)) {
-            val levelStr = if (spell.level == 0) "Заговор" else "Уровень ${spell.level}"
-            addRow("Уровень", levelStr)
-            addRow("Школа", localizeSpellSchool(spell.school))
-            addRow("Время сотворения", spell.casting_time)
-            addRow("Длительность", spell.duration)
-            addRow("Дистанция", spell.range?.text ?: spell.range?.type ?: "—")
-            addRow("Компоненты", spell.components.joinToString(", "))
-            spell.material?.let { addRow("Материальный", it) }
-            addRow("Концентрация", if (spell.concentration) "Да" else "Нет")
-            addRow("Ритуал", if (spell.ritual) "Да" else "Нет")
-            spell.saving_throw?.let { addRow("Спасбросок", localizeAbility(it)) }
-            spell.attack_type?.let { addRow("Тип атаки", it.replaceFirstChar { c -> c.uppercase() }) }
-            spell.area_of_effect?.let { addRow("Область", "${it.size} фт ${it.type.replaceFirstChar { c -> c.uppercase() }}") }
+            val levelStr = if (spell.level == 0) getString(R.string.reference_spell_cantrip) else getString(R.string.reference_spell_level, spell.level)
+            addRow(getString(R.string.reference_spell_level_label), levelStr)
+            addRow(getString(R.string.reference_spell_school), localizeSpellSchool(spell.school))
+            addRow(getString(R.string.reference_spell_casting_time), spell.casting_time)
+            addRow(getString(R.string.reference_spell_duration), spell.duration)
+            addRow(getString(R.string.reference_spell_range), spell.range?.text ?: spell.range?.type ?: "—")
+            addRow(getString(R.string.reference_spell_components), spell.components.joinToString(", "))
+            spell.material?.let { addRow(getString(R.string.reference_spell_material), it) }
+            addRow(getString(R.string.reference_spell_concentration), if (spell.concentration) getString(R.string.yes) else getString(R.string.no))
+            addRow(getString(R.string.reference_spell_ritual), if (spell.ritual) getString(R.string.yes) else getString(R.string.no))
+            spell.saving_throw?.let { addRow(getString(R.string.reference_spell_saving_throw), localizeAbility(it)) }
+            spell.attack_type?.let { addRow(getString(R.string.reference_spell_attack_type), it.replaceFirstChar { c -> c.uppercase() }) }
+            spell.area_of_effect?.let { addRow(getString(R.string.reference_spell_area), "${it.size} фт ${it.type.replaceFirstChar { c -> c.uppercase() }}") }
         }
         addSection(getString(R.string.reference_description)) {
             val conditionLinks = buildConditionLinkMap()
             addView(buildLinkedTextView(spell.description.get(), conditionLinks))
         }
-        spell.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        spell.table?.let { addSection(getString(R.string.reference_spell_table)) { addView(createTableView(it)) } }
         spell.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
         spell.higher_levels?.let {
-            addSection("Улучшения") { addText(it.get()) }
+            addSection(getString(R.string.reference_spell_higher_levels)) { addText(it.get()) }
+        }
+        spell.damage?.let { dmg ->
+            addSection(getString(R.string.reference_spell_damage)) {
+                addRow(getString(R.string.damage_label), dmg.damage_type.replaceFirstChar { it.uppercase() })
+                if (dmg.damage_at_slot_level.isNotEmpty()) {
+                    addText(getString(R.string.reference_spell_damage_per_slot))
+                    for ((slot, dice) in dmg.damage_at_slot_level) {
+                        addText("  $slot: $dice")
+                    }
+                }
+                dmg.damage_at_character_level?.takeIf { it.isNotEmpty() }?.let { charLevels ->
+                    addText(getString(R.string.reference_spell_damage_per_character_level))
+                    for ((lvl, dice) in charLevels) {
+                        addText("  $lvl: $dice")
+                    }
+                }
+            }
         }
         spell.classes.takeIf { it.isNotEmpty() }?.let { ids ->
-            addSection("Классы") {
+            addSection(getString(R.string.reference_spell_classes)) {
                 addText(ids.mapNotNull { id -> viewModel.resolveName(id) ?: id }.joinToString(", "))
             }
         }
@@ -1734,12 +1740,12 @@ class ReferenceDetailFragment : Fragment() {
         addSection(getString(R.string.reference_quick_stats)) {
             val subtypeStr = obj.subtype?.let { " ($it)" } ?: ""
             val sizeLabel = if (obj.name.get().startsWith("Рой")) {
-                localizeMonsterSizeDetail(obj.size)
+                UiLocalizer.monsterSizeDetail(obj.size)
             } else {
-                localizeSize(obj.size)
+                UiLocalizer.size(obj.size)
             }
-            addRow(getString(R.string.size_label), "$sizeLabel ${localizeType(obj.creature_type)}$subtypeStr")
-            obj.alignment.takeIf { it.isNotBlank() }?.let { addRow("Мировоззрение", localizeAlignment(it)) }
+            addRow(getString(R.string.size_label), "$sizeLabel ${UiLocalizer.type(obj.creature_type)}$subtypeStr")
+            obj.alignment.takeIf { it.isNotBlank() }?.let { addRow("Мировоззрение", UiLocalizer.alignment(it)) }
             addRow("Класс Защиты", obj.armor_class.toString())
             obj.initiative?.takeIf { it.isNotBlank() }?.let { addRow("Инициатива", it) }
             obj.hit_points.takeIf { it.isNotBlank() }?.let { addRow("Хиты", it) }
@@ -1765,7 +1771,7 @@ class ReferenceDetailFragment : Fragment() {
         val skills = obj.skills
         if (skills != null && skills.isNotEmpty()) {
             addSection(getString(R.string.reference_skills)) {
-                val parts = skills.map { (skill, bonus) -> "${localizeSkill(skill)} +$bonus" }
+                val parts = skills.map { (skill, bonus) -> "${UiLocalizer.skill(skill)} +$bonus" }
                 addText(parts.joinToString(", "))
             }
         }
@@ -1774,7 +1780,7 @@ class ReferenceDetailFragment : Fragment() {
         val senses = obj.senses
         if (senses != null && senses.isNotEmpty()) {
             addSection("Чувства") {
-                addText(senses.entries.joinToString(", ") { (k, v) -> "${localizeSense(k)} $v" })
+                addText(senses.entries.joinToString(", ") { (k, v) -> "${UiLocalizer.sense(k)} $v" })
             }
         }
 
@@ -1800,7 +1806,7 @@ class ReferenceDetailFragment : Fragment() {
         val condImmunities = obj.condition_immunities
         if (condImmunities != null && condImmunities.isNotEmpty()) {
             addSection("Иммунитет к состояниям") {
-                addText(condImmunities.joinToString(", ") { localizeCondition(it) })
+                addText(condImmunities.joinToString(", ") { UiLocalizer.condition(it) })
             }
         }
 
@@ -1810,7 +1816,7 @@ class ReferenceDetailFragment : Fragment() {
         }
         if (obj.environment.isNotEmpty()) {
             addSection("Среда обитания") {
-                addText(obj.environment.joinToString(", ") { localizeEnvironment(it) })
+                addText(obj.environment.joinToString(", ") { UiLocalizer.environment(it) })
             }
         }
         obj.treasure?.takeIf { it.isNotBlank() }?.let { tr ->
@@ -1858,141 +1864,20 @@ class ReferenceDetailFragment : Fragment() {
 
     private fun formatNumber(value: Int): String = java.text.NumberFormat.getInstance().format(value)
 
-    private fun localizeSense(sense: String): String = when (sense.lowercase()) {
-        "darkvision" -> "Тёмное зрение"
-        "blindsight" -> "Слепое зрение"
-        "tremorsense" -> "Вибрационное чутьё"
-        "truesight" -> "Истинное зрение"
-        "passive_perception" -> "пассивное Восприятие"
-        else -> sense.replace('_', ' ').replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeCondition(condition: String): String = when (condition.lowercase()) {
-        "blinded" -> "Ослеплённый"
-        "charmed" -> "Очарованный"
-        "deafened" -> "Оглохший"
-        "frightened" -> "Испуганный"
-        "grappled" -> "Схваченный"
-        "incapacitated" -> "Недееспособный"
-        "invisible" -> "Невидимый"
-        "paralyzed" -> "Парализованный"
-        "petrified" -> "Окаменевший"
-        "poisoned" -> "Отравленный"
-        "prone" -> "Опрокинутый"
-        "restrained" -> "Опутанный"
-        "stunned" -> "Ошеломлённый"
-        "unconscious" -> "Без сознания"
-        "exhaustion" -> "Истощение"
-        else -> condition.replace('_', ' ').replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeAlignment(alignment: String): String {
-        val parts = alignment.trim().lowercase().split(" ")
-        val lawAxis = when (parts.firstOrNull()) {
-            "lawful" -> "Законно"
-            "neutral" -> "Нейтрально"
-            "chaotic" -> "Хаотично"
-            else -> null
-        }
-        val goodAxis = when (parts.getOrNull(1) ?: "") {
-            "good" -> "доброе"
-            "evil" -> "злое"
-            "neutral" -> "нейтральное"
-            else -> null
-        }
-        // Single-word alignments: neutral, lawful, chaotic, good, evil
-        if (parts.size == 1) {
-            return when (parts[0]) {
-                "neutral" -> "Нейтральное"
-                "lawful" -> "Законноправное"
-                "chaotic" -> "Хаотичное"
-                "good" -> "Доброе"
-                "evil" -> "Злое"
-                "any" -> "Любое"
-                "unaligned" -> "Без мировоззрения"
-                else -> alignment.trim().replaceFirstChar { it.uppercase() }
-            }
-        }
-        return when {
-            lawAxis != null && goodAxis != null -> "$lawAxis-$goodAxis"
-            else -> alignment.trim().replaceFirstChar { it.uppercase() }
-        }
-    }
-
-    private fun localizeEnvironment(environment: String): String = when (environment.lowercase()) {
-        "any" -> "Любая"
-        "arctic" -> "Арктика"
-        "coastal" -> "Прибрежье"
-        "desert" -> "Пустыня"
-        "forest" -> "Леса"
-        "grassland" -> "Луга"
-        "hills", "hill" -> "Холмы"
-        "mountains", "mountain" -> "Горы"
-        "underdark" -> "Подземье"
-        "swamp" -> "Болото"
-        "underwater" -> "Под водой"
-        "urban" -> "Город"
-        "astral plane" -> "Астральный план"
-        "upper planes" -> "Верхние планы"
-        "lower planes" -> "Нижние планы"
-        "acheron" -> "Ахерон"
-        "abyss" -> "Бездна"
-        "gehenna" -> "Геенна"
-        "nine hells" -> "Девять преисподних"
-        "beastlands" -> "Звериные земли"
-        "limbo" -> "Лимбо"
-        "mechanus" -> "Механус"
-        "elemental water" -> "Стихийный план воды"
-        "elemental fire" -> "Стихийный план огня"
-        "elemental earth" -> "Стихийный план земли"
-        "elemental air" -> "Стихийный план воздуха"
-        "elemental planes" -> "Стихийные планы"
-        "elemental chaos" -> "Стихийный хаос"
-        "feywild" -> "Страна фей"
-        "shadowfell" -> "Царство теней"
-        "ethereal plane" -> "Эфирный план"
-        "underground" -> "Подземелье"
-        else -> environment.replaceFirstChar { it.uppercase() }
-    }
 
     // ─── Helpers ──────────────────────────────────────────────────────
 
     private fun addSection(title: String, block: LinearLayout.() -> Unit) {
         val renderTarget = activeRenderContainer ?: binding.detailContent
-        val titleView = TextView(requireContext()).apply {
-            text = title
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 24, 0, 8)
-        }
-        renderTarget.addView(titleView)
-
-        val container = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(0, 0, 0, 8)
-        }
-        container.block()
-        renderTarget.addView(container)
+        CardBuilder.addSection(requireContext(), renderTarget, title, block)
     }
 
     private fun LinearLayout.addRow(label: String, value: String) {
-        val row = TextView(requireContext()).apply {
-            val text = "$label: $value"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-            setPadding(0, 4, 0, 4)
-            this.text = SpannableString(text).apply {
-                setSpan(StyleSpan(Typeface.BOLD), 0, label.length + 1, 0)
-            }
-        }
-        addView(row)
+        CardBuilder.addRow(this, label, value)
     }
 
     private fun LinearLayout.addText(text: String) {
-        val tv = TextView(requireContext()).apply {
-            this.text = text
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-            setPadding(0, 4, 0, 4)
-        }
-        addView(tv)
+        CardBuilder.addText(this, text)
     }
 
     private fun LinearLayout.addLinkedItemDescription(description: String, currentName: String) {
@@ -2163,10 +2048,8 @@ class ReferenceDetailFragment : Fragment() {
     }
 
     private fun addSourceSection(source: SourceInfo) {
-        addSection(getString(R.string.reference_source)) {
-            val page = source.page?.let { ", p. $it" } ?: ""
-            addText("${source.book.get()} (${source.abbreviation})$page")
-        }
+        val renderTarget = activeRenderContainer ?: binding.detailContent
+        CardBuilder.addSourceSection(requireContext(), renderTarget, getString(R.string.reference_source), source)
     }
 
     private fun addReferencesSection(references: List<Reference>) {
@@ -2275,44 +2158,6 @@ class ReferenceDetailFragment : Fragment() {
         else -> null
     }
 
-    private fun localizeSize(size: String): String = when (size.lowercase()) {
-        "small" -> getString(R.string.size_small)
-        "medium" -> getString(R.string.size_medium)
-        "large" -> getString(R.string.size_large)
-        "huge" -> getString(R.string.size_huge)
-        "gargantuan" -> getString(R.string.size_gargantuan)
-        "tiny" -> getString(R.string.size_tiny)
-        else -> size.replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeMonsterSizeDetail(size: String): String = when (size.lowercase()) {
-        "tiny" -> "Крошечный рой"
-        "small" -> "Маленький рой"
-        "medium" -> "Средний рой"
-        "large" -> "Большой рой"
-        "huge" -> "Огромный рой"
-        "gargantuan" -> "Громадный рой"
-        else -> "Рой"
-    }
-
-    private fun localizeType(type: String): String = when (type.lowercase()) {
-        "humanoid" -> getString(R.string.type_humanoid)
-        "fey" -> getString(R.string.type_fey)
-        "fiend" -> getString(R.string.type_fiend)
-        "undead" -> getString(R.string.type_undead)
-        "monstrosity" -> getString(R.string.type_monstrosity)
-        "aberration" -> getString(R.string.type_aberration)
-        "celestial" -> getString(R.string.type_celestial)
-        "elemental" -> getString(R.string.type_elemental)
-        "construct" -> getString(R.string.type_construct)
-        "dragon" -> getString(R.string.type_dragon)
-        "giant" -> getString(R.string.type_giant)
-        "ooze" -> getString(R.string.type_ooze)
-        "plant" -> getString(R.string.type_plant)
-        "beast" -> getString(R.string.type_beast)
-        else -> type.replaceFirstChar { it.uppercase() }
-    }
-
     private fun localizeAbility(ability: String): String = when (ability.lowercase()) {
         "strength" -> getString(R.string.ability_strength)
         "dexterity" -> getString(R.string.ability_dexterity)
@@ -2321,28 +2166,6 @@ class ReferenceDetailFragment : Fragment() {
         "wisdom" -> getString(R.string.ability_wisdom)
         "charisma" -> getString(R.string.ability_charisma)
         else -> ability.replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeSkill(skill: String): String = when (skill.lowercase().replace(" ", "_")) {
-        "acrobatics" -> getString(R.string.skill_acrobatics)
-        "animal_handling" -> getString(R.string.skill_animal_handling)
-        "arcana" -> getString(R.string.skill_arcana)
-        "athletics" -> getString(R.string.skill_athletics)
-        "deception" -> getString(R.string.skill_deception)
-        "history" -> getString(R.string.skill_history)
-        "insight" -> getString(R.string.skill_insight)
-        "intimidation" -> getString(R.string.skill_intimidation)
-        "investigation" -> getString(R.string.skill_investigation)
-        "medicine" -> getString(R.string.skill_medicine)
-        "nature" -> getString(R.string.skill_nature)
-        "perception" -> getString(R.string.skill_perception)
-        "performance" -> getString(R.string.skill_performance)
-        "persuasion" -> getString(R.string.skill_persuasion)
-        "religion" -> getString(R.string.skill_religion)
-        "sleight_of_hand" -> getString(R.string.skill_sleight_of_hand)
-        "stealth" -> getString(R.string.skill_stealth)
-        "survival" -> getString(R.string.skill_survival)
-        else -> skill.replaceFirstChar { it.uppercase() }
     }
 
     private fun navigateToItem(itemId: String) {
@@ -2364,12 +2187,7 @@ class ReferenceDetailFragment : Fragment() {
 
     private fun showNotFound() {
         binding.toolbar.title = getString(R.string.reference_not_found)
-        binding.detailContent.addView(TextView(requireContext()).apply {
-            text = getString(R.string.reference_not_found)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
-            gravity = Gravity.CENTER
-            setPadding(32, 64, 32, 32)
-        })
+        CardBuilder.showNotFound(requireContext(), binding.detailContent, getString(R.string.reference_not_found))
     }
 
     override fun onStop() {
@@ -2402,6 +2220,8 @@ class ReferenceDetailFragment : Fragment() {
         outState.putStringArrayList("openSchemsIds", ArrayList(openSchemsIds))
         outState.putStringArrayList("openMetamagicIds", ArrayList(openMetamagicIds))
         outState.putStringArrayList("openManeuversIds", ArrayList(openManeuversIds))
+        outState.putStringArrayList("openSpeciesTraitIds", ArrayList(openSpeciesTraitIds))
+        outState.putStringArrayList("openClassSubclassIds", ArrayList(openClassSubclassIds))
         outState.putInt("contentScrollPosition", binding.contentScroll.scrollY)
     }
 

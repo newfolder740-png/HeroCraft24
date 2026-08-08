@@ -1,5 +1,5 @@
 {
-  "id": "phb2024:warlock_great_old_one",
+  "id": "warlock_great_old_one","full_id": "phb2024:warlock_great_old_one",
   "features": [
     "phb2024:warlock_great_old_one_l3_spells",
     "phb2024:warlock_great_old_one_l3_awakened_mind",
@@ -16,7 +16,7 @@
   "type": "subclass",
   "source": {
     "book": {
-      "en": "Player's Handbook (2024)",
+      "en": "Player's Handbook 2024",
       "ru": "Книга игрока (2024)"
     },
     "abbreviation": "PHB2024"

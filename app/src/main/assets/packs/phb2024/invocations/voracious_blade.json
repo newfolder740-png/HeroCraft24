@@ -1,5 +1,7 @@
 {
     "id":  "voracious_blade",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Voracious Blade",
                  "ru":  "Пожирающий клинок"

@@ -100,6 +100,7 @@ data class EquipmentChoice(
     val options: List<EquipmentOption> = emptyList(),
     val default: String? = null,
     val description2: LocalizedString? = null,
+    val type: String? = null,
 )
 
 @Serializable
@@ -120,7 +121,8 @@ data class SpellcastingInfo(
     val spell_list: String? = null,
     val cantrips_known: List<ProgressionValue> = emptyList(),
     val spells_known: List<ProgressionValue>? = null,
-    val spell_slots: SpellSlotsTable? = null
+    val spell_slots: SpellSlotsTable? = null,
+    val requires_tools: Boolean = false
 )
 
 @Serializable
@@ -169,6 +171,8 @@ data class MulticlassRequirements(
 @Serializable
 data class Invocation(
     val id: String,
+    val type: String = "invocation",
+    val format_version: Int = 1,
     val name: LocalizedString,
     val description: LocalizedString,
     val level: Int? = null,
@@ -186,12 +190,17 @@ data class InvocationRequirements(
 @Serializable
 data class Maneuvers(
     val id: String,
+    val type: String = "maneuver",
+    val format_version: Int = 1,
     val name: LocalizedString,
-    val description: LocalizedString
+    val description: LocalizedString,
+    val cost: String? = null
 )
 @Serializable
 data class Schems(
     val id: String,
+    val type: String = "schem",
+    val format_version: Int = 1,
     val name: LocalizedString,
     val table: Table? = null, // Добавляем поле для таблицы
     val description: LocalizedString? = null,
@@ -221,6 +230,8 @@ data class TableRow(
 @Serializable
 data class Metamagic(
     val id: String,
+    val type: String = "metamagic",
+    val format_version: Int = 1,
     val name: LocalizedString,
     val description: LocalizedString,
     val cost: String

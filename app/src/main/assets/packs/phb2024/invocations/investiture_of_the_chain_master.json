@@ -1,5 +1,7 @@
 {
     "id":  "investiture_of_the_chain_master",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Investiture of the Chain Master",
                  "ru":  "Облачение хозяина цепи"

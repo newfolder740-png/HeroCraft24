@@ -1,5 +1,7 @@
 {
     "id":  "ascendant_step",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Ascendant Step",
                  "ru":  "Восходящий шаг"

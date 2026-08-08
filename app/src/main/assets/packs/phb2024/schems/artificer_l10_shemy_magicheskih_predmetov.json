@@ -1,5 +1,7 @@
 {
   "id": "artificer_l10_shemy_magicheskih_predmetov",
+  "type": "schem",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Схемы магических предметов (10-й уровень Артефактора и выше)"

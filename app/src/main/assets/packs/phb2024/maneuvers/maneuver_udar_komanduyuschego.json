@@ -1,5 +1,7 @@
 {
   "id": "maneuver_udar_komanduyuschego",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Удар командующего"

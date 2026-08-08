@@ -1,5 +1,7 @@
 {
     "id":  "mystic_spear",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Mystic Spear",
                  "ru":  "Мистическое копьё"

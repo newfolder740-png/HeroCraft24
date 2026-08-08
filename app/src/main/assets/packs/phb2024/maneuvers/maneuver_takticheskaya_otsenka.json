@@ -1,5 +1,7 @@
 {
   "id": "maneuver_takticheskaya_otsenka",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Тактическая оценка"

@@ -1,0 +1,87 @@
+Отчёт по выполнению пунктов плана 6, 7, 8
+============================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 6, 7, 8
+
+6. Добавить type/format_version в Invocation/Metamagic/Maneuvers/Schems
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение:
+     - Invocation: +val type: String = "invocation", +val format_version: Int = 1
+     - Metamagic:  +val type: String = "metamagic",  +val format_version: Int = 1
+     - Maneuvers:  +val type: String = "maneuver",   +val format_version: Int = 1
+     - Schems:     +val type: String = "schem",      +val format_version: Int = 1
+   Статус: ✅ выполнено
+   Риск: низкий (default-значения, ignoreUnknownKeys включён)
+
+7. Добавить cost в maneuvers/maneuver_zasada.json
+   Файл: app/src/main/assets/packs/phb2024/maneuvers/maneuver_zasada.json
+   Изменение: добавлены поля type, format_version и cost
+     "type": "maneuver",
+     "format_version": 1,
+     "cost": "1 Кость превосходства"
+   Статус: ✅ выполнено
+
+8. Добавить feat в 2 background-файла
+   Файлы:
+     - app/src/main/assets/packs/phb2024/backgrounds/haunted_one.json
+       "feat": "phb2024:shadow_touched"
+     - app/src/main/assets/packs/phb2024/backgrounds/svoya_predystoriya.json
+       "feat": "phb2024:skilled"
+   Статус: ✅ выполнено
+
+Изменённые файлы:
+- core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+- app/src/main/assets/packs/phb2024/maneuvers/maneuver_zasada.json
+- app/src/main/assets/packs/phb2024/backgrounds/haunted_one.json
+- app/src/main/assets/packs/phb2024/backgrounds/svoya_predystoriya.json
+
+Изменения API:
+- Invocation: появились поля type (default "invocation") и format_version (default 1)
+- Metamagic: появились поля type (default "metamagic") и format_version (default 1)
+- Maneuvers: появились поля type (default "maneuver") и format_version (default 1)
+- Schems: появились поля type (default "schem") и format_version (default 1)
+- JSON-файлы манёвра и предысторий получили новые поля без изменения структуры остальных данных
+
+Проверки выполнены:
+1. Поиск прямых конструкций Invocation(...), Metamagic(...), Maneuvers(...), Schems(...) в Kotlin-коде —
+   найдены только определения data class, внешние вызовы отсутствуют, позиционные параметры не нарушены.
+2. Проверка мест использования obj.feat в ReferenceDetailFragment — логика отрисовки ссылки
+   на черту уже реализована и использует viewModel.resolveName(featId).
+3. Проверка наличия выбранных черт в manifest.json:
+   - "shadow_touched" ✅
+   - "skilled" ✅
+4. Сборка Kotlin: ./gradlew :app:compileDebugKotlin — BUILD SUCCESSFUL (91 actionable tasks).
+5. Валидация синтаксиса изменённых JSON через PowerShell ConvertFrom-Json — все 3 файла OK.
+
+Результат build/test:
+- :app:compileDebugKotlin — ✅ SUCCESS
+- Unit-тесты в проекте отсутствуют, дополнительных тестовых задач запущено не было.
+
+Обнаруженные проблемы:
+- Проблем не выявлено. Все изменения аддитивные и обратно совместимы.
+
+Что осталось сделать:
+- Выполнить пункт 16 плана: добавить type/format_version в остальные 62 JSON-файла категорий
+  invocations/metamagics/maneuvers/schems (теперь модели уже поддерживают эти поля).
+- Проверить отображение стоимости манёвра "Засада" и ссылок на черты в карточках
+  предысторий Haunted One / Своя предыстория на устройстве/эмуляторе.
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+С учётом выполненных изменений теперь можно безопасно продолжать (по возрастанию риска):
+
+- #9  — monk.multiclass_requirements (точечная правка JSON)
+- #10 — scimitar/glaive category (точечная правка JSON)
+- #16 — добавить type/format_version в 62 JSON-файла (модели уже поддерживают поля)
+- #14 — source.abbreviation в manifest.json
+- #15 — source.book.en в JSON-файлах
+
+С повышенной осторожностью (средний риск, требуют проверки resolveReference для каждого id):
+- #11 — убрать префикс phb2024: из id subclass-файлов
+- #12 — исправить 5 дубликатов id в manifest.json
+- #13 — убрать префикс phb2024: из entry.id в manifest.json
+
+Не рекомендуется начинать досрочно:
+- #17–#25 и далее — зависят от завершения локализации (Этап 3) и/или UI-рендеринга (Этап 4).

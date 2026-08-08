@@ -196,7 +196,8 @@ class ContentRepository private constructor(private val context: Context) {
         objects.classes + objects.species + objects.backgrounds +
         objects.feats + objects.conditions + objects.monsters +
         objects.mechanics + objects.glossary + objects.spells + objects.items +
-        objects.features + objects.subclasses
+        objects.features + objects.subclasses + objects.invocations +
+        objects.metamagics + objects.maneuvers + objects.schems
 
     private fun findType(objects: ManifestObjects, objectId: String): String? {
         if (objects.classes.any { it.id == objectId }) return "class"
@@ -211,6 +212,10 @@ class ContentRepository private constructor(private val context: Context) {
         if (objects.items.any { it.id == objectId }) return "item"
         if (objects.features.any { it.id == objectId }) return "feature"
         if (objects.subclasses.any { it.id == objectId }) return "subclass"
+        if (objects.invocations.any { it.id == objectId }) return "invocation"
+        if (objects.metamagics.any { it.id == objectId }) return "metamagic"
+        if (objects.maneuvers.any { it.id == objectId }) return "maneuvers"
+        if (objects.schems.any { it.id == objectId }) return "schems"
         return null
     }
 }

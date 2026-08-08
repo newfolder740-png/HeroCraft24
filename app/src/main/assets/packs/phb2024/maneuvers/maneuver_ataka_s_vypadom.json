@@ -1,5 +1,7 @@
 {
   "id": "maneuver_ataka_s_vypadom",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Атака с выпадом"

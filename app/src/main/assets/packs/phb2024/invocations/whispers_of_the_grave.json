@@ -1,5 +1,7 @@
 {
     "id":  "whispers_of_the_grave",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Whispers of the Grave",
                  "ru":  "Могильный шёпот"

@@ -1,5 +1,7 @@
 {
     "id":  "mask_of_many_faces",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Mask of Many Faces",
                  "ru":  "Маска многих лиц"

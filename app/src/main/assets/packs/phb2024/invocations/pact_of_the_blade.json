@@ -1,5 +1,7 @@
 {
     "id":  "pact_of_the_blade",
+  "type": "invocation",
+  "format_version": 1,
     "name":  {
                  "en":  "Pact of the Blade",
                  "ru":  "Договор клинка"

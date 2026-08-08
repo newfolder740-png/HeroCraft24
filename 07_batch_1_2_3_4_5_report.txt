@@ -1,0 +1,49 @@
+Отчёт по выполнению пунктов плана 1, 2, 3, 4, 5
+================================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+Выполненные пункты: 1, 2, 3, 4, 5 (из 06_low_risk_plan.txt)
+
+1. Добавить `cost: String?` в модель Maneuvers
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class Maneuvers(..., val cost: String? = null)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+2. Добавить `requires_tools: Boolean` в SpellcastingInfo
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class SpellcastingInfo(..., val requires_tools: Boolean = false)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+3. Добавить 4 категории в ManifestObjects
+   Файл: core/data/src/main/java/com/herocraft24/core/data/Manifest.kt
+   Изменение: добавлены invocations, metamagics, maneuvers, schems (default emptyList())
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+4. Обновить ContentRepository.allEntries() и findType()
+   Файл: core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt
+   Изменение: в allEntries() и findType() добавлены 4 новые категории (invocations, metamagics, maneuvers, schems)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+5. Добавить `type: String?` в EquipmentChoice
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class EquipmentChoice(..., val type: String? = null)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+Изменённые файлы:
+- core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+- core/data/src/main/java/com/herocraft24/core/data/Manifest.kt
+- core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt
+
+Результат сборки:
+BUILD SUCCESSFUL in 19s
+91 actionable tasks: 10 executed, 81 up-to-date
+
+Примечания:
+- Все изменения аддитивные, с default-значениями, обратно совместимы.
+- JSON-файлы не затронуты.
+- Дополнительно изменены не были.

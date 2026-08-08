@@ -1,5 +1,5 @@
 {
-  "id": "phb2024:fighter_master_boya",
+  "id": "fighter_master_boya","full_id": "phb2024:fighter_master_boya",
   "type": "subclass",
   "format_version": 1,
   "name": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "book": {
-      "en": "Player's Handbook (2024)",
+      "en": "Player's Handbook 2024",
       "ru": "Книга игрока (2024)"
     },
     "abbreviation": "PHB2024"

@@ -1,5 +1,7 @@
 {
   "id": "maneuver_obezoruzhivayuschaya_ataka",
+  "type": "maneuver",
+  "format_version": 1,
   "name": {
     "en": "",
     "ru": "Обезоруживающая атака"
