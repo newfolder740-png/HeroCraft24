@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "salamander_inferno_master",
     "type":  "monster",
     "format_version":  1,
@@ -52,7 +52,7 @@
                       },
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к урону Холод"
+                                   "cold"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

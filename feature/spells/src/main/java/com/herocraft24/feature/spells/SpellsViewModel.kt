@@ -4,29 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Spell
+import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.data.FavoritesStore
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.ItemLinkifier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-data class SpellSummary(
-    val fullId: String,
-    val name: String,
-    val level: Int,
-    val school: String,
-    val concentration: Boolean,
-    val ritual: Boolean,
-    val components: List<String>,
-    val classes: List<String>,
-    val subclasses: List<String>,
-    val castingTime: String,
-    val damageType: String?,
-    val tags: List<String>,
-    val material: String? = null,
-    val materialHasCost: Boolean = false,
-    val materialConsumable: Boolean = false
-)
 
 data class SpellFilters(
     val levels: Set<Int> = emptySet(),
@@ -141,14 +124,13 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
     fun getEntryType(fullId: String): String? = repository.getEntryType(fullId)
     fun getCondition(fullId: String): com.herocraft24.core.model.Condition? = repository.getCondition(fullId)
 
-    /** Maps a subclass's localised name to its parent class's localised name (e.g. "Круг земли" -> "Друид"). */
+    /** Maps a subclass's full id to its parent class's localised name (e.g. "phb2024:druid_zemlya" -> "Друид"). */
     val subclassToClassMap: Map<String, String> by lazy {
         val map = mutableMapOf<String, String>()
         for (subclassId in repository.getSubclassIds()) {
             val subclass = repository.getSubclass(subclassId) ?: continue
-            val subclassName = subclass.name.get().takeIf { it.isNotBlank() } ?: continue
             val className = repository.resolveName(subclass.class_id) ?: continue
-            map[subclassName] = className
+            map[subclassId] = className
         }
         map
     }

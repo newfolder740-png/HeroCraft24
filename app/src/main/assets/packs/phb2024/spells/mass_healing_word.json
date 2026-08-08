@@ -1,48 +1,48 @@
 {
-  "id": "mass_healing_word",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Mass Healing Word",
-    "ru": "Множественное лечащее слово"
-  },
-  "description": {
-    "en": "",
-    "ru": "Выберите до шести существ, видимых вами в пределах дистанции; каждое из этих существ восстанавливает Хиты в количестве, равном 2к4 + ваш модификатор заклинательной характеристики."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "abjuration",
-  "casting_time": "Бонусное действие",
-  "range": {
-    "type": "range",
-    "text": "60 футов"
-  },
-  "components": [
-    "V"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Лечение увеличивается на 1к4 за каждый уровень ячейки выше 3-го."
-  },
-  "classes": [
-    "phb2024:bard",
-    "phb2024:cleric"
-  ],
-  "subclasses": [
-    "Алхимик",
-    "Домен жизни"
-  ]
+    "id":  "mass_healing_word",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Mass Healing Word",
+                 "ru":  "Множественное лечащее слово"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Выберите до шести существ, видимых вами в пределах дистанции; каждое из этих существ восстанавливает Хиты в количестве, равном 2к4 + ваш модификатор заклинательной характеристики."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "abjuration",
+    "casting_time":  "Бонусное действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "60 футов"
+              },
+    "components":  [
+                       "V"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Лечение увеличивается на 1к4 за каждый уровень ячейки выше 3-го."
+                      },
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:cleric"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_alhimik",
+                       "phb2024:cleric_zhizn"
+                   ]
 }

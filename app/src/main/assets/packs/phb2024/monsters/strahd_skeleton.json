@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "strahd_skeleton",
     "type":  "monster",
     "format_version":  1,
@@ -50,7 +50,7 @@
                       },
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к урону Дробящий"
+                                   "bludgeoning"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

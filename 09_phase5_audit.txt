@@ -1,0 +1,244 @@
+Phase 5 cleanup audit
+=====================
+Run date: 2026-08-08
+Script: phase5_cleanup.ps1
+
+Summary
+-------
+Spell files changed: 173
+Monster files changed: 28
+Class files changed: 5
+Invalid JSON files: 0
+
+Spell subclass unknown values (left unchanged because they are not in manifest.json):
+Картограф: 12
+Реаниматор: 11
+
+Monster damage_vulnerabilities unknown values: none
+
+Special monster handling
+--------------------------
+- shadow.json: damage_vulnerabilities set to ["radiant"]
+- rakshasa.json: damage_vulnerabilities set to ["piercing"]; trait "Уязвимость к Колющему урону" added
+- shoggoth.json: damage_vulnerabilities set to []
+
+Class fixes applied
+-------------------
+- druid.json: subclass_title.ru = "Круг друидов"; slot column names filled with ru numbers
+- monk.json: subclass_title.ru = "Монастическая традиция"
+- paladin.json: subclass_title.ru = "Священная клятва"; slot column names filled with ru numbers
+- ranger.json: subclass_title.ru = "Конклав следопыта"; slot column names filled with ru numbers
+- rogue.json: subclass_title.ru = "Архетип плута"
+
+Validation
+----------
+All JSON files in spells, monsters, and classes directories parse successfully.
+
+Changed files
+-------------
+app/src/main/assets/packs/phb2024/classes/druid.json
+app/src/main/assets/packs/phb2024/classes/monk.json
+app/src/main/assets/packs/phb2024/classes/paladin.json
+app/src/main/assets/packs/phb2024/classes/ranger.json
+app/src/main/assets/packs/phb2024/classes/rogue.json
+app/src/main/assets/packs/phb2024/monsters/ankhtepot.json
+app/src/main/assets/packs/phb2024/monsters/awakened_shrub.json
+app/src/main/assets/packs/phb2024/monsters/awakened_tree.json
+app/src/main/assets/packs/phb2024/monsters/bodytaker_plant.json
+app/src/main/assets/packs/phb2024/monsters/dust_mephit.json
+app/src/main/assets/packs/phb2024/monsters/earth_elemental.json
+app/src/main/assets/packs/phb2024/monsters/flaming_skeleton.json
+app/src/main/assets/packs/phb2024/monsters/flumph.json
+app/src/main/assets/packs/phb2024/monsters/ice_mephit.json
+app/src/main/assets/packs/phb2024/monsters/magma_mephit.json
+app/src/main/assets/packs/phb2024/monsters/minotaur_skeleton.json
+app/src/main/assets/packs/phb2024/monsters/mummy.json
+app/src/main/assets/packs/phb2024/monsters/mummy_lord.json
+app/src/main/assets/packs/phb2024/monsters/polar_serpent.json
+app/src/main/assets/packs/phb2024/monsters/rakshasa.json
+app/src/main/assets/packs/phb2024/monsters/salamander.json
+app/src/main/assets/packs/phb2024/monsters/salamander_fire_snake.json
+app/src/main/assets/packs/phb2024/monsters/salamander_inferno_master.json
+app/src/main/assets/packs/phb2024/monsters/scarecrow.json
+app/src/main/assets/packs/phb2024/monsters/shadow.json
+app/src/main/assets/packs/phb2024/monsters/shadow_demon.json
+app/src/main/assets/packs/phb2024/monsters/shoggoth.json
+app/src/main/assets/packs/phb2024/monsters/skeleton.json
+app/src/main/assets/packs/phb2024/monsters/strahd_skeleton.json
+app/src/main/assets/packs/phb2024/monsters/treant.json
+app/src/main/assets/packs/phb2024/monsters/twig_blight.json
+app/src/main/assets/packs/phb2024/monsters/warhorse_skeleton.json
+app/src/main/assets/packs/phb2024/monsters/waxwork.json
+app/src/main/assets/packs/phb2024/spells/acid_splash.json
+app/src/main/assets/packs/phb2024/spells/aid.json
+app/src/main/assets/packs/phb2024/spells/alarm.json
+app/src/main/assets/packs/phb2024/spells/alter_self.json
+app/src/main/assets/packs/phb2024/spells/antilife_shell.json
+app/src/main/assets/packs/phb2024/spells/arcane_eye.json
+app/src/main/assets/packs/phb2024/spells/arms_of_hadar.json
+app/src/main/assets/packs/phb2024/spells/aura_of_life.json
+app/src/main/assets/packs/phb2024/spells/aura_of_purity.json
+app/src/main/assets/packs/phb2024/spells/aura_of_vitality.json
+app/src/main/assets/packs/phb2024/spells/bane.json
+app/src/main/assets/packs/phb2024/spells/banishing_smite.json
+app/src/main/assets/packs/phb2024/spells/banishment.json
+app/src/main/assets/packs/phb2024/spells/beacon_of_hope.json
+app/src/main/assets/packs/phb2024/spells/beast_sense.json
+app/src/main/assets/packs/phb2024/spells/blade_ward.json
+app/src/main/assets/packs/phb2024/spells/bless.json
+app/src/main/assets/packs/phb2024/spells/blight.json
+app/src/main/assets/packs/phb2024/spells/blindness_deafness.json
+app/src/main/assets/packs/phb2024/spells/blink.json
+app/src/main/assets/packs/phb2024/spells/blur.json
+app/src/main/assets/packs/phb2024/spells/burning_hands.json
+app/src/main/assets/packs/phb2024/spells/calm_emotions.json
+app/src/main/assets/packs/phb2024/spells/charm_monster.json
+app/src/main/assets/packs/phb2024/spells/charm_person.json
+app/src/main/assets/packs/phb2024/spells/chill_touch.json
+app/src/main/assets/packs/phb2024/spells/chromatic_orb.json
+app/src/main/assets/packs/phb2024/spells/clairvoyance.json
+app/src/main/assets/packs/phb2024/spells/cloudkill.json
+app/src/main/assets/packs/phb2024/spells/command.json
+app/src/main/assets/packs/phb2024/spells/commune.json
+app/src/main/assets/packs/phb2024/spells/commune_with_nature.json
+app/src/main/assets/packs/phb2024/spells/compulsion.json
+app/src/main/assets/packs/phb2024/spells/cone_of_cold.json
+app/src/main/assets/packs/phb2024/spells/confusion.json
+app/src/main/assets/packs/phb2024/spells/conjure_barrage.json
+app/src/main/assets/packs/phb2024/spells/conjure_elemental.json
+app/src/main/assets/packs/phb2024/spells/control_water.json
+app/src/main/assets/packs/phb2024/spells/counterspell.json
+app/src/main/assets/packs/phb2024/spells/creation.json
+app/src/main/assets/packs/phb2024/spells/crusader_s_mantle.json
+app/src/main/assets/packs/phb2024/spells/cure_wounds.json
+app/src/main/assets/packs/phb2024/spells/darkness.json
+app/src/main/assets/packs/phb2024/spells/daylight.json
+app/src/main/assets/packs/phb2024/spells/death_ward.json
+app/src/main/assets/packs/phb2024/spells/detect_evil_and_good.json
+app/src/main/assets/packs/phb2024/spells/detect_thoughts.json
+app/src/main/assets/packs/phb2024/spells/dimension_door.json
+app/src/main/assets/packs/phb2024/spells/disguise_self.json
+app/src/main/assets/packs/phb2024/spells/dispel_evil_and_good.json
+app/src/main/assets/packs/phb2024/spells/dispel_magic.json
+app/src/main/assets/packs/phb2024/spells/dissonant_whispers.json
+app/src/main/assets/packs/phb2024/spells/dominate_beast.json
+app/src/main/assets/packs/phb2024/spells/dominate_person.json
+app/src/main/assets/packs/phb2024/spells/dragon_s_breath.json
+app/src/main/assets/packs/phb2024/spells/elementalism.json
+app/src/main/assets/packs/phb2024/spells/enhance_ability.json
+app/src/main/assets/packs/phb2024/spells/ensnaring_strike.json
+app/src/main/assets/packs/phb2024/spells/evard_s_black_tentacles.json
+app/src/main/assets/packs/phb2024/spells/faerie_fire.json
+app/src/main/assets/packs/phb2024/spells/false_life.json
+app/src/main/assets/packs/phb2024/spells/fear.json
+app/src/main/assets/packs/phb2024/spells/fire_bolt.json
+app/src/main/assets/packs/phb2024/spells/fire_shield.json
+app/src/main/assets/packs/phb2024/spells/fireball.json
+app/src/main/assets/packs/phb2024/spells/flame_strike.json
+app/src/main/assets/packs/phb2024/spells/flaming_sphere.json
+app/src/main/assets/packs/phb2024/spells/fly.json
+app/src/main/assets/packs/phb2024/spells/fog_cloud.json
+app/src/main/assets/packs/phb2024/spells/freedom_of_movement.json
+app/src/main/assets/packs/phb2024/spells/gaseous_form.json
+app/src/main/assets/packs/phb2024/spells/geas.json
+app/src/main/assets/packs/phb2024/spells/gentle_repose.json
+app/src/main/assets/packs/phb2024/spells/greater_invisibility.json
+app/src/main/assets/packs/phb2024/spells/greater_restoration.json
+app/src/main/assets/packs/phb2024/spells/guardian_of_faith.json
+app/src/main/assets/packs/phb2024/spells/guidance.json
+app/src/main/assets/packs/phb2024/spells/guiding_bolt.json
+app/src/main/assets/packs/phb2024/spells/gust_of_wind.json
+app/src/main/assets/packs/phb2024/spells/haste.json
+app/src/main/assets/packs/phb2024/spells/healing_word.json
+app/src/main/assets/packs/phb2024/spells/heroism.json
+app/src/main/assets/packs/phb2024/spells/hold_monster.json
+app/src/main/assets/packs/phb2024/spells/hold_person.json
+app/src/main/assets/packs/phb2024/spells/hunger_of_hadar.json
+app/src/main/assets/packs/phb2024/spells/hunter_s_mark.json
+app/src/main/assets/packs/phb2024/spells/hypnotic_pattern.json
+app/src/main/assets/packs/phb2024/spells/ice_knife.json
+app/src/main/assets/packs/phb2024/spells/ice_storm.json
+app/src/main/assets/packs/phb2024/spells/inflict_wounds.json
+app/src/main/assets/packs/phb2024/spells/insect_plague.json
+app/src/main/assets/packs/phb2024/spells/invisibility.json
+app/src/main/assets/packs/phb2024/spells/legend_lore.json
+app/src/main/assets/packs/phb2024/spells/lesser_restoration.json
+app/src/main/assets/packs/phb2024/spells/light.json
+app/src/main/assets/packs/phb2024/spells/lightning_bolt.json
+app/src/main/assets/packs/phb2024/spells/mage_hand.json
+app/src/main/assets/packs/phb2024/spells/magic_missile.json
+app/src/main/assets/packs/phb2024/spells/magic_weapon.json
+app/src/main/assets/packs/phb2024/spells/mass_cure_wounds.json
+app/src/main/assets/packs/phb2024/spells/mass_healing_word.json
+app/src/main/assets/packs/phb2024/spells/melf_s_acid_arrow.json
+app/src/main/assets/packs/phb2024/spells/mind_sliver.json
+app/src/main/assets/packs/phb2024/spells/minor_illusion.json
+app/src/main/assets/packs/phb2024/spells/mirror_image.json
+app/src/main/assets/packs/phb2024/spells/mislead.json
+app/src/main/assets/packs/phb2024/spells/misty_step.json
+app/src/main/assets/packs/phb2024/spells/modify_memory.json
+app/src/main/assets/packs/phb2024/spells/moonbeam.json
+app/src/main/assets/packs/phb2024/spells/nondetection.json
+app/src/main/assets/packs/phb2024/spells/pass_without_trace.json
+app/src/main/assets/packs/phb2024/spells/passwall.json
+app/src/main/assets/packs/phb2024/spells/phantasmal_force.json
+app/src/main/assets/packs/phb2024/spells/phantasmal_killer.json
+app/src/main/assets/packs/phb2024/spells/phantom_steed.json
+app/src/main/assets/packs/phb2024/spells/plant_growth.json
+app/src/main/assets/packs/phb2024/spells/polymorph.json
+app/src/main/assets/packs/phb2024/spells/protection_from_energy.json
+app/src/main/assets/packs/phb2024/spells/protection_from_evil_and_good.json
+app/src/main/assets/packs/phb2024/spells/raise_dead.json
+app/src/main/assets/packs/phb2024/spells/rary_s_telepathic_bond.json
+app/src/main/assets/packs/phb2024/spells/ray_of_enfeeblement.json
+app/src/main/assets/packs/phb2024/spells/ray_of_frost.json
+app/src/main/assets/packs/phb2024/spells/ray_of_sickness.json
+app/src/main/assets/packs/phb2024/spells/remove_curse.json
+app/src/main/assets/packs/phb2024/spells/revivify.json
+app/src/main/assets/packs/phb2024/spells/rope_trick.json
+app/src/main/assets/packs/phb2024/spells/sacred_flame.json
+app/src/main/assets/packs/phb2024/spells/scorching_ray.json
+app/src/main/assets/packs/phb2024/spells/scrying.json
+app/src/main/assets/packs/phb2024/spells/see_invisibility.json
+app/src/main/assets/packs/phb2024/spells/seeming.json
+app/src/main/assets/packs/phb2024/spells/sending.json
+app/src/main/assets/packs/phb2024/spells/shatter.json
+app/src/main/assets/packs/phb2024/spells/shield.json
+app/src/main/assets/packs/phb2024/spells/shield_of_faith.json
+app/src/main/assets/packs/phb2024/spells/shield_spell.json
+app/src/main/assets/packs/phb2024/spells/shining_smite.json
+app/src/main/assets/packs/phb2024/spells/shocking_grasp.json
+app/src/main/assets/packs/phb2024/spells/sleep.json
+app/src/main/assets/packs/phb2024/spells/sleet_storm.json
+app/src/main/assets/packs/phb2024/spells/spare_the_dying.json
+app/src/main/assets/packs/phb2024/spells/speak_with_animals.json
+app/src/main/assets/packs/phb2024/spells/speak_with_dead.json
+app/src/main/assets/packs/phb2024/spells/spirit_guardians.json
+app/src/main/assets/packs/phb2024/spells/spiritual_weapon.json
+app/src/main/assets/packs/phb2024/spells/steel_wind_strike.json
+app/src/main/assets/packs/phb2024/spells/stinking_cloud.json
+app/src/main/assets/packs/phb2024/spells/stoneskin.json
+app/src/main/assets/packs/phb2024/spells/suggestion.json
+app/src/main/assets/packs/phb2024/spells/summon_aberration.json
+app/src/main/assets/packs/phb2024/spells/summon_beast.json
+app/src/main/assets/packs/phb2024/spells/summon_celestial.json
+app/src/main/assets/packs/phb2024/spells/summon_construct.json
+app/src/main/assets/packs/phb2024/spells/summon_dragon.json
+app/src/main/assets/packs/phb2024/spells/summon_fey.json
+app/src/main/assets/packs/phb2024/spells/summon_undead.json
+app/src/main/assets/packs/phb2024/spells/tasha_s_hideous_laughter.json
+app/src/main/assets/packs/phb2024/spells/telekinesis.json
+app/src/main/assets/packs/phb2024/spells/thunderwave.json
+app/src/main/assets/packs/phb2024/spells/tree_stride.json
+app/src/main/assets/packs/phb2024/spells/vampiric_touch.json
+app/src/main/assets/packs/phb2024/spells/vitriolic_sphere.json
+app/src/main/assets/packs/phb2024/spells/wall_of_fire.json
+app/src/main/assets/packs/phb2024/spells/wall_of_force.json
+app/src/main/assets/packs/phb2024/spells/wall_of_stone.json
+app/src/main/assets/packs/phb2024/spells/warding_bond.json
+app/src/main/assets/packs/phb2024/spells/water_breathing.json
+app/src/main/assets/packs/phb2024/spells/web.json
+app/src/main/assets/packs/phb2024/spells/wind_wall.json
+app/src/main/assets/packs/phb2024/spells/wrathful_smite.json
+app/src/main/assets/packs/phb2024/spells/yolande_s_regal_presence.json
+app/src/main/assets/packs/phb2024/spells/zone_of_truth.json

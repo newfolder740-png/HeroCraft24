@@ -226,6 +226,8 @@ object UiLocalizer {
         else -> environment.replaceFirstChar { it.uppercase() }
     }
 
+    // Hardcoded Russian UI labels: the app currently ships only Russian UI strings
+    // (no values-en resources) and this object is context-free, so R.string lookups are not used here.
     fun size(size: String): String = when (size.lowercase()) {
         "small" -> "Маленький"
         "medium" -> "Средний"
@@ -246,6 +248,7 @@ object UiLocalizer {
         else -> "Рой"
     }
 
+    // See size() for the rationale: Russian-only UI, context-free object.
     fun type(type: String): String = when (type.lowercase()) {
         "humanoid" -> "Гуманоид"
         "fey" -> "Фея"
@@ -264,6 +267,7 @@ object UiLocalizer {
         else -> type.replaceFirstChar { it.uppercase() }
     }
 
+    // See size() for the rationale: Russian-only UI, context-free object.
     fun skill(skill: String): String = when (skill.lowercase().replace(" ", "_")) {
         "acrobatics" -> "Акробатика"
         "animal_handling" -> "Уход за животными"

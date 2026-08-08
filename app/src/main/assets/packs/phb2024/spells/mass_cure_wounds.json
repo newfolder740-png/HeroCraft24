@@ -1,51 +1,51 @@
 {
-  "id": "mass_cure_wounds",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Mass Cure Wounds",
-    "ru": "Множественное лечение ран"
-  },
-  "description": {
-    "en": "",
-    "ru": "Волна целительной энергии исходит из выбранной вами в пределах дистанции точки. Выберите до шести существ в 30-футовой Сфере с центром на этой точке; каждая цель восстанавливает Хиты в количестве, равном 5к8 + ваш модификатор заклинательной характеристики."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 5,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "60 футов"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Лечение увеличивается на 1к8 за каждый уровень ячейки выше 5-го."
-  },
-  "classes": [
-    "phb2024:bard",
-    "phb2024:druid",
-    "phb2024:cleric"
-  ],
-  "subclasses": [
-    "Боевой кузнец",
-    "Круг луны",
-    "Домен жизни"
-  ]
+    "id":  "mass_cure_wounds",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Mass Cure Wounds",
+                 "ru":  "Множественное лечение ран"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Волна целительной энергии исходит из выбранной вами в пределах дистанции точки. Выберите до шести существ в 30-футовой Сфере с центром на этой точке; каждая цель восстанавливает Хиты в количестве, равном 5к8 + ваш модификатор заклинательной характеристики."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  5,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "60 футов"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Лечение увеличивается на 1к8 за каждый уровень ячейки выше 5-го."
+                      },
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:druid",
+                    "phb2024:cleric"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_boevoy_kuznets",
+                       "phb2024:druid_luna",
+                       "phb2024:cleric_zhizn"
+                   ]
 }

@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "polar_serpent",
     "type":  "monster",
     "format_version":  1,
@@ -52,7 +52,7 @@
                    "stealth":  6
                },
     "damage_vulnerabilities":  [
-                                   "к урону Огонь"
+                                   "fire"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

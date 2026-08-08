@@ -1,44 +1,44 @@
 {
-  "id": "detect_evil_and_good",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Detect Evil and Good",
-    "ru": "Обнаружение добра и зла"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание действует, вы ощущаете местоположение всех Аберраций, Исчадий, Небожителей, Нежити, Фей и Элементалей в пределах 30 футов от вас. Вы также ощущаете, действует ли в этом месте заклинание Святилище, и если да, то где именно.\n\nДействие заклинания блокируется тонким листом свинца, 1 дюймом другого металла или 1 футом камня, земли или дерева."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 1,
-  "school": "divination",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Концентрация, вплоть до 10 минут",
-  "concentration": true,
-  "ritual": false,
-  "classes": [
-    "phb2024:cleric",
-    "phb2024:paladin"
-  ],
-  "subclasses": [
-    "Домен упокоения"
-  ]
+    "id":  "detect_evil_and_good",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Detect Evil and Good",
+                 "ru":  "Обнаружение добра и зла"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание действует, вы ощущаете местоположение всех Аберраций, Исчадий, Небожителей, Нежити, Фей и Элементалей в пределах 30 футов от вас. Вы также ощущаете, действует ли в этом месте заклинание Святилище, и если да, то где именно.\n\nДействие заклинания блокируется тонким листом свинца, 1 дюймом другого металла или 1 футом камня, земли или дерева."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  1,
+    "school":  "divination",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Концентрация, вплоть до 10 минут",
+    "concentration":  true,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:cleric",
+                    "phb2024:paladin"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_upokoeniya"
+                   ]
 }

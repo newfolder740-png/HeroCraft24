@@ -1,50 +1,50 @@
 {
-  "id": "revivify",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Revivify",
-    "ru": "Оживление"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь существа, мёртвого не больше минуты. Это существо возвращается к жизни с 1 Хитом. Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает отсутствующие части тела."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "necromancy",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "бриллиант стоимостью не менее 300 ЗМ, расходуемый заклинанием",
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:druid",
-    "phb2024:cleric",
-    "phb2024:paladin",
-    "phb2024:ranger"
-  ],
-  "subclasses": [
-    "Домен жизни",
-    "Домен упокоения",
-    "Небожитель"
-  ]
+    "id":  "revivify",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Revivify",
+                 "ru":  "Оживление"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь существа, мёртвого не больше минуты. Это существо возвращается к жизни с 1 Хитом. Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает отсутствующие части тела."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "necromancy",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "бриллиант стоимостью не менее 300 ЗМ, расходуемый заклинанием",
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:druid",
+                    "phb2024:cleric",
+                    "phb2024:paladin",
+                    "phb2024:ranger"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_zhizn",
+                       "phb2024:cleric_upokoeniya",
+                       "phb2024:warlock_celestial"
+                   ]
 }

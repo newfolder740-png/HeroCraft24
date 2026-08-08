@@ -53,7 +53,7 @@
                       },
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к очарованию. Шоггот совершает с Помехой спасброска на избежание или окончание состояния Очарованный."
+
                                ],
     "damage_resistances":  [
                                "bludgeoning",

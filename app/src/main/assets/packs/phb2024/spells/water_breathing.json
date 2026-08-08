@@ -1,48 +1,48 @@
 {
-  "id": "water_breathing",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Water Breathing",
-    "ru": "Подводное дыхание"
-  },
-  "description": {
-    "en": "",
-    "ru": "Это заклинание дарует на время своего действия до десяти согласным существам, видимым вами в пределах дистанции, способность дышать под водой. Эти существа сохраняют и обычное дыхание."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "transmutation",
-  "casting_time": "Действие или Ритуал",
-  "range": {
-    "type": "range",
-    "text": "30 футов"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "тростинка",
-  "duration": "24 часа",
-  "concentration": false,
-  "ritual": true,
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:druid",
-    "phb2024:ranger",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Круг моря"
-  ]
+    "id":  "water_breathing",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Water Breathing",
+                 "ru":  "Подводное дыхание"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Это заклинание дарует на время своего действия до десяти согласным существам, видимым вами в пределах дистанции, способность дышать под водой. Эти существа сохраняют и обычное дыхание."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "transmutation",
+    "casting_time":  "Действие или Ритуал",
+    "range":  {
+                  "type":  "range",
+                  "text":  "30 футов"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "тростинка",
+    "duration":  "24 часа",
+    "concentration":  false,
+    "ritual":  true,
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:druid",
+                    "phb2024:ranger",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:druid_more"
+                   ]
 }

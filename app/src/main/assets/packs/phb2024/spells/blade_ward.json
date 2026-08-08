@@ -1,46 +1,46 @@
 {
-  "id": "blade_ward",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Blade Ward",
-    "ru": "Защита от оружия"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание действует, каждый раз, когда существо совершает по вам бросок атаки, оно вычитает 1к4 из результата этого броска."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 0,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Концентрация, вплоть до 1 минуты",
-  "concentration": true,
-  "ritual": false,
-  "classes": [
-    "phb2024:bard",
-    "phb2024:wizard",
-    "phb2024:warlock",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Наследник троицы"
-  ]
+    "id":  "blade_ward",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Blade Ward",
+                 "ru":  "Защита от оружия"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание действует, каждый раз, когда существо совершает по вам бросок атаки, оно вычитает 1к4 из результата этого броска."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  0,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Концентрация, вплоть до 1 минуты",
+    "concentration":  true,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:wizard",
+                    "phb2024:warlock",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:rogue_naslednik_troicy"
+                   ]
 }

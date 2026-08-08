@@ -22,6 +22,7 @@ import com.herocraft24.core.model.Cost
 import com.herocraft24.core.model.Item
 import com.herocraft24.core.model.Weight
 import com.herocraft24.core.ui.local.UiLocalizer
+import com.herocraft24.core.ui.util.FormatUtils
 import com.herocraft24.core.ui.util.ItemLinkifier
 import com.herocraft24.feature.equipment.databinding.FragmentEquipmentDetailBinding
 
@@ -207,10 +208,6 @@ class EquipmentDetailFragment : Fragment() {
         return spannable
     }
 
-    private fun formatAmount(amount: Double): String {
-        return if (amount == amount.toLong().toDouble()) amount.toLong().toString() else amount.toString()
-    }
-
     private fun formatCost(cost: Cost): String {
         val unit = when (cost.unit.lowercase()) {
             "gp" -> "ЗМ"
@@ -219,11 +216,11 @@ class EquipmentDetailFragment : Fragment() {
             "pp" -> "ПМ"
             else -> cost.unit.uppercase()
         }
-        return "${formatAmount(cost.amount)} $unit"
+        return "${FormatUtils.formatAmount(cost.amount)} $unit"
     }
 
     private fun formatWeight(weight: Weight): String =
-        "${formatAmount(weight.amount)} ${UiLocalizer.weightUnit(weight.unit)}"
+        "${FormatUtils.formatAmount(weight.amount)} ${UiLocalizer.weightUnit(weight.unit)}"
 
     private fun localizeProperty(p: String): String = UiLocalizer.property(p)
 

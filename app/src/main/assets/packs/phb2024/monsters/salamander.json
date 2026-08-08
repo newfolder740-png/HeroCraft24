@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "salamander",
     "type":  "monster",
     "format_version":  1,
@@ -49,7 +49,7 @@
     "saving_throws":  null,
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к урону Холод"
+                                   "cold"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

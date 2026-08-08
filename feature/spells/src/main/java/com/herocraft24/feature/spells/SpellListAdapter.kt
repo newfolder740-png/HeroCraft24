@@ -1,15 +1,16 @@
 package com.herocraft24.feature.spells
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.resolveColor
+import com.herocraft24.core.ui.util.schoolColor
 import com.herocraft24.feature.spells.databinding.CardSpellBinding
+import com.herocraft24.feature.spells.util.SpellComponentLocalizer
 
 class SpellListAdapter(
     private var favoriteIds: Set<String>,
@@ -41,7 +42,7 @@ class SpellListAdapter(
         val spell = items[position]
         holder.binding.spellName.text = spell.name
         holder.binding.spellSubtitle.text = buildSubtitle(spell, holder.itemView.context)
-        holder.binding.schoolColor.setBackgroundColor(schoolColor(spell.school))
+        holder.binding.schoolColor.setBackgroundColor(holder.itemView.context.schoolColor(spell.school))
         holder.binding.root.setOnClickListener { onItemClick(spell) }
 
         val isFav = spell.fullId in favoriteIds
@@ -71,10 +72,10 @@ class SpellListAdapter(
         if (s.concentration) badges.add(ctx.getString(R.string.spell_badge_concentration))
         if (s.ritual) badges.add(ctx.getString(R.string.spell_badge_ritual))
         if (s.components.isNotEmpty()) {
-            badges.add(s.components.joinToString("/") { localizeComponent(ctx, it) })
+            badges.add(s.components.joinToString("/") { SpellComponentLocalizer.localizeComponent(ctx, it) })
         }
-        if (s.damageType != null) {
-            badges.add(s.damageType.replaceFirstChar { it.uppercase() })
+        s.damageType?.let { dt ->
+            badges.add(dt.replaceFirstChar { it.uppercase() })
         }
         if (badges.isNotEmpty()) {
             container.addView(TextView(ctx).apply {
@@ -85,23 +86,4 @@ class SpellListAdapter(
         }
     }
 
-    private fun localizeComponent(context: android.content.Context, component: String): String =
-        when (component.trim().uppercase()) {
-            "V" -> "В"
-            "S" -> "С"
-            "M" -> "М"
-            else -> component
-        }
-
-    private fun schoolColor(school: String): Int = when (school) {
-        "abjuration" -> Color.parseColor("#2196F3")
-        "conjuration" -> Color.parseColor("#FFC107")
-        "divination" -> Color.parseColor("#00BCD4")
-        "enchantment" -> Color.parseColor("#E91E63")
-        "evocation" -> Color.parseColor("#F44336")
-        "illusion" -> Color.parseColor("#9C27B0")
-        "necromancy" -> Color.parseColor("#4CAF50")
-        "transmutation" -> Color.parseColor("#FF9800")
-        else -> Color.parseColor("#6750A4")
-    }
 }

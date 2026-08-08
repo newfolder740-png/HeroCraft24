@@ -3,30 +3,13 @@ package com.herocraft24.feature.reference
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.herocraft24.core.model.ReferenceListItem
 import com.herocraft24.feature.reference.databinding.CardReferenceItemBinding
 
 class ReferenceListAdapter(
     private val items: List<ReferenceListItem>,
     private val onItemClick: (ReferenceListItem) -> Unit
 ) : RecyclerView.Adapter<ReferenceListAdapter.ViewHolder>() {
-
-    data class ReferenceListItem(
-        val fullId: String,
-        val name: String,
-        val subtitle: String,
-        val category: String = "",
-        val source: String = "",
-        val subcategory: List<String> = emptyList<String>(),
-        val rarity: String = "",
-        val materialHasCost: Boolean = false,
-        val materialConsumable: Boolean = false,
-        val size: String = "",
-        val creatureType: String = "",
-        val challengeRating: Double = 0.0,
-        val environment: List<String> = emptyList<String>(),
-        val isSwarm: Boolean = false,
-        val hitDie: Int? = null
-    )
 
     class ViewHolder(val binding: CardReferenceItemBinding) : RecyclerView.ViewHolder(binding.root)
 

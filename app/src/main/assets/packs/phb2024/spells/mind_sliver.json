@@ -1,48 +1,48 @@
 {
-  "id": "mind_sliver",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Mind Sliver",
-    "ru": "Расщепление разума"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы пытаетесь расщепить разум существа, видимого вами в пределах дистанции. Цель должна преуспеть в спасброске Интеллекта, иначе получит 1к6 Психического урона и вычтет 1к4 из результата своего следующего спасброска, если совершит его до конца вашего следующего хода."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 0,
-  "school": "enchantment",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "60 футов"
-  },
-  "components": [
-    "V"
-  ],
-  "duration": "1 раунд",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Усиление заговора. Урон увеличивается на 1к6, когда вы достигаете 5-го (2к6), 11-го (3к6) и 17-го (4к6) уровней."
-  },
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:warlock",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Аберрантное чародейство"
-  ]
+    "id":  "mind_sliver",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Mind Sliver",
+                 "ru":  "Расщепление разума"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы пытаетесь расщепить разум существа, видимого вами в пределах дистанции. Цель должна преуспеть в спасброске Интеллекта, иначе получит 1к6 Психического урона и вычтет 1к4 из результата своего следующего спасброска, если совершит его до конца вашего следующего хода."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  0,
+    "school":  "enchantment",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "60 футов"
+              },
+    "components":  [
+                       "V"
+                   ],
+    "duration":  "1 раунд",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Усиление заговора. Урон увеличивается на 1к6, когда вы достигаете 5-го (2к6), 11-го (3к6) и 17-го (4к6) уровней."
+                      },
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:warlock",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:sorcerer_aberrant"
+                   ]
 }

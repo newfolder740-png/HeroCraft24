@@ -4,22 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.model.ItemSummary
 import com.herocraft24.core.model.Spell
 import com.herocraft24.core.ui.data.FavoritesStore
+import com.herocraft24.core.ui.util.FormatUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-data class ItemSummary(
-    val fullId: String,
-    val name: String,
-    val category: String,
-    val subcategory: List<String>,
-    val rarity: String,
-    val magic: Boolean,
-    val cost: String?,
-    val weight: String?,
-    val tags: List<String>
-)
 
 data class EquipmentFilters(
     val categories: Set<String> = emptySet(),
@@ -70,8 +60,8 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
                 subcategory = item?.subcategory ?: emptyList<String>(),
                 rarity = entry.rarity ?: "non-magic",
                 magic = item?.magic ?: false,
-                cost = item?.cost?.let { "${formatAmount(it.amount)} ${localizeCostUnit(it.unit)}" },
-                weight = item?.weight?.let { "${formatAmount(it.amount)} ${localizeWeightUnit(it.unit)}" },
+                cost = item?.cost?.let { "${FormatUtils.formatAmount(it.amount)} ${localizeCostUnit(it.unit)}" },
+                weight = item?.weight?.let { "${FormatUtils.formatAmount(it.amount)} ${localizeWeightUnit(it.unit)}" },
                 tags = entry.tags
             )
         }
@@ -213,10 +203,6 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
         "ammunition" -> "Боеприпасы"
         "gear" -> "Снаряжение"
         else -> category.replaceFirstChar { it.uppercase() }
-    }
-
-    private fun formatAmount(amount: Double): String {
-        return if (amount == amount.toLong().toDouble()) amount.toLong().toString() else amount.toString()
     }
 
     private fun localizeCostUnit(unit: String): String = when (unit.lowercase()) {

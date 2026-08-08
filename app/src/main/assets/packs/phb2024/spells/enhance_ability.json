@@ -1,55 +1,55 @@
 {
-  "id": "enhance_ability",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Enhance Ability",
-    "ru": "Улучшение характеристики"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь существа и выбираете Силу, Ловкость, Интеллект, Мудрость или Харизму. Пока заклинание действует, цель совершает с Преимуществом проверки выбранной характеристики."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "transmutation",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "мех или перо",
-  "duration": "Концентрация, вплоть до 1 часа",
-  "concentration": true,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень заклинания выше 2-го. Для каждой цели вы можете выбирать разные характеристики."
-  },
-  "classes": [
-    "phb2024:bard",
-    "phb2024:wizard",
-    "phb2024:druid",
-    "phb2024:cleric",
-    "phb2024:ranger",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Реаниматор",
-    "Клятва славы"
-  ]
+    "id":  "enhance_ability",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Enhance Ability",
+                 "ru":  "Улучшение характеристики"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь существа и выбираете Силу, Ловкость, Интеллект, Мудрость или Харизму. Пока заклинание действует, цель совершает с Преимуществом проверки выбранной характеристики."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "transmutation",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "мех или перо",
+    "duration":  "Концентрация, вплоть до 1 часа",
+    "concentration":  true,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень заклинания выше 2-го. Для каждой цели вы можете выбирать разные характеристики."
+                      },
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:wizard",
+                    "phb2024:druid",
+                    "phb2024:cleric",
+                    "phb2024:ranger",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_reanimator",
+                       "phb2024:paladin_slavy"
+                   ]
 }

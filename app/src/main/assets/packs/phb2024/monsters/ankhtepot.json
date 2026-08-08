@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "ankhtepot",
     "type":  "monster",
     "format_version":  1,
@@ -57,7 +57,7 @@
                    "perception":  11
                },
     "damage_vulnerabilities":  [
-                                   "к урону Огонь"
+                                   "fire"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

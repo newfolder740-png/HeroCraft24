@@ -1,43 +1,43 @@
 {
-  "id": "aura_of_life",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Aura of Life",
-    "ru": "Аура жизни"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание действует, от вас 30-футовой Эманацией исходит аура. Находясь в пределах этой ауры, вы и ваши союзники получаете Сопротивление Некротическому урону, и максимум ваших Хитов не может быть уменьшен. Если союзник с 0 Хитами начинает свой ход в пределах ауры, то он восстанавливает 1 Хит."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 4,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V"
-  ],
-  "duration": "Концентрация, вплоть до 10 минут",
-  "concentration": true,
-  "ritual": false,
-  "classes": [
-    "phb2024:cleric",
-    "phb2024:paladin"
-  ],
-  "subclasses": [
-    "Домен жизни"
-  ]
+    "id":  "aura_of_life",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Aura of Life",
+                 "ru":  "Аура жизни"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание действует, от вас 30-футовой Эманацией исходит аура. Находясь в пределах этой ауры, вы и ваши союзники получаете Сопротивление Некротическому урону, и максимум ваших Хитов не может быть уменьшен. Если союзник с 0 Хитами начинает свой ход в пределах ауры, то он восстанавливает 1 Хит."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  4,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V"
+                   ],
+    "duration":  "Концентрация, вплоть до 10 минут",
+    "concentration":  true,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:cleric",
+                    "phb2024:paladin"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_zhizn"
+                   ]
 }

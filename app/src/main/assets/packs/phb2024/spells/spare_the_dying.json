@@ -1,49 +1,49 @@
 {
-  "id": "spare_the_dying",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Spare the Dying",
-    "ru": "Уход за умирающим"
-  },
-  "description": {
-    "en": "",
-    "ru": "Выберите существо в пределах дистанции; Хиты этого существа должны быть опущены до 0, но оно не должно быть мертво. Это существо становится Стабилизировано."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 0,
-  "school": "necromancy",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "15 футов"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Усиление заговора. Дистанция этого заклинания удваивается, когда вы достигаете 5-го (30 футов), 11-го (60 футов) и 17-го (120 футов) уровней."
-  },
-  "classes": [
-    "phb2024:druid",
-    "phb2024:cleric"
-  ],
-  "subclasses": [
-    "Реаниматор",
-    "Домен упокоения"
-  ]
+    "id":  "spare_the_dying",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Spare the Dying",
+                 "ru":  "Уход за умирающим"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Выберите существо в пределах дистанции; Хиты этого существа должны быть опущены до 0, но оно не должно быть мертво. Это существо становится Стабилизировано."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  0,
+    "school":  "necromancy",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "15 футов"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Усиление заговора. Дистанция этого заклинания удваивается, когда вы достигаете 5-го (30 футов), 11-го (60 футов) и 17-го (120 футов) уровней."
+                      },
+    "classes":  [
+                    "phb2024:druid",
+                    "phb2024:cleric"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_reanimator",
+                       "phb2024:cleric_upokoeniya"
+                   ]
 }

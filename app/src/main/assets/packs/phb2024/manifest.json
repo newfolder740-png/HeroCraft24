@@ -13,7 +13,7 @@
   "dependencies": [],
   "language": "en",
   "locales": ["en", "ru"],
-  "total_objects": 2575,
+  "total_objects": 2577,
   "objects": {
     "spells": [
       {"id":"acid_splash","name":{"en":"Acid Splash","ru":"Брызги кислоты"},"level":0,"school":"evocation","ritual":false,"concentration":false,"classes":[
@@ -5286,6 +5286,8 @@
 {"id":"artificer_artillerist","name":{"en":"Artillerist","ru":"Артиллерист"},"tags":[]},
 {"id":"artificer_boevoy_kuznets","name":{"en":"Battle Smith","ru":"Боевой кузнец"},"tags":[]},
 {"id":"artificer_bronnik","name":{"en":"Armorer","ru":"Бронник"},"tags":[]},
+{"id":"artificer_kartograf","name":{"en":"Cartographer","ru":"Картограф"},"tags":[]},
+{"id":"artificer_reanimator","name":{"en":"Reanimator","ru":"Реаниматор"},"tags":[]},
 {"id":"fighter_banneret","name":{"en":"Banneret","ru":"Баннерет"},"tags":[]},
 {"id":"fighter_champion","name":{"en":"Champion","ru":"Чемпион"},"tags":[]},
 {"id":"fighter_master_boya","name":{"en":"Battle Master","ru":"Мастер боя"},"tags":[]},

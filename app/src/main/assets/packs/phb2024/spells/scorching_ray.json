@@ -1,51 +1,51 @@
 {
-  "id": "scorching_ray",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Scorching Ray",
-    "ru": "Палящий луч"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы метаете три огненных луча. Вы можете метать их как в одну цель в пределах дистанции, так и в несколько. Совершите дальнобойную атаку заклинанием для каждого луча; при попадании цель получает 2к6 урона Огнём."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "evocation",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "120 футов"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Вы создаёте по одному дополнительному лучу за каждый уровень ячейки выше 2-го."
-  },
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Артиллерист",
-    "Домен света",
-    "Исчадие",
-    "Чародейство чаропламени"
-  ]
+    "id":  "scorching_ray",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Scorching Ray",
+                 "ru":  "Палящий луч"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы метаете три огненных луча. Вы можете метать их как в одну цель в пределах дистанции, так и в несколько. Совершите дальнобойную атаку заклинанием для каждого луча; при попадании цель получает 2к6 урона Огнём."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "evocation",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "120 футов"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Вы создаёте по одному дополнительному лучу за каждый уровень ячейки выше 2-го."
+                      },
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_artillerist",
+                       "phb2024:cleric_svet",
+                       "phb2024:warlock_fiend",
+                       "phb2024:sorcerer_spellfire"
+                   ]
 }

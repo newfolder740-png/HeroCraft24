@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "mummy",
     "type":  "monster",
     "format_version":  1,
@@ -50,7 +50,7 @@
                       },
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к урону Огонь"
+                                   "fire"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

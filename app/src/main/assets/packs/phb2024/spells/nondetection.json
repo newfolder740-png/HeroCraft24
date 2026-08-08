@@ -1,48 +1,48 @@
 {
-  "id": "nondetection",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Nondetection",
-    "ru": "Необнаружимость"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание активно, цель, которой вы коснулись, сокрыта от заклинаний школы Прорицания. Целью может быть согласное существо, место или объект, не превышающий 10 футов ни по одному из линейных размеров. Цель не может стать целью заклинаний школы Прорицания, и её не воспринимают магические наблюдательные сенсоры."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "щепоть алмазной пыли стоимостью не менее 25 ЗМ",
-  "duration": "8 часов",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:bard",
-    "phb2024:wizard",
-    "phb2024:ranger"
-  ],
-  "subclasses": [
-    "Домен обмана",
-    "Теневое чародейство"
-  ]
+    "id":  "nondetection",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Nondetection",
+                 "ru":  "Необнаружимость"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание активно, цель, которой вы коснулись, сокрыта от заклинаний школы Прорицания. Целью может быть согласное существо, место или объект, не превышающий 10 футов ни по одному из линейных размеров. Цель не может стать целью заклинаний школы Прорицания, и её не воспринимают магические наблюдательные сенсоры."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "щепоть алмазной пыли стоимостью не менее 25 ЗМ",
+    "duration":  "8 часов",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:wizard",
+                    "phb2024:ranger"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_obman",
+                       "phb2024:sorcerer_shadow"
+                   ]
 }

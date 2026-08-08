@@ -1,47 +1,47 @@
 {
-  "id": "see_invisibility",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "See Invisibility",
-    "ru": "Видение невидимого"
-  },
-  "description": {
-    "en": "",
-    "ru": "На время действия заклинания вы видите существ и объекты которые имеют состояние Невидимый, как если бы они были видимы, и ваше зрение простирается на Эфирный план. Эфирные существа и предметы выглядят призрачными и полупрозрачными."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "divination",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "щепотка талька",
-  "duration": "1 час",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:bard",
-    "phb2024:wizard",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Домен света"
-  ]
+    "id":  "see_invisibility",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "See Invisibility",
+                 "ru":  "Видение невидимого"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "На время действия заклинания вы видите существ и объекты которые имеют состояние Невидимый, как если бы они были видимы, и ваше зрение простирается на Эфирный план. Эфирные существа и предметы выглядят призрачными и полупрозрачными."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "divination",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "щепотка талька",
+    "duration":  "1 час",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:wizard",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_svet"
+                   ]
 }

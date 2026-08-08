@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "magma_mephit",
     "type":  "monster",
     "format_version":  1,
@@ -51,7 +51,7 @@
                    "stealth":  3
                },
     "damage_vulnerabilities":  [
-                                   "к урону Холод"
+                                   "cold"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

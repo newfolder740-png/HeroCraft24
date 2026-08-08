@@ -1,46 +1,46 @@
 {
-  "id": "remove_curse",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Remove Curse",
-    "ru": "Снятие проклятия"
-  },
-  "description": {
-    "en": "",
-    "ru": "С вашим касанием все проклятия, действующие на одно существо или объект, заканчиваются. Если объект — проклятый магический предмет, то проклятие предмета сохраняется, но заклинание разрывает Настройку владельца на него, так что предмет можно снять или выбросить."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:cleric",
-    "phb2024:warlock",
-    "phb2024:paladin"
-  ],
-  "subclasses": [
-    "Зимний ходок"
-  ]
+    "id":  "remove_curse",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Remove Curse",
+                 "ru":  "Снятие проклятия"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "С вашим касанием все проклятия, действующие на одно существо или объект, заканчиваются. Если объект — проклятый магический предмет, то проклятие предмета сохраняется, но заклинание разрывает Настройку владельца на него, так что предмет можно снять или выбросить."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:cleric",
+                    "phb2024:warlock",
+                    "phb2024:paladin"
+                ],
+    "subclasses":  [
+                       "phb2024:ranger_zimniy_khodok"
+                   ]
 }

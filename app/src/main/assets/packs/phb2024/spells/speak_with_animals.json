@@ -1,47 +1,47 @@
 {
-  "id": "speak_with_animals",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Speak with Animals",
-    "ru": "Разговор с животными"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание активно, вы получаете возможность понимать Зверей и общаться с ними устно, а также использовать на них действие Влияние.\n\nБольшая часть Зверей могут что-то сказать только на темы выживания и общения, но по меньшей мере они могут дать информацию о ближайших местах и чудовищах, включая тех, кого они видели за последний день."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 1,
-  "school": "divination",
-  "casting_time": "Действие или Ритуал",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "10 минут",
-  "concentration": false,
-  "ritual": true,
-  "classes": [
-    "phb2024:bard",
-    "phb2024:druid",
-    "phb2024:warlock",
-    "phb2024:ranger"
-  ],
-  "subclasses": [
-    "Путь дикого сердца",
-    "Клятва древних"
-  ]
+    "id":  "speak_with_animals",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Speak with Animals",
+                 "ru":  "Разговор с животными"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание активно, вы получаете возможность понимать Зверей и общаться с ними устно, а также использовать на них действие Влияние.\n\nБольшая часть Зверей могут что-то сказать только на темы выживания и общения, но по меньшей мере они могут дать информацию о ближайших местах и чудовищах, включая тех, кого они видели за последний день."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  1,
+    "school":  "divination",
+    "casting_time":  "Действие или Ритуал",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "10 минут",
+    "concentration":  false,
+    "ritual":  true,
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:druid",
+                    "phb2024:warlock",
+                    "phb2024:ranger"
+                ],
+    "subclasses":  [
+                       "phb2024:barbarian_dikoe_serdce",
+                       "phb2024:paladin_drevnikh"
+                   ]
 }

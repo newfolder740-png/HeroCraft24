@@ -1,52 +1,52 @@
 {
-  "id": "greater_restoration",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Greater Restoration",
-    "ru": "Высшее восстановление"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь существа и магическим образом снимаете с него одно из следующего:\n\n1 уровень Истощения\n\nсостояние Очарованный или Окаменевший\n\nпроклятие, включая Настройку цели на проклятый магический предмет\n\nвсе эффекты, понижающие значение одной из характеристик цели\n\nвсе эффекты, понижающие максимум Хитов цели"
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 5,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "алмазная пыль стоимостью не менее 100 ЗМ, расходуемая заклинанием",
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:bard",
-    "phb2024:druid",
-    "phb2024:cleric",
-    "phb2024:paladin",
-    "phb2024:ranger"
-  ],
-  "subclasses": [
-    "Домен жизни",
-    "Небожитель",
-    "Заводное чародейство",
-    "Чародейство чаропламени"
-  ]
+    "id":  "greater_restoration",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Greater Restoration",
+                 "ru":  "Высшее восстановление"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь существа и магическим образом снимаете с него одно из следующего:\n\n1 уровень Истощения\n\nсостояние Очарованный или Окаменевший\n\nпроклятие, включая Настройку цели на проклятый магический предмет\n\nвсе эффекты, понижающие значение одной из характеристик цели\n\nвсе эффекты, понижающие максимум Хитов цели"
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  5,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "алмазная пыль стоимостью не менее 100 ЗМ, расходуемая заклинанием",
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:druid",
+                    "phb2024:cleric",
+                    "phb2024:paladin",
+                    "phb2024:ranger"
+                ],
+    "subclasses":  [
+                       "phb2024:cleric_zhizn",
+                       "phb2024:warlock_celestial",
+                       "phb2024:sorcerer_clockwork",
+                       "phb2024:sorcerer_spellfire"
+                   ]
 }

@@ -1,50 +1,50 @@
 {
-  "id": "blindness_deafness",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Blindness/Deafness",
-    "ru": "Глухота/слепота"
-  },
-  "description": {
-    "en": "",
-    "ru": "Одно существо, видимое вами в пределах дистанции, должно преуспеть в спасброске Телосложения, иначе получит состояние Ослеплённый или Оглохший (по вашему выбору) на время действия заклинания. В конце каждого своего хода цель повторяет спасбросок, при успехе оканчивая на себе эффект заклинания."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "transmutation",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "120 футов"
-  },
-  "components": [
-    "V"
-  ],
-  "duration": "1 минута",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень ячейки выше 2-го."
-  },
-  "classes": [
-    "phb2024:bard",
-    "phb2024:wizard",
-    "phb2024:cleric",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Реаниматор",
-    "Нежить"
-  ]
+    "id":  "blindness_deafness",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Blindness/Deafness",
+                 "ru":  "Глухота/слепота"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Одно существо, видимое вами в пределах дистанции, должно преуспеть в спасброске Телосложения, иначе получит состояние Ослеплённый или Оглохший (по вашему выбору) на время действия заклинания. В конце каждого своего хода цель повторяет спасбросок, при успехе оканчивая на себе эффект заклинания."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "transmutation",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "120 футов"
+              },
+    "components":  [
+                       "V"
+                   ],
+    "duration":  "1 минута",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень ячейки выше 2-го."
+                      },
+    "classes":  [
+                    "phb2024:bard",
+                    "phb2024:wizard",
+                    "phb2024:cleric",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_reanimator",
+                       "phb2024:warlock_undying"
+                   ]
 }

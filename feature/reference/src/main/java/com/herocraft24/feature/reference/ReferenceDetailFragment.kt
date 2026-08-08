@@ -36,6 +36,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.herocraft24.core.model.*
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.render.CardBuilder
+import com.herocraft24.core.ui.render.ExpandableCard
 import com.herocraft24.core.ui.util.ItemLinkifier
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.core.ui.util.resolveColor
@@ -55,7 +56,6 @@ class ReferenceDetailFragment : Fragment() {
 
     // Active render target for class tab pages (changed on ViewPager page re-render).
     private var activeRenderContainer: LinearLayout? = null
-    private var classBackCallback: OnBackPressedCallback? = null
 
     // Scroll position persistence for class tabs across configuration changes and back‑stack navigation.
     private val classTabScrollPositions = mutableMapOf<Int, Int>()
@@ -145,23 +145,6 @@ class ReferenceDetailFragment : Fragment() {
             }
         }
 
-        // System back: on a class page with a visible tab pager, first return to the
-        // "Класс" tab instead of leaving the card. Enabled only while on a non-first class
-        // tab, so that on the first tab (or non-class screens) the default back handling
-        // (including the app's double-press-to-exit) still applies.
-        classBackCallback = object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                binding.classViewPager.setCurrentItem(0, false)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, classBackCallback!!)
-
-        binding.classViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                updateClassBackEnabled()
-            }
-        })
-
         when (categoryKey) {
             "classes" -> renderClass()
             "species" -> renderSpecies()
@@ -178,15 +161,19 @@ class ReferenceDetailFragment : Fragment() {
         if (categoryKey != "classes" && contentScrollPosition > 0) {
             binding.contentScroll.post { binding.contentScroll.scrollTo(0, contentScrollPosition) }
         }
-
-        updateClassBackEnabled()
     }
 
-    private fun updateClassBackEnabled() {
-        classBackCallback?.isEnabled =
-            categoryKey == "classes" &&
-            binding.classViewPager.visibility == View.VISIBLE &&
-            binding.classViewPager.currentItem > 0
+    /**
+     * Called by MainActivity before popping the reference nav stack.
+     * If the user is on a non-first tab of a class card, switches to the first tab
+     * and returns true so the back press is consumed. Otherwise returns false.
+     */
+    fun onClassBackPressed(): Boolean {
+        if (categoryKey != "classes") return false
+        if (binding.classViewPager.visibility != View.VISIBLE) return false
+        if (binding.classViewPager.currentItem <= 0) return false
+        binding.classViewPager.setCurrentItem(0, false)
+        return true
     }
 
     private var selectedSubclassId: String? = null
@@ -297,7 +284,6 @@ class ReferenceDetailFragment : Fragment() {
                     }
                 }
                 lastKnownTabPage = position
-                updateClassBackEnabled()
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -366,42 +352,16 @@ class ReferenceDetailFragment : Fragment() {
     }
 
     private fun createClassSubclassCard(subclass: Subclass): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = subclass.name.get(),
+            openId = subclass.id,
+            openIdsSet = openClassSubclassIds
+        ) { body ->
+            body.addView(buildRichLinkedTextView(subclass.description.get()))
+            subclass.table?.let { body.addView(createTableView(it)) }
+            subclass.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
         }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        val title = TextView(requireContext()).apply {
-            text = subclass.name.get()
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        }
-        inner.addView(title)
-
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = subclass.id in openClassSubclassIds
-        }
-        inner.addView(body)
-
-        body.addView(buildRichLinkedTextView(subclass.description.get()))
-        subclass.table?.let { body.addView(createTableView(it)) }
-        subclass.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
-
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openClassSubclassIds.add(subclass.id) else openClassSubclassIds.remove(subclass.id)
-        }
-
         return card
     }
 
@@ -444,140 +404,39 @@ class ReferenceDetailFragment : Fragment() {
     }
 
     private fun createMetamagicCard(metamagic: Metamagic): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        val subtitle = metamagic.cost.ifBlank { null }
-        val titleText = if (subtitle != null) "${metamagic.name.get()} • $subtitle" else metamagic.name.get()
-
-        inner.addView(TextView(requireContext()).apply {
-            text = titleText
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        })
-
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = false
-        }
-        inner.addView(body)
-
-        body.addView(buildRichLinkedTextView(metamagic.description.get()))
-
-        if (metamagic.id in openMetamagicIds) body.isVisible = true
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openMetamagicIds.add(metamagic.id) else openMetamagicIds.remove(metamagic.id)
+        val title = metamagic.cost.ifBlank { null }?.let { "${metamagic.name.get()} • $it" } ?: metamagic.name.get()
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = title,
+            openId = metamagic.id,
+            openIdsSet = openMetamagicIds
+        ) { body ->
+            body.addView(buildRichLinkedTextView(metamagic.description.get()))
         }
         return card
     }
 
     private fun createManeuversCard(maneuvers: Maneuvers): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-
-        val titleText = maneuvers.name.get()
-
-        inner.addView(TextView(requireContext()).apply {
-            text = titleText
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        })
-
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = false
-        }
-        inner.addView(body)
-
-        body.addView(buildRichLinkedTextView(maneuvers.description.get()))
-
-        if (maneuvers.id in openManeuversIds) body.isVisible = true
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openManeuversIds.add(maneuvers.id) else openManeuversIds.remove(maneuvers.id)
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = maneuvers.name.get(),
+            openId = maneuvers.id,
+            openIdsSet = openManeuversIds
+        ) { body ->
+            body.addView(buildRichLinkedTextView(maneuvers.description.get()))
         }
         return card
     }
     private fun createSchemsCard(schems: Schems): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        // Заголовок карточки
-        inner.addView(TextView(requireContext()).apply {
-            text = schems.name.get()
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        })
-
-        // Тело карточки (скрытое по умолчанию)
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = false
-        }
-        inner.addView(body)
-
-        // Отображаем описание, если есть
-        schems.description?.let { desc ->
-            body.addView(buildRichLinkedTextView(desc.get()))
-        }
-
-        // Отображаем таблицу, если есть
-        schems.table?.let { table ->
-            body.addView(createTableView(table))
-        }
-
-        schems.description2?.let { desc ->
-            body.addView(buildRichLinkedTextView(desc.get()))
-        }
-
-        if (schems.id in openSchemsIds) body.isVisible = true
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openSchemsIds.add(schems.id) else openSchemsIds.remove(schems.id)
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = schems.name.get(),
+            openId = schems.id,
+            openIdsSet = openSchemsIds
+        ) { body ->
+            schems.description?.let { body.addView(buildRichLinkedTextView(it.get())) }
+            schems.table?.let { body.addView(createTableView(it)) }
+            schems.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
         }
         return card
     }
@@ -705,58 +564,22 @@ class ReferenceDetailFragment : Fragment() {
         invocation: Invocation,
         invocationsById: Map<String, Invocation>
     ): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        val title = TextView(requireContext()).apply {
-            text = invocation.name.get()
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        }
-        inner.addView(title)
-
         val subtitleParts = mutableListOf<String>()
         invocation.level?.let { subtitleParts.add("уровень Колдуна $it") }
         invocation.requirements?.invocation_id?.let { reqId ->
             val reqName = invocationsById[reqId]?.name?.get() ?: reqId
             subtitleParts.add("«$reqName»")
         }
-        if (subtitleParts.isNotEmpty()) {
-            inner.addView(TextView(requireContext()).apply {
-                text = subtitleParts.joinToString(" • ")
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
-                setPadding(0, dpToPx(4), 0, 0)
-            })
-        }
-
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = false
-        }
-        inner.addView(body)
-
-        body.addView(buildRichLinkedTextView(invocation.description.get()))
-        invocation.table?.let { body.addView(createTableView(it)) }
-        invocation.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
-
-        if (invocation.id in openInvocationIds) body.isVisible = true
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openInvocationIds.add(invocation.id) else openInvocationIds.remove(invocation.id)
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = invocation.name.get(),
+            subtitle = subtitleParts.joinToString(" • ").ifBlank { null },
+            openId = invocation.id,
+            openIdsSet = openInvocationIds
+        ) { body ->
+            body.addView(buildRichLinkedTextView(invocation.description.get()))
+            invocation.table?.let { body.addView(createTableView(it)) }
+            invocation.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
         }
         return card
     }
@@ -1131,89 +954,55 @@ class ReferenceDetailFragment : Fragment() {
     }
 
     private fun createFeatureCard(classObj: GameClass, feature: Feature, source: String, selectedSubclass: Subclass?): Pair<MaterialCardView, LinearLayout> {
-        val t0 = System.currentTimeMillis()
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        val title = TextView(requireContext()).apply {
-            text = "Уровень ${feature.level}: ${feature.name.get()}"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        }
-        inner.addView(title)
-
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = false
-        }
-        inner.addView(body)
-
-        feature.table?.let { body.addView(createTableView(it)) }
-        feature.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
-
-        val hasContent = feature.description.get().isNotBlank() || (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) || feature.table != null || feature.description2 != null
-
-        if (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) {
-            body.addView(createSubclassSpinner(classObj, selectedSubclass))
-        }
-
-        // Defer expensive text linking until the card is expanded.
-        // Store the raw description and build the linked TextView on first click.
         val rawDescription = feature.description.get()
         var descriptionLinked = false
-        if (rawDescription.isNotBlank()) {
-            // Add a placeholder that will be replaced with the linked version on expand.
-            val placeholder = TextView(requireContext()).apply {
-                tag = "feature_desc"
-                text = rawDescription
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-                setPadding(0, 4, 0, 4)
+        val onExpandHolder = object { var callback: (() -> Unit)? = null }
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = "Уровень ${feature.level}: ${feature.name.get()}",
+            openId = feature.id,
+            openIdsSet = openFeatureIds,
+            onExpand = { onExpandHolder.callback?.invoke() }
+        ) { body ->
+            feature.table?.let { body.addView(createTableView(it)) }
+            feature.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
+            if (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) {
+                body.addView(createSubclassSpinner(classObj, selectedSubclass))
             }
-            body.addView(placeholder)
+            if (rawDescription.isNotBlank()) {
+                body.addView(TextView(requireContext()).apply {
+                    tag = "feature_desc"
+                    text = rawDescription
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 4, 0, 4)
+                })
+            }
         }
 
-        if (hasContent) {
-            // Restore previously expanded state when navigating back to the class card.
-            if (feature.id in openFeatureIds) {
-                body.isVisible = true
-                if (!descriptionLinked && rawDescription.isNotBlank()) {
-                    val existingPlaceholder = body.findViewWithTag<TextView>("feature_desc")
-                    if (existingPlaceholder != null) {
-                        val linkedView = buildRichLinkedTextView(rawDescription)
-                        val index = body.indexOfChild(existingPlaceholder)
-                        body.removeViewAt(index)
-                        body.addView(linkedView, index)
-                    }
-                    descriptionLinked = true
+        onExpandHolder.callback = {
+            if (!descriptionLinked && rawDescription.isNotBlank()) {
+                val existingPlaceholder = body.findViewWithTag<TextView>("feature_desc")
+                if (existingPlaceholder != null) {
+                    val linkedView = buildRichLinkedTextView(rawDescription)
+                    val index = body.indexOfChild(existingPlaceholder)
+                    body.removeViewAt(index)
+                    body.addView(linkedView, index)
                 }
+                descriptionLinked = true
             }
+        }
 
-            card.setOnClickListener {
-                // Build linked text on first expand only.
-                if (!descriptionLinked && rawDescription.isNotBlank()) {
-                    val existingPlaceholder = body.findViewWithTag<TextView>("feature_desc")
-                    if (existingPlaceholder != null) {
-                        val linkedView = buildRichLinkedTextView(rawDescription)
-                        val index = body.indexOfChild(existingPlaceholder)
-                        body.removeViewAt(index)
-                        body.addView(linkedView, index)
-                    }
-                    descriptionLinked = true
-                }
-                body.isVisible = !body.isVisible
-                if (body.isVisible) openFeatureIds.add(feature.id) else openFeatureIds.remove(feature.id)
-            }
+        if (body.isVisible) {
+            onExpandHolder.callback?.invoke()
+        }
+
+        val hasContent = rawDescription.isNotBlank() ||
+                (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) ||
+                feature.table != null || feature.description2 != null
+        if (!hasContent) {
+            card.setOnClickListener(null)
+            card.isClickable = false
         }
 
         return card to body
@@ -1402,44 +1191,18 @@ class ReferenceDetailFragment : Fragment() {
     }
 
     private fun createSpeciesTraitCard(trait: SpeciesTrait): MaterialCardView {
-        val card = MaterialCardView(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(0, 0, 0, dpToPx(12))
-            }
-            radius = dpToPx(12).toFloat()
-            cardElevation = dpToPx(2).toFloat()
-        }
-
-        val inner = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
-        }
-        card.addView(inner)
-
-        val title = TextView(requireContext()).apply {
-            val levelSuffix = trait.level?.let { "Уровень $it: " } ?: ""
-            text = "$levelSuffix${trait.name.get()}"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setTypeface(null, Typeface.BOLD)
-        }
-        inner.addView(title)
-
         val traitKey = trait.name.get()
-        val body = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            isVisible = traitKey in openSpeciesTraitIds
+        val levelSuffix = trait.level?.let { "Уровень $it: " } ?: ""
+        val (card, _) = ExpandableCard.createExpandableCard(
+            requireContext(),
+            title = "$levelSuffix$traitKey",
+            openId = traitKey,
+            openIdsSet = openSpeciesTraitIds
+        ) { body ->
+            body.addView(buildRichLinkedTextView(trait.description.get()))
+            trait.table?.let { body.addView(createTableView(it)) }
+            trait.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
         }
-        inner.addView(body)
-
-        body.addView(buildRichLinkedTextView(trait.description.get()))
-        trait.table?.let { body.addView(createTableView(it)) }
-        trait.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
-
-        card.setOnClickListener {
-            body.isVisible = !body.isVisible
-            if (body.isVisible) openSpeciesTraitIds.add(traitKey) else openSpeciesTraitIds.remove(traitKey)
-        }
-
         return card
     }
 
@@ -1609,8 +1372,7 @@ class ReferenceDetailFragment : Fragment() {
             spell.area_of_effect?.let { addRow(getString(R.string.reference_spell_area), "${it.size} фт ${it.type.replaceFirstChar { c -> c.uppercase() }}") }
         }
         addSection(getString(R.string.reference_description)) {
-            val conditionLinks = buildConditionLinkMap()
-            addView(buildLinkedTextView(spell.description.get(), conditionLinks))
+            addView(buildLinkedTextView(spell.description.get()))
         }
         spell.table?.let { addSection(getString(R.string.reference_spell_table)) { addView(createTableView(it)) } }
         spell.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
@@ -1669,52 +1431,53 @@ class ReferenceDetailFragment : Fragment() {
     private fun renderCondition() {
         val obj = viewModel.getCondition(objectId) ?: return showNotFound()
         binding.toolbar.title = obj.name.get()
-        val conditionLinks = buildConditionLinkMap().filter { it.second != objectId }
+        val excludedIds = setOf(objectId)
         addSection(getString(R.string.reference_description)) {
-            addView(buildLinkedTextView(obj.description.get(), conditionLinks))
+            addView(buildLinkedTextView(obj.description.get(), excludedIds))
         }
         if (obj.effects.isNotEmpty()) {
             addSection(getString(R.string.reference_effects)) {
                 for (e in obj.effects) {
-                    addView(buildLinkedTextView("• ${e.get()}", conditionLinks))
+                    addView(buildLinkedTextView("• ${e.get()}", excludedIds))
                 }
             }
         }
         addSourceSection(obj.source)
     }
 
-    /** Maps localised condition names to their full ids, longest name first (to match longer names first). */
-    private fun buildConditionLinkMap(): List<Pair<String, String>> =
-        viewModel.getCategoryIds("conditions")
-            // Exclude the generic "Состояние"/Condition overview article — its generic name
-            // shouldn't be linked from other condition texts.
-            .filterNot { it.endsWith(":condition") }
-            .mapNotNull { id -> viewModel.resolveName(id)?.let { it to id } }
-            .sortedByDescending { it.first.length }
-
-    private fun buildLinkedTextView(text: String, links: List<Pair<String, String>>): TextView {
-        val spannable = SpannableStringBuilder(text)
-        for ((name, fullId) in links) {
-            if (name.isBlank()) continue
-            var idx = 0
-            while (idx <= spannable.length - name.length) {
-                val start = spannable.toString().indexOf(name, idx, ignoreCase = true)
-                if (start < 0) break
-                val end = start + name.length
-                spannable.setSpan(object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        val type = viewModel.getEntryType(fullId)
-                        val key = type?.let { categoryKeyForType(it) } ?: "conditions"
-                        val bundle = Bundle().apply {
-                            putString("objectId", fullId)
-                            putString("categoryKey", key)
-                        }
-                        findNavController().navigate(R.id.referenceDetail, bundle)
+    private fun buildLinkedTextView(text: String, excludedIds: Set<String> = emptySet()): TextView {
+        val marker = ItemLinkifier.stripMarkers(text)
+        val spannable = SpannableStringBuilder(marker.text)
+        val matches = ItemLinkifier.findRanges(marker.text, viewModel.getConditionBucketsCache(), marker.excludedRanges)
+        for ((start, end, fullId) in matches) {
+            if (fullId in excludedIds) continue
+            spannable.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val type = viewModel.getEntryType(fullId)
+                    val key = type?.let { categoryKeyForType(it) } ?: "conditions"
+                    val bundle = Bundle().apply {
+                        putString("objectId", fullId)
+                        putString("categoryKey", key)
                     }
-                }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                spannable.setSpan(android.text.style.ForegroundColorSpan(linkColor()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                idx = end
-            }
+                    findNavController().navigate(R.id.referenceDetail, bundle)
+                }
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(android.text.style.ForegroundColorSpan(linkColor()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        for (link in marker.explicitLinks) {
+            val range = link.range
+            spannable.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val type = viewModel.getEntryType(link.fullId)
+                    val key = type?.let { categoryKeyForType(it) } ?: "conditions"
+                    val bundle = Bundle().apply {
+                        putString("objectId", link.fullId)
+                        putString("categoryKey", key)
+                    }
+                    findNavController().navigate(R.id.referenceDetail, bundle)
+                }
+            }, range.first, range.last + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(android.text.style.ForegroundColorSpan(linkColor()), range.first, range.last + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return TextView(requireContext()).apply {
             setText(spannable)
@@ -1764,6 +1527,13 @@ class ReferenceDetailFragment : Fragment() {
                     val save = obj.saving_throws?.get(a)?.let { "+$it" } ?: modStr
                     addRow(localizeAbility(a), "$score (мод $modStr; спас $save)")
                 }
+            }
+        }
+
+        // ── Описание ────────────────────────────────────────────────
+        if (obj.description.get().isNotBlank()) {
+            addSection(getString(R.string.reference_description)) {
+                addText(obj.description.get())
             }
         }
 
@@ -1843,12 +1613,6 @@ class ReferenceDetailFragment : Fragment() {
         addAbilityBlockSection(getString(R.string.reference_mythic_actions), obj.mythic_actions)
         addAbilityBlockSection(getString(R.string.reference_lair_actions), obj.lair_actions)
 
-        // ── Описание ────────────────────────────────────────────────
-        if (obj.description.get().isNotBlank()) {
-            addSection(getString(R.string.reference_description)) {
-                addText(obj.description.get())
-            }
-        }
         obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
         obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
 

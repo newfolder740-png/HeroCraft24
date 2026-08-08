@@ -1,0 +1,111 @@
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+Фаза: Phase 2
+=======================================
+
+A) Закрытые проблемы
+---------------------
+1. ItemSummary, SpellSummary, ReferenceListItem перенесены в core:model.
+   - Новый файл: core/model/src/main/java/com/herocraft24/core/model/Summary.kt
+   - Удалены локальные определения из:
+     • EquipmentViewModel.kt
+     • SpellsViewModel.kt
+     • ReferenceListAdapter.kt
+   - Обновлены импорты и ссылки в:
+     • EquipmentListAdapter.kt
+     • SpellListAdapter.kt
+     • ReferenceListFragment.kt
+2. Добавлены extension-свойства для Monster.
+   - Новый файл: core/model/src/main/java/com/herocraft24/core/model/MonsterExtensions.kt
+   - Покрыты nullable List/Map поля:
+     • effectiveVulnerabilities, effectiveResistances, effectiveImmunities,
+       effectiveConditionImmunities
+     • effectiveBonusActions, effectiveReactions, effectiveLegendaryActions,
+       effectiveMythicActions, effectiveLairActions
+     • effectiveSenses (Map)
+   - Все свойства возвращают emptyList()/emptyMap() вместо null.
+3. Созданы UI enum-классы в core:model.
+   - Новый файл: core/model/src/main/java/com/herocraft24/core/model/Enums.kt
+   • SpellSchool — abjuration..transmutation + UNKNOWN
+   • ItemCategory — weapon, armor, shield, adventuring_gear, pack, tool, etc.
+   • ItemRarity — non-magic, common, uncommon, rare, very-rare/veryrare,
+     legendary, artifact, varies + UNKNOWN
+   • CreatureSize — tiny..gargantuan + UNKNOWN
+   • CreatureType — aberration..undead + UNKNOWN
+   - Каждый enum имеет companion object с fromValue(String) и fallback на UNKNOWN.
+4. @Transient для Invocation: не добавлен.
+   - Поля table и description2 действительно используются в
+     ReferenceDetailFragment (ReferenceDetailFragment.kt:753-754).
+   - Проверка JSON-ассетов invocations показала, что поля отсутствуют,
+     но так как они задействованы в коде UI, добавление @Transient
+     могло бы сломать логику при появлении этих полей в будущем.
+   - Оставлены как есть, с соответствующей пометкой в разделе B.
+
+B) Оставшиеся проблемы
+-----------------------
+1. Поля Invocation.table и Invocation.description2 остаются в модели
+   без @Transient. Они не используются в текущих JSON, но используются в коде.
+   Если цель — уменьшить размер сериализованных объектов, нужно либо
+   удалить эти поля из модели и UI, либо оставить до момента,
+   когда появятся реальные данные.
+2. После переноса summary-классов в core:model Kotlin запрещает smart cast
+   на nullable публичных свойствах из другого модуля. Пришлось заменить
+   `if (i.cost != null) ... i.cost` на `i.cost?.let { }` и аналогично
+   для `s.damageType`. Это не ошибка, но требует аккуратности при дальнейшем
+   использовании summary-классов в адаптерах.
+3. UI enum-классы созданы, но пока нигде не используются.
+   Их нужно начать применять в фильтрах/адаптерах для замены magic strings.
+4. Summary.kt теперь содержит 3 несериализуемых data class.
+   Это увеличивает размер core:model, но делает слой UI-списков чище.
+
+C) Новые риски
+--------------
+1. Перенос summary-классов в core:model увеличивает связанность между
+   feature-модулями через core:model. Это ожидаемо, но стоит следить,
+   чтобы core:model не превратился в свалку UI-only классов.
+2. Monster extension-свойства добавляют новый публичный API в core:model.
+   Если в Monster появятся ещё nullable List-поля, их придётся добавлять
+   в MonsterExtensions.kt, и otherwise забыть.
+3. Enum-классы из Enums.kt пока не используются, поэтому не выявлены
+   возможные ошибки в fromValue() (например, неочевидные альтернативные
+   написания значений из JSON).
+4. ReferenceListFragment всё ещё использует deprecated `getParcelable()`;
+   это не связано с текущим рефакторингом, но появляется в warnings.
+
+D) Что оставить как есть
+-------------------------
+1. Модели Spell, Item, Monster оставлены без изменений.
+2. JSON-ассеты не затронуты.
+3. Поля Invocation.table и description2 оставлены без @Transient,
+   потому что используются в ReferenceDetailFragment.
+4. Hardcoded локализации в UI (например, "Подклассы" в SpellDetailFragment,
+   "Описание" и "Эффекты" в ConditionReferenceFragment) — вне scope.
+
+E) Следующая очередь работ
+---------------------------
+1. Начать использовать SpellSchool/ItemCategory/ItemRarity/CreatureSize/CreatureType
+   в фильтрах и адаптерах вместо сравнения с raw strings.
+2. Рассмотреть удаление Invocation.table/description2 из модели,
+   если они действительно не нужны, или добавить @Transient
+   после согласования с product/UX.
+3. Заменить deprecated getParcelable() в ReferenceListFragment
+   на современный API.
+4. Запустить lint и устранить оставшиеся warnings.
+
+=======================================
+Проверка сборки:
+./gradlew :app:assembleDebug — BUILD SUCCESSFUL
+=======================================
+Изменённые/добавленные файлы:
+- core/model/src/main/java/com/herocraft24/core/model/Summary.kt
+- core/model/src/main/java/com/herocraft24/core/model/MonsterExtensions.kt
+- core/model/src/main/java/com/herocraft24/core/model/Enums.kt
+- feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentViewModel.kt
+- feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentListAdapter.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceListAdapter.kt
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceListFragment.kt
+- 09_phase2_audit.txt (этот файл)
+=======================================

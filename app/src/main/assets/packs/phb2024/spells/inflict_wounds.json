@@ -1,47 +1,47 @@
 {
-  "id": "inflict_wounds",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Inflict Wounds",
-    "ru": "Нанесение ран"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь существа; оно совершает спасбросок Телосложения, получая 2к10 Некротического урона при провале или половину этого урона при успехе."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 1,
-  "school": "necromancy",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Урон увеличивается на 1к10 за каждый уровень ячейки выше 1-го."
-  },
-  "classes": [
-    "phb2024:cleric"
-  ],
-  "subclasses": [
-    "Теневое чародейство"
-  ]
+    "id":  "inflict_wounds",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Inflict Wounds",
+                 "ru":  "Нанесение ран"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь существа; оно совершает спасбросок Телосложения, получая 2к10 Некротического урона при провале или половину этого урона при успехе."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  1,
+    "school":  "necromancy",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Урон увеличивается на 1к10 за каждый уровень ячейки выше 1-го."
+                      },
+    "classes":  [
+                    "phb2024:cleric"
+                ],
+    "subclasses":  [
+                       "phb2024:sorcerer_shadow"
+                   ]
 }

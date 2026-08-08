@@ -1,49 +1,49 @@
 {
-  "id": "chill_touch",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Chill Touch",
-    "ru": "Леденящее прикосновение"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы направляете могильный холод на цель в пределах дистанции; совершите по ней рукопашную атаку заклинанием. При попадании цель получает 1к10 Некротического урона и до конца вашего следующего хода не может восстанавливать Хиты."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 0,
-  "school": "necromancy",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Усиление заговора. Урон увеличивается на 1к10, когда вы достигаете 5-го (2к10), 11-го (3к10) и 17-го (4к10) уровней."
-  },
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:warlock",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Наследник троицы"
-  ]
+    "id":  "chill_touch",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Chill Touch",
+                 "ru":  "Леденящее прикосновение"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы направляете могильный холод на цель в пределах дистанции; совершите по ней рукопашную атаку заклинанием. При попадании цель получает 1к10 Некротического урона и до конца вашего следующего хода не может восстанавливать Хиты."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  0,
+    "school":  "necromancy",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Усиление заговора. Урон увеличивается на 1к10, когда вы достигаете 5-го (2к10), 11-го (3к10) и 17-го (4к10) уровней."
+                      },
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:warlock",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:rogue_naslednik_troicy"
+                   ]
 }

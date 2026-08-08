@@ -1,0 +1,30 @@
+{
+  "id": "artificer_reanimator","full_id": "phb2024:artificer_reanimator",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Reanimator",
+    "ru": "Реаниматор"
+  },
+  "description": {
+    "en": "",
+    "ru": "Пересобирайте трупы и поднимайте мёртвых\n\nРеаниматоры нарушают законы природы в своих мрачных экспериментах. Эти зловещие Артефакторы сшивают слуг из разрозненных тел, применяют мерзкую магию для усиления живых и превращают некромантию в пугающую науку."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+    "phb2024:artificer_reanimator_l3_zaklinaniya_reanimatora",
+    "phb2024:artificer_reanimator_l3_navyki_reanimatora",
+    "phb2024:artificer_reanimator_l3_reanimirovannyy_sputnik",
+    "phb2024:artificer_reanimator_l5_chuzhdye_modifikatsii",
+    "phb2024:artificer_reanimator_l9_uluchshennaya_reanimatsiya",
+    "phb2024:artificer_reanimator_l9_uzhasnye_modifikatsii",
+    "phb2024:artificer_reanimator_l15_ottochennaya_reanimatsiya"
+  ]
+}

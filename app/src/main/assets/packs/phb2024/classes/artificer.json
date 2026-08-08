@@ -157,7 +157,9 @@
     "phb2024:artificer_alhimik",
     "phb2024:artificer_artillerist",
     "phb2024:artificer_boevoy_kuznets",
-    "phb2024:artificer_bronnik"
+    "phb2024:artificer_bronnik",
+    "phb2024:artificer_kartograf",
+    "phb2024:artificer_reanimator"
   ],
   "class_table": {
     "columns": [

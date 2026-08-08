@@ -1,0 +1,98 @@
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+Фаза: Phase 4
+=======================================
+
+A) Закрытые проблемы
+---------------------
+1. Переведены на ItemLinkifier.findRanges:
+   - ConditionReferenceFragment.buildLinkedTextView
+   - ReferenceDetailFragment.buildLinkedTextView
+   - Удалён ручной indexOf/while-loop и сортировка по длине имени.
+
+2. Добавлены/использованы BucketsCache:
+   - SpellsViewModel.conditionBucketsCache — уже существовал, теперь используется
+     в ConditionReferenceFragment.
+   - ReferenceViewModel.getConditionBucketsCache() — новый кеш только для имён
+     состояний (аналогично getCombinedBucketsCache, но без предметов/заклинаний).
+
+3. ReferenceDetailFragment.buildLinkedTextView теперь:
+   - Использует ItemLinkifier.stripMarkers + excludedRanges + explicitLinks.
+   - Принимает excludedIds: Set<String> для исключения текущего состояния.
+   - Сохраняет ForegroundColorSpan для цвета ссылок.
+   - Удалён buildConditionLinkMap.
+
+4. ConditionReferenceFragment.buildLinkedTextView теперь:
+   - Использует vm.conditionBucketsCache.
+   - Сохраняет excludedRanges из маркеров.
+   - Поддерживает explicitLinks [[text|id]].
+   - Исключает текущее состояние по fullId.
+
+B) Оставшиеся проблемы
+-----------------------
+1. ReferenceDetailFragment.buildRichLinkedTextView и addLinkedItemDescription
+   уже используют getCombinedBucketsCache и ItemLinkifier; дублирующий
+   ручной код остался только в addLinkedIds (списки id), но он вне scope.
+2. Карта состояний в ReferenceViewModel строится только из локализованного
+   resolveName(); не содержит английских вариантов, в отличие от
+   SpellsViewModel.conditionNameToIdMap. Для русских описаний этого достаточно,
+   но для многоязычных текстов может потребоваться расширение.
+3. ItemLinkifier использует word-boundary + stem-matching, поэтому набор
+   ссылок может немного отличаться от ручного цикла (например, не будет
+   ложных частичных совпадений внутри других слов).
+
+C) Новые риски
+--------------
+1. Смена алгоритма матчинга может привести к тому, что какие-то имена
+   состояний перестанут/начнут ссылаться, если они пересекаются с обычными
+   словами. Word-boundary снижает риск ложных ссылок.
+2. Переход на BucketsCache в ReferenceViewModel добавляет дополнительный
+   Volatile-флаг и lazy-инициализацию; при неправильной синхронизации возможны
+   race-conditions (используется synchronized(lock)).
+3. explicitLinks в ConditionReferenceFragment и ReferenceDetailFragment
+   обрабатываются вручную после findRanges; если формат маркера изменится,
+   нужно будет обновить оба места.
+
+D) Что оставить как есть
+-------------------------
+1. buildRichLinkedTextView/addLinkedItemDescription оставлены без изменений,
+   так как уже используют ItemLinkifier и общий combined cache.
+2. addLinkedIds (списки снаряжения/классов и т.п.) оставлен вручную, потому
+   что он работает с уже известными full id, а не с авто-линковкой текста.
+3. Обработка маркеров {…} и [[…|…]] сохранена в buildLinkedTextView.
+
+E) Следующая очередь работ
+---------------------------
+1. Распространить ItemLinkifier/BucketsCache на остальные ручные места
+   авто-линковки (если остались) в других фрагментах.
+2. Рассмотреть объединение SpellsViewModel.conditionBucketsCache и
+   ReferenceViewModel.getConditionBucketsCache() в единый репозиторий/
+   use-case, чтобы избежать дублирования карты состояний.
+3. Добавить UI-тесты/интеграционные тесты для навигации по кликам на
+   авто-ссылки в ReferenceDetailFragment и ConditionReferenceFragment.
+
+=======================================
+Проверка сборки:
+./gradlew :app:assembleDebug — BUILD SUCCESSFUL
+./gradlew :app:lintDebug — BUILD SUCCESSFUL
+./gradlew :core:ui:testDebugUnitTest — BUILD SUCCESSFUL
+=======================================
+Smoke-тест (3-5 случаев):
+- charm_person → "Очарованный" → phb2024:charmed (PASS)
+- blinding_smite → "Ослеплённый" → phb2024:blinded (PASS)
+- entangle → "Опутанный" → phb2024:restrained (PASS)
+- contagion → "Отравленный" → phb2024:poisoned (PASS)
+- paralyzed → "Недееспособный" → phb2024:incapacitated (PASS)
+- petrified → "Отравленный" → phb2024:poisoned (PASS)
+
+Все проверные случаи прошли через обновлённый ItemLinkifierSmokeTest
+(core/ui/src/test/java/com/herocraft24/core/ui/util/ItemLinkifierSmokeTest.kt).
+=======================================
+Изменённые/добавленные файлы:
+- feature/spells/src/main/java/com/herocraft24/feature/spells/ConditionReferenceFragment.kt
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceViewModel.kt
+- core/ui/src/test/java/com/herocraft24/core/ui/util/ItemLinkifierSmokeTest.kt
+- 09_phase4_audit.txt (этот файл)
+=======================================

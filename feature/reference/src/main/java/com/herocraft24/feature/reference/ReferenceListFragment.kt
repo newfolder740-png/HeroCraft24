@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.herocraft24.core.model.ReferenceListItem
 import com.herocraft24.core.ui.widget.FilterBottomSheet
 import com.herocraft24.core.ui.widget.FilterGroup
 import com.herocraft24.core.ui.widget.FilterOption
@@ -32,7 +33,7 @@ class ReferenceListFragment : Fragment() {
     private var categoryKey: String = ""
     private var categoryLabel: String = ""
     private lateinit var stateViewBinder: StateViewBinder
-    private var allItems: List<ReferenceListAdapter.ReferenceListItem> = emptyList<ReferenceListAdapter.ReferenceListItem>()
+    private var allItems: List<ReferenceListItem> = emptyList<ReferenceListItem>()
     private var currentFilterCategories: Set<String> = emptySet()
     private var currentFilterSources: Set<String> = emptySet()
     private var currentFilterArmorTypes: Set<String> = emptySet()
@@ -253,11 +254,11 @@ class ReferenceListFragment : Fragment() {
         updateFilterButtonAppearance()
     }
 
-    private fun buildItems(): List<ReferenceListAdapter.ReferenceListItem> {
+    private fun buildItems(): List<ReferenceListItem> {
         return try {
             val ids = viewModel.getCategoryIds(categoryKey)
 
-            val items = mutableListOf<ReferenceListAdapter.ReferenceListItem>()
+            val items = mutableListOf<ReferenceListItem>()
 
             for (fullId in ids) {
                 try {
@@ -276,7 +277,7 @@ class ReferenceListFragment : Fragment() {
                     // For classes we therefore read the hit die from the full class object.
                     val hitDie = if (categoryKey == "classes") viewModel.getClass(fullId)?.hit_die else null
                     val subcategory = entry.subcategory ?: emptyList()
-                    val item = ReferenceListAdapter.ReferenceListItem(
+                    val item = ReferenceListItem(
                         fullId = fullId,
                         name = name,
                         subtitle = buildSubtitle(entry, isSwarm, hitDie),
@@ -304,7 +305,7 @@ class ReferenceListFragment : Fragment() {
             val collator = java.text.Collator.getInstance(java.util.Locale("ru"))
             if (categoryKey == "monsters") {
                 items.sortWith(
-                    compareBy<ReferenceListAdapter.ReferenceListItem> { it.challengeRating }
+                    compareBy<ReferenceListItem> { it.challengeRating }
                         .thenComparator { a, b -> collator.compare(a.name, b.name) }
                 )
             } else {
@@ -405,11 +406,11 @@ class ReferenceListFragment : Fragment() {
             is PreviewSortMode.NAME_ASC -> items = items.sortedWith { a, b -> collator.compare(a.name, b.name) }
             is PreviewSortMode.NAME_DESC -> items = items.sortedWith { a, b -> collator.compare(b.name, a.name) }
             is PreviewSortMode.CHALLENGE_ASC -> items = items.sortedWith(
-                compareBy<ReferenceListAdapter.ReferenceListItem> { it.challengeRating }
+                compareBy<ReferenceListItem> { it.challengeRating }
                     .thenComparator { a, b -> collator.compare(a.name, b.name) }
             )
             is PreviewSortMode.CHALLENGE_DESC -> items = items.sortedWith(
-                compareByDescending<ReferenceListAdapter.ReferenceListItem> { it.challengeRating }
+                compareByDescending<ReferenceListItem> { it.challengeRating }
                     .thenComparator { a, b -> collator.compare(a.name, b.name) }
             )
             is PreviewSortMode.TYPE_ASC -> items = items.sortedWith { a, b -> 
@@ -800,7 +801,7 @@ class ReferenceListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val state = binding.recyclerView.layoutManager?.onSaveInstanceState()
+        val state = _binding?.recyclerView?.layoutManager?.onSaveInstanceState()
         if (state != null) {
             outState.putParcelable("layoutManagerState", state)
         }
@@ -808,7 +809,7 @@ class ReferenceListFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        layoutManagerState = binding.recyclerView.layoutManager?.onSaveInstanceState()
+        layoutManagerState = _binding?.recyclerView?.layoutManager?.onSaveInstanceState()
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- School colors -->
+    <color name="school_abjuration">#2196F3</color>
+    <color name="school_conjuration">#FFC107</color>
+    <color name="school_divination">#00BCD4</color>
+    <color name="school_enchantment">#E91E63</color>
+    <color name="school_evocation">#F44336</color>
+    <color name="school_illusion">#9C27B0</color>
+    <color name="school_necromancy">#4CAF50</color>
+    <color name="school_transmutation">#FF9800</color>
+    <color name="school_default">#6750A4</color>
+
+    <!-- Rarity colors -->
+    <color name="rarity_non_magic">#9E9E9E</color>
+    <color name="rarity_common">#9E9E9E</color>
+    <color name="rarity_uncommon">#4CAF50</color>
+    <color name="rarity_rare">#2196F3</color>
+    <color name="rarity_very_rare">#9C27B0</color>
+    <color name="rarity_legendary">#FFD700</color>
+    <color name="rarity_artifact">#FF5722</color>
+    <color name="rarity_default">#9E9E9E</color>
+</resources>

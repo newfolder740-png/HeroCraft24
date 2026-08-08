@@ -1,0 +1,560 @@
+Отчёт по выполнению пунктов плана 1, 2, 3, 4, 5
+================================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+Выполненные пункты: 1, 2, 3, 4, 5 (из 06_low_risk_plan.txt)
+
+1. Добавить `cost: String?` в модель Maneuvers
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class Maneuvers(..., val cost: String? = null)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+2. Добавить `requires_tools: Boolean` в SpellcastingInfo
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class SpellcastingInfo(..., val requires_tools: Boolean = false)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+3. Добавить 4 категории в ManifestObjects
+   Файл: core/data/src/main/java/com/herocraft24/core/data/Manifest.kt
+   Изменение: добавлены invocations, metamagics, maneuvers, schems (default emptyList())
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+4. Обновить ContentRepository.allEntries() и findType()
+   Файл: core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt
+   Изменение: в allEntries() и findType() добавлены 4 новые категории (invocations, metamagics, maneuvers, schems)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+5. Добавить `type: String?` в EquipmentChoice
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение: data class EquipmentChoice(..., val type: String? = null)
+   Статус: ✅ выполнено
+   Проверка: ./gradlew :app:compileDebugKotlin — SUCCESS
+
+Изменённые файлы:
+- core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+- core/data/src/main/java/com/herocraft24/core/data/Manifest.kt
+- core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt
+
+Результат сборки:
+BUILD SUCCESSFUL in 19s
+91 actionable tasks: 10 executed, 81 up-to-date
+
+Примечания:
+- Все изменения аддитивные, с default-значениями, обратно совместимы.
+- JSON-файлы не затронуты.
+- Дополнительно изменены не были.
+
+
+Отчёт по выполнению пунктов плана 6, 7, 8
+============================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 6, 7, 8
+
+6. Добавить type/format_version в Invocation/Metamagic/Maneuvers/Schems
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Изменение:
+     - Invocation: +val type: String = "invocation", +val format_version: Int = 1
+     - Metamagic:  +val type: String = "metamagic",  +val format_version: Int = 1
+     - Maneuvers:  +val type: String = "maneuver",   +val format_version: Int = 1
+     - Schems:     +val type: String = "schem",      +val format_version: Int = 1
+   Статус: ✅ выполнено
+   Риск: низкий (default-значения, ignoreUnknownKeys включён)
+
+7. Добавить cost в maneuvers/maneuver_zasada.json
+   Файл: app/src/main/assets/packs/phb2024/maneuvers/maneuver_zasada.json
+   Изменение: добавлены поля type, format_version и cost
+     "type": "maneuver",
+     "format_version": 1,
+     "cost": "1 Кость превосходства"
+   Статус: ✅ выполнено
+
+8. Добавить feat в 2 background-файла
+   Файлы:
+     - app/src/main/assets/packs/phb2024/backgrounds/haunted_one.json
+       "feat": "phb2024:shadow_touched"
+     - app/src/main/assets/packs/phb2024/backgrounds/svoya_predystoriya.json
+       "feat": "phb2024:skilled"
+   Статус: ✅ выполнено
+
+Изменённые файлы:
+- core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+- app/src/main/assets/packs/phb2024/maneuvers/maneuver_zasada.json
+- app/src/main/assets/packs/phb2024/backgrounds/haunted_one.json
+- app/src/main/assets/packs/phb2024/backgrounds/svoya_predystoriya.json
+
+Изменения API:
+- Invocation: появились поля type (default "invocation") и format_version (default 1)
+- Metamagic: появились поля type (default "metamagic") и format_version (default 1)
+- Maneuvers: появились поля type (default "maneuver") и format_version (default 1)
+- Schems: появились поля type (default "schem") и format_version (default 1)
+- JSON-файлы манёвра и предысторий получили новые поля без изменения структуры остальных данных
+
+Проверки выполнены:
+1. Поиск прямых конструкций Invocation(...), Metamagic(...), Maneuvers(...), Schems(...) в Kotlin-коде —
+   найдены только определения data class, внешние вызовы отсутствуют, позиционные параметры не нарушены.
+2. Проверка мест использования obj.feat в ReferenceDetailFragment — логика отрисовки ссылки
+   на черту уже реализована и использует viewModel.resolveName(featId).
+3. Проверка наличия выбранных черт в manifest.json:
+   - "shadow_touched" ✅
+   - "skilled" ✅
+4. Сборка Kotlin: ./gradlew :app:compileDebugKotlin — BUILD SUCCESSFUL (91 actionable tasks).
+5. Валидация синтаксиса изменённых JSON через PowerShell ConvertFrom-Json — все 3 файла OK.
+
+Результат build/test:
+- :app:compileDebugKotlin — ✅ SUCCESS
+- Unit-тесты в проекте отсутствуют, дополнительных тестовых задач запущено не было.
+
+Обнаруженные проблемы:
+- Проблем не выявлено. Все изменения аддитивные и обратно совместимы.
+
+Что осталось сделать:
+- Выполнить пункт 16 плана: добавить type/format_version в остальные 62 JSON-файла категорий
+  invocations/metamagics/maneuvers/schems (теперь модели уже поддерживают эти поля).
+- Проверить отображение стоимости манёвра "Засада" и ссылок на черты в карточках
+  предысторий Haunted One / Своя предыстория на устройстве/эмуляторе.
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+С учётом выполненных изменений теперь можно безопасно продолжать (по возрастанию риска):
+
+- #9  — monk.multiclass_requirements (точечная правка JSON)
+- #10 — scimitar/glaive category (точечная правка JSON)
+- #16 — добавить type/format_version в 62 JSON-файла (модели уже поддерживают поля)
+- #14 — source.abbreviation в manifest.json
+- #15 — source.book.en в JSON-файлах
+
+С повышенной осторожностью (средний риск, требуют проверки resolveReference для каждого id):
+- #11 — убрать префикс phb2024: из id subclass-файлов
+- #12 — исправить 5 дубликатов id в manifest.json
+- #13 — убрать префикс phb2024: из entry.id в manifest.json
+
+Не рекомендуется начинать досрочно:
+- #17–#25 и далее — зависят от завершения локализации (Этап 3) и/или UI-рендеринга (Этап 4).
+
+
+
+Отчёт по выполнению пунктов плана 9–18
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+
+9. Добавить multiclass_requirements в monk.json
+   Файл: app/src/main/assets/packs/phb2024/classes/monk.json
+   Изменение: добавлен блок "multiclass_requirements":{"ability_scores":{"dexterity":13,"wisdom":13}}
+   Статус: ✅ выполнено
+
+10. Исправить category у scimitar/glaive
+    Файлы:
+      - app/src/main/assets/packs/phb2024/items/scimitar.json
+      - app/src/main/assets/packs/phb2024/items/glaive.json
+    Изменение: "category":"adventuring_gear" → "category":"weapon"
+    Статус: ✅ выполнено
+
+11. Убрать префикс phb2024: из id subclass-файлов
+    Файлы: 20 subclass JSON в app/src/main/assets/packs/phb2024/subclasses/
+            (artificer_*, fighter_*, sorcerer_*, warlock_*)
+    Изменение: "id":"phb2024:xxx" → "id":"xxx" + добавлен alias "full_id":"phb2024:xxx"
+    Статус: ✅ выполнено
+
+12. Исправить 5 дубликатов id в manifest.json
+    Файлы:
+      - app/src/main/assets/packs/phb2024/manifest.json
+      - app/src/main/assets/packs/phb2024/monsters/guard.json → guard_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/noble.json → noble_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/mist_wanderer.json → mist_wanderer_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/piercer.json → piercer_npc.json
+      - app/src/main/assets/packs/phb2024/monsters/tough.json → tough_npc.json
+    Изменение: monster-id в manifest изменены на *_npc; соответствующие файлы переименованы.
+             Background/feat-записи с теми же id оставлены без изменений.
+    Статус: ✅ выполнено
+
+13. Убрать префикс phb2024: из 114 entry.id в manifest.json
+    Файл: app/src/main/assets/packs/phb2024/manifest.json
+    Изменение: все "id":"phb2024:..." в features/subclasses заменены на "id":"..."
+    Статус: ✅ выполнено
+
+14. Стандартизировать source.abbreviation
+    Файл: app/src/main/assets/packs/phb2024/manifest.json
+    Изменение: "PHB 2024" → "PHB2024" ("MM 2025" не тронут)
+    Статус: ✅ выполнено
+
+15. Стандартизировать source.book.en
+    Файлы: все JSON-файлы в app/src/main/assets/packs/phb2024/ (≈520 файлов)
+    Изменение: "Player's Handbook (2024)" и "Player\u0027s Handbook (2024)" → "Player's Handbook 2024"
+    Статус: ✅ выполнено
+
+16. Добавить type/format_version в 62 JSON-файла
+    Файлы: invocations (28), metamagics (10), maneuvers (20), schems (4)
+    Изменение: после "id" добавлены "type":"invocation"/"metamagic"/"maneuver"/"schem"
+             и "format_version":1
+    Статус: ✅ выполнено
+
+17. Заменить хардкод-русские строки на getString в renderSpell
+    Файлы:
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+      - feature/reference/src/main/res/values/strings.xml
+    Изменение: все русские метки в renderSpell() заменены на R.string.*; добавлены
+             reference_spell_*, yes/no и др.
+    Статус: ✅ выполнено
+
+18. Добавить damage-секцию в ReferenceDetailFragment.renderSpell
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: после блока higher_levels добавлена секция "Урон" с damage_type,
+             damage_at_slot_level, damage_at_character_level (аналогично SpellDetailFragment)
+    Статус: ✅ выполнено
+
+Изменённые файлы (основные группы):
+- app/src/main/assets/packs/phb2024/manifest.json
+- app/src/main/assets/packs/phb2024/classes/monk.json
+- app/src/main/assets/packs/phb2024/items/scimitar.json
+- app/src/main/assets/packs/phb2024/items/glaive.json
+- app/src/main/assets/packs/phb2024/subclasses/*.json (20 файлов)
+- app/src/main/assets/packs/phb2024/monsters/*.json (переименование 5 файлов)
+- app/src/main/assets/packs/phb2024/invocations/*.json (28)
+- app/src/main/assets/packs/phb2024/metamagics/*.json (10)
+- app/src/main/assets/packs/phb2024/maneuvers/*.json (20)
+- app/src/main/assets/packs/phb2024/schems/*.json (4)
+- Все остальные JSON-файлы PHB2024, где source.book.en содержал "Player's Handbook (2024)"
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- feature/reference/src/main/res/values/strings.xml
+
+Изменения API:
+- Kotlin/API: новых публичных методов/полей не добавлено.
+- JSON: появился новый поле "full_id" в 20 subclass-файлах (ignoreUnknownKeys, игнорируется моделью).
+- Ресурсы: в feature/reference добавлены string-ресурсы для отображения заклинаний (reference_spell_*).
+
+Проверки выполнены:
+1. Поиск использования entry.id в ContentRepository/Manifest — используется только
+   для построения entryIndex и getManifestIds, прямые зависимости от префикса устранены.
+2. Проверка subclass JSON: id без префикса, full_id сохранён.
+3. Проверка manifest: осталось 0 вхождений "id":"phb2024: и "PHB 2024".
+4. Проверка source.book.en: 0 вхождений "Player's Handbook (2024)" и escaped-формы.
+5. Проверка дубликатов: background-записи guard/noble/mist_wanderer остались прежними,
+   monster-записи переименованы в *_npc, файлы переименованы.
+6. Сборка Kotlin: ./gradlew :app:compileDebugKotlin — BUILD SUCCESSFUL.
+7. Валидация JSON: все JSON-файлы в app/src/main/assets/packs/phb2024/ прошли ConvertFrom-Json — OK.
+
+Результат build/test:
+- :app:compileDebugKotlin — ✅ SUCCESS
+- Unit-тесты в проекте отсутствуют.
+
+Обнаруженные проблемы:
+- Проблем при валидации не обнаружено. Все JSON корректны, сборка проходит.
+- При первой попытке автоматизации через PowerShell возникла ошибка парсинга из-за
+  не-ASCII символов внутри .ps1; после замены на ASCII-safe регулярные выражения
+  скрипт отработал корректно.
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе открытие Monk, Scimitar/Glaive фильтра,
+  subclass (Warlock/Sorcerer/Fighter/Artificer), monster (guard_npc и др.) и
+  damage-секции для заклинаний в Reference.
+- Выполнить оставшиеся пункты плана (локализация и UI-рендеринг).
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+Сейчас можно безопасно продолжать:
+- #19 — сохранение expanded state для SpeciesTraitCard
+- #20 — сохранение expanded state для ClassSubclassCard
+- #21 — вынести addSection/addRow/addText в CardBuilder (чистый рефакторинг)
+- #22–#26 — локализация через UiLocalizer (school, subcategory, cost, weight,
+  ref-detail-only локализаторы)
+
+После завершения #19–#26 (локализация и CardBuilder) станут безопасны:
+- #24–#29 — оставшиеся UI-рендеринг пункты (SourceSectionBuilder,
+  renderSpell getString/damage уже частично затронуты, SpeciesTraitCard/ClassSubclassCard
+  expanded state)
+
+Высокий/средний риск, оставить на последнюю очередь:
+- #30 — замена ручного indexOf-loop в SpellDetailFragment на ItemLinkifier
+  (требует отдельной ручной проверки ссылок на 3–5 заклинаниях)
+
+
+
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 19, 20, 21, 22, 23
+
+19. Сохранять expanded state для SpeciesTraitCard
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: добавлено поле openSpeciesTraitIds, сохранение/восстановление в
+             onSaveInstanceState/onViewCreated, createSpeciesTraitCard теперь
+             открывает карточку если имя черты (trait.name.get()) есть в множестве,
+             click-listener обновляет множество.
+    Статус: ✅ выполнено
+
+20. Сохранять expanded state для ClassSubclassCard
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: добавлено поле openClassSubclassIds, сохранение/восстановление в
+             onSaveInstanceState/onViewCreated, createClassSubclassCard теперь
+             открывает карточку если subclass.id есть в множестве,
+             click-listener обновляет множество.
+    Статус: ✅ выполнено
+
+21. Вынести addSection/addRow/addText в CardBuilder
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt (новый)
+      - core/ui/build.gradle.kts
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: создан object CardBuilder с addSection, addRow, addText, addSourceSection;
+             core:ui получил зависимость project(":core:model");
+             приватные helpers в ReferenceDetailFragment делегируют работу CardBuilder.
+    Статус: ✅ выполнено
+
+22. Унифицировать localizeSchool через UiLocalizer
+    Файлы:
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+    Изменение: удалены локальные when-блоки localizeSchool, заменены на UiLocalizer.school();
+             убран лишний параметр Context в SpellListAdapter.
+    Статус: ✅ выполнено
+
+23. Удалить localizeSubcategory из ReferenceDetailFragment
+    Файл: feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: удалён private fun localizeSubcategory(...);
+             использование заменено на UiLocalizer.subcategory(it).
+    Статус: ✅ выполнено
+
+=======================================
+
+Изменённые файлы (основные):
+- core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt
+- core/ui/build.gradle.kts
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+- core/data/src/main/java/com/herocraft24/core/data/ContentRepository.kt (неплановая правка синтаксической ошибки,
+  см. раздел "Дополнительно")
+
+Изменения API:
+- Kotlin/API: новых публичных методов/полей не добавлено.
+- CardBuilder.addSection/addRow/addText/addSourceSection — публичные методы в core:ui,
+  используются в ReferenceDetailFragment.
+
+Проверки выполнены:
+1. Проверка всех вызовов addSection/addRow/addText/addSourceSection в ReferenceDetailFragment —
+   делегируют CardBuilder, нет оставшихся when-блоков локализации школы/подкатегории.
+2. Поиск localizeSchool в feature/spells — остались только через UiLocalizer.school().
+3. Поиск localizeSubcategory в ReferenceDetailFragment — удалён, используется UiLocalizer.subcategory().
+
+Результат build/test:
+- ./gradlew assembleDebug — ✅ BUILD SUCCESSFUL
+- ./gradlew testDebugUnitTest — ✅ BUILD SUCCESSFUL (тестовые источники отсутствуют)
+
+Дополнительно:
+- При первой попытке сборки обнаружена синтаксическая ошибка в ContentRepository.kt
+  (лишняя точка в начале строки: `.        objects.features + ...`).
+  Ошибка блокировала компиляцию всех зависимых модулей, поэтому была исправлена.
+  Изменение не связано с логикой плановых пунктов 19–23, но необходимо для прохождения сборки.
+
+Обнаруженные проблемы:
+- Проблем в рамках пунктов 19–23 не обнаружено.
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе:
+  - открытие/закрытие карточек черт вида (SpeciesTraitCard) и подклассов (ClassSubclassCard)
+    с сохранением состояния при смене конфигурации/возврате назад;
+  - корректность локализации школ заклинаний в списке, деталях и сортировке;
+  - корректность отображения подкатегории предметов.
+- Продолжить выполнение оставшихся пунктов 06_low_risk_plan.txt.
+
+
+
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 24, 25, 26, 27, 28, 29
+
+24. Удалить localizeCostUnit из ReferenceDetailFragment
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/local/UiLocalizer.kt
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: в UiLocalizer.costUnit добавлен кейс "ep" → "ЭМ";
+             удалён private fun localizeCostUnit() из ReferenceDetailFragment,
+             использование заменено на UiLocalizer.costUnit().
+    Статус: ✅ выполнено
+
+25. Удалить localizeWeightUnit из ReferenceDetailFragment
+    Файлы:
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: удалён private fun localizeWeightUnit(),
+             использование заменено на UiLocalizer.weightUnit().
+    Статус: ✅ выполнено
+
+26. Перенести RefDetail-only локализаторы в UiLocalizer
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/local/UiLocalizer.kt
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: в UiLocalizer добавлены методы sense, condition, alignment,
+             environment, size, monsterSizeDetail, type, skill с теми же
+             when-блоками и переводами, что были в ReferenceDetailFragment;
+             удалены соответствующие private fun из ReferenceDetailFragment;
+             все вызовы заменены на UiLocalizer.<method>().
+    Статус: ✅ выполнено
+
+27. Вынести dpToPx/resolveColor в core/ui util
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/util/ViewExtensions.kt (новый)
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+      - core/ui/src/main/java/com/herocraft24/core/ui/widget/FilterBottomSheet.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+    Изменение: создан ViewExtensions.kt с fun Int.dp(context) и fun Context.resolveColor();
+             приватные реализации dpToPx/resolveColor в ReferenceDetailFragment
+             делегируют новые extensions;
+             FilterBottomSheet использует Int.dp(requireContext()) и
+             requireContext().resolveColor();
+             SpellListAdapter использует ctx.resolveColor().
+    Статус: ✅ выполнено
+
+28. Унифицировать showNotFound
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt
+      - feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+    Изменение: в CardBuilder добавлен fun showNotFound(context, container, message);
+             ReferenceDetailFragment.showNotFound() делегирует отображение
+             сообщения в CardBuilder.
+    Статус: ✅ выполнено
+
+29. Вынести favorites logic в FavoritesStore
+    Файлы:
+      - core/ui/src/main/java/com/herocraft24/core/ui/data/FavoritesStore.kt (новый)
+      - feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentViewModel.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+    Изменение: создан FavoritesStore(context, prefsName) с load/save/toggle;
+             EquipmentViewModel и SpellsViewModel используют FavoritesStore
+             с сохранением прежних имен SharedPreferences (equip_favs, spells_favs);
+             удалены дублирующие loadFavorites/saveFavorites и работа с prefs.
+    Статус: ✅ выполнено
+
+=======================================
+
+Изменённые файлы (основные):
+- core/ui/src/main/java/com/herocraft24/core/ui/local/UiLocalizer.kt
+- core/ui/src/main/java/com/herocraft24/core/ui/render/CardBuilder.kt
+- core/ui/src/main/java/com/herocraft24/core/ui/util/ViewExtensions.kt
+- core/ui/src/main/java/com/herocraft24/core/ui/data/FavoritesStore.kt
+- feature/reference/src/main/java/com/herocraft24/feature/reference/ReferenceDetailFragment.kt
+- core/ui/src/main/java/com/herocraft24/core/ui/widget/FilterBottomSheet.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+- feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentViewModel.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+
+Изменения API:
+- UiLocalizer: добавлены costUnit("ep" → "ЭМ"), sense(), condition(), alignment(),
+  environment(), size(), monsterSizeDetail(), type(), skill().
+- CardBuilder: добавлен showNotFound(context, container, message).
+- ViewExtensions: новые extensions Int.dp(context) и Context.resolveColor(attrRes).
+- FavoritesStore: новый класс для load/save/toggle избранного.
+- Удалены из ReferenceDetailFragment: localizeCostUnit, localizeWeightUnit,
+  localizeSense, localizeCondition, localizeAlignment, localizeEnvironment,
+  localizeSize, localizeMonsterSizeDetail, localizeType, localizeSkill.
+- Удалены приватные реализации resolveColor из FilterBottomSheet и SpellListAdapter.
+- Удалены дублирующие loadFavorites/saveFavorites из EquipmentViewModel и SpellsViewModel.
+
+Проверки выполнены:
+1. Поиск оставшихся локализаторов в ReferenceDetailFragment — удалены,
+   все вызовы идут через UiLocalizer.
+2. Проверка вызовов dpToPx/resolveColor — используются extensions из core:ui.
+3. Проверка toggleFavorite/loadFavorites — единственная точка правды FavoritesStore.
+
+Результат build/test:
+- ./gradlew assembleDebug — ✅ BUILD SUCCESSFUL
+- ./gradlew testDebugUnitTest — ✅ BUILD SUCCESSFUL (тестовые источники отсутствуют)
+
+Обнаруженные проблемы:
+- Проблем в рамках пунктов 24–29 не обнаружено.
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе:
+  - локализацию монстров (чувства, мировоззрение, среда, размер, тип, навыки);
+  - локализацию веса/стоимости предметов (особенно электрум);
+  - корректность dpToPx/resolveColor в FilterBottomSheet и SpellListAdapter;
+  - работу избранного в equipment/spells (добавление/удаление, сохранение после перезапуска).
+- Продолжить выполнение оставшихся пунктов 06_low_risk_plan.txt.
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+Сейчас можно безопасно продолжать:
+- #30 — замена ручного indexOf-loop в SpellDetailFragment на ItemLinkifier.findRanges
+  (единственный оставшийся пункт из плана; риск средний, требует ручной проверки
+  ссылок на 3–5 заклинаниях).
+
+
+
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+База: 06_low_risk_plan.txt
+
+Выполненные пункты: 30
+
+30. Заменить ручной indexOf-loop в SpellDetailFragment на ItemLinkifier.findRanges
+    Файлы:
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+      - feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+    Изменение:
+      - В SpellsViewModel добавлено свойство conditionBucketsCache на основе
+        ItemLinkifier.BucketsCache(conditionNameToIdMap) для повторного использования
+        построенных бакетов.
+      - В SpellDetailFragment.buildLinkedTextView() удалён ручной while-loop с
+        indexOf по списку условий; вместо него используется
+        ItemLinkifier.findRanges(marker.text, viewModel.conditionBucketsCache, marker.excludedRanges).
+      - Добавлен импорт com.herocraft24.core.ui.util.ItemLinkifier.
+    Статус: ✅ выполнено
+
+=======================================
+
+Изменённые файлы (основные):
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellsViewModel.kt
+
+Изменения API:
+- SpellsViewModel: добавлен публичный val conditionBucketsCache (ItemLinkifier.BucketsCache).
+- SpellDetailFragment: buildLinkedTextView теперь использует ItemLinkifier.findRanges
+  вместо ручного поиска по conditionNameToIdMap.
+
+Проверки выполнены:
+1. Поиск ручных indexOf/while в SpellDetailFragment — ручного линка условий больше нет,
+   используется ItemLinkifier.
+2. Проверка всех вызовов buildLinkedTextView — остаются в описании заклинания
+   и высших уровнях, оба пути проходят через новую реализацию.
+3. Проверка использования viewModel.conditionBucketsCache — используется только
+   в SpellDetailFragment.buildLinkedTextView().
+
+Результат build/test:
+- ./gradlew assembleDebug — ✅ BUILD SUCCESSFUL
+- ./gradlew testDebugUnitTest — ✅ BUILD SUCCESSFUL (тестовые источники отсутствуют)
+
+Обнаруженные проблемы:
+- Проблем в рамках пункта 30 не обнаружено.
+- Следует обратить внимание на рантайм-поведение: ItemLinkifier использует
+  проверку word-boundary, поэтому ссылки на состояния могут появляться/исчезать
+  немного иначе, чем в ручном indexOf. Рекомендуется проверить 3–5 заклинаний
+  с упоминанием состояний (например, fireball, zone_of_truth и др.).
+
+Что осталось сделать:
+- Проверить на устройстве/эмуляторе:
+  - открытие нескольких заклинаний с описанием, содержащим названия состояний;
+  - что условия в тексте заклинаний остаются кликабельными;
+  - что исключённые диапазоны (маркеры {...}) не превращаются в ссылки;
+  - производительность прокрутки длинных описаний.
+- Продолжить выполнение следующих этапов плана.
+
+Следующие безопасные пункты 06_low_risk_plan.txt:
+- Все 30 low-risk пунктов плана выполнены.
+- В 06_low_risk_plan.txt не осталось явных low-risk пунктов. Дальнейшие шаги
+  (если они будут добавлены в план) должны быть оценены по рискам отдельно.
+

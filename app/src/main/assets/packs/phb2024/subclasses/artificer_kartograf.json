@@ -1,0 +1,30 @@
+{
+  "id": "artificer_kartograf","full_id": "phb2024:artificer_kartograf",
+  "type": "subclass",
+  "format_version": 1,
+  "name": {
+    "en": "Cartographer",
+    "ru": "Картограф"
+  },
+  "description": {
+    "en": "",
+    "ru": "Прокладывайте курс через сумятицу\n\nКартографы — исключительные навигаторы и разведчики. Используя свои творения, они могут показывать угрозы, защищать союзников и прокладывать пути в отдалённые места."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "class_id": "phb2024:artificer",
+  "features": [
+    "phb2024:artificer_kartograf_l3_instrumenty_spetsializatsii",
+    "phb2024:artificer_kartograf_l3_zaklinaniya_kartografa",
+    "phb2024:artificer_kartograf_l3_atlas_priklyucheniy",
+    "phb2024:artificer_kartograf_l3_magiya_karty",
+    "phb2024:artificer_kartograf_l5_napravlennaya_tochnost",
+    "phb2024:artificer_kartograf_l9_genialnyy_hod",
+    "phb2024:artificer_kartograf_l15_prevoshodnyy_atlas"
+  ]
+}

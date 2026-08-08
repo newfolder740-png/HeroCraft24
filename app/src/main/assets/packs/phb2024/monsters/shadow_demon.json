@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "shadow_demon",
     "type":  "monster",
     "format_version":  1,
@@ -55,7 +55,7 @@
                    "stealth":  7
                },
     "damage_vulnerabilities":  [
-                                   "к урону Излучение"
+                                   "radiant"
                                ],
     "damage_resistances":  [
                                "bludgeoning",

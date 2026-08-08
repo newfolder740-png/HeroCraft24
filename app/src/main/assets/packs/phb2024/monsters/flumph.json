@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "flumph",
     "type":  "monster",
     "format_version":  1,
@@ -54,7 +54,7 @@
                    "arcana":  4
                },
     "damage_vulnerabilities":  [
-                                   "к урону Психический"
+                                   "psychic"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  null,

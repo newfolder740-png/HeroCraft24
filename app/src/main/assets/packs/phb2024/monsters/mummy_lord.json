@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "mummy_lord",
     "type":  "monster",
     "format_version":  1,
@@ -55,7 +55,7 @@
                    "perception":  9
                },
     "damage_vulnerabilities":  [
-                                   "к урону Огонь"
+                                   "fire"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

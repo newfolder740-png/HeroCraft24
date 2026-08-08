@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "warhorse_skeleton",
     "type":  "monster",
     "format_version":  1,
@@ -48,7 +48,7 @@
     "saving_throws":  null,
     "skills":  null,
     "damage_vulnerabilities":  [
-                                   "к урону Дробящий"
+                                   "bludgeoning"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  [

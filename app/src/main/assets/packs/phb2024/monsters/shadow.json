@@ -50,8 +50,7 @@
                    "stealth":  6
                },
     "damage_vulnerabilities":  [
-                                   "к солнечному свету. Находясь под солнечным светом",
-                                   "Тень совершает с Помехой Тесты К20."
+                                   "radiant"
                                ],
     "damage_resistances":  [
                                "thunder",

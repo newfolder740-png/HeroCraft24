@@ -1,43 +1,43 @@
 {
-  "id": "beast_sense",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Beast Sense",
-    "ru": "Животные чувства"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь согласного Зверя. Пока заклинание действует, вы можете ощущать мироокружение как своими чувствами, так и чувствами этого Зверя. Воспринимая чувствами Зверя, вы пользуетесь преимуществами всех его особых чувств."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "divination",
-  "casting_time": "Действие или Ритуал",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "S"
-  ],
-  "duration": "Концентрация, вплоть до 1 часа",
-  "concentration": true,
-  "ritual": true,
-  "classes": [
-    "phb2024:druid",
-    "phb2024:ranger"
-  ],
-  "subclasses": [
-    "Путь дикого сердца"
-  ]
+    "id":  "beast_sense",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Beast Sense",
+                 "ru":  "Животные чувства"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь согласного Зверя. Пока заклинание действует, вы можете ощущать мироокружение как своими чувствами, так и чувствами этого Зверя. Воспринимая чувствами Зверя, вы пользуетесь преимуществами всех его особых чувств."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "divination",
+    "casting_time":  "Действие или Ритуал",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "S"
+                   ],
+    "duration":  "Концентрация, вплоть до 1 часа",
+    "concentration":  true,
+    "ritual":  true,
+    "classes":  [
+                    "phb2024:druid",
+                    "phb2024:ranger"
+                ],
+    "subclasses":  [
+                       "phb2024:barbarian_dikoe_serdce"
+                   ]
 }

@@ -88,7 +88,18 @@ class MainActivity : AppCompatActivity(), SwipeToggle {
                 val childFm = fragmentInManager.childFragmentManager
                 val nestedHost = childFm.fragments.firstOrNull() as? NavHostFragment
                 val navController = nestedHost?.navController
-                navController?.previousBackStackEntry != null && navController.popBackStack()
+
+                // If the current destination is a class detail on a non-first tab,
+                // let it handle the back press (switch to the first tab).
+                val currentFragment = nestedHost?.childFragmentManager?.fragments?.lastOrNull()
+                val consumedByClass = (currentFragment as? com.herocraft24.feature.reference.ReferenceDetailFragment)
+                    ?.onClassBackPressed() == true
+
+                if (consumedByClass) {
+                    true
+                } else {
+                    navController?.previousBackStackEntry != null && navController.popBackStack()
+                }
             } else {
                 false
             }

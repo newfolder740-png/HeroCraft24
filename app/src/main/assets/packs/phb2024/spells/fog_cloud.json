@@ -1,51 +1,51 @@
 {
-  "id": "fog_cloud",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Fog Cloud",
-    "ru": "Туманное облако"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы создаете Сферу тумана радиусом 20 футов с центром в точке в пределах дистанции. Эта Сфера — Сильно заслонённая местность. Она существует до окончания действия заклинания, или пока её не рассеет сильный ветер (например, созданный заклинанием Порыв ветра)."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 1,
-  "school": "conjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "120 футов"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Концентрация, вплоть до 1 часа",
-  "concentration": true,
-  "ritual": false,
-  "higher_levels": {
-    "en": "",
-    "ru": "Используя ячейку заклинания большего уровня. Радиус Сферы увеличивается на 20 футов за каждый уровень ячейки выше 1-го."
-  },
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:druid",
-    "phb2024:ranger",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Круг земли",
-    "Круг моря"
-  ]
+    "id":  "fog_cloud",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Fog Cloud",
+                 "ru":  "Туманное облако"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы создаете Сферу тумана радиусом 20 футов с центром в точке в пределах дистанции. Эта Сфера — Сильно заслонённая местность. Она существует до окончания действия заклинания, или пока её не рассеет сильный ветер (например, созданный заклинанием Порыв ветра)."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  1,
+    "school":  "conjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "120 футов"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Концентрация, вплоть до 1 часа",
+    "concentration":  true,
+    "ritual":  false,
+    "higher_levels":  {
+                          "en":  "",
+                          "ru":  "Используя ячейку заклинания большего уровня. Радиус Сферы увеличивается на 20 футов за каждый уровень ячейки выше 1-го."
+                      },
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:druid",
+                    "phb2024:ranger",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:druid_zemlya",
+                       "phb2024:druid_more"
+                   ]
 }

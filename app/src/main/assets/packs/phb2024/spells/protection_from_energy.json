@@ -1,50 +1,50 @@
 {
-  "id": "protection_from_energy",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Protection from Energy",
-    "ru": "Защита от энергии"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание активно, согласное существо, которого вы коснулись, получает Сопротивление урону одного типа по вашему выбору: Звук, Кислота, Огонь, Холод или Электричество."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Концентрация, вплоть до 1 часа",
-  "concentration": true,
-  "ritual": false,
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:druid",
-    "phb2024:cleric",
-    "phb2024:ranger",
-    "phb2024:sorcerer"
-  ],
-  "subclasses": [
-    "Клятва возмездия",
-    "Клятва древних",
-    "Клятва славы",
-    "Заводное чародейство"
-  ]
+    "id":  "protection_from_energy",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Protection from Energy",
+                 "ru":  "Защита от энергии"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание активно, согласное существо, которого вы коснулись, получает Сопротивление урону одного типа по вашему выбору: Звук, Кислота, Огонь, Холод или Электричество."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Концентрация, вплоть до 1 часа",
+    "concentration":  true,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:wizard",
+                    "phb2024:druid",
+                    "phb2024:cleric",
+                    "phb2024:ranger",
+                    "phb2024:sorcerer"
+                ],
+    "subclasses":  [
+                       "phb2024:paladin_vozmezdiya",
+                       "phb2024:paladin_drevnikh",
+                       "phb2024:paladin_slavy",
+                       "phb2024:sorcerer_clockwork"
+                   ]
 }

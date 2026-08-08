@@ -1,4 +1,4 @@
-{
+﻿{
     "id":  "twig_blight",
     "type":  "monster",
     "format_version":  1,
@@ -50,7 +50,7 @@
                    "stealth":  4
                },
     "damage_vulnerabilities":  [
-                                   "к урону Огонь"
+                                   "fire"
                                ],
     "damage_resistances":  null,
     "damage_immunities":  null,

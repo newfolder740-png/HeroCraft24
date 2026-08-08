@@ -1,45 +1,45 @@
 {
-  "id": "aura_of_vitality",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Aura of Vitality",
-    "ru": "Аура живучести"
-  },
-  "description": {
-    "en": "",
-    "ru": "Пока заклинание действует, вы излучаете ауру Эманацией радиусом 30 футов. Когда вы создаёте этот эффект и в начале каждого вашего хода, пока аура действует, вы можете восстановить 2к6 Хитов одному находящемуся в ней существу."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "abjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "На себя?"
-  },
-  "components": [
-    "V"
-  ],
-  "duration": "Концентрация, вплоть до 1 минуты",
-  "concentration": true,
-  "ritual": false,
-  "classes": [
-    "phb2024:druid",
-    "phb2024:cleric",
-    "phb2024:paladin"
-  ],
-  "subclasses": [
-    "Боевой кузнец",
-    "Чародейство чаропламени"
-  ]
+    "id":  "aura_of_vitality",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Aura of Vitality",
+                 "ru":  "Аура живучести"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Пока заклинание действует, вы излучаете ауру Эманацией радиусом 30 футов. Когда вы создаёте этот эффект и в начале каждого вашего хода, пока аура действует, вы можете восстановить 2к6 Хитов одному находящемуся в ней существу."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "abjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "На себя?"
+              },
+    "components":  [
+                       "V"
+                   ],
+    "duration":  "Концентрация, вплоть до 1 минуты",
+    "concentration":  true,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:druid",
+                    "phb2024:cleric",
+                    "phb2024:paladin"
+                ],
+    "subclasses":  [
+                       "phb2024:artificer_boevoy_kuznets",
+                       "phb2024:sorcerer_spellfire"
+                   ]
 }

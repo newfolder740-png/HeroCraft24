@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 class ReferenceViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = ContentRepository.get(application)
+    // Must be initialized before the init block because preloadClasses()
+    // launches a coroutine that may call synchronized(lock) immediately.
+    private val lock = Any()
 
     init {
         repository.initialize()
@@ -103,8 +106,8 @@ class ReferenceViewModel(application: Application) : AndroidViewModel(applicatio
     private var _combinedNameMap: Map<String, String>? = null
     @Volatile
     private var _combinedBucketsCache: ItemLinkifier.BucketsCache? = null
-
-    private val lock = Any()
+    @Volatile
+    private var _conditionBucketsCache: ItemLinkifier.BucketsCache? = null
 
     private inline fun buildNameMap(idsProvider: () -> List<String>): Map<String, String> {
         val map = mutableMapOf<String, String>()
@@ -161,6 +164,15 @@ class ReferenceViewModel(application: Application) : AndroidViewModel(applicatio
         synchronized(lock) {
             _combinedBucketsCache?.let { return it }
             return ItemLinkifier.BucketsCache(getCombinedNameMap()).also { _combinedBucketsCache = it }
+        }
+    }
+
+    /** Pre-built buckets cache for condition names only. */
+    fun getConditionBucketsCache(): ItemLinkifier.BucketsCache {
+        _conditionBucketsCache?.let { return it }
+        synchronized(lock) {
+            _conditionBucketsCache?.let { return it }
+            return ItemLinkifier.BucketsCache(getConditionNameMap()).also { _conditionBucketsCache = it }
         }
     }
 }

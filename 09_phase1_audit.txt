@@ -1,0 +1,88 @@
+=======================================
+Проект: HeroCraft24
+Дата: 2026-08-08
+Фаза: Phase 1
+=======================================
+
+A) Закрытые проблемы
+---------------------
+1. SpellDetailFragment переведён на CardBuilder:
+   - удалены приватные addSection/addRow/addText;
+   - все секции теперь используют com.herocraft24.core.ui.render.CardBuilder;
+   - секция источника заменена на CardBuilder.addSourceSection();
+   - «заклинание не найдено» заменено на CardBuilder.showNotFound() с сохранением toolbar title.
+2. ConditionReferenceFragment переведён на CardBuilder:
+   - приватный addSection удалён;
+   - hardcoded «Состояние не найдено» заменено на CardBuilder.showNotFound();
+   - toolbar title по-прежнему устанавливается фрагментом, не троган.
+3. formatAmount() вынесен в общий util:
+   - новый файл: core/ui/src/main/java/com/herocraft24/core/ui/util/FormatUtils.kt;
+   - EquipmentViewModel и EquipmentDetailFragment теперь используют FormatUtils.formatAmount();
+   - дублирующие приватные методы удалены.
+4. localizeComponent вынесен в shared helper:
+   - новый файл: feature/spells/src/main/java/com/herocraft24/feature/spells/util/SpellComponentLocalizer.kt;
+   - SpellDetailFragment и SpellListAdapter теперь используют единый SpellComponentLocalizer.localizeComponent();
+   - маппинг V/S/M вынесен из фрагментов/адаптера.
+
+B) Оставшиеся проблемы
+-----------------------
+1. ConditionReferenceFragment.buildLinkedTextView() по-прежнему использует ручной
+   indexOf/while, а не ItemLinkifier.findRanges(). Это дублирует уже удалённую
+   логику SpellDetailFragment.
+2. В EquipmentViewModel и EquipmentDetailFragment остаётся дублирование
+   localizeCostUnit/localizeWeightUnit с расхождениями («сер/мед» vs «СМ/ММ»).
+3. SpellListAdapter.schoolColor() и EquipmentListAdapter цвета редкости
+   по-прежнему используют Color.parseColor() с хардкод-hex.
+4. CardBuilder.showNotFound() не устанавливает toolbar title — это остаётся
+   на стороне фрагмента; легко забыть при новых экранах.
+
+C) Новые риски
+--------------
+1. SpellComponentLocalizer возвращает полные строки «Вербальный (В)» и т.п.
+   вместо однобуквенных сокращений. В SpellListAdapter это увеличит длину бейджей
+   компонентов; визуально бейдж может стать шире, чем раньше.
+2. Переход SpellDetailFragment на CardBuilder не изменил порядок секций,
+   но изменил внутреннее оформление «не найдено» (CardBuilder.showNotFound()
+   центрирует текст и добавляет отступы). Это может не совпадать с предыдущим UI.
+3. SpellComponentLocalizer размещён в feature:spells, поэтому другие фичи
+   (например, feature:reference) не могут им воспользоваться. Это ожидаемо,
+   т.к. компоненты заклинаний им не нужны, но стоит учитывать при расширении.
+4. FormatUtils.formatAmount() — публичный top-level object в core:ui;
+   любой модуль, зависящий от core:ui, теперь может его использовать, что хорошо,
+   но появляется соблазн поместить туда другие UI-форматтеры без обдуманного дизайна.
+
+D) Что оставить как есть
+-------------------------
+1. buildLinkedTextView() в SpellDetailFragment оставлен без изменений
+   (ограничение задачи: «НЕ меняй buildLinkedTextView логику»).
+2. Toolbar title управляется фрагментами, CardBuilder не трогает его.
+3. Расхождение в localizeCostUnit между EquipmentViewModel и EquipmentDetailFragment
+   не трогалось, т.к. задача касалась только formatAmount().
+4. Hardcoded школьные цвета и цвета редкости — вне scope текущего рефакторинга.
+
+E) Следующая очередь работ
+---------------------------
+1. Перевести ConditionReferenceFragment.buildLinkedTextView() на ItemLinkifier.findRanges()
+   с использованием BucketsCache/карты имен из ViewModel.
+2. Унифицировать localizeCostUnit/localizeWeightUnit в Equipment
+   (либо через UiLocalizer, либо общий helper) и свести расхождения «сер/мед» vs «СМ/ММ».
+3. Заменить хардкод-цвета в SpellListAdapter/EquipmentListAdapter на theme-attr
+   или отдельный ColorMapper.
+4. Добавить строковые ресурсы для hardcoded title «Подклассы» в SpellDetailFragment
+   и «Описание»/«Эффекты» в ConditionReferenceFragment.
+5. Запустить lint и устранить оставшиеся non-deprecated warnings.
+
+=======================================
+Проверка сборки:
+./gradlew :app:assembleDebug — BUILD SUCCESSFUL
+=======================================
+Изменённые/добавленные файлы:
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellDetailFragment.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/ConditionReferenceFragment.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/SpellListAdapter.kt
+- feature/spells/src/main/java/com/herocraft24/feature/spells/util/SpellComponentLocalizer.kt
+- feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentViewModel.kt
+- feature/equipment/src/main/java/com/herocraft24/feature/equipment/EquipmentDetailFragment.kt
+- core/ui/src/main/java/com/herocraft24/core/ui/util/FormatUtils.kt
+- 09_phase1_audit.txt (этот файл)
+=======================================
