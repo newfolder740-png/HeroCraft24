@@ -13,7 +13,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.herocraft24.core.model.CreatureSize
+import com.herocraft24.core.model.CreatureType
+import com.herocraft24.core.model.ItemCategory
+import com.herocraft24.core.model.ItemRarity
 import com.herocraft24.core.model.ReferenceListItem
+import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.widget.FilterBottomSheet
 import com.herocraft24.core.ui.widget.FilterGroup
 import com.herocraft24.core.ui.widget.FilterOption
@@ -131,7 +136,7 @@ class ReferenceListFragment : Fragment() {
         }
 
         // System back: if search/filters are active, clear them instead of leaving the tab.
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (hasActiveSearchOrFilters()) {
                     clearSearchAndFilters()
@@ -349,7 +354,12 @@ class ReferenceListFragment : Fragment() {
         }
 
         if (currentFilterCategories.isNotEmpty()) {
-            items = items.filter { it.category in currentFilterCategories }
+            if (categoryKey == "items") {
+                val selectedCategories = currentFilterCategories.map { ItemCategory.fromValue(it) }.toSet()
+                items = items.filter { ItemCategory.fromValue(it.category) in selectedCategories }
+            } else {
+                items = items.filter { it.category in currentFilterCategories }
+            }
         }
 
         if (currentFilterArmorTypes.isNotEmpty()) {
@@ -357,7 +367,8 @@ class ReferenceListFragment : Fragment() {
         }
 
         if (currentFilterRarities.isNotEmpty()) {
-            items = items.filter { it.rarity in currentFilterRarities }
+            val selectedRarities = currentFilterRarities.map { ItemRarity.fromValue(it) }.toSet()
+            items = items.filter { ItemRarity.fromValue(it.rarity) in selectedRarities }
         }
 
         if (currentFilterSources.isNotEmpty()) {
@@ -376,16 +387,17 @@ class ReferenceListFragment : Fragment() {
                 items = items.filter { item ->
                     currentMonsterSizes.any { sizeFilter ->
                         when (sizeFilter) {
-                            "swarm_small" -> item.isSwarm && item.size.lowercase() == "small"
-                            "swarm_medium" -> item.isSwarm && item.size.lowercase() == "medium"
-                            "swarm_large" -> item.isSwarm && item.size.lowercase() == "large"
-                            else -> !item.isSwarm && item.size.lowercase() == sizeFilter
+                            "swarm_small" -> item.isSwarm && CreatureSize.fromValue(item.size) == CreatureSize.SMALL
+                            "swarm_medium" -> item.isSwarm && CreatureSize.fromValue(item.size) == CreatureSize.MEDIUM
+                            "swarm_large" -> item.isSwarm && CreatureSize.fromValue(item.size) == CreatureSize.LARGE
+                            else -> !item.isSwarm && CreatureSize.fromValue(item.size) == CreatureSize.fromValue(sizeFilter)
                         }
                     }
                 }
             }
             if (currentMonsterTypes.isNotEmpty()) {
-                items = items.filter { it.creatureType.lowercase() in currentMonsterTypes }
+                val selectedTypes = currentMonsterTypes.map { CreatureType.fromValue(it) }.toSet()
+                items = items.filter { CreatureType.fromValue(it.creatureType) in selectedTypes }
             }
             if (currentMonsterChallenge.isNotEmpty()) {
                 items = items.filter { item ->
@@ -496,7 +508,7 @@ class ReferenceListFragment : Fragment() {
         if (categoryKey == "items") {
             groups.add(FilterGroup("category", "Категория", listOf(
                 FilterOption("weapon", "Оружие"),
-                FilterOption("armor", "Броня"),
+                FilterOption("armor", "Доспех"),
                 FilterOption("shield", "Щит"),
                 FilterOption("adventuring_gear", "Снаряжение приключений"),
                 FilterOption("pack", "Набор"),
@@ -524,7 +536,7 @@ class ReferenceListFragment : Fragment() {
             groups.add(FilterGroup("rarity", "Редкость", listOf(
                 FilterOption("non-magic", "Немагический"),
                 FilterOption("common", "Обычный"),
-                FilterOption("uncommon", "Нестандартный"),
+                FilterOption("uncommon", "Необычный"),
                 FilterOption("rare", "Редкий"),
                 FilterOption("very-rare", "Очень редкий"),
                 FilterOption("legendary", "Легендарный"),
@@ -686,13 +698,13 @@ class ReferenceListFragment : Fragment() {
         else -> env.replaceFirstChar { it.uppercase() }
     }
 
-    private fun sizeOrder(size: String): Int = when (size.lowercase()) {
-        "tiny" -> 0
-        "small" -> 1
-        "medium" -> 2
-        "large" -> 3
-        "huge" -> 4
-        "gargantuan" -> 5
+    private fun sizeOrder(size: String): Int = when (CreatureSize.fromValue(size)) {
+        CreatureSize.TINY -> 0
+        CreatureSize.SMALL -> 1
+        CreatureSize.MEDIUM -> 2
+        CreatureSize.LARGE -> 3
+        CreatureSize.HUGE -> 4
+        CreatureSize.GARGANTUAN -> 5
         else -> 6
     }
 
@@ -734,70 +746,13 @@ class ReferenceListFragment : Fragment() {
         }
     }
     
-    private fun localizeSchool(school: String?): String = when (school) {
-        "abjuration" -> "Ограждение"
-        "conjuration" -> "Призыв"
-        "divination" -> "Прорицание"
-        "enchantment" -> "Очарование"
-        "evocation" -> "Воплощение"
-        "illusion" -> "Иллюзия"
-        "necromancy" -> "Некромантия"
-        "transmutation" -> "Преобразование"
-        else -> school ?: ""
-    }
+    private fun localizeSchool(school: String?): String = UiLocalizer.school(school)
 
-    private fun localizeCategory(category: String?): String = when (category) {
-        "origin" -> "Черта происхождения"
-        "universal" -> "Универсальная черта"
-        "fighting_style" -> "Боевой стиль"
-        "epic_boon" -> "Эпический дар"
-        "dragonmark" -> "Драконья метка"
-        "dark_gift" -> "Тёмный дар"
-        "weapon" -> "Оружие"
-        "armor" -> "Броня"
-        "shield" -> "Щит"
-        "adventuring_gear" -> "Снаряжение приключений"
-        "pack" -> "Набор"
-        "tool" -> "Ремесленный инструмент"
-        "instrument" -> "Инструмент"
-        "focus" -> "Фокусировка"
-        "wand" -> "Волшебная палочка"
-        "rod" -> "Жезл"
-        "potion" -> "Зелье"
-        "ring" -> "Кольцо"
-        "staff" -> "Посох"
-        "scroll" -> "Свиток"
-        "wondrous_item" -> "Чудесная вещь"
-        "ammunition" -> "Боеприпасы"
-        "gear" -> "Снаряжение"
-        else -> category?.replaceFirstChar { it.uppercase() } ?: ""
-    }
+    private fun localizeCategory(category: String?): String = UiLocalizer.category(category)
 
-    private fun localizeSubcategory(subcategory: String): String = when (subcategory.lowercase()) {
-        "simple_melee" -> "Простое рукопашное"
-        "martial_melee" -> "Воинское рукопашное"
-        "simple_ranged" -> "Простое дальнобойное"
-        "martial_ranged" -> "Воинское дальнобойное"
-        "ammunition" -> "Боеприпас"
-        "light_armor" -> "Лёгкий"
-        "medium_armor" -> "Средний"
-        "heavy_armor" -> "Тяжёлый"
-        "shield" -> "Щит"
-        "magic_item" -> "Волшебный предмет"
-        else -> subcategory.replaceFirstChar { it.uppercase() }
-    }
+    private fun localizeSubcategory(subcategory: String): String = UiLocalizer.subcategory(subcategory)
 
-    private fun localizeRarity(rarity: String?): String = when (rarity?.lowercase()) {
-        null, "", "non-magic", "nonmagic" -> "Немагический"
-        "common" -> "Обычный"
-        "uncommon" -> "Нестандартный"
-        "rare" -> "Редкий"
-        "very-rare", "veryrare" -> "Очень редкий"
-        "legendary" -> "Легендарный"
-        "artifact" -> "Артефакт"
-        "varies" -> "Редкость варьируется"
-        else -> rarity.replaceFirstChar { it.uppercase() }
-    }
+    private fun localizeRarity(rarity: String?): String = UiLocalizer.rarity(rarity)
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

@@ -2,7 +2,11 @@ package com.herocraft24.core.ui.util
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.herocraft24.core.model.ItemRarity
+import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.ui.R
+
+fun Context.schoolColor(school: SpellSchool): Int = schoolColor(school.raw)
 
 fun Context.schoolColor(school: String): Int = when (school) {
     "abjuration" -> ContextCompat.getColor(this, R.color.school_abjuration)
@@ -26,3 +30,5 @@ fun Context.rarityColor(rarity: String): Int = when (rarity) {
     "artifact" -> ContextCompat.getColor(this, R.color.rarity_artifact)
     else -> ContextCompat.getColor(this, R.color.rarity_default)
 }
+
+fun Context.rarityColor(rarity: ItemRarity): Int = rarityColor(rarity.raw)

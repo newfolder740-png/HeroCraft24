@@ -3,6 +3,7 @@ package com.herocraft24.feature.equipment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.herocraft24.core.model.ItemRarity
 import com.herocraft24.core.model.ItemSummary
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.rarityColor
@@ -36,7 +37,7 @@ class EquipmentListAdapter(
         val item = items[pos]
         h.b.itemName.text = item.name
         h.b.itemSubtitle.text = buildSubtitle(item)
-        h.b.rarityColor.setBackgroundColor(h.b.rarityColor.context.rarityColor(item.rarity))
+        h.b.rarityColor.setBackgroundColor(h.b.rarityColor.context.rarityColor(ItemRarity.fromValue(item.rarity)))
         h.b.root.setOnClickListener { onItemClick(item) }
         val isFav = item.fullId in favoriteIds
         h.b.favoriteIcon.setImageResource(

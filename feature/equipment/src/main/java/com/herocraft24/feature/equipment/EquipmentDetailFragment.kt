@@ -208,16 +208,8 @@ class EquipmentDetailFragment : Fragment() {
         return spannable
     }
 
-    private fun formatCost(cost: Cost): String {
-        val unit = when (cost.unit.lowercase()) {
-            "gp" -> "ЗМ"
-            "sp" -> "СМ"
-            "cp" -> "ММ"
-            "pp" -> "ПМ"
-            else -> cost.unit.uppercase()
-        }
-        return "${FormatUtils.formatAmount(cost.amount)} $unit"
-    }
+    private fun formatCost(cost: Cost): String =
+        "${FormatUtils.formatAmount(cost.amount)} ${UiLocalizer.costUnit(cost.unit)}"
 
     private fun formatWeight(weight: Weight): String =
         "${FormatUtils.formatAmount(weight.amount)} ${UiLocalizer.weightUnit(weight.unit)}"

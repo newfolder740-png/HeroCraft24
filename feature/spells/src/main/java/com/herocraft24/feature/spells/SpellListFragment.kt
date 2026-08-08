@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.ui.widget.FilterBottomSheet
 import com.herocraft24.core.ui.widget.FilterGroup
 import com.herocraft24.core.ui.widget.FilterOption
@@ -60,7 +61,7 @@ class SpellListFragment : Fragment() {
         binding.searchBar.setOnQueryListener { query -> viewModel.setSearchQuery(query) }
 
         // System back: if search/filters are active, clear them instead of leaving the tab.
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (viewModel.hasActiveSearchOrFilters()) {
                     viewModel.clearSearchAndFilters()
@@ -162,7 +163,7 @@ class SpellListFragment : Fragment() {
             "levels" to currentFilters.levels.map { it.toString() }.toSet(),
             "classes" to currentFilters.classes,
             "subclasses" to currentFilters.subclasses,
-            "schools" to currentFilters.schools,
+            "schools" to currentFilters.schools.map { it.raw }.toSet(),
             "ritual" to (if (currentFilters.ritual != null) setOf(if (currentFilters.ritual) "yes" else "no") else emptySet()),
             "concentration" to (if (currentFilters.concentration != null) setOf(if (currentFilters.concentration) "yes" else "no") else emptySet()),
             "components" to currentFilters.components,
@@ -267,10 +268,14 @@ class SpellListFragment : Fragment() {
             "monk" to listOf("Воин тени", "Воин стихий"),
             "rogue" to listOf("Мистический ловкач", "Наследник троицы")
         )
+        val nameToId = viewModel.subclassNameToIdMap
         for ((cls, subs) in classSubclasses) {
             opts.add(FilterOption(cls, classNameRu(cls), isParent = true))
             for (sub in subs) {
-                opts.add(FilterOption(sub, sub, indent = 1, parentKey = cls))
+                val fullId = nameToId[sub]
+                if (fullId != null) {
+                    opts.add(FilterOption(fullId, sub, indent = 1, parentKey = cls))
+                }
             }
         }
         return opts
@@ -297,7 +302,7 @@ class SpellListFragment : Fragment() {
         val levels = (result["levels"] ?: emptySet()).mapNotNull { it.toIntOrNull() }.toSet()
         val classes = result["classes"] ?: emptySet()
         val subclasses = result["subclasses"] ?: emptySet()
-        val schools = result["schools"] ?: emptySet()
+        val schools = (result["schools"] ?: emptySet()).map { SpellSchool.fromValue(it) }.toSet()
         val ritualSet = result["ritual"] ?: emptySet()
         val ritual = when {
             "yes" in ritualSet -> true

@@ -1046,33 +1046,6 @@ class ReferenceDetailFragment : Fragment() {
         return spinner
     }
 
-    private fun localizeCategory(category: String?): String = when (category) {
-        "origin" -> "Черта происхождения"
-        "universal" -> "Универсальная черта"
-        "fighting_style" -> "Боевой стиль"
-        "epic_boon" -> "Эпический дар"
-        "dragonmark" -> "Драконья метка"
-        "dark_gift" -> "Тёмный дар"
-        "weapon" -> "Оружие"
-        "armor" -> "Броня"
-        "shield" -> "Щит"
-        "adventuring_gear" -> "Снаряжение приключений"
-        "pack" -> "Набор"
-        "tool" -> "Ремесленный инструмент"
-        "instrument" -> "Инструмент"
-        "focus" -> "Фокусировка"
-        "wand" -> "Волшебная палочка"
-        "rod" -> "Жезл"
-        "potion" -> "Зелье"
-        "ring" -> "Кольцо"
-        "staff" -> "Посох"
-        "scroll" -> "Свиток"
-        "wondrous_item" -> "Чудесная вещь"
-        "ammunition" -> "Боеприпасы"
-        "gear" -> "Снаряжение"
-        else -> category?.replaceFirstChar { it.uppercase() } ?: ""
-    }
-
     private fun localizeItemRarity(rarity: String?): String = UiLocalizer.rarity(rarity)
 
     private fun localizeDamageType(type: String): String = UiLocalizer.damageType(type)
@@ -1305,7 +1278,7 @@ class ReferenceDetailFragment : Fragment() {
         val obj = viewModel.getItem(objectId) ?: return showNotFound()
         binding.toolbar.title = obj.name.get()
         addSection(getString(R.string.reference_quick_info)) {
-            addRow(getString(R.string.category_label), localizeCategory(obj.category))
+            addRow(getString(R.string.category_label), UiLocalizer.category(obj.category))
             if (obj.category !in magicItemCategories) {
                 if (obj.subcategory.isNotEmpty()) {
                     addRow(getString(R.string.subcategory_label), obj.subcategory.joinToString(", ") { UiLocalizer.subcategory(it) })
@@ -1410,7 +1383,7 @@ class ReferenceDetailFragment : Fragment() {
         val obj = viewModel.getFeat(objectId) ?: return showNotFound()
         binding.toolbar.title = obj.name.get()
         addSection(getString(R.string.reference_quick_info)) {
-            addRow(getString(R.string.category_label), localizeCategory(obj.category))
+            addRow(getString(R.string.category_label), UiLocalizer.category(obj.category))
             val prereq = obj.prerequisite
             if (prereq != null) addRow("Требование", prereq.get())
             if (obj.ability_score_increase.isNotEmpty()) {

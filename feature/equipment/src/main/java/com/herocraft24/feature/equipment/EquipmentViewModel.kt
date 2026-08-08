@@ -4,16 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.model.ItemCategory
+import com.herocraft24.core.model.ItemRarity
 import com.herocraft24.core.model.ItemSummary
 import com.herocraft24.core.model.Spell
 import com.herocraft24.core.ui.data.FavoritesStore
+import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.FormatUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class EquipmentFilters(
-    val categories: Set<String> = emptySet(),
-    val rarities: Set<String> = emptySet(),
+    val categories: Set<ItemCategory> = emptySet(),
+    val rarities: Set<ItemRarity> = emptySet(),
     val weaponCategories: Set<String> = emptySet(),
     val armorCategories: Set<String> = emptySet(),
     val allSubcategories: Set<String> = emptySet(),
@@ -60,8 +63,8 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
                 subcategory = item?.subcategory ?: emptyList<String>(),
                 rarity = entry.rarity ?: "non-magic",
                 magic = item?.magic ?: false,
-                cost = item?.cost?.let { "${FormatUtils.formatAmount(it.amount)} ${localizeCostUnit(it.unit)}" },
-                weight = item?.weight?.let { "${FormatUtils.formatAmount(it.amount)} ${localizeWeightUnit(it.unit)}" },
+                cost = item?.cost?.let { "${FormatUtils.formatAmount(it.amount)} ${UiLocalizer.costUnit(it.unit)}" },
+                weight = item?.weight?.let { "${FormatUtils.formatAmount(it.amount)} ${UiLocalizer.weightUnit(it.unit)}" },
                 tags = entry.tags
             )
         }
@@ -153,8 +156,8 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
 
-        if (f.categories.isNotEmpty()) result = result.filter { it.category in f.categories || it.subcategory.any { it in f.categories } }
-        if (f.rarities.isNotEmpty()) result = result.filter { it.rarity in f.rarities }
+        if (f.categories.isNotEmpty()) result = result.filter { ItemCategory.fromValue(it.category) in f.categories || it.subcategory.any { ItemCategory.fromValue(it) in f.categories } }
+        if (f.rarities.isNotEmpty()) result = result.filter { ItemRarity.fromValue(it.rarity) in f.rarities }
         if (f.weaponCategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.weaponCategories } }
         if (f.armorCategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.armorCategories } || (it.category == "shield" && "shield" in f.armorCategories) }
         if (f.allSubcategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.allSubcategories } }
@@ -166,69 +169,21 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
             EquipmentSortMode.NAME_DESC -> result.sortedByDescending { it.name.lowercase() }
             EquipmentSortMode.RARITY_ASC -> result.sortedBy { rarityOrder(it.rarity) }
             EquipmentSortMode.RARITY_DESC -> result.sortedByDescending { rarityOrder(it.rarity) }
-            EquipmentSortMode.CATEGORY_ASC -> result.sortedBy { localizeCategory(it.category) }
+            EquipmentSortMode.CATEGORY_ASC -> result.sortedBy { UiLocalizer.category(it.category) }
         }
 
         _filteredItems.value = result
     }
 
-    private fun localizeRarity(rarity: String): String = when (rarity.lowercase()) {
-        "non-magic", "nonmagic" -> "Немагический"
-        "common" -> "Обычный"
-        "uncommon" -> "Необычный"
-        "rare" -> "Редкий"
-        "very-rare", "veryrare" -> "Очень редкий"
-        "legendary" -> "Легендарный"
-        "artifact" -> "Артефакт"
-        "varies" -> "Варьируется"
-        else -> rarity.replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeCategory(category: String): String = when (category) {
-        "weapon" -> "Оружие"
-        "armor" -> "Доспех"
-        "shield" -> "Щит"
-        "adventuring_gear" -> "Снаряжение приключений"
-        "pack" -> "Набор"
-        "tool" -> "Ремесленный инструмент"
-        "instrument" -> "Инструмент"
-        "focus" -> "Фокусировка"
-        "wand" -> "Волшебная палочка"
-        "rod" -> "Жезл"
-        "potion" -> "Зелье"
-        "ring" -> "Кольцо"
-        "staff" -> "Посох"
-        "scroll" -> "Свиток"
-        "wondrous_item" -> "Чудесная вещь"
-        "ammunition" -> "Боеприпасы"
-        "gear" -> "Снаряжение"
-        else -> category.replaceFirstChar { it.uppercase() }
-    }
-
-    private fun localizeCostUnit(unit: String): String = when (unit.lowercase()) {
-        "gp" -> "ЗМ"
-        "sp" -> "сер"
-        "cp" -> "мед"
-        "pp" -> "ПМ"
-        else -> unit
-    }
-
-    private fun localizeWeightUnit(unit: String): String = when (unit.lowercase()) {
-        "lb" -> "фнт."
-        "kg" -> "кг"
-        "oz" -> "унц."
-        else -> unit
-    }
-
-    private fun rarityOrder(r: String): Int = when (r.lowercase()) {
-        "non-magic", "nonmagic" -> 1
-        "common" -> 2
-        "uncommon" -> 3
-        "rare" -> 4
-        "very-rare", "veryrare" -> 5
-        "legendary" -> 6
-        "artifact" -> 7
-        "varies" -> 8
+    private fun rarityOrder(r: String): Int = when (ItemRarity.fromValue(r)) {
+        ItemRarity.NON_MAGIC -> 1
+        ItemRarity.COMMON -> 2
+        ItemRarity.UNCOMMON -> 3
+        ItemRarity.RARE -> 4
+        ItemRarity.VERY_RARE, ItemRarity.VERY_RARE_ALT -> 5
+        ItemRarity.LEGENDARY -> 6
+        ItemRarity.ARTIFACT -> 7
+        ItemRarity.VARIES -> 8
         else -> 99
     }
 }

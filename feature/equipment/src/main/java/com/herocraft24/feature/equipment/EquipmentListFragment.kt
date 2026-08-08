@@ -12,6 +12,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.herocraft24.core.model.ItemCategory
+import com.herocraft24.core.model.ItemRarity
 import com.herocraft24.core.ui.widget.FilterBottomSheet
 import com.herocraft24.core.ui.widget.FilterGroup
 import com.herocraft24.core.ui.widget.FilterOption
@@ -59,7 +61,7 @@ class EquipmentListFragment : Fragment() {
         binding.searchBar.setOnQueryListener { vm.setSearchQuery(it) }
 
         // System back: if search/filters are active, clear them instead of leaving the tab.
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (vm.hasActiveSearchOrFilters()) {
                     vm.clearSearchAndFilters()
@@ -147,8 +149,8 @@ class EquipmentListFragment : Fragment() {
             ))
         )
         val selectedMap = mutableMapOf<String, Set<String>>(
-            "categories" to currentFilters.categories,
-            "rarities" to currentFilters.rarities,
+            "categories" to currentFilters.categories.map { it.raw }.toSet(),
+            "rarities" to currentFilters.rarities.map { it.raw }.toSet(),
             "weapon_categories" to currentFilters.weaponCategories,
             "armor_categories" to currentFilters.armorCategories
         )
@@ -221,8 +223,8 @@ class EquipmentListFragment : Fragment() {
 
     private fun filtersFromMap(result: Map<String, Set<String>>): EquipmentFilters {
         return EquipmentFilters(
-            categories = result["categories"] ?: emptySet(),
-            rarities = result["rarities"] ?: emptySet(),
+            categories = (result["categories"] ?: emptySet()).map { ItemCategory.fromValue(it) }.toSet(),
+            rarities = (result["rarities"] ?: emptySet()).map { ItemRarity.fromValue(it) }.toSet(),
             weaponCategories = result["weapon_categories"] ?: emptySet(),
             armorCategories = result["armor_categories"] ?: emptySet(),
             allSubcategories = result["all_subcategories"] ?: emptySet(),

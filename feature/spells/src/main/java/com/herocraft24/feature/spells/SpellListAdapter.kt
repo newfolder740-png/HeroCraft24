@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.resolveColor
@@ -42,7 +43,7 @@ class SpellListAdapter(
         val spell = items[position]
         holder.binding.spellName.text = spell.name
         holder.binding.spellSubtitle.text = buildSubtitle(spell, holder.itemView.context)
-        holder.binding.schoolColor.setBackgroundColor(holder.itemView.context.schoolColor(spell.school))
+        holder.binding.schoolColor.setBackgroundColor(holder.itemView.context.schoolColor(SpellSchool.fromValue(spell.school)))
         holder.binding.root.setOnClickListener { onItemClick(spell) }
 
         val isFav = spell.fullId in favoriteIds

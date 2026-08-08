@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Spell
+import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.data.FavoritesStore
 import com.herocraft24.core.ui.local.UiLocalizer
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 data class SpellFilters(
     val levels: Set<Int> = emptySet(),
-    val schools: Set<String> = emptySet(),
+    val schools: Set<SpellSchool> = emptySet(),
     val classes: Set<String> = emptySet(),
     val subclasses: Set<String> = emptySet(),
     val concentration: Boolean? = null,
@@ -135,6 +136,17 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
         map
     }
 
+    /** Maps a subclass's localised name to its full id (e.g. "Круг земли" -> "phb2024:druid_zemlya"). */
+    val subclassNameToIdMap: Map<String, String> by lazy {
+        val map = mutableMapOf<String, String>()
+        for (subclassId in repository.getSubclassIds()) {
+            val subclass = repository.getSubclass(subclassId) ?: continue
+            val name = subclass.name.get().takeIf { it.isNotBlank() } ?: continue
+            map[name] = subclassId
+        }
+        map
+    }
+
     /** Localised spelling -> condition full id, excluding the generic "Состояние"/Condition overview article. */
     val conditionNameToIdMap: Map<String, String> by lazy {
         val map = mutableMapOf<String, String>()
@@ -173,7 +185,7 @@ class SpellsViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         if (filters.levels.isNotEmpty()) result = result.filter { it.level in filters.levels }
-        if (filters.schools.isNotEmpty()) result = result.filter { it.school in filters.schools }
+        if (filters.schools.isNotEmpty()) result = result.filter { SpellSchool.fromValue(it.school) in filters.schools }
         if (filters.classes.isNotEmpty()) result = result.filter { spell ->
             spell.classes.any { it.removePrefix("phb2024:") in filters.classes }
         }

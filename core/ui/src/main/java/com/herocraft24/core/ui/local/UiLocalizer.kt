@@ -8,20 +8,26 @@ package com.herocraft24.core.ui.local
 object UiLocalizer {
 
     // ─── Schools (люби Meyer) ────────────────────────────────────────
-    fun school(value: String): String = when (value.lowercase()) {
+    fun school(value: String?): String = when (value?.lowercase()) {
         "abjuration" -> "Ограждение"
-        "conjuration" -> "Вызов"
+        "conjuration" -> "Призыв"
         "divination" -> "Прорицание"
         "enchantment" -> "Очарование"
         "evocation" -> "Воплощение"
         "illusion" -> "Иллюзия"
         "necromancy" -> "Некромантия"
         "transmutation" -> "Преобразование"
-        else -> value.replaceFirstChar { it.uppercase() }
+        else -> value?.replaceFirstChar { it.uppercase() } ?: ""
     }
 
     // ─── Item categories ────────────────────────────────────────────
     fun category(value: String?): String = when (value) {
+        "origin" -> "Черта происхождения"
+        "universal" -> "Универсальная черта"
+        "fighting_style" -> "Боевой стиль"
+        "epic_boon" -> "Эпический дар"
+        "dragonmark" -> "Драконья метка"
+        "dark_gift" -> "Тёмный дар"
         "weapon" -> "Оружие"
         "armor" -> "Доспех"
         "shield" -> "Щит"
@@ -53,6 +59,7 @@ object UiLocalizer {
         "medium_armor" -> "Средний"
         "heavy_armor" -> "Тяжёлый"
         "shield" -> "Щит"
+        "magic_item" -> "magic_item"
         else -> value.replaceFirstChar { it.uppercase() }
     }
 
@@ -65,7 +72,7 @@ object UiLocalizer {
         "very-rare", "veryrare" -> "Очень редкий"
         "legendary" -> "Легендарный"
         "artifact" -> "Артефакт"
-        "varies" -> "Варьируется"
+        "varies" -> "Редкость варьируется"
         else -> value.replaceFirstChar { it.uppercase() }
     }
 
@@ -261,7 +268,7 @@ object UiLocalizer {
         "construct" -> "Конструкт"
         "dragon" -> "Дракон"
         "giant" -> "Великан"
-        "ooze" -> "Желе"
+        "ooze" -> "Слизь"
         "plant" -> "Растение"
         "beast" -> "Зверь"
         else -> type.replaceFirstChar { it.uppercase() }
