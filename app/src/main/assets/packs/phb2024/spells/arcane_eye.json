@@ -37,6 +37,7 @@
     "concentration":  true,
     "ritual":  false,
     "classes":  [
+                    "phb2024:artificer",
                     "phb2024:wizard"
                 ],
     "subclasses":  [

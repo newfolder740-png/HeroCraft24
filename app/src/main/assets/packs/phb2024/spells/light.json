@@ -36,10 +36,11 @@
     "concentration":  false,
     "ritual":  false,
     "classes":  [
+                    "phb2024:artificer",
                     "phb2024:bard",
-                    "phb2024:wizard",
                     "phb2024:cleric",
-                    "phb2024:sorcerer"
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:warlock_celestial"

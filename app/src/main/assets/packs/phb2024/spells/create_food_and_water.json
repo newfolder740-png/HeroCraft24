@@ -1,41 +1,42 @@
 {
-  "id": "create_food_and_water",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Create Food and Water",
-    "ru": "Сотворение пищи и воды"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы создаёте 45 фунтов еды и 30 галлонов (100 литров) воды на земле или в контейнерах в пределах дистанции; еда и вода могут помочь предотвратить недоедание и обезвоживание. Вода чистая. Еда безвкусная, но сытная; вы выбираете, как выглядит эта еда. Не съеденная через 24 часа еда портится."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 3,
-  "school": "conjuration",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "30 футов"
-  },
-  "components": [
-    "V",
-    "S"
-  ],
-  "duration": "Мгновенная",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:cleric",
-    "phb2024:paladin"
-  ]
+    "id":  "create_food_and_water",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Create Food and Water",
+                 "ru":  "Сотворение пищи и воды"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы создаёте 45 фунтов еды и 30 галлонов (100 литров) воды на земле или в контейнерах в пределах дистанции; еда и вода могут помочь предотвратить недоедание и обезвоживание. Вода чистая. Еда безвкусная, но сытная; вы выбираете, как выглядит эта еда. Не съеденная через 24 часа еда портится."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  3,
+    "school":  "conjuration",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "30 футов"
+              },
+    "components":  [
+                       "V",
+                       "S"
+                   ],
+    "duration":  "Мгновенная",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:artificer",
+                    "phb2024:cleric",
+                    "phb2024:paladin"
+                ]
 }

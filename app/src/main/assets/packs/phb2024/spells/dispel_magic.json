@@ -39,14 +39,15 @@
                           "ru":  "Используя ячейку заклинания большего уровня. Вы автоматически оканчиваете на цели эффекты заклинаний, уровень которых не выше уровня использованной ячейки."
                       },
     "classes":  [
+                    "phb2024:artificer",
                     "phb2024:bard",
-                    "phb2024:wizard",
-                    "phb2024:druid",
                     "phb2024:cleric",
-                    "phb2024:warlock",
+                    "phb2024:druid",
                     "phb2024:paladin",
                     "phb2024:ranger",
-                    "phb2024:sorcerer"
+                    "phb2024:sorcerer",
+                    "phb2024:warlock",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:wizard_ograditel",

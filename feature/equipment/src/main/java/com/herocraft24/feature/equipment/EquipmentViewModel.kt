@@ -19,13 +19,12 @@ data class EquipmentFilters(
     val rarities: Set<ItemRarity> = emptySet(),
     val weaponCategories: Set<String> = emptySet(),
     val armorCategories: Set<String> = emptySet(),
-    val allSubcategories: Set<String> = emptySet(),
     val magic: Boolean? = null,
     val showFavoritesOnly: Boolean = false
 ) {
     val isActive: Boolean get() = categories.isNotEmpty() || rarities.isNotEmpty() ||
         weaponCategories.isNotEmpty() || armorCategories.isNotEmpty() ||
-        allSubcategories.isNotEmpty() || magic != null || showFavoritesOnly
+        magic != null || showFavoritesOnly
 }
 
 enum class EquipmentSortMode(val label: String) {
@@ -160,7 +159,6 @@ class EquipmentViewModel(application: Application) : AndroidViewModel(applicatio
         if (f.rarities.isNotEmpty()) result = result.filter { ItemRarity.fromValue(it.rarity) in f.rarities }
         if (f.weaponCategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.weaponCategories } }
         if (f.armorCategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.armorCategories } || (it.category == "shield" && "shield" in f.armorCategories) }
-        if (f.allSubcategories.isNotEmpty()) result = result.filter { it.subcategory.any { it in f.allSubcategories } }
         if (f.magic != null) result = result.filter { it.magic == f.magic }
         if (f.showFavoritesOnly) result = result.filter { it.fullId in favs }
 

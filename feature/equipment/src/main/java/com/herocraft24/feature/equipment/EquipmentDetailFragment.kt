@@ -66,12 +66,14 @@ class EquipmentDetailFragment : Fragment() {
         val ac = i.armor_class
         val dmg = i.damage
         val subcat = i.subcategory
+        val view = i.view
         val cost = i.cost
         val weight = i.weight
 
         addSection("Быстрая информация") {
             addRow("Категория", localizeCategory(i.category))
             if (subcat.isNotEmpty() && i.category !in magicItemCategories) addRow("Подкатегории", subcat.joinToString(", ") { localizeSubcategory(it) })
+            if (view.isNotEmpty()) addLinkedRow("Вид", view.joinToString(", "))
             addRow("Редкость", localizeRarity(i.rarity))
             if (i.attunement) addRow("Настройка", "Требуется")
             if (cost != null) addRow("Стоимость", formatCost(cost))
@@ -123,6 +125,18 @@ class EquipmentDetailFragment : Fragment() {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
             setPadding(0, 4, 0, 4)
             text = SpannableString(t).apply { setSpan(StyleSpan(Typeface.BOLD), 0, label.length + 1, 0) }
+        })
+    }
+
+    private fun LinearLayout.addLinkedRow(label: String, value: String) {
+        addView(TextView(requireContext()).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            setPadding(0, 4, 0, 4)
+            movementMethod = LinkMovementMethod.getInstance()
+            val builder = SpannableStringBuilder()
+            builder.append(SpannableString("$label: ").apply { setSpan(StyleSpan(Typeface.BOLD), 0, label.length + 1, 0) })
+            builder.append(linkify(value, itemId))
+            text = builder
         })
     }
 

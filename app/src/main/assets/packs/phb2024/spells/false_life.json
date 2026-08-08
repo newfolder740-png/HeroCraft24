@@ -41,8 +41,9 @@
                           "ru":  "Используя ячейку заклинания большего уровня. Вы получаете на 5 Временных хитов больше за каждый уровень ячейки выше 1-го."
                       },
     "classes":  [
-                    "phb2024:wizard",
-                    "phb2024:sorcerer"
+                    "phb2024:artificer",
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:artificer_reanimator",

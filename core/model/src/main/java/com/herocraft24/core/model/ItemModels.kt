@@ -16,6 +16,8 @@ data class Item(
     val category: String,
     @Serializable(with = StringOrListSerializer::class)
     val subcategory: List<String> = emptyList(),
+    @Serializable(with = StringOrListSerializer::class)
+    val view: List<String> = emptyList(),
     val rarity: String,
     val magic: Boolean = false,
     val attunement: Boolean = false,

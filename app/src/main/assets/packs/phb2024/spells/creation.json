@@ -41,8 +41,9 @@
                           "ru":  "Используя ячейку заклинания большего уровня. Длина ребра Куба увеличивается на 5 футов за каждый уровень ячейки выше 5-го."
                       },
     "classes":  [
-                    "phb2024:wizard",
-                    "phb2024:sorcerer"
+                    "phb2024:artificer",
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:sorcerer_shadow"

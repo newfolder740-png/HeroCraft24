@@ -37,8 +37,9 @@
     "concentration":  false,
     "ritual":  true,
     "classes":  [
-                    "phb2024:wizard",
-                    "phb2024:ranger"
+                    "phb2024:artificer",
+                    "phb2024:ranger",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:sorcerer_clockwork"

@@ -1,45 +1,46 @@
 {
-  "id": "darkvision",
-  "type": "spell",
-  "format_version": 1,
-  "name": {
-    "en": "Darkvision",
-    "ru": "Тёмное зрение"
-  },
-  "description": {
-    "en": "",
-    "ru": "Вы касаетесь согласного существа; пока заклинание действует, это существо обладает Тёмным зрением дальностью 150 футов."
-  },
-  "source": {
-    "book": {
-      "en": "Player's Handbook 2024",
-      "ru": "Книга игрока (2024)"
-    },
-    "abbreviation": "PHB 2024"
-  },
-  "tags": [
-    "spell"
-  ],
-  "level": 2,
-  "school": "transmutation",
-  "casting_time": "Действие",
-  "range": {
-    "type": "range",
-    "text": "Касание"
-  },
-  "components": [
-    "V",
-    "S",
-    "M"
-  ],
-  "material": "сушёная морковка",
-  "duration": "8 часов",
-  "concentration": false,
-  "ritual": false,
-  "classes": [
-    "phb2024:wizard",
-    "phb2024:druid",
-    "phb2024:ranger",
-    "phb2024:sorcerer"
-  ]
+    "id":  "darkvision",
+    "type":  "spell",
+    "format_version":  1,
+    "name":  {
+                 "en":  "Darkvision",
+                 "ru":  "Тёмное зрение"
+             },
+    "description":  {
+                        "en":  "",
+                        "ru":  "Вы касаетесь согласного существа; пока заклинание действует, это существо обладает Тёмным зрением дальностью 150 футов."
+                    },
+    "source":  {
+                   "book":  {
+                                "en":  "Player\u0027s Handbook 2024",
+                                "ru":  "Книга игрока (2024)"
+                            },
+                   "abbreviation":  "PHB 2024"
+               },
+    "tags":  [
+                 "spell"
+             ],
+    "level":  2,
+    "school":  "transmutation",
+    "casting_time":  "Действие",
+    "range":  {
+                  "type":  "range",
+                  "text":  "Касание"
+              },
+    "components":  [
+                       "V",
+                       "S",
+                       "M"
+                   ],
+    "material":  "сушёная морковка",
+    "duration":  "8 часов",
+    "concentration":  false,
+    "ritual":  false,
+    "classes":  [
+                    "phb2024:artificer",
+                    "phb2024:druid",
+                    "phb2024:ranger",
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
+                ]
 }

@@ -206,17 +206,6 @@ class EquipmentListFragment : Fragment() {
                 FilterOption("medium_armor", "Средний"),
                 FilterOption("heavy_armor", "Тяжёлый"),
                 FilterOption("shield", "Щит")
-            )),
-            FilterGroup("all_subcategories", "Подкатегории", listOf(
-                FilterOption("simple_melee", "Простое рукопашное"),
-                FilterOption("martial_melee", "Воинское рукопашное"),
-                FilterOption("simple_ranged", "Простое дальнобойное"),
-                FilterOption("martial_ranged", "Воинское дальнобойное"),
-                FilterOption("ammunition", "Боеприпас"),
-                FilterOption("light_armor", "Лёгкий"),
-                FilterOption("medium_armor", "Средний"),
-                FilterOption("heavy_armor", "Тяжёлый"),
-                FilterOption("shield", "Щит")
             ))
         )
     }
@@ -227,7 +216,6 @@ class EquipmentListFragment : Fragment() {
             rarities = (result["rarities"] ?: emptySet()).map { ItemRarity.fromValue(it) }.toSet(),
             weaponCategories = result["weapon_categories"] ?: emptySet(),
             armorCategories = result["armor_categories"] ?: emptySet(),
-            allSubcategories = result["all_subcategories"] ?: emptySet(),
             showFavoritesOnly = "show_favorites" in (result["favorites"] ?: emptySet())
         )
     }

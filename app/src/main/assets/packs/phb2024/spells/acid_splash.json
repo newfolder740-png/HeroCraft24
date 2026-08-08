@@ -39,8 +39,9 @@
                           "ru":  "Усиление заговора. Урон увеличивается на 1к6, когда вы достигаете 5-го (2к6), 11-го (3к6) и 17-го (4к6) уровней."
                       },
     "classes":  [
-                    "phb2024:wizard",
-                    "phb2024:sorcerer"
+                    "phb2024:artificer",
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:druid_zemlya"

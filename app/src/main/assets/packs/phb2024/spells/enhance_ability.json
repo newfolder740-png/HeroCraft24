@@ -41,12 +41,13 @@
                           "ru":  "Используя ячейку заклинания большего уровня. Вы можете нацелить заклинание на одно дополнительное существо за каждый уровень заклинания выше 2-го. Для каждой цели вы можете выбирать разные характеристики."
                       },
     "classes":  [
+                    "phb2024:artificer",
                     "phb2024:bard",
-                    "phb2024:wizard",
-                    "phb2024:druid",
                     "phb2024:cleric",
+                    "phb2024:druid",
                     "phb2024:ranger",
-                    "phb2024:sorcerer"
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:artificer_reanimator",

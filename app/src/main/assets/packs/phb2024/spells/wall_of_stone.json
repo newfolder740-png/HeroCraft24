@@ -37,9 +37,10 @@
     "concentration":  true,
     "ritual":  false,
     "classes":  [
-                    "phb2024:wizard",
+                    "phb2024:artificer",
                     "phb2024:druid",
-                    "phb2024:sorcerer"
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:druid_zemlya"

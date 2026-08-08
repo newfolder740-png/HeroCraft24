@@ -1,4 +1,4 @@
-﻿$packDir = "C:\Users\Newfo\AndroidStudioProjects\HeroCraft24\app\src\main\assets\packs\phb2024"
+﻿$packDir = "C:\Users\Newfo\HeroCraft24\app\src\main\assets\packs\phb2024"
 $manifestPath = "$packDir\manifest.json"
 
 function Extract-String($text, $key) {

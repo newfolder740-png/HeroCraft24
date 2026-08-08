@@ -41,8 +41,9 @@
                           "ru":  "Используя ячейку заклинания большего уровня. Урон увеличивается на 1к6 за каждый уровень ячейки выше 2-го."
                       },
     "classes":  [
-                    "phb2024:wizard",
-                    "phb2024:sorcerer"
+                    "phb2024:artificer",
+                    "phb2024:sorcerer",
+                    "phb2024:wizard"
                 ],
     "subclasses":  [
                        "phb2024:sorcerer_draconic"

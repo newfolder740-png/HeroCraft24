@@ -35,8 +35,9 @@
     "concentration":  true,
     "ritual":  false,
     "classes":  [
-                    "phb2024:druid",
-                    "phb2024:cleric"
+                    "phb2024:artificer",
+                    "phb2024:cleric",
+                    "phb2024:druid"
                 ],
     "subclasses":  [
                        "phb2024:druid_zvezdy"
