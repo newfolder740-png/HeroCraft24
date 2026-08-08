@@ -93,28 +93,18 @@ class ReferenceViewModel(application: Application) : AndroidViewModel(applicatio
 
     // Cached name→id maps (rebuilt lazily once). Rebuilding these on every render
     // caused UI freezes on pages with many rich-linked text blocks (e.g. species traits).
-    private val _itemNameMap: Map<String, String> by lazy {
-        buildNameMap { repository.getItemIds() }
-    }
+    @Volatile
+    private var _itemNameMap: Map<String, String>? = null
+    @Volatile
+    private var _spellNameMap: Map<String, String>? = null
+    @Volatile
+    private var _conditionNameMap: Map<String, String>? = null
+    @Volatile
+    private var _combinedNameMap: Map<String, String>? = null
+    @Volatile
+    private var _combinedBucketsCache: ItemLinkifier.BucketsCache? = null
 
-    private val _spellNameMap: Map<String, String> by lazy {
-        buildNameMap { repository.getSpellIds() }
-    }
-
-    private val _conditionNameMap: Map<String, String> by lazy {
-        buildNameMap { repository.getConditionIds().filterNot { it.endsWith(":condition") } }
-    }
-
-    private val _combinedNameMap: Map<String, String> by lazy {
-        HashMap<String, String>().apply {
-            // Items have the highest priority, then spells, then conditions.
-            // This matches the convention that equipment names win over spell names
-            // when a word like "Щит" could refer to both.
-            putAll(_spellNameMap)
-            putAll(_conditionNameMap)
-            putAll(_itemNameMap)
-        }
-    }
+    private val lock = Any()
 
     private inline fun buildNameMap(idsProvider: () -> List<String>): Map<String, String> {
         val map = mutableMapOf<String, String>()
@@ -125,16 +115,52 @@ class ReferenceViewModel(application: Application) : AndroidViewModel(applicatio
         return map
     }
 
-    fun getItemNameMap(): Map<String, String> = _itemNameMap
-    fun getSpellNameMap(): Map<String, String> = _spellNameMap
+    fun getItemNameMap(): Map<String, String> {
+        _itemNameMap?.let { return it }
+        synchronized(lock) {
+            _itemNameMap?.let { return it }
+            return buildNameMap { repository.getItemIds() }.also { _itemNameMap = it }
+        }
+    }
+
+    fun getSpellNameMap(): Map<String, String> {
+        _spellNameMap?.let { return it }
+        synchronized(lock) {
+            _spellNameMap?.let { return it }
+            return buildNameMap { repository.getSpellIds() }.also { _spellNameMap = it }
+        }
+    }
+
+    private fun getConditionNameMap(): Map<String, String> {
+        _conditionNameMap?.let { return it }
+        synchronized(lock) {
+            _conditionNameMap?.let { return it }
+            return buildNameMap { repository.getConditionIds().filterNot { it.endsWith(":condition") } }.also { _conditionNameMap = it }
+        }
+    }
 
     /** Combined cached map of item/spell/condition localised names → full ids. */
-    fun getCombinedNameMap(): Map<String, String> = _combinedNameMap
-
-    private val _combinedBucketsCache: ItemLinkifier.BucketsCache by lazy {
-        ItemLinkifier.BucketsCache(_combinedNameMap)
+    fun getCombinedNameMap(): Map<String, String> {
+        _combinedNameMap?.let { return it }
+        synchronized(lock) {
+            _combinedNameMap?.let { return it }
+            val map = HashMap<String, String>().apply {
+                // Items have the highest priority, then spells, then conditions.
+                putAll(getSpellNameMap())
+                putAll(getConditionNameMap())
+                putAll(getItemNameMap())
+            }
+            _combinedNameMap = map
+            return map
+        }
     }
 
     /** Pre-built buckets cache for ItemLinkifier — avoids rebuilding on every call. */
-    fun getCombinedBucketsCache(): ItemLinkifier.BucketsCache = _combinedBucketsCache
+    fun getCombinedBucketsCache(): ItemLinkifier.BucketsCache {
+        _combinedBucketsCache?.let { return it }
+        synchronized(lock) {
+            _combinedBucketsCache?.let { return it }
+            return ItemLinkifier.BucketsCache(getCombinedNameMap()).also { _combinedBucketsCache = it }
+        }
+    }
 }

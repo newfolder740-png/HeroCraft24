@@ -15,7 +15,9 @@ data class Mechanic(
     val category: String,
     @Serializable(with = StringOrListSerializer::class)
     val subcategory: List<String> = emptyList(),
-    val related: List<String> = emptyList()
+    val related: List<String> = emptyList(),
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable

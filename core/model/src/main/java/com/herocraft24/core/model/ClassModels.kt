@@ -57,6 +57,7 @@ data class Subclass(
     val source: SourceInfo,
     val class_id: String,
     val features: List<String> = emptyList(),
+    val table: Table? = null,
     val description2: LocalizedString? = null
 )
 
@@ -73,6 +74,7 @@ data class Feature(
     val is_subclass_choice: Boolean = false,
     val is_placeholder: Boolean = false,
     val references: List<Reference> = emptyList(),
+    val table: Table? = null,
     val description2: LocalizedString? = null
 )
 
@@ -171,6 +173,7 @@ data class Invocation(
     val description: LocalizedString,
     val level: Int? = null,
     val requirements: InvocationRequirements? = null,
+    val table: Table? = null,
     val description2: LocalizedString? = null,
 )
 

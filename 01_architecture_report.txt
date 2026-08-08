@@ -1,0 +1,238 @@
+Архитектурный отчёт HeroCraft24
+================================
+Дата: 2026-08-08
+
+A) Структура проекта
+--------------------
+
+Модули (settings.gradle.kts):
+  :app                — точка входа (MainActivity, HeroCraftApplication)
+  :core:model         — data-классы моделей (Kotlin Serialization)
+  :core:data          — ContentRepository + Manifest — загрузка JSON из assets
+  :core:ui            — общие UI-компоненты: ItemLinkifier, FilterBottomSheet, SearchBarView, UiLocalizer, StateViewBinder, SwipeToggle
+  :feature:reference  — справочник (классы, виды, бестиарий, механики, происхождения)
+  :feature:spells     — заклинания (список + детали + условия)
+  :feature:equipment  — снаряжение (список + детали)
+  :feature:characters — персонажи (создание, лист, лист персонажа)
+  :feature:settings   — настройки
+
+Навигация: MainActivity → ViewPager2 (5 табов) → каждый таб содержит
+           вложенный NavHostFragment со своим nav_graph.xml.
+
+Контент: 2771 JSON-файл в assets/packs/phb2024/ (15 категорий).
+  Топ по объёму: items (685), features (635), monsters (633), spells (412).
+
+Распределение кода (строк, топ-10):
+  2180  feature/reference/ReferenceDetailFragment.kt
+   837  feature/reference/ReferenceListFragment.kt
+   306  feature/spells/SpellListFragment.kt
+   248  feature/spells/SpellsViewModel.kt
+   230  feature/equipment/EquipmentListFragment.kt
+   225  feature/equipment/EquipmentViewModel.kt
+   224  core/ui/util/ItemLinkifier.kt
+   215  feature/equipment/EquipmentDetailFragment.kt
+   207  core/model/ClassModels.kt
+   201  feature/spells/SpellDetailFragment.kt
+
+
+B) Критические узлы
+--------------------
+
+1. ReferenceDetailFragment.kt (2180 строк)
+   Единственный файл, отвечающий за рендеринг ВСЕХ типов карточек
+   справочника: классы, виды, происхождения, черты, монстры, механики,
+   условия, фичи, подклассы, инвокации, схемы, метамагия, приёмы.
+   Содержит: ViewPager2-адаптер для классов, 15+ createXxxCard-методов,
+   8+ renderXxx-методов, onSaveInstanceState, управление состоянием
+   5 наборов открытых карточек + scroll position.
+   → Любое изменение UI справочника требует правок в этом файле.
+
+2. ContentRepository.kt (191 строка)
+   Singleton-репозиторий, загружающий JSON из assets через Kotlin
+   Serialization. ConcurrentHashMap-кеш. Методы getXxx() для 15 типов.
+   → Единая точка доступа ко всем данным; при сбое инициализации
+     всё приложение теряет контент.
+
+3. EquipmentViewModel.kt (225 строк) / SpellsViewModel.kt (248 строк)
+   Оба содержат дублирующуюся логику: Summary-модели, построение
+   name→id маппингов, фильтрация, сортировка, избранное через
+   SharedPreferences. Фактически — параллельные реализации одного
+   паттерна с разными данными.
+
+4. ReferenceViewModel.kt (148 строк)
+   Thread-safe ленивая инициализация name maps через @Volatile + synchronized.
+   Кеширует объединённый маппинг для ItemLinkifier. Зависит от preloadClasses()
+   для предзагрузки в IO-потоке.
+
+5. ItemLinkifier.kt (224 строки)
+   Критичный для UX: авто-линковка имён предметов/заклинаний/состояний
+   в тексте описаний. Использует bucket-индекс для быстрого поиска,
+   поддерживает русские склонения (stem matching). Вызывается при
+   рендеринге каждого rich-text блока.
+
+
+C) Дубликаты и слабые места
+-----------------------------
+
+1. Дублирование name→id маппингов
+   - EquipmentViewModel.itemNameToIdMap, spellNameToIdMap, conditionNameToIdMap
+   - SpellsViewModel.conditionNameToIdMap, subclassToClassMap
+   - ReferenceViewModel.getItemNameMap(), getSpellNameMap(), getConditionNameMap()
+   Три разных ViewModel строят одни и те же маппинги независимо.
+   → Файлы: EquipmentViewModel.kt:89-111, SpellsViewModel.kt:152-166,
+     ReferenceViewModel.kt:96-127
+
+2. Дублирование render-логики в Detail-фрагментах
+   - EquipmentDetailFragment.kt и SpellDetailFragment.kt содержат
+     собственные реализации buildRichLinkedTextView / createTableView
+     вместо переиспользования из ReferenceDetailFragment.
+   - Nav-граф equipment ссылается на SpellDetailFragment и
+     ConditionReferenceFragment из модуля :feature:spells —
+     межмодульная зависимость на уровне навигации.
+   → Файлы: EquipmentDetailFragment.kt:1-242, SpellDetailFragment.kt:1-201,
+     nav_equipment.xml (строки 18-31)
+
+3. Дублирование фильтр/сортировка/поиск
+   - EquipmentListFragment, SpellListFragment, ReferenceListFragment
+     реализуют один и тот же паттерн: SearchBar + FilterBottomSheet + Sort +
+     RecyclerView + FAB. Каждый — ~230-837 строк.
+   - Каждый ViewModel дублирует: recompute(), clearSearchAndFilters(),
+     hasActiveSearchOrFilters(), toggleFavorite().
+   → Файлы: EquipmentListFragment.kt, SpellListFragment.kt:1-306,
+     ReferenceListFragment.kt:1-837
+
+4. Дублирование Summary-моделей
+   - ItemSummary, SpellSummary, ReferenceListItem — плоские модели
+     для списков, каждая содержит fullId, name, tags + типоспецифичные поля.
+   → Файлы: EquipmentViewModel.kt:13-24, SpellsViewModel.kt:14-32,
+     ReferenceListAdapter.kt:14-31
+
+5. Модельный God-object: ClassModels.kt (207 строк)
+   Содержит GameClass, Feature, Subclass, Invocation, Metamagic, Maneuvers,
+   Schems, Spellcasting, Table, TableColumn, TableRow — 11 классов в одном
+   файле. Остальные модели аналогично: MonsterModels.kt (82), ItemModels.kt.
+   → Файл: core/model/ClassModels.kt
+
+6. Отсутствие интерфейсов/абстракций для ViewModel
+   EquipmentViewModel, SpellsViewModel, ReferenceViewModel — все
+   AndroidViewModel с direct-зависимостью от ContentRepository singleton.
+   Нет общего интерфейса для filtered-list ViewModel.
+
+7. 6+ копий локализационных маппингов
+   localizeSchool() — в SpellsViewModel.kt, SpellListAdapter.kt, SpellDetailFragment.kt
+   localizeCategory(), localizeRarity(), localizeSubcategory() — в
+   EquipmentViewModel.kt, ReferenceListFragment.kt, ReferenceDetailFragment.kt
+   При этом UiLocalizer в core:ui уже предоставляет канонические версии,
+   но используется только в EquipmentDetailFragment и EquipmentListAdapter.
+   → Файлы: SpellsViewModel.kt:185-194, SpellListAdapter.kt, EquipmentViewModel.kt:155-185,
+     ReferenceListFragment.kt, ReferenceDetailFragment.kt
+
+8. Кросс-модульная навигация без объявления зависимости
+   nav_equipment.xml ссылается на SpellDetailFragment и
+   ConditionReferenceFragment из :feature:spells, но build.gradle.kts
+   модуля :feature:equipment НЕ объявляет implementation(project(":feature:spells")).
+   Работает только потому, что :app подключает оба модуля.
+   → Файл: feature/equipment/src/main/res/navigation/nav_equipment.xml (строки 18-31)
+
+9. AppLocale — изменяемое глобальное состояние
+   object AppLocale { var current: String } — устанавливается в
+   MainActivity.onCreate() и читается из LocalizedString.get() во
+   всём модельном слое. Не привязан к lifecycle, может привести к
+   рассинхрону при смене конфигурации.
+   → Файл: core/model/AppLocale.kt
+
+10. BaseFragment определён, но не используется
+    core/ui/base/BaseFragment.kt существует, но ни один фрагмент
+    проекта его не наследует — все наследуют Fragment напрямую.
+    → Файл: core/ui/base/BaseFragment.kt
+
+11. Модуль :shared:resources не подключён
+    Директория shared/resources/ существует и содержит colors.xml,
+    но модоль НЕ включён в settings.gradle.kts и не используется
+    никаким модулем.
+
+
+D) Рекомендуемый порядок рефакторинга
+----------------------------------------
+
+1. Вынести общие name→id маппинги в ContentRepository
+   Добавить getItemNameMap(), getSpellNameMap(), getConditionNameMap()
+   в ContentRepository с кешированием. Удалить дубли из трёх ViewModel.
+   Причина: максимальный эффект при минимальном риске, нет UI-изменений.
+   Затронутые файлы: ContentRepository.kt, EquipmentViewModel.kt,
+   SpellsViewModel.kt, ReferenceViewModel.kt
+
+2. Вынести render-утилиты в core:ui
+   createTableView(), buildRichLinkedTextView(), addSection() —
+   из ReferenceDetailFragment в отдельный объект (например,
+   ContentRenderer.kt в core:ui). Заменить вызовы в EquipmentDetailFragment
+   и SpellDetailFragment.
+   Причина: устраняет дублирование, упрощает добавление table/description2
+   в новых местах.
+   Затронутые файлы: ReferenceDetailFragment.kt, EquipmentDetailFragment.kt,
+   SpellDetailFragment.kt, новый core/ui/ContentRenderer.kt
+
+3. Расщепить ReferenceDetailFragment
+   Вынести рендеринг каждого типа в отдельный класс/функцию:
+   ClassCardRenderer, MonsterCardRenderer, SpeciesCardRenderer и т.д.
+   ReferenceDetailFragment оставить только координатором (выбор рендерера,
+   навигация, scroll position).
+   Причина: 2180 строк — критический порог поддерживаемости.
+   Затронутые файлы: ReferenceDetailFragment.kt → 6-8 новых файлов
+
+4. Общий базовый класс для filtered-list ViewModel
+   AbstractFilteredViewModel<T> с recompute(), search, filters, sort,
+   favorites. Equipment/Spells/Reference унаследуют его.
+   Причина: устраняет ~200 строк дублированной логики.
+   Затронутые файлы: EquipmentViewModel.kt, SpellsViewModel.kt,
+   ReferenceViewModel.kt, новый AbstractFilteredViewModel.kt
+
+5. Общий filtered-list Fragment
+   Аналогично: базовый фрагмент с SearchBar + FilterBottomSheet + RecyclerView
+   + scroll position preservation. Конкретные фрагменты определяют
+   только тип адаптера и фильтры.
+   Причина: три фрагмента с ~1400 строк суммарного дублирования.
+   Затронутые файлы: EquipmentListFragment.kt, SpellListFragment.kt,
+     ReferenceListFragment.kt
+
+
+E) Top-10 файлов для следующего шага
+--------------------------------------
+
+1.  core/data/ContentRepository.kt
+    Добавить кешированные name→id маппинги. Затронут все 3 ViewModel.
+
+2.  feature/reference/ReferenceDetailFragment.kt
+    2180 строк — главный кандидат на расщепление. Каждый баг в UI
+    справочника требует правок здесь.
+
+3.  feature/equipment/EquipmentViewModel.kt
+    3 дублирующихся name→id маппинга + Summary-модель — первый
+    кандидат на миграцию маппингов в ContentRepository.
+
+4.  feature/spells/SpellsViewModel.kt
+    Аналогично EquipmentViewModel — те же дублирующиеся маппинги.
+
+5.  feature/reference/ReferenceViewModel.kt
+    Третий обладатель name→id маппингов. После п.1 — упростится
+    до делегирования в ContentRepository.
+
+6.  feature/reference/ReferenceListFragment.kt
+    837 строк — второй по величине. Шаблон поиска/фильтра/сортировки
+    идентичен двум другим List-фрагментам.
+
+7.  feature/equipment/EquipmentDetailFragment.kt
+    215 строк с собственной render-логикой, которая дублирует
+    ReferenceDetailFragment. После выноса утилит — упростится.
+
+8.  feature/spells/SpellDetailFragment.kt
+    201 строка — аналогично EquipmentDetailFragment.
+
+9.  core/ui/util/ItemLinkifier.kt
+    224 строки — критичный для производительности. Bucket-кеш уже
+    есть, но BucketsCache не используется в Equipment/Spells
+    (там findRanges() пересоздаёт бакеты на каждый вызов).
+
+10. core/model/ClassModels.kt
+    207 строк, 11 классов. Не блокирует разработку, но при добавлении
+    новых типов (artificer features) — будет расти.

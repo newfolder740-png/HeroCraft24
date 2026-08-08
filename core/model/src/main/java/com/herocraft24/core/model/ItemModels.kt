@@ -25,7 +25,9 @@ data class Item(
     val properties: List<String> = emptyList(),
     val damage: WeaponDamage? = null,
     val armor_class: ArmorClass? = null,
-    val effects: List<LocalizedString> = emptyList()
+    val effects: List<LocalizedString> = emptyList(),
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable

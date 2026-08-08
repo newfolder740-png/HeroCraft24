@@ -45,7 +45,9 @@ data class Monster(
     val lair_actions: List<MonsterAbility>? = null,
     val environment: List<String> = emptyList(),
     val treasure: String? = null,
-    val equipment: String? = null
+    val equipment: String? = null,
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable

@@ -24,7 +24,9 @@ data class Background(
     val equipment_items: List<String> = emptyList(),
     val feat: String? = null,
     val feature: BackgroundFeature? = null,
-    val characteristics: Characteristics? = null
+    val characteristics: Characteristics? = null,
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable

@@ -31,7 +31,9 @@ data class Spell(
     val higher_levels: LocalizedString? = null,
     val classes: List<String> = emptyList(),
     val subclasses: List<String> = emptyList(),
-    val source_class: String? = null
+    val source_class: String? = null,
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable

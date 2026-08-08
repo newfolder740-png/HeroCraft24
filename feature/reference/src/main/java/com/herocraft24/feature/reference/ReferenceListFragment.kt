@@ -3,6 +3,7 @@ package com.herocraft24.feature.reference
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class ReferenceListFragment : Fragment() {
     private var currentMonsterTypes: Set<String> = emptySet()
     private var currentMonsterChallenge: Set<String> = emptySet()
     private var currentMonsterEnvironments: Set<String> = emptySet()
+    private var layoutManagerState: Parcelable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,6 +58,10 @@ class ReferenceListFragment : Fragment() {
 
         categoryKey = arguments?.getString("categoryKey") ?: "classes"
         categoryLabel = arguments?.getString("categoryLabel") ?: ""
+
+        savedInstanceState?.let {
+            layoutManagerState = it.getParcelable("layoutManagerState")
+        }
 
         binding.toolbarTitle.text = categoryLabel
         binding.toolbar.setNavigationOnClickListener {
@@ -244,6 +250,7 @@ class ReferenceListFragment : Fragment() {
         currentMonsterChallenge = emptySet()
         currentMonsterEnvironments = emptySet()
         applyFilters()
+        updateFilterButtonAppearance()
     }
 
     private fun buildItems(): List<ReferenceListAdapter.ReferenceListItem> {
@@ -421,6 +428,10 @@ class ReferenceListFragment : Fragment() {
             }
         }
 
+        // Save current scroll position before replacing the adapter
+        val currentLayoutState = layoutManagerState
+            ?: binding.recyclerView.layoutManager?.onSaveInstanceState()
+
         binding.recyclerView.adapter = ReferenceListAdapter(items) { item ->
             val bundle = Bundle().apply {
                 putString("objectId", item.fullId)
@@ -428,6 +439,12 @@ class ReferenceListFragment : Fragment() {
             }
             findNavController().navigate(R.id.referenceDetail, bundle)
         }
+
+        // Restore scroll position after adapter is set
+        currentLayoutState?.let { state ->
+            (binding.recyclerView.layoutManager as? LinearLayoutManager)?.onRestoreInstanceState(state)
+        }
+        layoutManagerState = null
 
         // Always show empty state when there are no items
         if (items.isEmpty()) {
@@ -779,6 +796,19 @@ class ReferenceListFragment : Fragment() {
         "artifact" -> "Артефакт"
         "varies" -> "Редкость варьируется"
         else -> rarity.replaceFirstChar { it.uppercase() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val state = binding.recyclerView.layoutManager?.onSaveInstanceState()
+        if (state != null) {
+            outState.putParcelable("layoutManagerState", state)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        layoutManagerState = binding.recyclerView.layoutManager?.onSaveInstanceState()
     }
 
     override fun onDestroyView() {

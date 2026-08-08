@@ -58,7 +58,12 @@ class ReferenceDetailFragment : Fragment() {
     private val classTabScrollPositions = mutableMapOf<Int, Int>()
     private var classPagerAdapter: RecyclerView.Adapter<ClassPageViewHolder>? = null
     private var lastKnownTabPage: Int = -1
+    private var contentScrollPosition: Int = 0
     private var openFeatureIds = mutableSetOf<String>()
+    private var openInvocationIds = mutableSetOf<String>()
+    private var openSchemsIds = mutableSetOf<String>()
+    private var openMetamagicIds = mutableSetOf<String>()
+    private var openManeuversIds = mutableSetOf<String>()
 
     private val magicItemCategories = setOf("wand", "rod", "potion", "ring", "staff", "scroll", "wondrous_item")
 
@@ -94,6 +99,23 @@ class ReferenceDetailFragment : Fragment() {
             if (featuresArray != null) {
                 openFeatureIds.addAll(featuresArray)
             }
+            val invocationsArray = bundle.getStringArrayList("openInvocationIds")
+            if (invocationsArray != null) {
+                openInvocationIds.addAll(invocationsArray)
+            }
+            val schemsArray = bundle.getStringArrayList("openSchemsIds")
+            if (schemsArray != null) {
+                openSchemsIds.addAll(schemsArray)
+            }
+            val metamagicArray = bundle.getStringArrayList("openMetamagicIds")
+            if (metamagicArray != null) {
+                openMetamagicIds.addAll(metamagicArray)
+            }
+            val maneuversArray = bundle.getStringArrayList("openManeuversIds")
+            if (maneuversArray != null) {
+                openManeuversIds.addAll(maneuversArray)
+            }
+            contentScrollPosition = bundle.getInt("contentScrollPosition", 0)
         }
 
         binding.tabLayout.visibility = View.GONE
@@ -137,6 +159,11 @@ class ReferenceDetailFragment : Fragment() {
             "conditions" -> renderCondition()
             "mechanics" -> renderMechanic()
             "monsters" -> renderMonster()
+        }
+
+        // Restore content scroll position for non-class cards
+        if (categoryKey != "classes" && contentScrollPosition > 0) {
+            binding.contentScroll.post { binding.contentScroll.scrollTo(0, contentScrollPosition) }
         }
 
         updateClassBackEnabled()
@@ -354,6 +381,8 @@ class ReferenceDetailFragment : Fragment() {
         inner.addView(body)
 
         body.addView(buildRichLinkedTextView(subclass.description.get()))
+        subclass.table?.let { body.addView(createTableView(it)) }
+        subclass.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
 
         card.setOnClickListener { body.isVisible = !body.isVisible }
 
@@ -433,7 +462,11 @@ class ReferenceDetailFragment : Fragment() {
 
         body.addView(buildRichLinkedTextView(metamagic.description.get()))
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        if (metamagic.id in openMetamagicIds) body.isVisible = true
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openMetamagicIds.add(metamagic.id) else openMetamagicIds.remove(metamagic.id)
+        }
         return card
     }
 
@@ -472,7 +505,11 @@ class ReferenceDetailFragment : Fragment() {
 
         body.addView(buildRichLinkedTextView(maneuvers.description.get()))
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        if (maneuvers.id in openManeuversIds) body.isVisible = true
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openManeuversIds.add(maneuvers.id) else openManeuversIds.remove(maneuvers.id)
+        }
         return card
     }
     private fun createSchemsCard(schems: Schems): MaterialCardView {
@@ -521,7 +558,11 @@ class ReferenceDetailFragment : Fragment() {
             body.addView(buildRichLinkedTextView(desc.get()))
         }
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        if (schems.id in openSchemsIds) body.isVisible = true
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openSchemsIds.add(schems.id) else openSchemsIds.remove(schems.id)
+        }
         return card
     }
 
@@ -693,8 +734,14 @@ class ReferenceDetailFragment : Fragment() {
         inner.addView(body)
 
         body.addView(buildRichLinkedTextView(invocation.description.get()))
+        invocation.table?.let { body.addView(createTableView(it)) }
+        invocation.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
 
-        card.setOnClickListener { body.isVisible = !body.isVisible }
+        if (invocation.id in openInvocationIds) body.isVisible = true
+        card.setOnClickListener {
+            body.isVisible = !body.isVisible
+            if (body.isVisible) openInvocationIds.add(invocation.id) else openInvocationIds.remove(invocation.id)
+        }
         return card
     }
 
@@ -1096,7 +1143,10 @@ class ReferenceDetailFragment : Fragment() {
         }
         inner.addView(body)
 
-        val hasContent = feature.description.get().isNotBlank() || (feature.is_subclass_choice && classObj.subclasses.isNotEmpty())
+        feature.table?.let { body.addView(createTableView(it)) }
+        feature.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
+
+        val hasContent = feature.description.get().isNotBlank() || (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) || feature.table != null || feature.description2 != null
 
         if (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) {
             body.addView(createSubclassSpinner(classObj, selectedSubclass))
@@ -1290,6 +1340,8 @@ class ReferenceDetailFragment : Fragment() {
             addView(container)
             rebuildSpeciesTraits(obj, container)
         }
+        obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
         addSourceSection(obj.source)
     }
 
@@ -1394,6 +1446,8 @@ class ReferenceDetailFragment : Fragment() {
         inner.addView(body)
 
         body.addView(buildRichLinkedTextView(trait.description.get()))
+        trait.table?.let { body.addView(createTableView(it)) }
+        trait.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
 
         card.setOnClickListener { body.isVisible = !body.isVisible }
 
@@ -1490,6 +1544,8 @@ class ReferenceDetailFragment : Fragment() {
                 addView(tv)
             }
         }
+        obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
         addSourceSection(obj.source)
     }
 
@@ -1540,6 +1596,8 @@ class ReferenceDetailFragment : Fragment() {
             }
         }
         addSection(getString(R.string.reference_description)) { addLinkedItemDescription(obj.description.get(), obj.name.get()) }
+        obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
         addSourceSection(obj.source)
     }
 
@@ -1565,6 +1623,8 @@ class ReferenceDetailFragment : Fragment() {
             val conditionLinks = buildConditionLinkMap()
             addView(buildLinkedTextView(spell.description.get(), conditionLinks))
         }
+        spell.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        spell.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
         spell.higher_levels?.let {
             addSection("Улучшения") { addText(it.get()) }
         }
@@ -1662,6 +1722,8 @@ class ReferenceDetailFragment : Fragment() {
         val obj = viewModel.getMechanic(objectId) ?: return showNotFound()
         binding.toolbar.title = obj.name.get()
         addSection(getString(R.string.reference_description)) { addText(obj.description.get()) }
+        obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
     }
 
     private fun renderMonster() {
@@ -1781,6 +1843,8 @@ class ReferenceDetailFragment : Fragment() {
                 addText(obj.description.get())
             }
         }
+        obj.table?.let { addSection("Таблица") { addView(createTableView(it)) } }
+        obj.description2?.let { addSection("") { addView(buildRichLinkedTextView(it.get())) } }
 
         addSourceSection(obj.source)
     }
@@ -2310,7 +2374,7 @@ class ReferenceDetailFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        // Save the current scroll position before the fragment goes to the back stack.
+        // Save class tab scroll positions
         if (categoryKey == "classes") {
             val currentScrollView = getCurrentScrollView()
             if (currentScrollView != null) {
@@ -2318,6 +2382,8 @@ class ReferenceDetailFragment : Fragment() {
                 classTabScrollPositions[currentPos] = currentScrollView.scrollY
             }
         }
+        // Save non-class content scroll position
+        contentScrollPosition = binding.contentScroll.scrollY
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -2332,6 +2398,11 @@ class ReferenceDetailFragment : Fragment() {
         outState.putIntArray("classTabScrollPositions", array)
         // Save ids of expanded feature cards so they can be restored on back navigation.
         outState.putStringArrayList("openFeatureIds", ArrayList(openFeatureIds))
+        outState.putStringArrayList("openInvocationIds", ArrayList(openInvocationIds))
+        outState.putStringArrayList("openSchemsIds", ArrayList(openSchemsIds))
+        outState.putStringArrayList("openMetamagicIds", ArrayList(openMetamagicIds))
+        outState.putStringArrayList("openManeuversIds", ArrayList(openManeuversIds))
+        outState.putInt("contentScrollPosition", binding.contentScroll.scrollY)
     }
 
     override fun onDestroyView() {

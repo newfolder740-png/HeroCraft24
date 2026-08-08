@@ -24,7 +24,9 @@ data class Species(
     val average_lifespan: String? = null,
     val average_height: String? = null,
     val average_weight: String? = null,
-    val subspecies: List<SubspeciesInfo>? = null
+    val subspecies: List<SubspeciesInfo>? = null,
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable
@@ -32,7 +34,9 @@ data class SpeciesTrait(
     val name: LocalizedString,
     val description: LocalizedString,
     val level: Int? = null,
-    val is_placeholder: Boolean = false
+    val is_placeholder: Boolean = false,
+    val table: Table? = null,
+    val description2: LocalizedString? = null
 )
 
 @Serializable
