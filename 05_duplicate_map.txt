@@ -1,0 +1,554 @@
+Карта дублей логики HeroCraft24
+================================
+Дата: 2026-08-08
+Источник: 03_ui_render_audit.txt + прямой анализ исходного кода
+
+
+A) Дубли по функциям
+---------------------
+
+A1. addSection(title, block) — 4 идентичные копии
+    Реализации:
+    - ReferenceDetailFragment.kt, строки ~1970-1990 (учитывает activeRenderContainer)
+    - EquipmentDetailFragment.kt, строки ~97-110 (пишет в binding.detailContent)
+    - SpellDetailFragment.kt, строки ~130-145 (пишет в binding.detailContent)
+    - ConditionReferenceFragment.kt, строки ~73-84 (пишет в binding.detailContent)
+
+    Код (одинаковый во всех 4):
+      TextView(context).apply {
+          text = title
+          setTextAppearance(TextAppearance_Material3_TitleMedium)
+          setPadding(0, 24, 0, 8)
+      }
+      → addView(titleView)
+      LinearLayout(context).apply { orientation = VERTICAL; setPadding(0,0,0,8) }
+      → block()
+      → addView(container)
+
+    Различия: RefDetail выбирает renderTarget = activeRenderContainer ?: binding.detailContent.
+    Остальные 3 — всегда binding.detailContent.
+
+A2. LinearLayout.addRow(label, value) — 3 идентичные копии
+    Реализации:
+    - ReferenceDetailFragment.kt, строки ~1998-2008
+    - EquipmentDetailFragment.kt, строки ~113-121
+    - SpellDetailFragment.kt, строки ~146-156
+
+    Код (одинаковый):
+      TextView(context).apply {
+          text = "$label: $value"
+          setTextAppearance(TextAppearance_Material3_BodyMedium)
+          setPadding(0, 4, 0, 4)
+          this.text = SpannableString(text).apply {
+              setSpan(StyleSpan(Typeface.BOLD), 0, label.length + 1, 0)
+          }
+      }
+
+A3. LinearLayout.addText(text) — 3 идентичные копии
+    Реализации:
+    - ReferenceDetailFragment.kt, строки ~2010-2017
+    - EquipmentDetailFragment.kt, строки ~123-128
+    - SpellDetailFragment.kt, строки ~158-164
+
+    Код (одинаковый):
+      TextView(context).apply {
+          this.text = text
+          setTextAppearance(TextAppearance_Material3_BodyMedium)
+          setPadding(0, 4, 0, 4)
+      }
+
+A4. buildRichLinkedTextView / linkify / buildLinkedTextView — 4 реализации
+    Реализации:
+    - ReferenceDetailFragment.kt: buildRichLinkedTextView (строка ~2100) + buildRichLinkedSpannable (строка ~2060)
+      Источник: viewModel.getCombinedBucketsCache() (BucketsCache)
+      Навигация: navigateToReference(key, fullId)
+      Фичи: stripMarkers + explicitLinks + excludedRanges + BucketsCache
+
+    - EquipmentDetailFragment.kt: linkify (строка ~131)
+      Источник: vm.itemNameToIdMap + vm.spellNameToIdMap + vm.conditionNameToIdMap
+      Навигация: Navigation.findNavController → R.id.equipmentDetail / equipmentSpellDetail / equipmentConditionDetail
+      Фичи: stripMarkers + explicitLinks + excludedRanges + findRanges (не BucketsCache)
+
+    - SpellDetailFragment.kt: buildLinkedTextView (строка ~100)
+      Источник: viewModel.conditionNameToIdMap (только conditions!)
+      Навигация: Navigation.findNavController → R.id.spellConditionDetail
+      Фичи: НЕТ stripMarkers, НЕТ explicitLinks, НЕТ excludedRanges — ручной indexOf
+
+    - ConditionReferenceFragment.kt: buildLinkedTextView (строка ~56)
+      Источник: vm.conditionNameToIdMap
+      Навигация: Navigation.findNavController → R.id.spellConditionDetail
+      Фичи: stripMarkers + excludedRanges, НЕТ explicitLinks
+
+    Общий код: SpannableStringBuilder → findRanges/indexOf → setSpan(ClickableSpan) →
+    updateDrawState(isUnderlineText, linkColor) → TextView с MovementMethod.
+    Копия ClickableSpan + updateDrawState — 8 раз (по 2 на каждый фрагмент, для auto+explicit).
+
+A5. addSourceSection — 3 реализации
+    Реализации:
+    - ReferenceDetailFragment.kt: addSourceSection(source) (строка ~2270)
+      Формат: "${book} (${abbr})${page?}", page = ", p. $it"
+    - EquipmentDetailFragment.kt: inline в render() (строка ~86)
+      Формат: "${book} (${abbr})${page?}", page = ", с. ${it}"
+    - SpellDetailFragment.kt: inline в render() (строка ~125)
+      Формат: "${book} (${abbr})${page?}", page = ", p. ${it}"
+
+    Код (одинаковый): addSection("Источник") { addText("...") }
+    Различия: ", p. $it" vs ", с. $it" — локаль страницы не унифицирована.
+
+A6. showNotFound — 4 реализации
+    Реализации:
+    - ReferenceDetailFragment.kt: showNotFound() (строка ~2380)
+      Текст: getString(R.string.reference_not_found)
+    - EquipmentDetailFragment.kt: inline в onViewCreated (строка ~45)
+      Текст: "Item not found." (хардкод)
+    - SpellDetailFragment.kt: inline в onViewCreated (строка ~38)
+      Текст: getString(R.string.spell_not_found)
+    - ConditionReferenceFragment.kt: inline в onViewCreated (строка ~37)
+      Текст: "Статья не найдена" + "Состояние не найдено." (хардкод)
+
+    Код: TextView с TextAppearance_Material3_BodyLarge, setPadding(32,64,32,32), gravity=CENTER.
+    RefDetail использует gravity=CENTER, остальные — нет.
+
+A7. dpToPx / Int.dp — 2 реализации
+    Реализации:
+    - ReferenceDetailFragment.kt: dpToPx(dp: Int): Int (строка ~1192)
+    - FilterBottomSheet.kt: val Int.dp: Int (строка ~148)
+    Код одинаковый: (dp * resources.displayMetrics.density).toInt()
+
+A8. resolveColor — 2 реализации
+    Реализации:
+    - ReferenceDetailFragment.kt: resolveColor(attrRes: Int): Int (строка ~1188)
+    - FilterBottomSheet.kt: resolveColor(attrRes: Int): Int (строка ~152)
+    Код одинаковый: TypedValue + theme.resolveAttribute.
+
+A9. formatCost / formatWeight — 2 реализации
+    Реализации:
+    - EquipmentDetailFragment.kt: formatCost(cost: Cost): String (строка ~165)
+      + formatWeight(weight: Weight): String (строка ~170)
+      + formatAmount(amount: Double): String (строка ~160)
+    - ReferenceDetailFragment.kt: inline в renderItem() (строка ~1530)
+      Использует: localizeCostUnit() + localizeWeightUnit()
+
+    EquipmentDetailFragment.formatCost → "${formatAmount(amount)} ${UiLocalizer.costUnit(unit)}"
+    RefDetail.renderItem → "${it.amount} ${localizeCostUnit(it.unit)}"
+    Различия: EquipDetail форматирует double (15.0 → 15), RefDetail — нет.
+
+A10. loadFavorites + saveFavorites + toggleFavorite — 2 идентичные копии
+     Реализации:
+     - EquipmentViewModel.kt: loadFavorites() (строка ~64), toggleFavorite() (строка ~141)
+     - SpellsViewModel.kt: loadFavorites() (строка ~84), saveFavorites() (строка ~89), toggleFavorite() (строка ~144)
+
+     Код одинаковый:
+       prefs = getSharedPreferences("<equip/spells>_favs", MODE_PRIVATE)
+       loadFavorites(): prefs.getStringSet("ids", emptySet()) ?: emptySet()
+       toggleFavorite(): toMutableSet() → add/remove → putStringSet("ids", cur).apply() → recompute()
+
+     Различие: Equipment встраивает save в toggle; Spells выделяет saveFavorites().
+
+A11. recompute() — 2 идентичные копии + 1 похожая в Fragment
+     Реализации:
+     - EquipmentViewModel.kt: recompute() (строка ~165)
+     - SpellsViewModel.kt: recompute() (строка ~190)
+     - ReferenceListFragment.kt: applyFilters() и смежная логика (строки ~241+)
+
+     Идентичный код:
+       val queryTokens = query.lowercase().trim().split("\\s+".toRegex()).filter { it.length >= 2 }
+       result = all.filter { name/tags matches tokens }
+       if (filters.X.isNotEmpty()) result = result.filter { ... }
+       when (sort) { ... }
+       _filtered.value = result
+
+     Отличие: ReferenceListFragment держит состояние фильтров во фрагменте, а не в ViewModel.
+
+A12. Name→id map construction — 4 реализации
+     Реализации:
+     - EquipmentViewModel.kt: itemNameToIdMap (строка ~80), spellNameToIdMap (строка ~91), conditionNameToIdMap (строка ~102)
+       Ключи: case-sensitive (entry.name.en / entry.name.ru as-is)
+     - SpellsViewModel.kt: conditionNameToIdMap (строка ~168)
+       Ключи: case-sensitive, байт-в-байт идентичен EquipmentViewModel
+     - ReferenceViewModel.kt: getItemNameMap() (строка ~118), getSpellNameMap() (строка ~126), getConditionNameMap() (строка ~134), getCombinedNameMap() (строка ~143)
+       Ключи: lowercase, double-checked locking + @Volatile
+     - EquipmentDetailFragment.kt: ручная сборка combinedMap (строка ~149-152)
+       из vm.itemNameToIdMap + vm.spellNameToIdMap + vm.conditionNameToIdMap
+
+     Конфликт: Equipment/Spells используют case-sensitive ключи,
+     ReferenceViewModel — lowercase. ReferenceDetailFragment.removeIf
+     предполагает lowercase-ключи; если подставить карту из
+     EquipmentViewModel, removeIf ничего не удалит.
+
+A13. getEntryType / getEntryTypeSafely — одна функция, разные имена
+     Реализации:
+     - EquipmentViewModel.kt: getEntryTypeSafely() (строка ~150)
+     - SpellsViewModel.kt: getEntryType() (строка ~158)
+     - ReferenceViewModel.kt: getEntryType() (строка ~94)
+
+     Код одинаковый: repository.getEntryType(fullId). "Safely" — лишнее.
+
+A14. ItemLinkifier.findRanges — uncached usage + internal duplication
+     Реализации:
+     - ItemLinkifier.kt: два overload'а findRanges (строка ~106 и ~135)
+       Первый overload (Map<String, String>) перестраивает exact/stem buckets
+       inline на каждый вызов, дублируя логику BucketsCache.init.
+       Второй overload (BucketsCache) — быстрый путь.
+     - ReferenceDetailFragment.kt: findRanges(text, itemMap) — slow path (строка ~977, ~2231)
+     - EquipmentDetailFragment.kt: findRanges(clean, combinedMap, excludedRanges) — slow path (строка ~153)
+     - ReferenceDetailFragment.kt: findRanges(clean, cache, excludedRanges) — fast path (строка ~2059)
+     - SpellDetailFragment.kt: ручной indexOf-loop (строка ~100) вместо findRanges
+
+A15. createTableView — 1 реализация, но 2 версии таблиц
+     Реализации:
+     - ReferenceDetailFragment.kt: createTableView(table: Table) (строка ~640)
+       — горизонтальный скролл, TableLayout, headerRow + dataRows
+     - ReferenceDetailFragment.kt: addClassTable(table: ClassTable) (строка ~780)
+       — фиксированная левая колонка + горизонтальный скролл справа
+     Оба метода создают TableRow, TextView, задают цвета, padding.
+     ClassTable и Table — структурно идентичны (см. 02_model_audit #6).
+
+
+B) Дубли по UI-паттернам
+-------------------------
+
+B1. Expandable card — 7 копий с одинаковым boilerplate
+    Реализации (все в ReferenceDetailFragment.kt):
+
+    | Метод                    | Строка | open-ids set       | subtitle | table | desc2 |
+    |--------------------------|--------|--------------------|----------|-------|-------|
+    | createFeatureCard        | ~1120  | openFeatureIds     | level    | ✓     | ✓     |
+    | createInvocationCard     | ~730   | openInvocationIds  | level+req| ✓     | ✓     |
+    | createMetamagicCard      | ~530   | openMetamagicIds   | cost     | ✗     | ✗     |
+    | createManeuversCard      | ~560   | openManeuversIds   | ✗        | ✗     | ✗     |
+    | createSchemsCard         | ~590   | openSchemsIds      | ✗        | ✓     | ✓     |
+    | createSpeciesTraitCard   | ~1310  | (нет!)             | level    | ✓     | ✓     |
+    | createClassSubclassCard  | ~410   | (нет!)             | ✗        | ✓     | ✓     |
+
+    Общий boilerplate (повторяется 7 раз, ~30 строк каждая):
+    1. MaterialCardView(context).apply { layoutParams, radius=12dp, cardElevation=2dp }
+    2. LinearLayout(context).apply { orientation=VERTICAL, padding=16dp }
+    3. card.addView(inner)
+    4. TextView(context).apply { text=title, TitleMedium, BOLD }
+    5. inner.addView(title)
+    6. LinearLayout(context).apply { orientation=VERTICAL, isVisible=false }
+    7. inner.addView(body)
+    8. body.addView(buildRichLinkedTextView(description))
+    9. (опционально) body.addView(createTableView(table))
+    10. (опционально) body.addView(buildRichLinkedTextView(desc2))
+    11. if (id in openXxxIds) body.isVisible = true
+    12. card.setOnClickListener { body.isVisible = !body.isVisible; update openXxxIds }
+
+    Что меняется:
+    - title-формат: "Уровень ${level}: ${name}" (Feature, SpeciesTrait) vs "${name}" (остальные)
+    - subtitle-формат: "уровень Колдуна $it" (Invocation) vs "${name} • $cost" (Metamagic) vs нет
+    - body-контент: buildRichLinkedTextView всегда, table/desc2 опциональны
+    - open-ids set: 5 имеют, 2 не имеют (SpeciesTrait, Subclass)
+    - FeatureCard имеет ленивый linkify (placeholder → linked при первом раскрытии)
+
+B2. Quick Info секция — 5 реализаций с одним паттерном
+    Реализации:
+    - ReferenceDetailFragment.renderItem(): addSection("Быстрая информация") { addRow(...) }
+    - ReferenceDetailFragment.renderSpell(): addSection("Быстрая информация") { addRow(...) }
+    - ReferenceDetailFragment.renderSpecies(): addSection("Быстрая информация") { addRow(...) }
+    - ReferenceDetailFragment.renderMonster(): addSection("Ключевые характеристики") { addRow(...) }
+    - EquipmentDetailFragment.render(): addSection("Быстрая информация") { addRow(...) }
+    - SpellDetailFragment.render(): addSection("Быстрая информация") { addRow(...) }
+
+    Паттерн: addSection(title) { addRow(label1, value1); if(...) addRow(label2, value2); ... }
+    Каждый render сам определяет порядок строк и условия.
+
+B3. Description секция — 4 реализации с разным linkify
+    Реализации:
+    - ReferenceDetailFragment.renderItem(): addSection("Описание") { addLinkedItemDescription(...) }
+    - ReferenceDetailFragment.renderSpell(): addSection("Описание") { addView(buildLinkedTextView(...)) }
+    - ReferenceDetailFragment.renderMonster(): addSection("Описание") { addText(desc) }
+    - EquipmentDetailFragment.render(): addSection("Описание") { addLinkedText(...) }
+    - SpellDetailFragment.render(): addSection("Описание") { addView(buildLinkedTextView(...)) }
+    - ConditionReferenceFragment.render(): addSection("Описание") { addView(buildLinkedTextView(...)) }
+
+    4 разных метода для отрисовки текста с ссылками:
+    addLinkedItemDescription, buildRichLinkedTextView, addLinkedText, buildLinkedTextView.
+
+B4. Sort mode enum — 2 параллельные иерархии
+    Реализации:
+    - EquipmentSortMode: NAME_ASC, NAME_DESC, RARITY_ASC, RARITY_DESC, CATEGORY_ASC
+      Файл: EquipmentViewModel.kt
+    - SpellSortMode: LEVEL_ASC, LEVEL_DESC, NAME_ASC, NAME_DESC, SCHOOL_ASC
+      Файл: SpellsViewModel.kt
+    - PreviewSortMode (sealed): DEFAULT, NAME_ASC, NAME_DESC, CHALLENGE_ASC, CHALLENGE_DESC,
+      TYPE_ASC, SIZE_ASC, SUBCATEGORY_ASC, RARITY_ASC
+      Файл: ReferenceListFragment.kt, строки ~906-917
+
+    Все три имеют val label: String и отличаются только набором вариантов.
+    Нет общего интерфейса/базового класса.
+
+B5. Filters data class — 2 параллельные структуры
+    Реализации:
+    - EquipmentFilters: categories, rarities, weaponCategories, armorCategories,
+      allSubcategories, magic, showFavoritesOnly
+      Файл: EquipmentViewModel.kt
+    - SpellFilters: levels, schools, classes, subclasses, concentration, ritual,
+      components, castingTimes, showFavoritesOnly
+      Файл: SpellsViewModel.kt
+
+    Общий паттерн: val isActive get() = listOfFields.any { it.isNotEmpty() }
+    Разные поля, но одинаковая структура.
+
+B6. Summary data class — 3 параллельные модели
+    Реализации:
+    - ItemSummary: fullId, name, category, subcategory, rarity, magic, cost, weight, tags
+      Файл: EquipmentViewModel.kt, строки ~13-24
+    - SpellSummary: fullId, name, level, school, concentration, ritual, components,
+      classes, subclasses, castingTime, damageType, tags, material, materialHasCost, materialConsumable
+      Файл: SpellsViewModel.kt, строки ~14-32
+    - ReferenceListItem: fullId, name, subtitle, category, source, subcategory, rarity,
+      materialHasCost, materialConsumable, size, creatureType, challengeRating, environment, isSwarm, hitDie
+      Файл: ReferenceListAdapter.kt, строки ~14-31
+
+    Общие поля: fullId, name, tags. Разные — типоспецифичные.
+    Нет общего базового класса/интерфейса.
+
+B7. name→id mapping — 3 ViewModel строят одни и те же маппинги
+    Реализации:
+    - EquipmentViewModel.kt, строки ~89-111:
+      itemNameToIdMap, spellNameToIdMap, conditionNameToIdMap
+    - SpellsViewModel.kt, строки ~152-166:
+      conditionNameToIdMap, subclassToClassMap
+    - ReferenceViewModel.kt, строки ~96-127:
+      getItemNameMap(), getSpellNameMap(), getConditionNameMap(),
+      getCombinedNameMap(), getCombinedBucketsCache()
+
+    Каждый ViewModel независимо строит Map<String, String> (name → fullId)
+    из одних и тех же манифест-данных.
+    EquipmentViewModel и SpellsViewModel используют простые Maps.
+    ReferenceViewModel использует BucketsCache для ItemLinkifier.
+    EquipmentViewModel НЕ использует BucketsCache → findRanges пересоздаёт бакеты на каждый вызов.
+
+
+C) Дубли по форматированию/локализации
+----------------------------------------
+
+C1. localizeSchool — 3 реализации с РАЗНЫМИ переводами
+    Реализации:
+    - UiLocalizer.school(): "Ограждение", "Вызов", "Прорицание", "Очарование",
+      "Воплощение", "Иллюзия", "Некромантия", "Преобразование"
+    - SpellDetailFragment.localizeSchool(): getString(R.string.school_abjuration) и т.д.
+      (значения в strings.xml — Могут отличаться от UiLocalizer)
+    - SpellsViewModel.localizeSchool(): when-блок (строки ~185-194)
+    - SpellListAdapter: ещё одна копия when-блок
+    - ReferenceDetailFragment.localizeSpellSchool(): делегирует UiLocalizer.school() ✓
+
+    Итого: 4 реализации, 3 из них не используют UiLocalizer.
+    Риск: Разные переводы школы в разных местах приложения.
+
+C2. localizeCategory — 2 реализации с РАЗНЫМ набором значений
+    Реализации:
+    - UiLocalizer.category(): 16 значений (weapon, armor, shield, ...)
+    - ReferenceDetailFragment.localizeCategory(): 24 значения (добавляет origin,
+      universal, fighting_style, epic_boon, dragonmark, dark_gift — feat-категории)
+    - EquipmentDetailFragment.localizeCategory(): делегирует UiLocalizer ✓
+
+    Риск: Feat-категории не локализуются через UiLocalizer.
+
+C3. localizeSubcategory — 2 реализации
+    - UiLocalizer.subcategory(): 10 значений
+    - ReferenceDetailFragment.localizeSubcategory(): 10 значений (идентичный набор)
+    - EquipmentDetailFragment.localizeSubcategory(): делегирует UiLocalizer ✓
+
+    RefDetail — полная копия UiLocalizer.subcategory(), но не вызывает его.
+
+C4. localizeCostUnit — 2 реализации
+    - UiLocalizer.costUnit(): gp→ЗМ, sp→СМ, cp→ММ, pp→ПМ
+    - ReferenceDetailFragment.localizeCostUnit(): + ep→ЭМ (дополнительное значение!)
+    - EquipmentDetailFragment.formatCost(): делегирует UiLocalizer.costUnit() ✓
+
+    Риск: "ep" (электрум) не локализуется через UiLocalizer.
+
+C5. localizeWeightUnit — 2 идентичные реализации
+    - UiLocalizer.weightUnit(): lb→фунт., kg→кг, + oz→унц.
+    - ReferenceDetailFragment.localizeWeightUnit(): lb→фунт., kg→кг (без oz!)
+    - EquipmentDetailFragment.formatWeight(): делегирует UiLocalizer.weightUnit() ✓
+
+    RefDetail — урезанная копия (отсутствует oz).
+
+C6. localizeAbility — 2 реализации
+    - UiLocalizer.ability(): "Сила", "Ловкость", и т.д. (хардкод)
+    - ReferenceDetailFragment.localizeAbility(): getString(R.string.ability_strength) и т.д.
+    - EquipmentDetailFragment: не использует (нет ability scores)
+
+    Одинаковая логика, разные источники строк.
+
+C7. Функции ТОЛЬКО в RefDetail (нет в UiLocalizer):
+    - localizeCondition(): 15-entry when (строка ~1800)
+    - localizeEnvironment(): 30+ entry when (строка ~1840)
+    - localizeAlignment(): сложная логика (строка ~1810)
+    - localizeSense(): 5-entry when (строка ~1780)
+    - localizeSkill(): 18-entry when (строка ~1910)
+    - localizeSize(): 6-entry when (строка ~2160)
+    - localizeType(): 14-entry when (строка ~2110) — creature type
+    - localizeMonsterSizeDetail(): 7-entry when (строка ~2170)
+    - localizeDamageType(): делегирует UiLocalizer ✓ (но используется и для monster vuln)
+    - localizeComponent():SpellDetailFragment только, 3-entry when
+
+C8. localizeDamageType — вызывается в 3 местах с разными источниками
+
+C9. ИНКОНСИСТЕНТНЫЕ ПЕРЕВОДЫ — разные места дают разные русские строки
+    Критичные примеры:
+    - "conjuration" → UiLocalizer: "Вызов"; SpellsViewModel/SpellListAdapter/ReferenceListFragment: "Призыв"
+    - "armor" → UiLocalizer: "Доспех"; ReferenceDetailFragment/ReferenceListFragment: "Броня"
+    - "uncommon" → UiLocalizer/EquipmentVM: "Необычный"; ReferenceListFragment: "Нестандартный"
+    - "varies" → UiLocalizer/EquipmentVM: "Варьируется"; ReferenceListFragment: "Редкость варьируется"
+    - "sp" → UiLocalizer/RefDetail: "СМ"; EquipmentViewModel: "сер"
+    - "lb" → UiLocalizer: "фунт."; EquipmentViewModel: "фнт."; RefDetail: "фунт."
+    - "light_armor" → UiLocalizer: "Лёгкий"; RefDetail: "Лёгкий доспех"
+
+    Следствие: Один и тот же источник (например, "uncommon") отображается
+    разным текстом в зависимости от экрана. Это баг UX.
+
+
+D) Что вынести в helpers
+--------------------------
+
+D1. CardBuilder (core:ui) — устраняет A1, A2, A3, A5, A6
+    Создать: core/ui/render/CardBuilder.kt
+    Методы:
+      fun addSection(target: LinearLayout, context: Context, title: String, block: LinearLayout.() -> Unit)
+      fun LinearLayout.addRow(context: Context, label: String, value: String)
+      fun LinearLayout.addText(context: Context, text: String)
+      fun LinearLayout.addLinkedText(context: Context, text: String, linkify: (String) -> Spannable)
+      fun addSourceSection(target: LinearLayout, context: Context, source: SourceInfo)
+      fun showNotFound(target: LinearLayout, context: Context, message: String)
+    Устраняет: 4 копии addSection, 3 копии addRow, 3 копии addText,
+              3 копии addSourceSection, 3 копии showNotFound
+    Эффект: ~150 строк дублированного кода → 1 файл ~50 строк
+
+D2. ExpandableCardFactory (core:ui) — устраняет B1
+    Создать: core/ui/render/ExpandableCardFactory.kt
+    Метод:
+      fun createCard(
+          context: Context,
+          title: String,
+          subtitle: String? = null,
+          bodyBuilder: LinearLayout.() -> Unit,
+          openId: String? = null,
+          openIds: MutableSet<String>? = null,
+          lazyLinkify: Boolean = false
+      ): MaterialCardView
+    Устраняет: 7 копий createXxxCard в RefDetail
+    Эффект: ~250 строк boilerplate → 1 фабрика ~40 строк + 7 вызовов по ~5 строк
+
+D3. RichTextLinkifier (core:ui) — устраняет A4
+    Создать: core/ui/render/RichTextLinkifier.kt (расширение ItemLinkifier)
+    Метод:
+      fun linkify(
+          context: Context,
+          text: String,
+          nameMap: Map<String, String> (или BucketsCache),
+          onNavigate: (String) -> Unit,
+          useBucketsCache: Boolean = true
+      ): Spannable
+    Устраняет: 4 копии buildRichLinkedTextView/linkify/buildLinkedTextView
+    Эффект: ~200 строк дублированного кода → 1 метод ~30 строк
+
+D4. LocalizeRegistry (дополнить UiLocalizer) — устраняет C1-C7
+    Добавить в: core/ui/local/UiLocalizer.kt
+    Новые методы:
+      fun condition(value: String): String — 15-entry when (из RefDetail)
+      fun environment(value: String): String — 30+ entry when (из RefDetail)
+      fun alignment(value: String): String — сложная логика (из RefDetail)
+      fun sense(value: String): String — 5-entry when (из RefDetail)
+      fun skill(value: String): String — 18-entry when (из RefDetail)
+      fun size(value: String): String — 6-entry when (из RefDetail)
+      fun creatureType(value: String): String — 14-entry when (из RefDetail)
+      fun component(value: String): String — 3-entry when (из SpellDetail)
+      fun monsterSizeDetail(value: String): String — 7-entry when (из RefDetail)
+    Дополнить: category() — добавить feat-категории (origin, fighting_style и т.д.)
+    Дополнить: costUnit() — добавить "ep" → "ЭМ"
+    Дополнить: weightUnit() — уже есть "oz", RefDetail просто не использует
+    Заменить: SpellDetailFragment.localizeSchool → UiLocalizer.school()
+    Устраняет: 3 копии localizeSchool, 2 копии localizeCategory,
+              2 копии localizeSubcategory, 2 копии localizeCostUnit,
+              2 копии localizeWeightUnit, 2 копии localizeAbility
+    Эффект: ~300 строк when-блоков → 1 файл
+
+D5. SummaryModel (core:model) — устраняет B6
+    Создать: core/model/Summary.kt
+    data class Summary(
+        val fullId: String,
+        val name: String,
+        val tags: List<String>,
+        val typeSpecific: Map<String, Any> // или sealed class
+    )
+    Или: interface Summary { val fullId: String; val name: String; val tags: List<String> }
+    Устраняет: 3 дублирующие Summary-модели в ViewModel/Adapter
+    Эффект: ~60 строк → 1 файл, общий базовый тип для списков
+
+D6. NameMapProvider (core:data или core:ui) — устраняет A12, B7
+    Добавить в: ContentRepository (или отдельный NameMapProvider)
+    Методы:
+      fun getItemNameMap(): Map<String, String>
+      fun getSpellNameMap(): Map<String, String>
+      fun getConditionNameMap(): Map<String, String>
+      fun getCombinedNameMap(): Map<String, String>
+      fun getCombinedBucketsCache(): ItemLinkifier.BucketsCache
+    С кешированием. Заменяет 4 независимые реализации (EquipmentVM, SpellsVM,
+    ReferenceVM, EquipmentDetailFragment).
+    Устраняет: ~80 строк дублированной логики построения name→id маппингов
+    + устраняет case-sensitive vs lowercase конфликт.
+    Дополнительно: EquipmentViewModel начнёт использовать BucketsCache
+    вместо пересоздания бакетов на каждый вызов findRanges.
+
+D7. FilteredListViewModel<T> (core:ui) — устраняет A10, A11, B4, B5, B7-частично
+    Создать: core/ui/viewmodel/FilteredListViewModel.kt
+    Абстрактный базовый класс с:
+      var search: String, var filters: T, var sortMode: SortMode
+      abstract fun recompute()
+      fun clearSearchAndFilters()
+      fun hasActiveSearchOrFilters(): Boolean
+      fun toggleFavorite(id: String)
+    Устраняет: дублирование loadFavorites/saveFavorites/toggleFavorite/recompute/
+    clearSearchAndFilters/hasActiveSearchOrFilters в 3 ViewModel
+    Эффект: ~200 строк дублированной логики → 1 базовый класс
+
+D8. FavoritesStore (core:ui) — устраняет A10
+    Создать: core/ui/data/FavoritesStore.kt
+    Методы:
+      fun load(): Set<String>
+      fun save(ids: Set<String>)
+      fun toggle(id: String): Set<String>
+    Использует SharedPreferences "favorites_<name>".
+    Устраняет: 2 копии loadFavorites/saveFavorites/toggleFavorite
+
+D9. formatCost / formatWeight (core:ui) — устраняет A9
+    Добавить в: UiLocalizer или отдельный Formatter
+    Методы:
+      fun formatCost(cost: Cost): String
+      fun formatWeight(weight: Weight): String
+    С统一ным форматированием double (15.0 → 15).
+    Устраняет: 2 копии formatCost + 2 копии inline-форматирования в RefDetail
+
+
+E) Рейтинг по выгоде
+----------------------
+
+Рейтинг = (кол-во устраняемых дублей × кол-во затронутых файлов) ÷ риск
+
+| # | Helper                | Дублей | Файлов | Строк | Риск | Выгода |
+|---|----------------------|--------|--------|-------|------|--------|
+| 1 | LocalizeRegistry (D4)| 15+    | 6      | ~300  | низк | ВЫСОКАЯ |
+| 2 | CardBuilder (D1)     | 16     | 4      | ~150  | низк | ВЫСОКАЯ |
+| 3 | RichTextLinkifier(D3)| 4      | 4      | ~200  | низк | ВЫСОКАЯ |
+| 4 | FilteredListVM (D7)  | 9      | 3      | ~200  | сред | ВЫСОКАЯ |
+| 5 | NameMapProvider (D6)  | 5      | 4      | ~80   | низк | СРЕДНЯЯ |
+| 6 | ExpandableCard (D2)  | 7      | 1      | ~250  | сред | СРЕДНЯЯ |
+| 7 | FavoritesStore (D8)  | 2      | 2      | ~40   | низк | НИЗКАЯ |
+| 8 | SummaryModel (D5)    | 3      | 3      | ~60   | низк | НИЗКАЯ |
+| 9 | Formatter (D9)       | 4      | 2      | ~40   | низк | НИЗКАЯ |
+
+Рекомендованный порядок:
+  1. D4 LocalizeRegistry — устраняет 15+ дублей и реальные баги разных переводов
+  2. D1 CardBuilder — максимальный эффект, минимальный риск, не меняет UI
+  3. D3 RichTextLinkifier — унификация linkify, требует тест навигации
+  4. D7 FilteredListVM — устраняет favorites/recompute/clearSearch в 3 ViewModel + Fragment
+  5. D6 NameMapProvider — устраняет дубли данных, устраняет case-sensitive vs lowercase конфликт
+  6. D2 ExpandableCard — самый эффектный, но средний риск (7 разных карточек)
+  7. D8 FavoritesStore — маленький helper, можно сделать вместе с D7
+  8. D5 SummaryModel — низкий эффект, можно отложить
+  9. D9 Formatter — низкий эффект, делать вместе с D4

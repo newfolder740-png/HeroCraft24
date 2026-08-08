@@ -1,0 +1,368 @@
+Аудит моделей данных HeroCraft24
+=================================
+Дата: 2026-08-08
+Источник: 01_architecture_report.txt + анализ core/model, core/data, assets/packs/phb2024
+
+
+A) Проблемные модели
+---------------------
+
+1. ManifestObjects — отсутствуют 4 категории
+   Файл: core/data/src/main/java/com/herocraft24/core/data/Manifest.kt
+   Проблема: ManifestObjects содержит 12 категорий (spells, items, classes, species,
+   backgrounds, feats, monsters, conditions, mechanics, glossary, features, subclasses),
+   но в assets/packs/phb2024/ есть ещё 4 директории: invocations/, metamagics/,
+   maneuvers/, schems/. Эти категории не индексируются в манифесте.
+   Следствие: ContentRepository.allEntries() не включает их; resolveReference(),
+   resolveName(), getEntryType(), findType() не знают об этих типах.
+   Методы getInvocation/getMetamagic/getManeuvers/getSchems работают, но только
+   при прямом вызове с известным fullId — невозможно перечислить все объекты
+   или найти тип по id.
+
+2. Maneuvers — отсутствует поле cost
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt (строка ~Maneuvers)
+   Проблема: JSON-файлы манёвров содержат поле "cost" (напр. "1 Кость превосходства"),
+   но модель Maneuvers имеет только {id, name, description}. Поле cost теряется
+   при десериализации (ignoreUnknownKeys=true молча проглатывает).
+   Следствие: UI не может отобразить стоимость манёвра.
+
+3. SpellcastingInfo — отсутствует поле requires_tools
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt (строка ~SpellcastingInfo)
+   Проблема: artificer.json содержит "spellcasting": {"ability":"intelligence","type":"prepared","requires_tools":true},
+   но SpellcastingInfo не имеет поля requires_tools. Данные теряются.
+   Следствие: Невозможно отобразить требование инструментов для заклинаний Артефактора.
+
+4. GameClass — жёсткие списки type-specific полей
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt (строка ~GameClass)
+   Проблема: GameClass содержит отдельные поля: invocations, metamagics, wild_magic,
+   maneuvers, schems. Каждый новый тип особенности класса требует добавления нового
+   поля в data class. Это не масштабируется: добавление класса с "infusions" или
+   "ki_disciplines" потребует менять модель и весь код, который её использует.
+   Альтернатива: Map<String, List<String>> или блоки с type-дискриминатором.
+
+5. GameClass.key_attributes — Map<String, String> с русскими ключами
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Проблема: key_attributes содержит русские ключи ("Основная характеристика", "Кость хитов"
+   и т.д.). Это делает программный доступ к конкретным атрибутам невозможным без
+   хардкода русских строк. Кроме того, значения тоже русские, а не LocalizedString.
+   Следствие: Невозможно отобразить key_attributes на английском; невозможно
+   программно извлечь "hit_die_text" или "primary_ability_text".
+
+6. Дублирование Table-структур
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Проблема: ClassTable + ClassTableColumn + ClassTableRow и Table + TableColumn + TableRow
+   — практически идентичные структуры. ClassTableColumn и TableColumn совпадают
+   полностью. ClassTableRow имеет поле level, TableRow — нет. Это дублирование
+   ведёт к раздуванию кода и необходимости поддерживать два набора рендер-логики.
+   ManifestEntry также не имеет type-дискриминатора для таблиц.
+
+7. Строковые поля, которые должны быть enum
+   Файл: SpellModels.kt, ItemModels.kt, MonsterModels.kt, SpeciesModels.kt, MechanicModels.kt
+   Проблема: Следующие поля содержат значения из фиксированных наборов, но
+   объявлены как String:
+     - Spell.school: 8 значений (evocation, abjuration, conjuration, divination,
+       enchantment, illusion, necromancy, transmutation)
+     - Spell.casting_time: свободный текст, но в D&D ~6 стандартных вариантов
+       + вариации; при этом в JSON значения нестандартны ("Действие" vs "1 действие")
+     - Item.category: ~10 значений (adventuring_gear, weapon, armor, tool, etc.)
+     - Item.rarity: ~7 значений (non-magic, common, uncommon, rare, very_rare,
+       legendary, artifact)
+     - Monster.size: 5 значений (tiny, small, medium, large, huge, gargantuan)
+     - Monster.creature_type: ~14 значений (aberration, beast, celestial, etc.)
+     - Monster.alignment: ~9 базовых комбинаций
+     - Species.creature_type, Species.size: аналогично Monster
+     - Mechanic.category, Feat.category: потенциально enum, но набор шире
+   Следствие: Нет типобезопасности при фильтрации/сортировке; опечатки в JSON
+   не ловятся; локализация этих полей делается через if/when в ViewModel вместо
+   единого enum.resLabel().
+
+8. Monster — 17 nullable-полей из ~30
+   Файл: core/model/src/main/java/com/herocraft24/core/model/MonsterModels.kt
+   Проблема: subtype, armor_class_description, initiative, speed, saving_throws,
+   skills, damage_vulnerabilities, damage_resistances, damage_immunities,
+   condition_immunities, senses, bonus_actions, reactions, legendary_actions,
+   mythic_actions, lair_actions, treasure, equipment — все nullable.
+   Причина: не все монстры имеют все эти поля. Но пустые списки (null вместо [])
+   для damage_vulnerabilities и т.п. создают трёхзначную логику (null / empty / non-empty),
+   что усложняет UI-код.
+   Примечание: частично это обосновано — null = "не указано" vs [] = "нет".
+   Но для damage_vulnerabilities/resistances/immunities разница бессмысленна.
+
+9. Invocation — модель переопределена относительно JSON
+   Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+   Проблема: Invocation имеет поля table, description2, но реальные JSON-файлы
+   invocations не содержат этих полей. Модель обещает то, чего нет в данных.
+   Аналогично: Schems имеет source, tags, references, description2, но JSON-файлы
+   schems содержат только id, name, table, description2. Поля source, tags,
+   references избыточны в модели.
+
+10. Summary-модели в ViewModels — дублирование
+    Файлы: EquipmentViewModel.kt (ItemSummary), SpellsViewModel.kt (SpellSummary),
+           ReferenceListAdapter.kt (ReferenceListItem)
+    Проблема: Три плоские модели для списков, каждая с fullId, name, tags +
+    типоспецифичные поля. Это не в core:model, а в слое ViewModel, что нарушает
+    разделение слоёв. Дублирование логики построения (из GameClass → ReferenceListItem,
+    из Spell → SpellSummary и т.д.).
+
+11. LocalizedString — ru nullable, но en часто пустой
+    Файл: core/model/src/main/java/com/herocraft24/core/model/Common.kt
+    Проблема: Множество JSON-файлов имеют {"en": "", "ru": "Непустой текст"}.
+    LocalizedString.get() при locale="ru" вернёт русский, при locale="en" вернёт
+    пустую строку. Nullable-ru означает, что при отсутствии русского текста будет
+    показан английский, но при отсутствии английского текста — показана пустота.
+    Модель не различает "поле отсутствует" и "поле пустое".
+
+12. Condition/GlossaryEntry — нет description2 и table
+    Файлы: ConditionModels.kt, MechanicModels.kt (GlossaryEntry)
+    Проблема: Почти все модели имеют description2 и table, но Condition и GlossaryEntry
+    — нет. Это не ошибка, но создаёт несовместимость: если в будущем_condition
+    понадобится таблица или дополнительное описание, потребуется менять модель.
+    Меньше беспокоит, чем другие проблемы.
+
+13. Item.subcategory / Mechanic.subcategory — StringOrListSerializer
+    Файл: core/model/src/main/java/com/herocraft24/core/model/StringOrListSerializer.kt
+    Проблема: Необходимость кастомного сериализатора указывает на несогласованность
+    JSON-данных: в одних файлах "subcategory": "value" (строка), в других
+    "subcategory": ["value"] (массив). Модель нормализует это к List<String>,
+    но это workaround, не исправление данных. При сериализации обратно
+    один элемент запишется как строка, что сохраняет несогласованность.
+
+14. EquipmentChoice — отсутствует поле type
+    Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+    Проблема: JSON-файлы background содержат "equipment_choices": [{"type": "equipment",
+    "options": [...]}], но EquipmentChoice не имеет поля type. Поле теряется
+    при десериализации. Следствие: Невозможно различить типы наборов снаряжения.
+
+15. Invocation / Metamagic / Maneuvers / Schems — нарушен паттерн type+format_version
+    Файл: core/model/src/main/java/com/herocraft24/core/model/ClassModels.kt
+    Проблема: Все остальные модели (GameClass, Subclass, Feature, Spell, Item, Monster,
+    Species, Background, Feat, Condition, Mechanic, GlossaryEntry) содержат поля
+    type и format_version. Invocation, Metamagic, Maneuvers, Schems — нет.
+    JSON-файлы этих категорий тоже не содержат этих полей. Это согласовано,
+    но нарушает единый паттерн и не позволяет ContentRepository.findType()
+    определить тип по полю "type" в JSON.
+
+16. Item — versatile_dice никогда не заполняется в JSON
+    Файл: core/model/src/main/java/com/herocraft24/core/model/ItemModels.kt
+    Проблема: WeaponDamage.versatile_dice объявлено в модели, но ни один
+    проверенный JSON-файл оружия не содержит этого поля. Длинный меч
+    является versatile, но versatile_dice отсутствует — информация о
+    универсальном уроне содержится только в тексте description.
+    Следствие: Невозможно программно отобразить урон versatile-оружия.
+
+
+B) Риск изменения
+------------------
+
+1. ManifestObjects — добавление 4 категорий
+   Риск: НИЗКИЙ. Добавление полей с default emptyList() в ManifestObjects не ломает
+   существующий JSON-манифест. ContentRepository.allEntries() и findType() нужно
+   обновить — это внутренний код, не затрагивающий ассеты.
+
+2. Maneuvers — добавление поля cost
+   Риск: НИЗКИЙ. Добавление val cost: String? = null в data class не ломает
+   десериализацию существующих JSON (ignoreUnknownKeys=true). Новое поле
+   будет прочитано из JSON автоматически.
+
+3. SpellcastingInfo — добавление поля requires_tools
+   Риск: НИЗКИЙ. Добавление val requires_tools: Boolean = false не ломает
+   существующий JSON (ignoreUnknownKeys=true + coerceInputValues).
+
+4. GameClass — замена жёстких списков на Map<String, List<String>>
+   Риск: ВЫСОКИЙ. Изменение структуры GameClass — одной из самых используемых
+   моделей — потребует переписать весь код, который читает gameClass.invocations,
+   gameClass.metamagics и т.д. Сюда входят: ReferenceDetailFragment,
+   ContentRepository, все ViewModel. Также потребуется миграция JSON-ассетов
+   (преобразование invocations/metamagics/... в blocks).
+
+5. GameClass.key_attributes — замена Map на структурированную модель
+   Риск: ВЫСОКИЙ. Потребует миграцию всех 13 JSON-файлов классов + перепись
+   UI-кода, который рендерит key_attributes. Текущий код скорее всего
+   итерирует по Map и выводит ключ-значение.
+
+6. Дублирование Table-структур — объединение
+   Риск: СРЕДНИЙ. Удаление ClassTable/ClassTableColumn/ClassTableRow и замена
+   на Table/TableColumn/TableRow потребует изменения GameClass.class_table: Table
+   и миграции JSON (добавление level в values-Map TableRow). Но ClassTableRow.level
+   можно перенести в values как "level": "1" и убрать отдельное поле.
+
+7. String → Enum для school, category, rarity, size, creature_type
+   Риск: СРЕДНИЙ. Сама замена в модели безопасна (Kotlin Serialization
+   поддерживает enum), но требует:
+   - Убедиться, что ВСЕ JSON-файлы используют только допустимые значения
+   - Добавить fallback для неизвестных значений (иначе падение при загрузке)
+   - Проверить 2771 JSON-файл на наличие опечаток/нестандартных значений
+   Без предварительного сканирования всех JSON — риск пропустить ошибку.
+
+8. Monster nullable → emptyList
+   Риск: СРЕДНИЙ. Замена null на emptyList() в модели требует изменения
+   JSON-ассетов (добавить [] вместо отсутствующего поля). Без миграции JSON
+   — coerceInputValues может помочь для List, но не для всех типов.
+
+9. Summary-модели — перенос в core:model
+   Риск: НИЗКИЙ. Перенос data class из ViewModel в core:model — чисто
+   структурное изменение, не затрагивает JSON. Но потребуется обновить
+   импорты в 3 ViewModel и 3 Adapter.
+
+10. LocalizedString — отказ от nullable ru
+    Риск: ВЫСОКИЙ. Потребует миграцию всех JSON, где ru отсутствует или null.
+    Слишком много ассетов для безопасного изменения.
+
+11. EquipmentChoice — добавление поля type
+    Риск: НИЗКИЙ. Добавление val type: String? = null не ломает
+    десериализацию. JSON background уже содержит это поле.
+
+12. Invocation / Metamagic / Maneuvers / Schems — добавление type/format_version
+    Риск: СРЕДНИЙ. Добавление полей в модель — безопасно (default-значения).
+    Но для полной согласованности нужно добавить type/format_version
+    во все 42 JSON-файла (28 invocations + 10 metamagics + 20 maneuvers + 4 schems).
+    Без этого findType() не сможет определить тип по JSON.
+
+
+C) Совместимые улучшения (без миграции JSON)
+----------------------------------------------
+
+1. Добавить 4 категории в ManifestObjects
+   Изменение: Добавить val invocations, val metamagics, val maneuvers, val schems
+   в ManifestObjects (default = emptyList()). Обновить allEntries() и findType()
+   в ContentRepository. Добавить resolveReference() для этих типов.
+   Почему безопасно: default emptyList() + ignoreUnknownKeys = существующий
+   манифест без этих полей будет работать как раньше.
+
+2. Добавить поле cost в Maneuvers
+   Изменение: val cost: String? = null в data class Maneuvers.
+   Почему безопасно: JSON уже содержит это поле; модель просто начнёт его читать.
+   Существующие JSON без cost (если есть) получат null.
+
+3. Добавить поле requires_tools в SpellcastingInfo
+   Изменение: val requires_tools: Boolean = false.
+   Почему безопасно: JSON artificer уже содержит это поле; другие классы
+   получат default false.
+
+4. Удалить избыточные поля из Invocation/Schems
+   Изменение: Ничего не менять — поля с default значениями не вредят.
+   Но можно пометить @Transient поля, которые не ожидаются в JSON.
+   Почему безопасно: @Transient пропускает поле при сериализации/десериализации.
+
+5. Перенести Summary-модели в core:model
+   Изменение: Создать ItemSummary, SpellSummary, ReferenceListItem в core:model
+   с общей базой (fullId, name, tags). Удалить дубли из ViewModel.
+   Почему безопасно: Чисто кодовое изменение, не затрагивает JSON.
+
+6. Добавить enum-классы без изменения моделей
+   Изменение: Создать enum классы (SpellSchool, ItemCategory, ItemRarity,
+   CreatureSize, CreatureType) в core:model. Использовать в UI-коде
+   через when(school) -> SpellSchool.valueOf(school) с fallback.
+   Почему безопасно: Enum не используется в сериализации, только в UI-логике.
+   Даёт типобезопасность без риска для JSON.
+
+7. Нормализовать Monster nullable-поля в коде
+   Изменение: Добавить extension-функции:
+     val Monster.effectiveVulnerabilities get() = damage_vulnerabilities ?: emptyList()
+   и т.п. для всех 17 nullable-полей.
+   Почему безопасно: Не меняет модель, не меняет JSON, упрощает UI-код.
+
+8. Добавить поле type в EquipmentChoice
+   Изменение: val type: String? = null в data class EquipmentChoice.
+   Почему безопасно: JSON background уже содержит это поле; другие
+   использования EquipmentChoice получат default null.
+
+9. Добавить type/format_version в Invocation / Metamagic / Maneuvers / Schems
+   Изменение: Добавить val type: String = "invocation" и val format_version: Int = 1
+   (и аналогично для других) в соответствующие data class.
+   Почему безопасно: default-значения работают с существующими JSON.
+   findType() можно будет обновить, чтобы использовать поле type из JSON.
+
+
+D) Несовместимые улучшения (требуют миграции JSON)
+----------------------------------------------------
+
+1. GameClass: заменить жёсткие списки на Map<String, List<String>>
+   Миграция: 13 JSON-файлов классов. Заменить:
+     "invocations": [...], "metamagics": [...], "wild_magic": [...],
+     "maneuvers": [...], "schems": [...]
+   на:
+     "feature_blocks": {
+       "invocations": [...], "metamagics": [...], "wild_magic": [...],
+       "maneuvers": [...], "schems": [...]
+     }
+   Объём: 13 файлов (по числу классов). Но каждый новый тип особенности
+   будет работать без изменения модели.
+
+2. GameClass.key_attributes: заменить на структурированную модель
+   Миграция: 13 JSON-файлов. Заменить:
+     "key_attributes": {"Основная характеристика": "Харизма", ...}
+   на:
+     "key_attributes": {
+       "primary_ability": {"en": "Charisma", "ru": "Харизма"},
+       "hit_die": {"en": "d8 per Warlock level", "ru": "К8 за уровень Колдуна"},
+       ...
+     }
+   Объём: 13 файлов. Даёт локализацию и программный доступ.
+
+3. Объединить ClassTable и Table
+   Миграция: 13 JSON-файлов классов. Заменить ClassTable на Table,
+   добавить level в values-Map каждой строки:
+     {"level": 1, "values": {"proficiency_bonus": "+2", ...}}
+   → {"values": {"level": "1", "proficiency_bonus": "+2", ...}}
+   Объём: 13 файлов. Устраняет дублирование моделей.
+
+4. String → Enum в сериализации
+   Миграция: 2771 JSON-файл. Нужно убедиться, что ВСЕ значения соответствуют
+   enum-константам. Любая опечатка приведёт к крашу при загрузке.
+   Объём: массовое обновление всех ассетов. Требует предварительного
+   сканирования и валидации.
+
+5. Monster: заменить null → emptyList() в JSON
+   Миграция: 633 JSON-файла монстров. Добавить [] для всех null-списков.
+   Объём: 633 файла. Упрощает код, но не критично.
+
+6. Нормализовать subcategory в JSON (убрать StringOrListSerializer)
+   Миграция: Найти все JSON с "subcategory": "value" (строка) и заменить
+   на "subcategory": ["value"]. Количество: неизвестно, нужно сканирование.
+   Объём: зависит от количества файлов с строковым subcategory.
+
+
+E) Рекомендованный патч-порядок
+---------------------------------
+
+Приоритет: сначала безопасные изменения с максимальным эффектом,
+потом — изменения, требующие миграции.
+
+Патч 1 (совместимый, немедленный):
+  - Добавить 4 категории в ManifestObjects + обновить ContentRepository
+  - Добавить cost в Maneuvers
+  - Добавить requires_tools в SpellcastingInfo
+  - Добавить type в EquipmentChoice
+  - Добавить type/format_version в Invocation, Metamagic, Maneuvers, Schems
+  Обоснование: 5 точечных изменений, не требуют миграции JSON, решают
+  реальные проблемы потери данных и нарушенные паттерны.
+
+Патч 2 (совместимый, рефакторинг кода):
+  - Создать enum-классы (SpellSchool, ItemCategory, ItemRarity, CreatureSize,
+    CreatureType) для использования в UI-логике
+  - Добавить extension-функции для Monster nullable-полей
+  - Перенести Summary-модели в core:model
+  Обоснование: Улучшает типобезопасность и читаемость без риска.
+
+Патч 3 (несовместимый, подготовка):
+  - Сканировать все 2771 JSON-файл на:
+    а) допустимые значения school/category/rarity/size/creature_type
+    б) использование строкового subcategory
+    в) пустые vs null списки в Monster
+  Обоснование: Без данных о реальном содержимом JSON нельзя безопасно
+  менять модели. Это исследовательский шаг.
+
+Патч 4 (несовместимый, GameClass):
+  - Заменить жёсткие списки на feature_blocks: Map<String, List<String>>
+  - Заменить key_attributes на структурированную модель
+  - Объединить ClassTable и Table
+  Обоснование: 3 связанных изменения в GameClass, затрагивают 13 JSON-файлов.
+  Делать вместе, чтобы не мигрировать классы дважды.
+
+Патч 5 (несовместимый, массовый):
+  - String → Enum в сериализации (после валидации из Патч 3)
+  - Нормализовать subcategory в JSON
+  - Monster: null → emptyList()
+  Обоснование: Массовые изменения, требуют автоматизации и тестирования.
+  Делать после того, как все предыдущие патчи устоялись.
