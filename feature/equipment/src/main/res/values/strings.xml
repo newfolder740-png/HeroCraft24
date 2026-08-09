@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tab_equipment">Снаряжение</string>
+    <string name="not_found">Не найдено</string>
+    <string name="item_not_found">Предмет не найден.</string>
 </resources>

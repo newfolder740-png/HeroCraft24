@@ -180,7 +180,7 @@ class SpellListFragment : Fragment() {
     }
 
     private fun showSortDialog() {
-        val options = SpellSortMode.values()
+        val options = SpellSortMode.entries.toTypedArray()
         val labels = options.map { it.label }.toTypedArray()
         val current = viewModel.sortMode.value.ordinal
         android.app.AlertDialog.Builder(requireContext())

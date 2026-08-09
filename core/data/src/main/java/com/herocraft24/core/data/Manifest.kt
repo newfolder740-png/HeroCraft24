@@ -1,10 +1,12 @@
 package com.herocraft24.core.data
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.InternalSerializationApi
 import com.herocraft24.core.model.StringOrListSerializer
 import com.herocraft24.core.model.LocalizedString
 
 @Serializable
+@OptIn(InternalSerializationApi::class)
 data class Manifest(
     val pack_id: String,
     val name: LocalizedString,
@@ -22,6 +24,7 @@ data class Manifest(
 )
 
 @Serializable
+@OptIn(InternalSerializationApi::class)
 data class ManifestObjects(
     val spells: List<ManifestEntry> = emptyList(),
     val items: List<ManifestEntry> = emptyList(),
@@ -42,6 +45,7 @@ data class ManifestObjects(
 )
 
 @Serializable
+@OptIn(InternalSerializationApi::class)
 data class ManifestEntry(
     val id: String,
     val name: LocalizedString,

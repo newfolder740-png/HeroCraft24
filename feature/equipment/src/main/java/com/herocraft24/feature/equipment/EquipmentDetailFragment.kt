@@ -49,9 +49,9 @@ class EquipmentDetailFragment : Fragment() {
 
         val item = vm.getItem(itemId)
         if (item == null) {
-            binding.toolbar.title = "Not Found"
+            binding.toolbar.title = getString(R.string.not_found)
             binding.detailContent.addView(TextView(requireContext()).apply {
-                text = "Item not found."
+                text = getString(R.string.item_not_found)
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
                 setPadding(32, 64, 32, 32)
             })

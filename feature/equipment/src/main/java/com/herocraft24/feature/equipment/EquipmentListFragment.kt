@@ -221,7 +221,7 @@ class EquipmentListFragment : Fragment() {
     }
 
     private fun showSortDialog() {
-        val options = EquipmentSortMode.values()
+        val options = EquipmentSortMode.entries.toTypedArray()
         val labels = options.map { it.label }.toTypedArray()
         val current = vm.sortMode.value.ordinal
         android.app.AlertDialog.Builder(requireContext())
