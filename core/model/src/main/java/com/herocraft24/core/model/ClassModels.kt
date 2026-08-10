@@ -75,7 +75,16 @@ data class Feature(
     val is_placeholder: Boolean = false,
     val references: List<Reference> = emptyList(),
     val table: Table? = null,
-    val description2: LocalizedString? = null
+    val description2: LocalizedString? = null,
+    val choice: FeatureChoice? = null
+)
+
+@Serializable
+data class FeatureChoice(
+    val type: String, // "feat_category" | "skill" | etc.
+    val category: String? = null, // e.g. "fighting_style"
+    val count: Int = 1,
+    val options: List<String> = emptyList() // list of feat/item IDs
 )
 
 @Serializable

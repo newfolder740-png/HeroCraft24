@@ -15,6 +15,7 @@ data class Background(
     val references: List<Reference> = emptyList(),
     val ability_score_increases: List<AbilityScoreIncrease> = emptyList(),
     val ability_score_choice: Boolean = false,
+    val ability_score_mode: String = "choice", // "choice" | "all_plus_one"
     val skill_proficiencies: List<String> = emptyList(),
     val tool_proficiencies: List<String> = emptyList(),
     val tool_item_ids: List<String> = emptyList(),

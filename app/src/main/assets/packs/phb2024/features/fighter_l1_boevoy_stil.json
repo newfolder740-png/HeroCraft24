@@ -12,5 +12,22 @@
     "ru": "Вы отточили свое боевое мастерство и получаете черту из категории Боевых стилей на ваш выбор. Рекомендуется Оборона.\nКаждый раз, когда вы получаете уровень Воина, можете заменить выбранную черту на другую черту из категории Боевых стилей."
   },
   "is_subclass_choice": false,
-  "format_version": 1
+  "format_version": 1,
+  "choice": {
+    "type": "feat_category",
+    "category": "fighting_style",
+    "count": 1,
+    "options": [
+      "phb2024:archery",
+      "phb2024:blind_fighting",
+      "phb2024:defense",
+      "phb2024:dueling",
+      "phb2024:great_weapon_fighting",
+      "phb2024:interception",
+      "phb2024:protection",
+      "phb2024:thrown_weapon_fighting",
+      "phb2024:two_weapon_fighting",
+      "phb2024:unarmed_fighting"
+    ]
+  }
 }
