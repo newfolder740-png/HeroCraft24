@@ -1,1 +1,614 @@
-{"id":"wizard","type":"class","format_version":1,"name":{"en":"Wizard","ru":"Волшебник"},"short_description":{"en":"","ru":""},"description":{"en":"","ru":"Волшебники известны своими дотошными изысканиями в области устройства магических потоков. Своими заклинаниями они способны творить огненные вихри и искрящиеся молнии, затуманивать разум и перевоплощать существ. Их магия может призвать чудовищ с других планов бытия, заглянуть в будущее или создать защитный барьер. Самые могущественные заклинания Волшебников превращают одно вещество в другое, насылают метеориты с неба или даже открывают порталы в другие миры.\n\n\n\nБольшинство Волшебников придерживается научного подхода к магии: они исследуют её теоретические основы и, в частности, разделение магии по школам. Такие известные Волшебники, как Бигби, Таша, Морденкайнен и Йоланда, создали в своих исследованиях культовые заклинания, которыми сейчас пользуются во всей мультивселенной.\n\n\n\nЖизнь мудреца или преподавателя может прокормить Волшебника вне жизни приключений. Иные Волшебники становятся советниками, служат в войсках или ведут преступную жизнь.\n\n\n\nОднако даже самых любящих покой Волшебников выманивает из уютных библиотек и лабораторий и ведёт в обвалившиеся руины и затерянные города жажда знаний. Большая часть Волшебников верит, что их древние коллеги знали секреты ныне утраченных в веках чудес, и раскрытие этих тайн могло бы открыть путь к силе, превосходящей любую магию, доступную в наше время."},"source":{"book":{"en":"Player's Handbook 2024","ru":"Книга игрока (2024)"},"abbreviation":"PHB2024"},"tags":["arcane","spellcaster","full-caster","intelligence","prepared"],"hit_die":6,"primary_ability":"intelligence","saving_throws":["intelligence","wisdom"],"skills":{"count":2,"from":["arcana","history","insight","investigation","medicine","religion"]},"starting_proficiencies":{"armor":[],"weapons":["dagger","dart","sling","quarterstaff","light_crossbow"],"tools":[],"saving_throws":["intelligence","wisdom"],"skills":[]},"starting_equipment":[{"description":{"en":"Choose A or B","ru":"Выберите А или Б:"},"count":1,"options":[{"description":{"en":"A","ru":"А"},"options":[{"item_id":"phb2024:dagger","quantity":2},{"item_id":"phb2024:quarterstaff","quantity":1},{"item_id":"phb2024:robe","quantity":1},{"item_id":"phb2024:book","quantity":1},{"item_id":"phb2024:scholar_s_pack","quantity":1},{"description":{"en":"5 gp","ru":"5 ЗМ"},"quantity":1}]},{"description":{"en":"B","ru":"Б"},"options":[{"description":{"en":"55 gp","ru":"55 ЗМ"},"quantity":1}]}]}],"subclass_title":{"en":"Arcane Tradition","ru":"Магическая традиция"},"subclass_level":3,"features":["phb2024:wizard_l1_sotvorenie_zaklinaniy","phb2024:wizard_l1_znatok_ritualov","phb2024:wizard_l1_magicheskoe_vosstanovlenie","phb2024:wizard_l2_akademicheskie_znaniya","phb2024:wizard_l3_podklass_volshebnika","phb2024:wizard_l4_uvelichenie_harakteristik","phb2024:wizard_l5_zapomnit_zaklinanie","phb2024:wizard_l6_umenie_podklassa","phb2024:wizard_l8_uvelichenie_harakteristik","phb2024:wizard_l10_umenie_podklassa","phb2024:wizard_l12_uvelichenie_harakteristik","phb2024:wizard_l14_umenie_podklassa","phb2024:wizard_l16_uvelichenie_harakteristik","phb2024:wizard_l18_masterstvo_zaklinatelya","phb2024:wizard_l19_epicheskiy_dar","phb2024:wizard_l20_firmennye_zaklinaniya"],"subclasses":["phb2024:wizard_voplotitel","phb2024:wizard_illyuzionist","phb2024:wizard_ograditel","phb2024:wizard_proritsatel","phb2024:wizard_pevets_klinka"],"acquisition":{"first_class":{"en":"","ru":"Получите все атрибуты из таблицы «Ключевые атрибуты Волшебника».\nПолучите умения Волшебника 1-го уровня; они перечислены в таблице «Умения Волшебника»."},"multiclass":{"en":"","ru":"Получите Кость хитов из таблицы «Ключевые атрибуты Волшебника».\nПолучите умения Волшебника 1-го уровня; они перечислены в таблице «Умения Волшебника». Ознакомьтесь с правилами мультиклассирования, чтобы определить доступные вам ячейки заклинаний."}},"key_attributes":{"Основная характеристика":"Интеллект","Кость хитов":"К6 за уровень Волшебника","Хиты за уровень":"1к6 (или 4) + ваш модификатор Телосложения (суммарно минимум 1). Как персонаж 1-го уровня — 6 + ваш модификатор Телосложения","Владение спасбросками":"Интеллект и Мудрость","Владение навыками":"Выберите два: История, Медицина, Природа, Проницательность, Расследование, Религия, Тайная магия","Владение оружием":"Простое оружие","Тренированность с доспехами":"Отсутствует","Начальное снаряжение":"Выберите А или Б:"},"class_table":{"columns":[{"key":"proficiency_bonus","name":{"en":"Prof. Bonus","ru":"БМ"}},{"key":"cantrips","name":{"en":"Cantrips","ru":"Заговоры"}},{"key":"prepared","name":{"en":"Prepared","ru":"Подготовленные"}},{"key":"slot1","name":{"en":"1","ru":"1"}},{"key":"slot2","name":{"en":"2","ru":"2"}},{"key":"slot3","name":{"en":"3","ru":"3"}},{"key":"slot4","name":{"en":"4","ru":"4"}},{"key":"slot5","name":{"en":"5","ru":"5"}},{"key":"slot6","name":{"en":"6","ru":"6"}},{"key":"slot7","name":{"en":"7","ru":"7"}},{"key":"slot8","name":{"en":"8","ru":"8"}},{"key":"slot9","name":{"en":"9","ru":"9"}}],"rows":[{"level":1,"values":{"proficiency_bonus":"+2","cantrips":"3","prepared":"4","slot1":"2","slot2":"-","slot3":"-","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":2,"values":{"proficiency_bonus":"+2","cantrips":"3","prepared":"5","slot1":"3","slot2":"-","slot3":"-","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":3,"values":{"proficiency_bonus":"+2","cantrips":"3","prepared":"6","slot1":"4","slot2":"2","slot3":"-","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":4,"values":{"proficiency_bonus":"+2","cantrips":"4","prepared":"7","slot1":"4","slot2":"3","slot3":"-","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":5,"values":{"proficiency_bonus":"+3","cantrips":"4","prepared":"9","slot1":"4","slot2":"3","slot3":"2","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":6,"values":{"proficiency_bonus":"+3","cantrips":"4","prepared":"10","slot1":"4","slot2":"3","slot3":"3","slot4":"-","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":7,"values":{"proficiency_bonus":"+3","cantrips":"4","prepared":"11","slot1":"4","slot2":"3","slot3":"3","slot4":"1","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":8,"values":{"proficiency_bonus":"+3","cantrips":"4","prepared":"12","slot1":"4","slot2":"3","slot3":"3","slot4":"2","slot5":"-","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":9,"values":{"proficiency_bonus":"+4","cantrips":"4","prepared":"14","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"1","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":10,"values":{"proficiency_bonus":"+4","cantrips":"5","prepared":"15","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"-","slot7":"-","slot8":"-","slot9":"-"}},{"level":11,"values":{"proficiency_bonus":"+4","cantrips":"5","prepared":"16","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"-","slot8":"-","slot9":"-"}},{"level":12,"values":{"proficiency_bonus":"+4","cantrips":"5","prepared":"16","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"-","slot8":"-","slot9":"-"}},{"level":13,"values":{"proficiency_bonus":"+5","cantrips":"5","prepared":"17","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"1","slot8":"-","slot9":"-"}},{"level":14,"values":{"proficiency_bonus":"+5","cantrips":"5","prepared":"18","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"1","slot8":"-","slot9":"-"}},{"level":15,"values":{"proficiency_bonus":"+5","cantrips":"5","prepared":"19","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"1","slot8":"1","slot9":"-"}},{"level":16,"values":{"proficiency_bonus":"+5","cantrips":"5","prepared":"21","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"1","slot8":"1","slot9":"-"}},{"level":17,"values":{"proficiency_bonus":"+6","cantrips":"5","prepared":"22","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"2","slot6":"1","slot7":"1","slot8":"1","slot9":"1"}},{"level":18,"values":{"proficiency_bonus":"+6","cantrips":"5","prepared":"23","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"3","slot6":"1","slot7":"1","slot8":"1","slot9":"1"}},{"level":19,"values":{"proficiency_bonus":"+6","cantrips":"5","prepared":"24","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"3","slot6":"2","slot7":"1","slot8":"1","slot9":"1"}},{"level":20,"values":{"proficiency_bonus":"+6","cantrips":"5","prepared":"25","slot1":"4","slot2":"3","slot3":"3","slot4":"3","slot5":"3","slot6":"2","slot7":"2","slot8":"1","slot9":"1"}}]},"spellcasting":{"ability":"intelligence","type":"prepared"},"multiclass_requirements":{"ability_scores":{"intelligence":13}}}
+{
+  "id": "wizard",
+  "type": "class",
+  "format_version": 1,
+  "name": {
+    "en": "Wizard",
+    "ru": "Волшебник"
+  },
+  "short_description": {
+    "en": "",
+    "ru": ""
+  },
+  "description": {
+    "en": "",
+    "ru": "Волшебники известны своими дотошными изысканиями в области устройства магических потоков. Своими заклинаниями они способны творить огненные вихри и искрящиеся молнии, затуманивать разум и перевоплощать существ. Их магия может призвать чудовищ с других планов бытия, заглянуть в будущее или создать защитный барьер. Самые могущественные заклинания Волшебников превращают одно вещество в другое, насылают метеориты с неба или даже открывают порталы в другие миры.\n\n\n\nБольшинство Волшебников придерживается научного подхода к магии: они исследуют её теоретические основы и, в частности, разделение магии по школам. Такие известные Волшебники, как Бигби, Таша, Морденкайнен и Йоланда, создали в своих исследованиях культовые заклинания, которыми сейчас пользуются во всей мультивселенной.\n\n\n\nЖизнь мудреца или преподавателя может прокормить Волшебника вне жизни приключений. Иные Волшебники становятся советниками, служат в войсках или ведут преступную жизнь.\n\n\n\nОднако даже самых любящих покой Волшебников выманивает из уютных библиотек и лабораторий и ведёт в обвалившиеся руины и затерянные города жажда знаний. Большая часть Волшебников верит, что их древние коллеги знали секреты ныне утраченных в веках чудес, и раскрытие этих тайн могло бы открыть путь к силе, превосходящей любую магию, доступную в наше время."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "arcane",
+    "spellcaster",
+    "full-caster",
+    "intelligence",
+    "prepared"
+  ],
+  "hit_die": 6,
+  "primary_ability": "intelligence",
+  "saving_throws": [
+    "intelligence",
+    "wisdom"
+  ],
+  "skills": {
+    "count": 2,
+    "from": [
+      "arcana",
+      "history",
+      "insight",
+      "investigation",
+      "medicine",
+      "religion"
+    ]
+  },
+  "starting_proficiencies": {
+    "armor": [],
+    "weapons": [
+      "dagger",
+      "dart",
+      "sling",
+      "quarterstaff",
+      "light_crossbow"
+    ],
+    "tools": [],
+    "saving_throws": [
+      "intelligence",
+      "wisdom"
+    ],
+    "skills": []
+  },
+  "starting_equipment": [
+    {
+      "description": {
+        "en": "Choose A or B",
+        "ru": "Выберите А или Б:"
+      },
+      "count": 1,
+      "options": [
+        {
+          "description": {
+            "en": "A",
+            "ru": "А"
+          },
+          "options": [
+            {
+              "item_id": "phb2024:dagger",
+              "quantity": 2
+            },
+            {
+              "item_id": "phb2024:quarterstaff",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:robe",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:book",
+              "quantity": 1
+            },
+            {
+              "item_id": "phb2024:scholar_s_pack",
+              "quantity": 1
+            },
+            {
+              "description": {
+                "en": "5 gp",
+                "ru": "5 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "description": {
+            "en": "B",
+            "ru": "Б"
+          },
+          "options": [
+            {
+              "description": {
+                "en": "55 gp",
+                "ru": "55 ЗМ"
+              },
+              "quantity": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "subclass_title": {
+    "en": "Arcane Tradition",
+    "ru": "Магическая традиция"
+  },
+  "subclass_level": 3,
+  "features": [
+    "phb2024:wizard_l1_sotvorenie_zaklinaniy",
+    "phb2024:wizard_l1_znatok_ritualov",
+    "phb2024:wizard_l1_magicheskoe_vosstanovlenie",
+    "phb2024:wizard_l2_akademicheskie_znaniya",
+    "phb2024:wizard_l3_podklass_volshebnika",
+    "phb2024:wizard_l4_uvelichenie_harakteristik",
+    "phb2024:wizard_l5_zapomnit_zaklinanie",
+    "phb2024:wizard_l6_umenie_podklassa",
+    "phb2024:wizard_l8_uvelichenie_harakteristik",
+    "phb2024:wizard_l10_umenie_podklassa",
+    "phb2024:wizard_l12_uvelichenie_harakteristik",
+    "phb2024:wizard_l14_umenie_podklassa",
+    "phb2024:wizard_l16_uvelichenie_harakteristik",
+    "phb2024:wizard_l18_masterstvo_zaklinatelya",
+    "phb2024:wizard_l19_epicheskiy_dar",
+    "phb2024:wizard_l20_firmennye_zaklinaniya"
+  ],
+  "subclasses": [
+    "phb2024:wizard_voplotitel",
+    "phb2024:wizard_illyuzionist",
+    "phb2024:wizard_ograditel",
+    "phb2024:wizard_proritsatel",
+    "phb2024:wizard_pevets_klinka"
+  ],
+  "class_table": {
+    "columns": [
+      {
+        "key": "proficiency_bonus",
+        "name": {
+          "en": "Prof. Bonus",
+          "ru": "БМ"
+        }
+      },
+      {
+        "key": "cantrips",
+        "name": {
+          "en": "Cantrips",
+          "ru": "Заговоры"
+        }
+      },
+      {
+        "key": "prepared",
+        "name": {
+          "en": "Prepared",
+          "ru": "Подготовленные"
+        }
+      },
+      {
+        "key": "slot1",
+        "name": {
+          "en": "1",
+          "ru": "1"
+        }
+      },
+      {
+        "key": "slot2",
+        "name": {
+          "en": "2",
+          "ru": "2"
+        }
+      },
+      {
+        "key": "slot3",
+        "name": {
+          "en": "3",
+          "ru": "3"
+        }
+      },
+      {
+        "key": "slot4",
+        "name": {
+          "en": "4",
+          "ru": "4"
+        }
+      },
+      {
+        "key": "slot5",
+        "name": {
+          "en": "5",
+          "ru": "5"
+        }
+      },
+      {
+        "key": "slot6",
+        "name": {
+          "en": "6",
+          "ru": "6"
+        }
+      },
+      {
+        "key": "slot7",
+        "name": {
+          "en": "7",
+          "ru": "7"
+        }
+      },
+      {
+        "key": "slot8",
+        "name": {
+          "en": "8",
+          "ru": "8"
+        }
+      },
+      {
+        "key": "slot9",
+        "name": {
+          "en": "9",
+          "ru": "9"
+        }
+      }
+    ],
+    "rows": [
+      {
+        "level": 1,
+        "values": {
+          "proficiency_bonus": "+2",
+          "cantrips": "3",
+          "prepared": "4",
+          "slot1": "2",
+          "slot2": "-",
+          "slot3": "-",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 2,
+        "values": {
+          "proficiency_bonus": "+2",
+          "cantrips": "3",
+          "prepared": "5",
+          "slot1": "3",
+          "slot2": "-",
+          "slot3": "-",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 3,
+        "values": {
+          "proficiency_bonus": "+2",
+          "cantrips": "3",
+          "prepared": "6",
+          "slot1": "4",
+          "slot2": "2",
+          "slot3": "-",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 4,
+        "values": {
+          "proficiency_bonus": "+2",
+          "cantrips": "4",
+          "prepared": "7",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "-",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 5,
+        "values": {
+          "proficiency_bonus": "+3",
+          "cantrips": "4",
+          "prepared": "9",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "2",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 6,
+        "values": {
+          "proficiency_bonus": "+3",
+          "cantrips": "4",
+          "prepared": "10",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "-",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 7,
+        "values": {
+          "proficiency_bonus": "+3",
+          "cantrips": "4",
+          "prepared": "11",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "1",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 8,
+        "values": {
+          "proficiency_bonus": "+3",
+          "cantrips": "4",
+          "prepared": "12",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "2",
+          "slot5": "-",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 9,
+        "values": {
+          "proficiency_bonus": "+4",
+          "cantrips": "4",
+          "prepared": "14",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "1",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 10,
+        "values": {
+          "proficiency_bonus": "+4",
+          "cantrips": "5",
+          "prepared": "15",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "-",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 11,
+        "values": {
+          "proficiency_bonus": "+4",
+          "cantrips": "5",
+          "prepared": "16",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 12,
+        "values": {
+          "proficiency_bonus": "+4",
+          "cantrips": "5",
+          "prepared": "16",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "-",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 13,
+        "values": {
+          "proficiency_bonus": "+5",
+          "cantrips": "5",
+          "prepared": "17",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 14,
+        "values": {
+          "proficiency_bonus": "+5",
+          "cantrips": "5",
+          "prepared": "18",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "-",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 15,
+        "values": {
+          "proficiency_bonus": "+5",
+          "cantrips": "5",
+          "prepared": "19",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "1",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 16,
+        "values": {
+          "proficiency_bonus": "+5",
+          "cantrips": "5",
+          "prepared": "21",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "1",
+          "slot9": "-"
+        }
+      },
+      {
+        "level": 17,
+        "values": {
+          "proficiency_bonus": "+6",
+          "cantrips": "5",
+          "prepared": "22",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "2",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "1",
+          "slot9": "1"
+        }
+      },
+      {
+        "level": 18,
+        "values": {
+          "proficiency_bonus": "+6",
+          "cantrips": "5",
+          "prepared": "23",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "3",
+          "slot6": "1",
+          "slot7": "1",
+          "slot8": "1",
+          "slot9": "1"
+        }
+      },
+      {
+        "level": 19,
+        "values": {
+          "proficiency_bonus": "+6",
+          "cantrips": "5",
+          "prepared": "24",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "3",
+          "slot6": "2",
+          "slot7": "1",
+          "slot8": "1",
+          "slot9": "1"
+        }
+      },
+      {
+        "level": 20,
+        "values": {
+          "proficiency_bonus": "+6",
+          "cantrips": "5",
+          "prepared": "25",
+          "slot1": "4",
+          "slot2": "3",
+          "slot3": "3",
+          "slot4": "3",
+          "slot5": "3",
+          "slot6": "2",
+          "slot7": "2",
+          "slot8": "1",
+          "slot9": "1"
+        }
+      }
+    ]
+  },
+  "acquisition": {
+    "first_class": {
+      "en": "",
+      "ru": "Получите все атрибуты из таблицы «Ключевые атрибуты Волшебника».\nПолучите умения Волшебника 1-го уровня; они перечислены в таблице «Умения Волшебника»."
+    },
+    "multiclass": {
+      "en": "",
+      "ru": "Получите Кость хитов из таблицы «Ключевые атрибуты Волшебника».\nПолучите умения Волшебника 1-го уровня; они перечислены в таблице «Умения Волшебника». Ознакомьтесь с правилами мультиклассирования, чтобы определить доступные вам ячейки заклинаний."
+    }
+  },
+  "key_attributes": {
+    "Основная характеристика": "Интеллект",
+    "Кость хитов": "К6 за уровень Волшебника",
+    "Хиты за уровень": "1к6 (или 4) + ваш модификатор Телосложения (суммарно минимум 1). Как персонаж 1-го уровня — 6 + ваш модификатор Телосложения",
+    "Владение спасбросками": "Интеллект и Мудрость",
+    "Владение навыками": "Выберите два: История, Медицина, Природа, Проницательность, Расследование, Религия, Тайная магия",
+    "Владение оружием": "Простое оружие",
+    "Тренированность с доспехами": "Отсутствует",
+    "Начальное снаряжение": "Выберите А или Б:"
+  },
+  "spellcasting": {
+    "ability": "intelligence",
+    "type": "prepared"
+  },
+  "multiclass_requirements": {
+    "ability_scores": {
+      "intelligence": 13
+    }
+  }
+}

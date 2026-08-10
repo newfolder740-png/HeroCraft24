@@ -1,1 +1,528 @@
-﻿{"acquisition":{"first_class":{"en":"","ru":"Получите все атрибуты из таблицы «Ключевые атрибуты». Получите умения 1-го уровня."},"multiclass":{"en":"","ru":"Получите Кость хитов. Получите умения 1-го уровня."}},"key_attributes":{"Основная характеристика":"Ловкость и Мудрость","Тренированность с доспехами":"Лёгкие и Средние доспехи и Щиты","Владение навыками":"Выберите три: Атлетика, Восприятие, Выживание, Обращение с животными, Природа, Проницательность, Расследование или Скрытность","Хиты за уровень":"1к10 (или 6) + ваш модификатор Телосложения (суммарно минимум 1)","Кость хитов":"К10 за уровень Следопыта","Владение спасбросками":"Сила и Ловкость","Владение оружием":"Простое и Воинское оружие","Начальное снаряжение":"Выберите А или Б:"},"features":["phb2024:ranger_l1_sotvorenie_zaklinaniy","phb2024:ranger_l1_izbrannyy_vrag","phb2024:ranger_l1_oruzheynoe_masterstvo","phb2024:ranger_l2_iskussnyy_issledovatel","phb2024:ranger_l2_boevoy_stil","phb2024:ranger_l3_podklass_sledopyta","phb2024:ranger_l4_uvelichenie_harakteristik","phb2024:ranger_l5_dopolnitelnaya_ataka","phb2024:ranger_l6_vezdekhodnost","phb2024:ranger_l7_umenie_podklassa","phb2024:ranger_l8_uvelichenie_harakteristik","phb2024:ranger_l9_ekspertnost","phb2024:ranger_l10_neutomimost","phb2024:ranger_l11_umenie_podklassa","phb2024:ranger_l12_uvelichenie_harakteristik","phb2024:ranger_l13_neustannyy_okhotnik","phb2024:ranger_l14_zavesa_prirody","phb2024:ranger_l15_umenie_podklassa","phb2024:ranger_l16_uvelichenie_harakteristik","phb2024:ranger_l17_metkiy_okhotnik","phb2024:ranger_l18_dikie_chuvstva","phb2024:ranger_l19_epicheskiy_dar","phb2024:ranger_l20_istrebitel_vragov"],"starting_proficiencies":{"armor":["light","medium","shields"],"tools":[],"weapons":["simple","martial"],"skills":[],"saving_throws":["strength","dexterity"]},"id":"ranger","class_table":{"columns":[{"key":"proficiency_bonus","name":{"en":"Prof. Bonus","ru":"БМ"}},{"key":"favored_enemy","name":{"en":"Favored Enemy","ru":"Избранный враг"}},{"key":"prepared","name":{"en":"Prepared","ru":"Подготовленные"}},{"key":"slot1","name":{"en":"1","ru":"1"}},{"key":"slot2","name":{"en":"2","ru":"2"}},{"key":"slot3","name":{"en":"3","ru":"3"}},{"key":"slot4","name":{"en":"4","ru":"4"}},{"key":"slot5","name":{"en":"5","ru":"5"}}],"rows":[{"level":1,"values":{"slot3":"-","favored_enemy":"2","slot4":"-","prepared":"2","slot5":"-","slot1":"2","slot2":"-","proficiency_bonus":"+2"}},{"level":2,"values":{"slot3":"-","favored_enemy":"2","slot4":"-","prepared":"3","slot5":"-","slot1":"2","slot2":"-","proficiency_bonus":"+2"}},{"level":3,"values":{"slot3":"-","favored_enemy":"2","slot4":"-","prepared":"4","slot5":"-","slot1":"3","slot2":"-","proficiency_bonus":"+2"}},{"level":4,"values":{"slot3":"-","favored_enemy":"2","slot4":"-","prepared":"5","slot5":"-","slot1":"3","slot2":"-","proficiency_bonus":"+2"}},{"level":5,"values":{"slot3":"-","favored_enemy":"3","slot4":"-","prepared":"6","slot5":"-","slot1":"4","slot2":"2","proficiency_bonus":"+3"}},{"level":6,"values":{"slot3":"-","favored_enemy":"3","slot4":"-","prepared":"6","slot5":"-","slot1":"4","slot2":"2","proficiency_bonus":"+3"}},{"level":7,"values":{"slot3":"-","favored_enemy":"3","slot4":"-","prepared":"7","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+3"}},{"level":8,"values":{"slot3":"-","favored_enemy":"3","slot4":"-","prepared":"7","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+3"}},{"level":9,"values":{"slot3":"2","favored_enemy":"4","slot4":"-","prepared":"9","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+4"}},{"level":10,"values":{"slot3":"2","favored_enemy":"4","slot4":"-","prepared":"9","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+4"}},{"level":11,"values":{"slot3":"3","favored_enemy":"4","slot4":"-","prepared":"10","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+4"}},{"level":12,"values":{"slot3":"3","favored_enemy":"4","slot4":"-","prepared":"10","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+4"}},{"level":13,"values":{"slot3":"3","favored_enemy":"5","slot4":"1","prepared":"11","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+5"}},{"level":14,"values":{"slot3":"3","favored_enemy":"5","slot4":"1","prepared":"11","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+5"}},{"level":15,"values":{"slot3":"3","favored_enemy":"5","slot4":"2","prepared":"12","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+5"}},{"level":16,"values":{"slot3":"3","favored_enemy":"5","slot4":"2","prepared":"12","slot5":"-","slot1":"4","slot2":"3","proficiency_bonus":"+5"}},{"level":17,"values":{"slot3":"3","favored_enemy":"6","slot4":"3","prepared":"14","slot5":"1","slot1":"4","slot2":"3","proficiency_bonus":"+6"}},{"level":18,"values":{"slot3":"3","favored_enemy":"6","slot4":"3","prepared":"14","slot5":"1","slot1":"4","slot2":"3","proficiency_bonus":"+6"}},{"level":19,"values":{"slot3":"3","favored_enemy":"6","slot4":"3","prepared":"15","slot5":"2","slot1":"4","slot2":"3","proficiency_bonus":"+6"}},{"level":20,"values":{"slot3":"3","favored_enemy":"6","slot4":"3","prepared":"15","slot5":"2","slot1":"4","slot2":"3","proficiency_bonus":"+6"}}]},"subclass_title":{"en":"Ranger Conclave","ru":"Конклав следопыта"},"short_description":{"en":"","ru":""},"subclass_level":3,"saving_throws":["strength","dexterity"],"name":{"en":"Ranger","ru":"Следопыт"},"spellcasting":{"type":"prepared","ability":"wisdom"},"source":{"book":{"en":"Player\u0027s Handbook 2024","ru":"Книга игрока (2024)"},"abbreviation":"PHB2024"},"primary_ability":"dexterity","skills":{"count":3,"from":["athletics","perception","survival","animal_handling","nature","insight","investigation","stealth"]},"hit_die":10,"description":{"en":"","ru":"Вдали от городской суеты, среди непроходимых лесов и на широких равнинах Следопыты несут свой бесконечный дозор. Следопыты учатся выслеживать добычу и защищать мир от разрушительных действий чудовищ и тиранов."},"type":"class","format_version":1,"starting_equipment":[{"description":{"en":"Choose A or B","ru":"Выберите А или Б:"},"options":[{"options":[{"quantity":1,"item_id":"phb2024:studded_leather_armor"},{"quantity":1,"item_id":"phb2024:scimitar"},{"quantity":1,"item_id":"phb2024:shortsword"},{"quantity":1,"item_id":"phb2024:longbow"},{"quantity":1,"description":{"en":"20 arrows","ru":"20 Стрел"}},{"quantity":1,"item_id":"phb2024:quiver"},{"quantity":1,"item_id":"phb2024:druidic_focus"},{"quantity":1,"item_id":"phb2024:explorer_s_pack"},{"quantity":1,"description":{"en":"7 gp","ru":"7 ЗМ"}}],"description":{"en":"A","ru":"А"}},{"options":[{"quantity":1,"description":{"en":"150 gp","ru":"150 ЗМ"}}],"description":{"en":"B","ru":"Б"}}],"count":1}],"tags":["divine","spellcaster","half-caster","dexterity","wisdom","prepared"],"subclasses":["phb2024:ranger_okhotnik","phb2024:ranger_povelitel_zverey","phb2024:ranger_strannik_fey","phb2024:ranger_sumrachnyy_okhotnik","phb2024:ranger_zimniy_khodok","phb2024:ranger_strazh_pustoshci"]}
+{
+  "id": "ranger",
+  "type": "class",
+  "format_version": 1,
+  "name": {
+    "en": "Ranger",
+    "ru": "Следопыт"
+  },
+  "short_description": {
+    "en": "",
+    "ru": ""
+  },
+  "description": {
+    "en": "",
+    "ru": "Вдали от городской суеты, среди непроходимых лесов и на широких равнинах Следопыты несут свой бесконечный дозор. Следопыты учатся выслеживать добычу и защищать мир от разрушительных действий чудовищ и тиранов."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024",
+      "ru": "Книга игрока (2024)"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "divine",
+    "spellcaster",
+    "half-caster",
+    "dexterity",
+    "wisdom",
+    "prepared"
+  ],
+  "hit_die": 10,
+  "primary_ability": "dexterity",
+  "saving_throws": [
+    "strength",
+    "dexterity"
+  ],
+  "skills": {
+    "count": 3,
+    "from": [
+      "athletics",
+      "perception",
+      "survival",
+      "animal_handling",
+      "nature",
+      "insight",
+      "investigation",
+      "stealth"
+    ]
+  },
+  "starting_proficiencies": {
+    "armor": [
+      "light",
+      "medium",
+      "shields"
+    ],
+    "weapons": [
+      "simple",
+      "martial"
+    ],
+    "tools": [],
+    "saving_throws": [
+      "strength",
+      "dexterity"
+    ],
+    "skills": []
+  },
+  "starting_equipment": [
+    {
+      "description": {
+        "en": "Choose A or B",
+        "ru": "Выберите А или Б:"
+      },
+      "options": [
+        {
+          "options": [
+            {
+              "quantity": 1,
+              "item_id": "phb2024:studded_leather_armor"
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:scimitar"
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:shortsword"
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:longbow"
+            },
+            {
+              "quantity": 1,
+              "description": {
+                "en": "20 arrows",
+                "ru": "20 Стрел"
+              }
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:quiver"
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:druidic_focus"
+            },
+            {
+              "quantity": 1,
+              "item_id": "phb2024:explorer_s_pack"
+            },
+            {
+              "quantity": 1,
+              "description": {
+                "en": "7 gp",
+                "ru": "7 ЗМ"
+              }
+            }
+          ],
+          "description": {
+            "en": "A",
+            "ru": "А"
+          }
+        },
+        {
+          "options": [
+            {
+              "quantity": 1,
+              "description": {
+                "en": "150 gp",
+                "ru": "150 ЗМ"
+              }
+            }
+          ],
+          "description": {
+            "en": "B",
+            "ru": "Б"
+          }
+        }
+      ],
+      "count": 1
+    }
+  ],
+  "subclass_title": {
+    "en": "Ranger Conclave",
+    "ru": "Конклав следопыта"
+  },
+  "subclass_level": 3,
+  "features": [
+    "phb2024:ranger_l1_sotvorenie_zaklinaniy",
+    "phb2024:ranger_l1_izbrannyy_vrag",
+    "phb2024:ranger_l1_oruzheynoe_masterstvo",
+    "phb2024:ranger_l2_iskussnyy_issledovatel",
+    "phb2024:ranger_l2_boevoy_stil",
+    "phb2024:ranger_l3_podklass_sledopyta",
+    "phb2024:ranger_l4_uvelichenie_harakteristik",
+    "phb2024:ranger_l5_dopolnitelnaya_ataka",
+    "phb2024:ranger_l6_vezdekhodnost",
+    "phb2024:ranger_l7_umenie_podklassa",
+    "phb2024:ranger_l8_uvelichenie_harakteristik",
+    "phb2024:ranger_l9_ekspertnost",
+    "phb2024:ranger_l10_neutomimost",
+    "phb2024:ranger_l11_umenie_podklassa",
+    "phb2024:ranger_l12_uvelichenie_harakteristik",
+    "phb2024:ranger_l13_neustannyy_okhotnik",
+    "phb2024:ranger_l14_zavesa_prirody",
+    "phb2024:ranger_l15_umenie_podklassa",
+    "phb2024:ranger_l16_uvelichenie_harakteristik",
+    "phb2024:ranger_l17_metkiy_okhotnik",
+    "phb2024:ranger_l18_dikie_chuvstva",
+    "phb2024:ranger_l19_epicheskiy_dar",
+    "phb2024:ranger_l20_istrebitel_vragov"
+  ],
+  "subclasses": [
+    "phb2024:ranger_okhotnik",
+    "phb2024:ranger_povelitel_zverey",
+    "phb2024:ranger_strannik_fey",
+    "phb2024:ranger_sumrachnyy_okhotnik",
+    "phb2024:ranger_zimniy_khodok",
+    "phb2024:ranger_strazh_pustoshci"
+  ],
+  "class_table": {
+    "columns": [
+      {
+        "key": "proficiency_bonus",
+        "name": {
+          "en": "Prof. Bonus",
+          "ru": "БМ"
+        }
+      },
+      {
+        "key": "favored_enemy",
+        "name": {
+          "en": "Favored Enemy",
+          "ru": "Избранный враг"
+        }
+      },
+      {
+        "key": "prepared",
+        "name": {
+          "en": "Prepared",
+          "ru": "Подготовленные"
+        }
+      },
+      {
+        "key": "slot1",
+        "name": {
+          "en": "1",
+          "ru": "1"
+        }
+      },
+      {
+        "key": "slot2",
+        "name": {
+          "en": "2",
+          "ru": "2"
+        }
+      },
+      {
+        "key": "slot3",
+        "name": {
+          "en": "3",
+          "ru": "3"
+        }
+      },
+      {
+        "key": "slot4",
+        "name": {
+          "en": "4",
+          "ru": "4"
+        }
+      },
+      {
+        "key": "slot5",
+        "name": {
+          "en": "5",
+          "ru": "5"
+        }
+      }
+    ],
+    "rows": [
+      {
+        "level": 1,
+        "values": {
+          "proficiency_bonus": "+2",
+          "slot3": "-",
+          "favored_enemy": "2",
+          "slot4": "-",
+          "prepared": "2",
+          "slot5": "-",
+          "slot1": "2",
+          "slot2": "-"
+        }
+      },
+      {
+        "level": 2,
+        "values": {
+          "proficiency_bonus": "+2",
+          "slot3": "-",
+          "favored_enemy": "2",
+          "slot4": "-",
+          "prepared": "3",
+          "slot5": "-",
+          "slot1": "2",
+          "slot2": "-"
+        }
+      },
+      {
+        "level": 3,
+        "values": {
+          "proficiency_bonus": "+2",
+          "slot3": "-",
+          "favored_enemy": "2",
+          "slot4": "-",
+          "prepared": "4",
+          "slot5": "-",
+          "slot1": "3",
+          "slot2": "-"
+        }
+      },
+      {
+        "level": 4,
+        "values": {
+          "proficiency_bonus": "+2",
+          "slot3": "-",
+          "favored_enemy": "2",
+          "slot4": "-",
+          "prepared": "5",
+          "slot5": "-",
+          "slot1": "3",
+          "slot2": "-"
+        }
+      },
+      {
+        "level": 5,
+        "values": {
+          "proficiency_bonus": "+3",
+          "slot3": "-",
+          "favored_enemy": "3",
+          "slot4": "-",
+          "prepared": "6",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "2"
+        }
+      },
+      {
+        "level": 6,
+        "values": {
+          "proficiency_bonus": "+3",
+          "slot3": "-",
+          "favored_enemy": "3",
+          "slot4": "-",
+          "prepared": "6",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "2"
+        }
+      },
+      {
+        "level": 7,
+        "values": {
+          "proficiency_bonus": "+3",
+          "slot3": "-",
+          "favored_enemy": "3",
+          "slot4": "-",
+          "prepared": "7",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 8,
+        "values": {
+          "proficiency_bonus": "+3",
+          "slot3": "-",
+          "favored_enemy": "3",
+          "slot4": "-",
+          "prepared": "7",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 9,
+        "values": {
+          "proficiency_bonus": "+4",
+          "slot3": "2",
+          "favored_enemy": "4",
+          "slot4": "-",
+          "prepared": "9",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 10,
+        "values": {
+          "proficiency_bonus": "+4",
+          "slot3": "2",
+          "favored_enemy": "4",
+          "slot4": "-",
+          "prepared": "9",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 11,
+        "values": {
+          "proficiency_bonus": "+4",
+          "slot3": "3",
+          "favored_enemy": "4",
+          "slot4": "-",
+          "prepared": "10",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 12,
+        "values": {
+          "proficiency_bonus": "+4",
+          "slot3": "3",
+          "favored_enemy": "4",
+          "slot4": "-",
+          "prepared": "10",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 13,
+        "values": {
+          "proficiency_bonus": "+5",
+          "slot3": "3",
+          "favored_enemy": "5",
+          "slot4": "1",
+          "prepared": "11",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 14,
+        "values": {
+          "proficiency_bonus": "+5",
+          "slot3": "3",
+          "favored_enemy": "5",
+          "slot4": "1",
+          "prepared": "11",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 15,
+        "values": {
+          "proficiency_bonus": "+5",
+          "slot3": "3",
+          "favored_enemy": "5",
+          "slot4": "2",
+          "prepared": "12",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 16,
+        "values": {
+          "proficiency_bonus": "+5",
+          "slot3": "3",
+          "favored_enemy": "5",
+          "slot4": "2",
+          "prepared": "12",
+          "slot5": "-",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 17,
+        "values": {
+          "proficiency_bonus": "+6",
+          "slot3": "3",
+          "favored_enemy": "6",
+          "slot4": "3",
+          "prepared": "14",
+          "slot5": "1",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 18,
+        "values": {
+          "proficiency_bonus": "+6",
+          "slot3": "3",
+          "favored_enemy": "6",
+          "slot4": "3",
+          "prepared": "14",
+          "slot5": "1",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 19,
+        "values": {
+          "proficiency_bonus": "+6",
+          "slot3": "3",
+          "favored_enemy": "6",
+          "slot4": "3",
+          "prepared": "15",
+          "slot5": "2",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      },
+      {
+        "level": 20,
+        "values": {
+          "proficiency_bonus": "+6",
+          "slot3": "3",
+          "favored_enemy": "6",
+          "slot4": "3",
+          "prepared": "15",
+          "slot5": "2",
+          "slot1": "4",
+          "slot2": "3"
+        }
+      }
+    ]
+  },
+  "acquisition": {
+    "first_class": {
+      "en": "",
+      "ru": "Получите все атрибуты из таблицы «Ключевые атрибуты». Получите умения 1-го уровня."
+    },
+    "multiclass": {
+      "en": "",
+      "ru": "Получите Кость хитов. Получите умения 1-го уровня."
+    }
+  },
+  "key_attributes": {
+    "Основная характеристика": "Ловкость и Мудрость",
+    "Кость хитов": "К10 за уровень Следопыта",
+    "Хиты за уровень": "1к10 (или 6) + ваш модификатор Телосложения (суммарно минимум 1)",
+    "Владение спасбросками": "Сила и Ловкость",
+    "Владение навыками": "Выберите три: Атлетика, Восприятие, Выживание, Обращение с животными, Природа, Проницательность, Расследование или Скрытность",
+    "Владение оружием": "Простое и Воинское оружие",
+    "Тренированность с доспехами": "Лёгкие и Средние доспехи и Щиты",
+    "Начальное снаряжение": "Выберите А или Б:"
+  },
+  "spellcasting": {
+    "ability": "wisdom",
+    "type": "prepared"
+  }
+}
