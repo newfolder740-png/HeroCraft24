@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.herocraft24.core.data.ContentRepository
+import com.herocraft24.core.model.Background
 import com.herocraft24.core.model.GameClass
+import com.herocraft24.core.model.Species
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -87,7 +89,9 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun getClassInfo(classId: String): GameClass? = repository.getClass(classId)
     fun resolveName(id: String): String? = repository.resolveName(id)
     fun getSpeciesIds() = repository.getSpeciesIds()
+    fun getAllSpecies(): List<Species> = repository.getSpeciesIds().mapNotNull { repository.getSpecies(it) }
     fun getBackgroundIds() = repository.getBackgroundIds()
+    fun getAllBackgrounds(): List<Background> = repository.getBackgroundIds().mapNotNull { repository.getBackground(it) }
     fun getClassIds() = repository.getClassIds()
     fun getFeatIds() = repository.getFeatIds()
     fun getSpellIds() = repository.getSpellIds()

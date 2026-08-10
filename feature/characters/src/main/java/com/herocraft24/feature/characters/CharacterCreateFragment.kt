@@ -92,7 +92,18 @@ class CharacterCreateFragment : Fragment() {
                 // Abilities step: all 6 slots must be filled
                 slotAssignments.values.all { it != null }
             }
-            1 -> vm.wizard.value.speciesId.isNotEmpty()
+            1 -> {
+                // Species step: species must be selected, and if it has subspecies, one must be chosen
+                val speciesId = vm.wizard.value.speciesId
+                if (speciesId.isEmpty()) {
+                    false
+                } else {
+                    val species = vm.getAllSpecies().find { it.id == speciesId }
+                    val hasSubspecies = !species?.subspecies.isNullOrEmpty()
+                    val subspeciesSelected = vm.wizard.value.subspeciesId != null
+                    !hasSubspecies || subspeciesSelected
+                }
+            }
             2 -> vm.wizard.value.backgroundId.isNotEmpty()
             3 -> vm.wizard.value.classId.isNotEmpty()
             else -> true
@@ -528,25 +539,239 @@ class CharacterCreateFragment : Fragment() {
     }
 
     private fun renderSpeciesStep(container: FrameLayout) {
-        val ll = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        vm.getSpeciesIds().forEach { id ->
-            val name = vm.resolveName(id) ?: id
-            ll.addView(Button(requireContext()).apply {
-                text = name; setOnClickListener { vm.updateWizard { it.copy(speciesId = id) }; renderStep() }
-            })
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_species, container, false)
+        container.addView(view)
+
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+        val searchBar = view.findViewById<com.herocraft24.core.ui.widget.SearchBarView>(R.id.search_bar)
+        val btnSort = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_sort)
+        val btnFilter = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_filter)
+
+        val allSpecies = vm.getAllSpecies()
+        val collator = java.text.Collator.getInstance(java.util.Locale("ru"))
+
+        // State
+        var currentSearchQuery = ""
+        var currentSortMode = "default" // "default", "name_asc", "name_desc"
+        var currentFilterSources = setOf<String>()
+
+        lateinit var adapter: SpeciesCreateAdapter
+        adapter = SpeciesCreateAdapter(
+            onSpeciesSelected = { id ->
+                vm.updateWizard { it.copy(speciesId = id, subspeciesId = null) }
+                adapter.clearSubspecies(id)
+                adapter.setSelected(id)
+                updateNextButtonState()
+            },
+            onSubspeciesSelected = { speciesId, subspeciesId ->
+                vm.updateWizard { it.copy(subspeciesId = subspeciesId) }
+                updateNextButtonState()
+            }
+        )
+
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+        fun applyFiltersAndSort() {
+            adapter.collapseAll()
+            var result = allSpecies
+
+            // Search
+            if (currentSearchQuery.isNotBlank()) {
+                val tokens = currentSearchQuery.lowercase().split("\\s+".toRegex()).filter { it.length >= 2 }
+                if (tokens.isNotEmpty()) {
+                    result = result.filter { species ->
+                        val name = species.name.get().lowercase()
+                        tokens.all { name.contains(it) }
+                    }
+                }
+            }
+
+            // Filter by source
+            if (currentFilterSources.isNotEmpty()) {
+                result = result.filter { it.source.abbreviation in currentFilterSources }
+            }
+
+            // Sort
+            result = when (currentSortMode) {
+                "name_asc" -> result.sortedWith(compareBy(collator) { it.name.get() })
+                "name_desc" -> result.sortedWith(compareByDescending(collator) { it.name.get() })
+                else -> result.sortedWith(compareBy(collator) { it.name.get() }) // default = alphabetical
+            }
+
+            adapter.submitList(result, vm.wizard.value.speciesId)
         }
-        container.addView(ScrollView(requireContext()).apply { addView(ll) })
+
+        applyFiltersAndSort()
+
+        // Search
+        searchBar.setOnQueryListener { query ->
+            currentSearchQuery = query
+            applyFiltersAndSort()
+        }
+
+        // Sort dialog (like Reference tab)
+        btnSort.setOnClickListener {
+            val options = listOf(
+                "default" to "По умолчанию",
+                "name_asc" to "Имя А–Я",
+                "name_desc" to "Имя Я–А"
+            )
+            val labels = options.map { it.second }.toTypedArray()
+            val current = options.indexOfFirst { it.first == currentSortMode }.coerceAtLeast(0)
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Сортировка")
+                .setSingleChoiceItems(labels, current) { dialog, which ->
+                    currentSortMode = options[which].first
+                    applyFiltersAndSort()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
+        }
+
+        // Filter dialog (like Reference tab - source filter only)
+        btnFilter.setOnClickListener {
+            val sources = allSpecies.map { it.source.abbreviation }.filter { it.isNotBlank() }.distinct().sorted()
+            val groups = mutableListOf<com.herocraft24.core.ui.widget.FilterGroup>()
+            if (sources.isNotEmpty()) {
+                groups.add(com.herocraft24.core.ui.widget.FilterGroup(
+                    "source", "Источник", sources.map { src ->
+                        com.herocraft24.core.ui.widget.FilterOption(src, src)
+                    }
+                ))
+            }
+
+            val sheet = com.herocraft24.core.ui.widget.FilterBottomSheet()
+            sheet.setGroups(groups)
+            sheet.setSelected(mapOf("source" to currentFilterSources))
+            sheet.setCallbacks(
+                onApply = { selected ->
+                    currentFilterSources = selected["source"] ?: emptySet()
+                    applyFiltersAndSort()
+                },
+                onReset = {
+                    currentFilterSources = emptySet()
+                    applyFiltersAndSort()
+                }
+            )
+            sheet.show(childFragmentManager, com.herocraft24.core.ui.widget.FilterBottomSheet.TAG)
+        }
     }
 
     private fun renderBackgroundStep(container: FrameLayout) {
-        val ll = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        vm.getBackgroundIds().forEach { id ->
-            val name = vm.resolveName(id) ?: id
-            ll.addView(Button(requireContext()).apply {
-                text = name; setOnClickListener { vm.updateWizard { it.copy(backgroundId = id) }; renderStep() }
-            })
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_backgrounds, container, false)
+        container.addView(view)
+
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+        val searchBar = view.findViewById<com.herocraft24.core.ui.widget.SearchBarView>(R.id.search_bar)
+        val btnSort = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_sort)
+        val btnFilter = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_filter)
+
+        val allBackgrounds = vm.getAllBackgrounds()
+        val collator = java.text.Collator.getInstance(java.util.Locale("ru"))
+
+        var currentSearchQuery = ""
+        var currentSortMode = "default"
+        var currentFilterSources = setOf<String>()
+
+        lateinit var adapter: BackgroundCreateAdapter
+        adapter = BackgroundCreateAdapter(
+            onBackgroundSelected = { id ->
+                vm.updateWizard { it.copy(backgroundId = id) }
+                adapter.setSelected(id)
+                updateNextButtonState()
+            },
+            onAbilityChoiceChanged = { bgId, plus2, plus1 ->
+                // Store in wizard state if needed
+            },
+            onEquipmentChoiceChanged = { bgId, optionIndex ->
+                vm.updateWizard { it.copy(equipmentChoiceIndex = optionIndex) }
+            }
+        )
+
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+        fun applyFiltersAndSort() {
+            adapter.collapseAll()
+            var result = allBackgrounds
+
+            if (currentSearchQuery.isNotBlank()) {
+                val tokens = currentSearchQuery.lowercase().split("\\s+".toRegex()).filter { it.length >= 2 }
+                if (tokens.isNotEmpty()) {
+                    result = result.filter { bg ->
+                        val name = bg.name.get().lowercase()
+                        tokens.all { name.contains(it) }
+                    }
+                }
+            }
+
+            if (currentFilterSources.isNotEmpty()) {
+                result = result.filter { it.source.abbreviation in currentFilterSources }
+            }
+
+            result = when (currentSortMode) {
+                "name_asc" -> result.sortedWith(compareBy(collator) { it.name.get() })
+                "name_desc" -> result.sortedWith(compareByDescending(collator) { it.name.get() })
+                else -> result.sortedWith(compareBy(collator) { it.name.get() })
+            }
+
+            adapter.submitList(result, vm.wizard.value.backgroundId)
         }
-        container.addView(ScrollView(requireContext()).apply { addView(ll) })
+
+        applyFiltersAndSort()
+
+        searchBar.setOnQueryListener { query ->
+            currentSearchQuery = query
+            applyFiltersAndSort()
+        }
+
+        btnSort.setOnClickListener {
+            val options = listOf(
+                "default" to "По умолчанию",
+                "name_asc" to "Имя А–Я",
+                "name_desc" to "Имя Я–А"
+            )
+            val labels = options.map { it.second }.toTypedArray()
+            val current = options.indexOfFirst { it.first == currentSortMode }.coerceAtLeast(0)
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Сортировка")
+                .setSingleChoiceItems(labels, current) { dialog, which ->
+                    currentSortMode = options[which].first
+                    applyFiltersAndSort()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
+        }
+
+        btnFilter.setOnClickListener {
+            val sources = allBackgrounds.map { it.source.abbreviation }.filter { it.isNotBlank() }.distinct().sorted()
+            val groups = mutableListOf<com.herocraft24.core.ui.widget.FilterGroup>()
+            if (sources.isNotEmpty()) {
+                groups.add(com.herocraft24.core.ui.widget.FilterGroup(
+                    "source", "Источник", sources.map { src ->
+                        com.herocraft24.core.ui.widget.FilterOption(src, src)
+                    }
+                ))
+            }
+
+            val sheet = com.herocraft24.core.ui.widget.FilterBottomSheet()
+            sheet.setGroups(groups)
+            sheet.setSelected(mapOf("source" to currentFilterSources))
+            sheet.setCallbacks(
+                onApply = { selected ->
+                    currentFilterSources = selected["source"] ?: emptySet()
+                    applyFiltersAndSort()
+                },
+                onReset = {
+                    currentFilterSources = emptySet()
+                    applyFiltersAndSort()
+                }
+            )
+            sheet.show(childFragmentManager, com.herocraft24.core.ui.widget.FilterBottomSheet.TAG)
+        }
     }
 
     private fun renderClassStep(container: FrameLayout) {
