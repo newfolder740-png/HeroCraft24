@@ -61,6 +61,7 @@ data class ManifestEntry(
     @Serializable(with = StringOrListSerializer::class)
     val view: List<String> = emptyList(),
     val rarity: String? = null,
+    val attunement: Boolean? = null,
     val hit_die: Int? = null,
     val primary_ability: String? = null,
     val type: String? = null,

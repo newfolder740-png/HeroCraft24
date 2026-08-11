@@ -37,7 +37,12 @@ class BackpackItemPickerAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val (id, item, count, variantId, variantItem) = items[position]
         holder.binding.itemName.text = items[position].displayName
-        holder.binding.itemSubtitle.text = UiLocalizer.category(variantItem?.category ?: item.category)
+        val isAttuned = variantItem?.attunement == true || item.attunement
+        holder.binding.itemSubtitle.text = if (isAttuned) {
+            "${UiLocalizer.category(variantItem?.category ?: item.category)} · Настройка: требуется"
+        } else {
+            UiLocalizer.category(variantItem?.category ?: item.category)
+        }
         holder.binding.actionButton.text = actionLabel
         holder.binding.actionButton.setOnClickListener { onAction(id, variantId) }
         holder.binding.root.setOnClickListener { onItemClick(id, variantId) }

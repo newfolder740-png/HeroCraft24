@@ -374,6 +374,13 @@ class SheetInventoryFragment : Fragment() {
                 setPadding(0, 2.dp(ctx), 0, 0)
             })
         }
+        if (resolved.item.attunement) {
+            container.addView(TextView(ctx).apply {
+                text = "Настройка: требуется"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
         resolved.cost?.let { cost ->
             container.addView(TextView(ctx).apply {
                 text = "Стоимость: ${cost.amount.toInt()} ${UiLocalizer.costUnit(cost.unit)}"
