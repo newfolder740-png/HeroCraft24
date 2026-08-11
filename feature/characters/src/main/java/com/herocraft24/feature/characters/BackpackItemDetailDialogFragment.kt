@@ -30,15 +30,20 @@ class BackpackItemDetailDialogFragment : DialogFragment() {
     private val vm: CharactersViewModel by activityViewModels()
 
     private var itemId: String = ""
+    private var variantItemId: String? = null
 
     private val magicItemCategories = setOf("wand", "rod", "potion", "ring", "staff", "scroll", "wondrous_item")
 
     companion object {
         private const val ARG_ITEM_ID = "itemId"
+        private const val ARG_VARIANT_ITEM_ID = "variantItemId"
 
-        fun newInstance(itemId: String): BackpackItemDetailDialogFragment {
+        fun newInstance(itemId: String, variantItemId: String? = null): BackpackItemDetailDialogFragment {
             return BackpackItemDetailDialogFragment().apply {
-                arguments = Bundle().apply { putString(ARG_ITEM_ID, itemId) }
+                arguments = Bundle().apply {
+                    putString(ARG_ITEM_ID, itemId)
+                    putString(ARG_VARIANT_ITEM_ID, variantItemId)
+                }
             }
         }
     }
@@ -46,6 +51,7 @@ class BackpackItemDetailDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         itemId = arguments?.getString(ARG_ITEM_ID) ?: ""
+        variantItemId = arguments?.getString(ARG_VARIANT_ITEM_ID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -71,7 +77,9 @@ class BackpackItemDetailDialogFragment : DialogFragment() {
     }
 
     private fun render(i: Item) {
-        binding.toolbar.title = i.name.get()
+        val variant = variantItemId?.let { vm.getItem(it) }
+        val displayName = if (variant != null) "${i.name.get()} (${variant.name.get()})" else i.name.get()
+        binding.toolbar.title = displayName
 
         val ac = i.armor_class
         val dmg = i.damage
@@ -104,7 +112,12 @@ class BackpackItemDetailDialogFragment : DialogFragment() {
             }
         }
 
-        addSection("Описание") { addLinkedText(i.description.get(), i) }
+        addSection("Описание") {
+            val variantDesc = variant?.description?.get()
+            val magicDesc = i.description.get()
+            val fullDesc = if (variantDesc.isNullOrBlank()) magicDesc else "$variantDesc\n\n$magicDesc"
+            addLinkedText(fullDesc, i)
+        }
 
         if (i.effects.isNotEmpty()) {
             addSection("Эффекты") {

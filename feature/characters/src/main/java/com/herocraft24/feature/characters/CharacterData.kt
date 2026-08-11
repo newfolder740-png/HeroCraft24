@@ -87,7 +87,8 @@ data class CharacterItem(
     val itemId: String,
     val quantity: Int = 1,
     val equipped: Boolean = false,
-    val notes: String = ""
+    val notes: String = "",
+    val variantItemId: String? = null
 )
 
 @Serializable

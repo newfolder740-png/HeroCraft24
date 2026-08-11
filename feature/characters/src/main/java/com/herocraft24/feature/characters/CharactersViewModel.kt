@@ -150,6 +150,14 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     fun getClassInfo(classId: String): GameClass? = repository.getClass(classId)
     fun resolveName(id: String): String? = repository.resolveName(id)
+    fun resolveEquipmentName(composite: String?): String? {
+        if (composite == null) return null
+        val itemId = composite.substringBefore("|")
+        val variantItemId = composite.substringAfter("|", "").takeIf { it.isNotBlank() }
+        val item = getItem(itemId) ?: return null
+        val variant = variantItemId?.let { getItem(it) }
+        return if (variant != null) "${item.name.get()} (${variant.name.get()})" else item.name.get()
+    }
     fun getSpeciesIds() = repository.getSpeciesIds()
     fun getAllSpecies(): List<Species> = repository.getSpeciesIds().mapNotNull { repository.getSpecies(it) }
     fun getBackgroundIds() = repository.getBackgroundIds()
@@ -161,15 +169,83 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun getSpell(id: String) = repository.getSpell(id)
     fun getItem(id: String) = repository.getItem(id)
 
-    fun addItemToBackpack(char: CharacterData, itemId: String) {
-        saveCharacter(char.copy(equipment = char.equipment + CharacterItem(itemId = itemId)))
+    fun addItemToBackpack(charId: String, itemId: String, variantItemId: String? = null) {
+        val current = getCharacter(charId) ?: return
+        saveCharacter(current.copy(equipment = current.equipment + CharacterItem(itemId = itemId, variantItemId = variantItemId)))
     }
 
-    fun removeItemFromBackpack(char: CharacterData, itemId: String) {
-        val index = char.equipment.indexOfFirst { it.itemId == itemId }
+    fun removeItemFromBackpack(charId: String, itemId: String, variantItemId: String? = null) {
+        val current = getCharacter(charId) ?: return
+        val index = current.equipment.indexOfFirst { it.itemId == itemId && it.variantItemId == variantItemId }
         if (index >= 0) {
-            val updated = char.equipment.toMutableList().apply { removeAt(index) }
-            saveCharacter(char.copy(equipment = updated))
+            val removed = current.equipment[index]
+            val updatedEquipment = current.equipment.toMutableList().apply { removeAt(index) }
+            val composite = if (removed.variantItemId != null) "${removed.itemId}|${removed.variantItemId}" else removed.itemId
+
+            val updatedMagicItems = current.equippedMagicItems.filter { it != composite && it != removed.itemId }
+            saveCharacter(current.copy(
+                equipment = updatedEquipment,
+                equippedArmor = if (current.equippedArmor == composite || current.equippedArmor == removed.itemId) null else current.equippedArmor,
+                equippedShield = if (current.equippedShield == composite || current.equippedShield == removed.itemId) null else current.equippedShield,
+                equippedWeapon1 = if (current.equippedWeapon1 == composite || current.equippedWeapon1 == removed.itemId) null else current.equippedWeapon1,
+                equippedWeapon2 = if (current.equippedWeapon2 == composite || current.equippedWeapon2 == removed.itemId) null else current.equippedWeapon2,
+                equippedMagicItems = updatedMagicItems
+            ))
+        }
+    }
+
+    fun findMagicItemVariants(item: com.herocraft24.core.model.Item): List<Pair<String, com.herocraft24.core.model.Item>> {
+        if (!item.magic) return emptyList()
+        if (item.category !in listOf("armor", "weapon", "shield")) return emptyList()
+        if (item.subcategory.isEmpty()) return emptyList()
+        
+        android.util.Log.d("MagicVariants", "Finding variants for ${item.name.ru}, category=${item.category}, subcategory=${item.subcategory}, view=${item.view}")
+        
+        val allItems = repository.getItemIds().mapNotNull { fullId -> getItem(fullId)?.let { fullId to it } }
+        val hasSpecificView = item.view.isNotEmpty() && !item.view.any { isExclusionPhrase(it) }
+        
+        val candidates = allItems.filter { (_, candidate) ->
+            if (candidate.category != item.category || candidate.magic) return@filter false
+            if (hasSpecificView) {
+                return@filter item.view.any { it.equals(candidate.name.ru, ignoreCase = true) }
+            }
+            return@filter candidate.subcategory.any { it in item.subcategory }
+        }
+        
+        android.util.Log.d("MagicVariants", "Found ${candidates.size} candidates before exclusion filter")
+        
+        if (item.view.isNotEmpty()) {
+            val exclusions = item.view.filter { isExclusionPhrase(it) }
+            if (exclusions.isNotEmpty()) {
+                val filtered = candidates.filter { (_, candidate) ->
+                    val name = candidate.name.ru ?: return@filter true
+                    val matches = exclusions.any { excluded -> nameMatchesExclusion(name, excluded) }
+                    if (matches) android.util.Log.d("MagicVariants", "Excluding ${candidate.name.ru}")
+                    !matches
+                }
+                android.util.Log.d("MagicVariants", "After exclusion: ${filtered.size} candidates")
+                return filtered
+            }
+        }
+        android.util.Log.d("MagicVariants", "Returning ${candidates.size} candidates")
+        return candidates
+    }
+
+    private fun isExclusionPhrase(view: String): Boolean {
+        return view.startsWith("кроме", ignoreCase = true) || view.startsWith("except", ignoreCase = true)
+    }
+
+    private fun nameMatchesExclusion(name: String, exclusion: String): Boolean {
+        val normalizedName = name.lowercase().replace(Regex("[^\\p{L}\\d]"), "")
+        val keywords = listOf("кроме", "except")
+        val exclusionWords = exclusion.lowercase()
+            .split(" ")
+            .map { it.replace(Regex("[^\\p{L}\\d]"), "") }
+            .filter { it.length > 2 && it !in keywords }
+        if (exclusionWords.isEmpty()) return false
+        return exclusionWords.all { word ->
+            val stem = word.dropLast(minOf(3, word.length))
+            normalizedName.contains(stem)
         }
     }
 

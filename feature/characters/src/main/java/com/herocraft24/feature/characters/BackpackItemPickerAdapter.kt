@@ -9,13 +9,18 @@ import com.herocraft24.feature.characters.databinding.ItemBackpackPickerBinding
 
 class BackpackItemPickerAdapter(
     private val actionLabel: String,
-    private val onItemClick: (String) -> Unit,
-    private val onAction: (String) -> Unit
+    private val showCount: Boolean,
+    private val onItemClick: (String, String?) -> Unit,
+    private val onAction: (String, String?) -> Unit
 ) : RecyclerView.Adapter<BackpackItemPickerAdapter.VH>() {
 
-    private var items: List<Pair<String, Item>> = emptyList()
+    data class Row(val id: String, val item: Item, val count: Int = 1, val variantId: String? = null, val variantItem: Item? = null) {
+        val displayName: String get() = if (variantItem != null) "${item.name.get()} (${variantItem.name.get()})" else item.name.get()
+    }
 
-    fun submitList(list: List<Pair<String, Item>>) {
+    private var items: List<Row> = emptyList()
+
+    fun submitList(list: List<Row>) {
         items = list
         notifyDataSetChanged()
     }
@@ -30,11 +35,17 @@ class BackpackItemPickerAdapter(
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val (id, item) = items[position]
-        holder.binding.itemName.text = item.name.get()
-        holder.binding.itemSubtitle.text = UiLocalizer.category(item.category)
+        val (id, item, count, variantId, variantItem) = items[position]
+        holder.binding.itemName.text = items[position].displayName
+        holder.binding.itemSubtitle.text = UiLocalizer.category(variantItem?.category ?: item.category)
         holder.binding.actionButton.text = actionLabel
-        holder.binding.actionButton.setOnClickListener { onAction(id) }
-        holder.binding.root.setOnClickListener { onItemClick(id) }
+        holder.binding.actionButton.setOnClickListener { onAction(id, variantId) }
+        holder.binding.root.setOnClickListener { onItemClick(id, variantId) }
+        if (showCount && count > 1) {
+            holder.binding.itemCount.visibility = android.view.View.VISIBLE
+            holder.binding.itemCount.text = "x$count"
+        } else {
+            holder.binding.itemCount.visibility = android.view.View.GONE
+        }
     }
 }

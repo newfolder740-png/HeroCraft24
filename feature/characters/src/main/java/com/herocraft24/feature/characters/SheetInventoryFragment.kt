@@ -18,6 +18,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.feature.characters.databinding.CardFeatureCreateBinding
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class SheetInventoryFragment : Fragment() {
 
     data class EquipmentSlot(
         val title: String,
-        val items: List<Pair<String, Item>>,
+        val items: List<ResolvedItem>,
         val selectedId: String?,
         val onSelected: (String?) -> Unit
     )
@@ -40,10 +41,35 @@ class SheetInventoryFragment : Fragment() {
     data class MagicItemSlot(
         val index: Int,
         val title: String,
-        val items: Map<String, Item>,
-        val selectedId: String?,
+        val items: List<ResolvedItem>,
+        val selectedComposite: String?,
         val onSelected: (String?) -> Unit
     )
+
+    data class ResolvedItem(
+        val inventoryItem: CharacterItem,
+        val item: Item,
+        val variantItem: Item?
+    ) {
+        val id: String get() = inventoryItem.itemId
+        val variantId: String? get() = inventoryItem.variantItemId
+        val compositeId: String get() = if (variantId != null) "$id|$variantId" else id
+        val displayName: String get() {
+            val base = variantItem?.name?.get() ?: item.name.get()
+            return if (variantItem != null) "${item.name.get()} ($base)" else item.name.get()
+        }
+        val category: String get() = variantItem?.category ?: item.category
+        val cost: com.herocraft24.core.model.Cost? get() = item.cost ?: variantItem?.cost
+        val weight: com.herocraft24.core.model.Weight? get() = item.weight ?: variantItem?.weight
+        val damage: com.herocraft24.core.model.WeaponDamage? get() = item.damage ?: variantItem?.damage
+        val armorClass: com.herocraft24.core.model.ArmorClass? get() = item.armor_class ?: variantItem?.armor_class
+        val isMagic: Boolean get() = item.magic
+        val description: String get() {
+            val magicDesc = item.description.get()
+            val baseDesc = variantItem?.description?.get()
+            return if (baseDesc.isNullOrBlank()) magicDesc else "$baseDesc\n\n$magicDesc"
+        }
+    }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View =
         LayoutInflater.from(requireContext()).inflate(R.layout.fragment_sheet_inventory, c, false)
@@ -68,43 +94,35 @@ class SheetInventoryFragment : Fragment() {
         val ctx = requireContext()
         val cls = vm.getClassInfo(char.classId)
 
-        // Auto-populate starting equipment for characters created before this feature
-        if (char.equipment.isEmpty()) {
-            val startingEquipment = vm.calculateStartingEquipment(char)
-            if (startingEquipment.isNotEmpty()) {
-                save(char.copy(equipment = startingEquipment))
-                return
-            }
-        }
-
         // Resolve backpack items with details
         android.util.Log.d("InventoryDebug", "char.equipment ids: ${char.equipment.map { it.itemId }}")
-        val backpackItems = char.equipment.mapNotNull { inv ->
+        val backpackItems: List<ResolvedItem> = char.equipment.mapNotNull { inv ->
             val item = vm.repository.getItem(inv.itemId)
-            if (item != null) inv.itemId to item else null
+            val variant = inv.variantItemId?.let { vm.repository.getItem(it) }
+            if (item != null) ResolvedItem(inv, item, variant) else null
         }
-        android.util.Log.d("InventoryDebug", "backpackItems count: ${backpackItems.size}, categories: ${backpackItems.map { it.second.category }}")
+        android.util.Log.d("InventoryDebug", "backpackItems count: ${backpackItems.size}, categories: ${backpackItems.map { it.category }}")
 
         // ── Equipment — expandable cards in 2x2 grid, expanding to full width ──
         sectionTitle(content, "Экипировано")
 
-        val armorItems = backpackItems.filter { it.second.category == "armor" }
-        val shieldItems = backpackItems.filter { it.second.category == "shield" }
-        val weaponItems = backpackItems.filter { it.second.category == "weapon" }
+        val armorItems = backpackItems.filter { it.category == "armor" }
+        val shieldItems = backpackItems.filter { it.category == "shield" }
+        val weaponItems = backpackItems.filter { it.category == "weapon" }
         android.util.Log.d("InventoryDebug", "armor: ${armorItems.size}, shield: ${shieldItems.size}, weapon: ${weaponItems.size}")
 
         val equipmentSlots = listOf(
-            EquipmentSlot("Доспех", armorItems, char.equippedArmor) { selectedId ->
-                save(char.copy(equippedArmor = selectedId))
+            EquipmentSlot("Доспех", armorItems, char.equippedArmor) { selectedComposite ->
+                save(char.copy(equippedArmor = selectedComposite))
             },
-            EquipmentSlot("Щит", shieldItems, char.equippedShield) { selectedId ->
-                save(char.copy(equippedShield = selectedId))
+            EquipmentSlot("Щит", shieldItems, char.equippedShield) { selectedComposite ->
+                save(char.copy(equippedShield = selectedComposite))
             },
-            EquipmentSlot("Оружие 1", weaponItems, char.equippedWeapon1) { selectedId ->
-                save(char.copy(equippedWeapon1 = selectedId))
+            EquipmentSlot("Оружие 1", weaponItems, char.equippedWeapon1) { selectedComposite ->
+                save(char.copy(equippedWeapon1 = selectedComposite))
             },
-            EquipmentSlot("Оружие 2", weaponItems, char.equippedWeapon2) { selectedId ->
-                save(char.copy(equippedWeapon2 = selectedId))
+            EquipmentSlot("Оружие 2", weaponItems, char.equippedWeapon2) { selectedComposite ->
+                save(char.copy(equippedWeapon2 = selectedComposite))
             }
         )
 
@@ -118,10 +136,11 @@ class SheetInventoryFragment : Fragment() {
         content.addView(equipmentRecycler)
 
         // ── Magic Items ──
-        val magicItemsById = backpackItems.filter { it.second.magic }.toMap()
+        val magicResolvedItems = backpackItems.filter { it.isMagic }
+        val magicItemsByComposite = magicResolvedItems.associateBy { it.compositeId }
         sectionTitle(content, "Магические предметы")
-        val selectedMagicIds = char.equippedMagicItems.take(24)
-        val attunedCount = selectedMagicIds.count { magicItemsById[it]?.attunement == true }
+        val selectedMagicComposites = char.equippedMagicItems.take(24)
+        val attunedCount = selectedMagicComposites.count { magicItemsByComposite[it]?.item?.attunement == true }
 
         // Counter: 3 cells
         val counterRow = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
@@ -131,16 +150,16 @@ class SheetInventoryFragment : Fragment() {
         content.addView(counterRow)
 
         // Magic item cards: one per selected item plus one empty slot, up to 24
-        val magicCardCount = minOf(selectedMagicIds.size + 1, 24)
+        val magicCardCount = minOf(selectedMagicComposites.size + 1, 24)
         val magicItemSlots = (0 until magicCardCount).map { index ->
-            val selectedId = selectedMagicIds.getOrNull(index)
+            val selectedComposite = selectedMagicComposites.getOrNull(index)
             MagicItemSlot(
                 index = index,
-                title = selectedId?.let { vm.resolveName(it) ?: it.substringAfterLast(":") } ?: "Магический предмет ${index + 1}",
-                items = magicItemsById,
-                selectedId = selectedId,
+                title = selectedComposite?.let { magicItemsByComposite[it]?.displayName } ?: "Магический предмет ${index + 1}",
+                items = magicResolvedItems,
+                selectedComposite = selectedComposite,
                 onSelected = { selectedId ->
-                    val current = selectedMagicIds.toMutableList()
+                    val current = selectedMagicComposites.toMutableList()
                     when {
                         selectedId == null && index < current.size -> current.removeAt(index)
                         selectedId != null && index < current.size -> current[index] = selectedId
@@ -190,36 +209,59 @@ class SheetInventoryFragment : Fragment() {
 
         // ── Backpack ──
         val totalWeight = calculateTotalWeight(backpackItems)
-        val unit = backpackItems.mapNotNull { it.second.weight?.unit }.firstOrNull() ?: "lb"
+        val unit = backpackItems.mapNotNull { it.weight?.unit }.firstOrNull() ?: "lb"
         val backpackHeader = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val backpackTitle = TextView(ctx).apply {
+        val backpackTitleCard = com.google.android.material.card.MaterialCardView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                setMargins(0, 4.dp(ctx), 8.dp(ctx), 4.dp(ctx))
+            }
+            radius = 12f
+            setCardBackgroundColor(resolveColor(com.google.android.material.R.attr.colorSurfaceContainerHigh))
+            strokeWidth = 0
+            isClickable = true
+            isFocusable = true
+            rippleColor = android.content.res.ColorStateList.valueOf(resolveColor(com.google.android.material.R.attr.colorPrimary))
+            setOnClickListener { openBackpackPicker(char, addMode = false) }
+        }
+        val backpackTitleInner = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(12.dp(ctx), 8.dp(ctx), 12.dp(ctx), 8.dp(ctx))
+        }
+        backpackTitleInner.addView(TextView(ctx).apply {
             text = "Рюкзак (Общий вес: ${formatWeight(totalWeight, unit)})"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            isClickable = true
-            isFocusable = true
-            setOnClickListener { openBackpackPicker(char, addMode = false) }
-        }
-        backpackHeader.addView(backpackTitle)
+        })
+        backpackTitleInner.addView(TextView(ctx).apply {
+            text = "−"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+        })
+        backpackTitleCard.addView(backpackTitleInner)
+        backpackHeader.addView(backpackTitleCard)
         backpackHeader.addView(androidx.appcompat.widget.AppCompatButton(ctx).apply {
             text = "+"
             setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
             setOnClickListener { openBackpackPicker(char, addMode = true) }
         })
         content.addView(backpackHeader)
-        val backpackItemsList = backpackItems.map { it.second }
-        if (backpackItemsList.isEmpty()) {
+        if (backpackItems.isEmpty()) {
             content.addView(TextView(ctx).apply {
                 text = "Пусто"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                 setPadding(0, 4.dp(ctx), 0, 0)
             })
         } else {
+            val grouped = backpackItems.groupingBy { it.displayName }.eachCount()
+            val namesText = backpackItems.map { it.displayName }.distinct().joinToString(", ") { displayName ->
+                val count = grouped[displayName] ?: 1
+                if (count > 1) "x$count $displayName" else displayName
+            }
             content.addView(TextView(ctx).apply {
-                text = backpackItemsList.joinToString(", ") { it.name.get() }
+                text = namesText
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                 setPadding(0, 4.dp(ctx), 0, 0)
             })
@@ -227,22 +269,24 @@ class SheetInventoryFragment : Fragment() {
         scrollView?.post { scrollView.scrollTo(0, scrollY) }
     }
 
-    private fun calculateTotalWeight(items: List<Pair<String, Item>>): Double {
+    private fun calculateTotalWeight(items: List<ResolvedItem>): Double {
         var total = 0.0
-        items.forEach { (id, item) ->
-            total += weightOf(id, item)
+        items.forEach { resolved ->
+            total += weightOf(resolved)
         }
         return total
     }
 
-    private fun weightOf(id: String, item: Item): Double {
+    private fun weightOf(resolved: ResolvedItem): Double {
+        val item = resolved.item
         if (item.category == "pack" && item.contents.isNotEmpty()) {
             return item.contents.sumOf { content ->
                 val contentItem = vm.getItem(content.item_id)
-                if (contentItem != null) content.quantity * weightOf(content.item_id, contentItem) else 0.0
+                if (contentItem != null) content.quantity * weightOf(ResolvedItem(CharacterItem(content.item_id), contentItem, null)) else 0.0
             }
         }
-        return item.weight?.amount ?: 0.0
+        val weight = resolved.weight
+        return weight?.amount ?: 0.0
     }
 
     private fun formatWeight(amount: Double, unit: String): String {
@@ -263,14 +307,16 @@ class SheetInventoryFragment : Fragment() {
     private fun buildEquipmentExpandedContent(ctx: Context, slot: EquipmentSlot): View {
         val content = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
 
+        val selectedResolved = slot.items.find { it.compositeId == slot.selectedId }
+
         val descView = TextView(ctx).apply {
-            text = slot.items.find { it.first == slot.selectedId }?.second?.description?.get() ?: ""
+            text = selectedResolved?.description ?: ""
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setPadding(0, 4.dp(ctx), 0, 0)
         }
 
-        val displayNames: List<String> = listOf("—") + slot.items.map { vm.resolveName(it.first) ?: it.first.substringAfterLast(":") }
-        val idByName: Map<String, String> = slot.items.map { (vm.resolveName(it.first) ?: it.first.substringAfterLast(":")) to it.first }.toMap()
+        val displayNames: List<String> = listOf("—") + slot.items.map { it.displayName }
+        val idByName: Map<String, String> = slot.items.map { it.displayName to it.compositeId }.toMap()
 
         val dropdownLayout = TextInputLayout(ctx).apply {
             this.hint = "Выберите ${slot.title}"
@@ -283,7 +329,7 @@ class SheetInventoryFragment : Fragment() {
             isClickable = true
             isFocusable = true
             setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, displayNames))
-            val currentName = slot.items.find { it.first == slot.selectedId }?.let { vm.resolveName(it.first) ?: it.first.substringAfterLast(":") }
+            val currentName = slot.items.find { it.compositeId == slot.selectedId }?.displayName
             setText(currentName ?: "—", false)
             setOnClickListener { showDropDown() }
             setOnItemClickListener { _, _, position, _ ->
@@ -293,17 +339,70 @@ class SheetInventoryFragment : Fragment() {
                     descView.text = ""
                     slot.onSelected(null)
                 } else {
-                    val item = slot.items.find { it.first == selectedItemId }?.second
-                    descView.text = item?.description?.get() ?: ""
+                    val resolved = slot.items.find { it.compositeId == selectedItemId }
+                    descView.text = resolved?.description ?: ""
                     slot.onSelected(selectedItemId)
                 }
             }
         }
         dropdownLayout.addView(dropdown)
         content.addView(dropdownLayout)
+        selectedResolved?.let { content.addView(buildItemStatsView(ctx, it)) }
         content.addView(descView)
 
         return content
+    }
+
+    private fun buildItemStatsView(ctx: Context, resolved: ResolvedItem): View {
+        val container = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        container.addView(TextView(ctx).apply {
+            text = "Категория: ${UiLocalizer.category(resolved.category)}"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 2.dp(ctx), 0, 0)
+        })
+        if (resolved.item.subcategory.isNotEmpty()) {
+            container.addView(TextView(ctx).apply {
+                text = "Подкатегория: ${resolved.item.subcategory.joinToString(", ") { UiLocalizer.subcategory(it) }}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        if (resolved.item.rarity.isNotBlank()) {
+            container.addView(TextView(ctx).apply {
+                text = "Редкость: ${UiLocalizer.rarity(resolved.item.rarity)}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        resolved.cost?.let { cost ->
+            container.addView(TextView(ctx).apply {
+                text = "Стоимость: ${cost.amount.toInt()} ${UiLocalizer.costUnit(cost.unit)}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        resolved.weight?.let { weight ->
+            container.addView(TextView(ctx).apply {
+                text = "Вес: ${weight.amount} ${UiLocalizer.weightUnit(weight.unit)}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        resolved.damage?.let { dmg ->
+            container.addView(TextView(ctx).apply {
+                text = "Урон: ${dmg.damage_dice} ${UiLocalizer.damageType(dmg.damage_type)}${dmg.versatile_dice?.let { " (универсальное $it)" } ?: ""}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        resolved.armorClass?.let { ac ->
+            container.addView(TextView(ctx).apply {
+                text = "КЗ: ${ac.base}${if (ac.dex_bonus) " + Ловкость" else ""}${ac.max_dex?.let { " (макс +$it)" } ?: ""}${ac.min_strength?.let { ", мин Сила $it" } ?: ""}${if (ac.stealth_disadvantage) ", помеха Скрытности" else ""}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 2.dp(ctx), 0, 0)
+            })
+        }
+        return container
     }
 
     inner class EquipmentAdapter(private val slots: List<EquipmentSlot>) : RecyclerView.Adapter<EquipmentAdapter.VH>() {
@@ -320,9 +419,7 @@ class SheetInventoryFragment : Fragment() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val slot = slots[position]
             val isExpanded = position == equipmentExpandedPosition
-            val selectedName = slot.items.find { it.first == slot.selectedId }?.let {
-                vm.resolveName(it.first) ?: it.first.substringAfterLast(":")
-            }
+            val selectedName = slot.items.find { it.compositeId == slot.selectedId }?.displayName
             holder.binding.featureTitle.text = selectedName ?: slot.title
             holder.binding.expandedContent.removeAllViews()
             holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
@@ -382,16 +479,16 @@ class SheetInventoryFragment : Fragment() {
 
     private fun buildMagicItemExpandedContent(ctx: Context, slot: MagicItemSlot): View {
         val content = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
-        val selectedItem = slot.selectedId?.let { slot.items[it] }
+        val selectedItem = slot.selectedComposite?.let { composite -> slot.items.find { it.compositeId == composite } }
 
         val descView = TextView(ctx).apply {
-            text = selectedItem?.description?.get() ?: ""
+            text = selectedItem?.description ?: ""
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setPadding(0, 4.dp(ctx), 0, 0)
         }
 
-        val displayNames: List<String> = listOf("—") + slot.items.values.map { it.name.get() }
-        val idByName: Map<String, String> = slot.items.entries.map { it.value.name.get() to it.key }.toMap()
+        val displayNames: List<String> = listOf("—") + slot.items.map { it.displayName }
+        val idByName: Map<String, String> = slot.items.map { it.displayName to it.compositeId }.toMap()
 
         val dropdownLayout = TextInputLayout(ctx).apply {
             this.hint = "Выберите магический предмет"
@@ -404,17 +501,18 @@ class SheetInventoryFragment : Fragment() {
             isClickable = true
             isFocusable = true
             setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, displayNames))
-            setText(selectedItem?.name?.get() ?: "—", false)
+            setText(selectedItem?.displayName ?: "—", false)
             setOnClickListener { showDropDown() }
             setOnItemClickListener { _, _, position, _ ->
                 val selectedName = displayNames.getOrNull(position) ?: "—"
-                val selectedId = idByName[selectedName]
-                descView.text = selectedId?.let { slot.items[it]?.description?.get() } ?: ""
-                slot.onSelected(selectedId)
+                val selectedComposite = idByName[selectedName]
+                descView.text = selectedComposite?.let { composite -> slot.items.find { it.compositeId == composite }?.description } ?: ""
+                slot.onSelected(selectedComposite)
             }
         }
         dropdownLayout.addView(dropdown)
         content.addView(dropdownLayout)
+        selectedItem?.let { content.addView(buildItemStatsView(ctx, it)) }
         content.addView(descView)
 
         return content
@@ -434,7 +532,7 @@ class SheetInventoryFragment : Fragment() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val slot = slots[position]
             val isExpanded = position == magicItemExpandedPosition
-            val selectedName = slot.selectedId?.let { vm.resolveName(it) ?: it.substringAfterLast(":") }
+            val selectedName = slot.selectedComposite?.let { composite -> slot.items.find { it.compositeId == composite }?.displayName }
             holder.binding.featureTitle.text = selectedName ?: slot.title
             holder.binding.expandedContent.removeAllViews()
             holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE

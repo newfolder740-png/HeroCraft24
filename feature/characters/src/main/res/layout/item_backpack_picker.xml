@@ -29,6 +29,14 @@
             tools:text="Оружие" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/itemCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/actionButton"
         android:layout_width="wrap_content"

@@ -294,7 +294,7 @@ class SheetMainFragment : Fragment() {
         // Row 4: BM, AC, Shield, Inspiration
         val profCard = labelValue("БМ", formatBonus(profBonus), centered = true, largeValue = true)
         val acCard = labelValue("КЗ", "${char.armorClass}", centered = true, largeValue = true)
-        val shieldCard = labelValue("Щит", char.equippedShield?.let { vm.resolveName(it) ?: it } ?: "—", centered = true, largeValue = true)
+        val shieldCard = labelValue("Щит", char.equippedShield?.let { vm.resolveEquipmentName(it) ?: it } ?: "—", centered = true, largeValue = true)
         val inspirationCard = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
