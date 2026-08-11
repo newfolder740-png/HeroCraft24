@@ -17,6 +17,11 @@ data class CharacterData(
     val abilityScorePointsUsed: Int = 0,
     val subspeciesId: String? = null,
     val classSkillChoices: List<String> = emptyList(),
+    val classEquipmentChoice: Int = 0,
+    val bgAbilityPlus2: String? = null,
+    val bgAbilityPlus1: String? = null,
+    val bgAbilityMode: Boolean? = null, // true = +2/+1, false = all +1, null = not chosen
+    val bgEquipmentChoice: Int = 0,
     val equipmentChoiceIndex: Int = 0,
     val featureChoices: Map<String, String> = emptyMap(),
     val selectedFeats: List<String> = emptyList(),

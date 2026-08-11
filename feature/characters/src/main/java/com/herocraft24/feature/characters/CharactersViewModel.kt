@@ -56,6 +56,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val char = _wizard.value
         val hp = calculateStartingHP(char)
         repo.save(char.copy(hitPoints = HitPoints(max = hp, current = hp)))
+        _wizard.value = CharacterData()
         _wizardStep.value = 0
     }
 

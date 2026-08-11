@@ -1,1 +1,111 @@
-﻿{"id":"hermit","type":"background","format_version":1,"name":{"en":"Hermit","ru":"Отшельник"},"description":{"en":"","ru":"Вы провели свои ранние годы в одиночестве, в хижине или монастыре, далеко за пределами ближайшего поселения. В те дни единственными вашими спутниками были лесные обитатели и те, кто время от времени навещал вас, принося новости о внешнем мире и припасы. В уединении вы провели много часов, размышляя о тайнах сотворения мира."},"source":{"book":{"en":"Player\u0027s Handbook 2024"},"abbreviation":"PHB2024"},"tags":["background"],"ability_score_choice":true,"ability_score_mode":"choice","ability_score_increases":[{"ability":"constitution","increase":0,"optional":true},{"ability":"wisdom","increase":0,"optional":true},{"ability":"charisma","increase":0,"optional":true}],"skill_proficiencies":["medicine","religion"],"tool_proficiencies":["Набор травника"],"tool_item_ids":["phb2024:herbalism_kit"],"equipment_choices":[{"type":"equipment","options":[{"items":[{"item_id":"phb2024:quarterstaff"},{"item_id":"phb2024:herbalism_kit"},{"item_id":"phb2024:bedroll"},{"item_id":"phb2024:book"},{"item_id":"phb2024:lamp"},{"item_id":"phb2024:oil"},{"item_id":"phb2024:oil"},{"item_id":"phb2024:oil"},{"item_id":"phb2024:traveler_s_clothes"}],"gold":16},{"gold":50}]}],"feat":"phb2024:healer","feature":{"name":{"en":"","ru":"Лекарь"},"description":{"en":"","ru":""}}}
+﻿{
+  "id": "hermit",
+  "type": "background",
+  "format_version": 1,
+  "name": {
+    "en": "Hermit",
+    "ru": "Отшельник"
+  },
+  "description": {
+    "en": "",
+    "ru": "Вы провели свои ранние годы в одиночестве, в хижине или монастыре, далеко за пределами ближайшего поселения. В те дни единственными вашими спутниками были лесные обитатели и те, кто время от времени навещал вас, принося новости о внешнем мире и припасы. В уединении вы провели много часов, размышляя о тайнах сотворения мира."
+  },
+  "source": {
+    "book": {
+      "en": "Player's Handbook 2024"
+    },
+    "abbreviation": "PHB2024"
+  },
+  "tags": [
+    "background"
+  ],
+  "ability_score_choice": true,
+  "ability_score_mode": "choice",
+  "ability_score_increases": [
+    {
+      "ability": "constitution",
+      "increase": 0,
+      "optional": true
+    },
+    {
+      "ability": "wisdom",
+      "increase": 0,
+      "optional": true
+    },
+    {
+      "ability": "charisma",
+      "increase": 0,
+      "optional": true
+    }
+  ],
+  "skill_proficiencies": [
+    "medicine",
+    "religion"
+  ],
+  "tool_proficiencies": [
+    "Набор травника"
+  ],
+  "tool_item_ids": [
+    "phb2024:herbalism_kit"
+  ],
+  "equipment_choices": [
+    {
+      "type": "equipment",
+      "options": [
+        {
+          "items": [
+            {
+              "item_id": "phb2024:quarterstaff"
+            },
+            {
+              "item_id": "phb2024:herbalism_kit"
+            },
+            {
+              "item_id": "phb2024:bedroll"
+            },
+            {
+              "item_id": "phb2024:book"
+            },
+            {
+              "item_id": "phb2024:lamp"
+            },
+            {
+              "item_id": "phb2024:oil"
+            },
+            {
+              "item_id": "phb2024:oil"
+            },
+            {
+              "item_id": "phb2024:oil"
+            },
+            {
+              "item_id": "phb2024:traveler_s_clothes"
+            }
+          ],
+          "gold": 16
+
+        },
+        {
+          "gold": 50
+
+        }
+      ],
+      "description": {
+        "en": "Choose A or B",
+        "ru": "Выберите А или Б:"
+      },
+      "count": 1
+    }
+  ],
+  "feat": "phb2024:healer",
+  "feature": {
+    "name": {
+      "en": "",
+      "ru": "Лекарь"
+    },
+    "description": {
+      "en": "",
+      "ru": ""
+    }
+  }
+}

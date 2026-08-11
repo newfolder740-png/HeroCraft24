@@ -27,6 +27,10 @@ class CharacterCreateFragment : Fragment() {
     private var nameInput: EditText? = null
     private var alignSpinner: Spinner? = null
 
+    // Adapter references for validation
+    private var classCreateAdapter: ClassCreateAdapter? = null
+    private var backgroundCreateAdapter: BackgroundCreateAdapter? = null
+
     // Abilities step binding
     private var _abilitiesBinding: FragmentCreateAbilitiesBinding? = null
     private val abilitiesBinding get() = _abilitiesBinding!!
@@ -42,7 +46,8 @@ class CharacterCreateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        step = savedInstanceState?.getInt("step", 0) ?: 0
+        step = savedInstanceState?.getInt("step", 0)
+            ?: vm.wizardStep.value
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -72,7 +77,9 @@ class CharacterCreateFragment : Fragment() {
             return
         }
         saveCurrentStepInput()
-        step++; renderStep()
+        step++
+        vm.setWizardStep(step)
+        renderStep()
     }
 
     private fun saveCurrentStepInput() {
@@ -83,7 +90,7 @@ class CharacterCreateFragment : Fragment() {
 
     private fun prevStep() {
         saveCurrentStepInput()
-        if (step > 0) { step--; renderStep() }
+        if (step > 0) { step--; vm.setWizardStep(step); renderStep() }
     }
 
     private fun updateNextButtonState() {
@@ -104,8 +111,22 @@ class CharacterCreateFragment : Fragment() {
                     !hasSubspecies || subspeciesSelected
                 }
             }
-            2 -> vm.wizard.value.backgroundId.isNotEmpty()
-            3 -> vm.wizard.value.classId.isNotEmpty()
+            2 -> {
+                val bgId = vm.wizard.value.backgroundId
+                if (bgId.isEmpty()) {
+                    false
+                } else {
+                    backgroundCreateAdapter?.areAllAbilitiesSelected() ?: true
+                }
+            }
+            3 -> {
+                val classId = vm.wizard.value.classId
+                if (classId.isEmpty()) {
+                    false
+                } else {
+                    classCreateAdapter?.areAllSkillsSelected() ?: true
+                }
+            }
             else -> true
         }
         binding.btnNext.isEnabled = canProceed
@@ -119,6 +140,8 @@ class CharacterCreateFragment : Fragment() {
         val container = binding.stepContainer
         container.removeAllViews()
         _abilitiesBinding = null
+        classCreateAdapter = null
+        backgroundCreateAdapter = null
 
         when (step) {
             0 -> renderAbilitiesStep(container)
@@ -566,7 +589,8 @@ class CharacterCreateFragment : Fragment() {
             onSubspeciesSelected = { speciesId, subspeciesId ->
                 vm.updateWizard { it.copy(subspeciesId = subspeciesId) }
                 updateNextButtonState()
-            }
+            },
+            initialSubspeciesId = vm.wizard.value.subspeciesId
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
@@ -675,6 +699,7 @@ class CharacterCreateFragment : Fragment() {
         var currentSortMode = "default"
         var currentFilterSources = setOf<String>()
 
+        val wizard = vm.wizard.value
         lateinit var adapter: BackgroundCreateAdapter
         adapter = BackgroundCreateAdapter(
             onBackgroundSelected = { id ->
@@ -683,15 +708,25 @@ class CharacterCreateFragment : Fragment() {
                 updateNextButtonState()
             },
             onAbilityChoiceChanged = { bgId, plus2, plus1 ->
-                // Store in wizard state if needed
+                vm.updateWizard { it.copy(bgAbilityPlus2 = plus2, bgAbilityPlus1 = plus1) }
+                updateNextButtonState()
+            },
+            onAbilityModeChanged = { mode ->
+                vm.updateWizard { it.copy(bgAbilityMode = mode) }
+                updateNextButtonState()
             },
             onEquipmentChoiceChanged = { bgId, optionIndex ->
-                vm.updateWizard { it.copy(equipmentChoiceIndex = optionIndex) }
-            }
+                vm.updateWizard { it.copy(bgEquipmentChoice = optionIndex) }
+            },
+            initialAbilityPlus2 = wizard.bgAbilityPlus2,
+            initialAbilityPlus1 = wizard.bgAbilityPlus1,
+            initialAbilityMode = wizard.bgAbilityMode,
+            initialEquipmentChoice = wizard.bgEquipmentChoice
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+        backgroundCreateAdapter = adapter
 
         fun applyFiltersAndSort() {
             adapter.collapseAll()
@@ -775,15 +810,41 @@ class CharacterCreateFragment : Fragment() {
     }
 
     private fun renderClassStep(container: FrameLayout) {
-        val ll = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        vm.getClassIds().forEach { id ->
-            val cls = vm.getClassInfo(id)
-            val name = cls?.name?.get() ?: id
-            ll.addView(Button(requireContext()).apply {
-                text = name; setOnClickListener { vm.updateWizard { it.copy(classId = id) }; renderStep() }
-            })
-        }
-        container.addView(ScrollView(requireContext()).apply { addView(ll) })
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_classes, container, false)
+        container.addView(view)
+
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+        val allClasses = vm.getClassIds().mapNotNull { vm.getClassInfo(it) }
+        val collator = java.text.Collator.getInstance(java.util.Locale("ru"))
+        val sortedClasses = allClasses.sortedWith(compareBy(collator) { it.name.get() })
+
+        val wizard = vm.wizard.value
+        lateinit var adapter: ClassCreateAdapter
+        adapter = ClassCreateAdapter(
+            onClassSelected = { id ->
+                vm.updateWizard { it.copy(classId = id) }
+                adapter.setSelected(id)
+                updateNextButtonState()
+            },
+            onSkillChoiceChanged = { classId, skills ->
+                vm.updateWizard { it.copy(classSkillChoices = skills) }
+                updateNextButtonState()
+            },
+            onEquipmentChoiceChanged = { classId, optionIndex ->
+                vm.updateWizard { it.copy(classEquipmentChoice = optionIndex) }
+            },
+            onSubclassSelected = { classId, subclassId ->
+                // Subclass is not saved to wizard — it's a per-session choice
+            },
+            initialSkillChoices = wizard.classSkillChoices,
+            initialEquipmentChoice = wizard.classEquipmentChoice,
+            initialSubclassId = null
+        )
+
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+        adapter.submitList(sortedClasses, wizard.classId)
+        classCreateAdapter = adapter
     }
 
     private fun renderFeaturesStep(container: FrameLayout) {

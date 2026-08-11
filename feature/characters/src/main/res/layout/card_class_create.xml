@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Header row: RadioButton + Name (clickable to toggle expand) -->
+        <!-- Header row: RadioButton + Name + Hit die (clickable to toggle expand) -->
         <LinearLayout
             android:id="@+id/header_row"
             android:layout_width="match_parent"
@@ -36,12 +36,18 @@
                 android:focusable="false" />
 
             <TextView
-                android:id="@+id/species_name"
+                android:id="@+id/class_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:id="@+id/hit_die_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall" />
         </LinearLayout>
 
         <!-- Expanded content container (populated programmatically) -->

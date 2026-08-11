@@ -15,7 +15,8 @@ import com.herocraft24.feature.characters.databinding.CardSpeciesCreateBinding
 
 class SpeciesCreateAdapter(
     private val onSpeciesSelected: (String) -> Unit,
-    private val onSubspeciesSelected: (String, String?) -> Unit
+    private val onSubspeciesSelected: (String, String?) -> Unit,
+    private val initialSubspeciesId: String? = null
 ) : RecyclerView.Adapter<SpeciesCreateAdapter.ViewHolder>() {
 
     private var items: List<Species> = emptyList()
@@ -28,6 +29,10 @@ class SpeciesCreateAdapter(
     fun submitList(list: List<Species>, selected: String? = selectedId) {
         items = list
         selectedId = selected
+        // Restore initial subspecies selection
+        if (selected != null && initialSubspeciesId != null) {
+            selectedSubspecies[selected] = initialSubspeciesId
+        }
         notifyDataSetChanged()
     }
 
@@ -68,24 +73,19 @@ class SpeciesCreateAdapter(
 
         holder.binding.speciesName.text = species.name.get()
         holder.binding.radioButton.isChecked = isSelected
-        holder.binding.chevron.rotation = if (isExpanded) 180f else 0f
         holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
-        // Click to select AND expand/collapse
-        holder.binding.root.setOnClickListener {
-            // Select this species
+        holder.binding.headerRow.setOnClickListener {
             if (!isSelected) {
                 onSpeciesSelected(species.id)
                 setSelected(species.id)
             }
-            // Toggle expansion
             val prevExpanded = expandedPosition
             expandedPosition = if (isExpanded) -1 else position
             if (prevExpanded >= 0) notifyItemChanged(prevExpanded)
             if (expandedPosition >= 0) notifyItemChanged(expandedPosition)
         }
 
-        // Build expanded content
         if (isExpanded) {
             buildExpandedContent(holder.binding.expandedContent, species, position)
         }
@@ -140,32 +140,31 @@ class SpeciesCreateAdapter(
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
                 setPadding(0, 0, 0, 4.dp(ctx))
             })
-            val spinner = android.widget.Spinner(ctx).apply {
-                val names = listOf("Выберите род") + subspeciesList.map { it.name.get() }
-                adapter = android.widget.ArrayAdapter(ctx, android.R.layout.simple_spinner_item, names).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
-                // Set current selection
+            val names = subspeciesList.map { it.name.get() }
+            val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                inputType = android.text.InputType.TYPE_NULL
+                threshold = 0
+                isFocusableInTouchMode = false
+                hint = "Выберите род"
+                setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, names))
+                setOnClickListener { showDropDown() }
                 val currentSubId = selectedSubspecies[species.id]
                 if (currentSubId != null) {
                     val idx = subspeciesList.indexOfFirst { it.id == currentSubId }
-                    if (idx >= 0) setSelection(idx + 1)
+                    if (idx >= 0) setText(names[idx], false)
                 }
-                setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                        val subId = if (pos == 0) null else subspeciesList[pos - 1].id
-                        val prevSubId = selectedSubspecies[species.id]
-                        if (subId != prevSubId) {
-                            selectedSubspecies[species.id] = subId
-                            onSubspeciesSelected(species.id, subId)
-                            // Rebuild expanded content to update traits
-                            notifyItemChanged(position)
-                        }
+                setOnItemClickListener { _, _, pos, _ ->
+                    val subId = subspeciesList.getOrNull(pos)?.id
+                    val prevSubId = selectedSubspecies[species.id]
+                    if (subId != prevSubId) {
+                        selectedSubspecies[species.id] = subId
+                        onSubspeciesSelected(species.id, subId)
+                        notifyItemChanged(position)
                     }
-                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-                })
+                }
             }
-            subContainer.addView(spinner)
+            subContainer.addView(dropdown)
             container.addView(subContainer)
         }
 

@@ -19,7 +19,12 @@ import com.herocraft24.feature.characters.databinding.CardBackgroundCreateBindin
 class BackgroundCreateAdapter(
     private val onBackgroundSelected: (String) -> Unit,
     private val onAbilityChoiceChanged: (String, String?, String?) -> Unit,
-    private val onEquipmentChoiceChanged: (String, Int) -> Unit
+    private val onAbilityModeChanged: (Boolean?) -> Unit,
+    private val onEquipmentChoiceChanged: (String, Int) -> Unit,
+    private val initialAbilityPlus2: String? = null,
+    private val initialAbilityPlus1: String? = null,
+    private val initialAbilityMode: Boolean? = null,
+    private val initialEquipmentChoice: Int = 0
 ) : RecyclerView.Adapter<BackgroundCreateAdapter.ViewHolder>() {
 
     private var items: List<Background> = emptyList()
@@ -28,16 +33,35 @@ class BackgroundCreateAdapter(
     private val openIds = mutableSetOf<String>()
     private val abilityChoices = mutableMapOf<String, Pair<String?, String?>>()
     private val equipmentChoices = mutableMapOf<String, Int>()
+    // true = +2/+1 option selected, false = all +1 selected, null = not yet chosen
+    private val abilityModeChoices = mutableMapOf<String, Boolean>()
 
     fun submitList(list: List<Background>, selected: String? = selectedId) {
         items = list
         selectedId = selected
+        // Restore initial state for the selected background
+        if (selected != null) {
+            if (initialAbilityMode != null) {
+                abilityModeChoices[selected] = initialAbilityMode
+            }
+            if (initialAbilityPlus2 != null || initialAbilityPlus1 != null) {
+                abilityChoices[selected] = Pair(initialAbilityPlus2, initialAbilityPlus1)
+            }
+            equipmentChoices[selected] = initialEquipmentChoice
+        }
         notifyDataSetChanged()
     }
 
     fun setSelected(id: String?) {
         val oldSelected = selectedId
         selectedId = id
+        // Default ability mode to "all +1" when a new background is selected
+        if (id != null && !abilityModeChoices.containsKey(id)) {
+            val bg = items.find { it.id == id }
+            if (bg != null && bg.ability_score_increases.isNotEmpty()) {
+                abilityModeChoices[id] = false
+            }
+        }
         if (oldSelected != null) {
             val oldIndex = items.indexOfFirst { it.id == oldSelected }
             if (oldIndex >= 0) notifyItemChanged(oldIndex)
@@ -54,6 +78,18 @@ class BackgroundCreateAdapter(
         if (prevExpanded >= 0) notifyItemChanged(prevExpanded)
     }
 
+    fun areAllAbilitiesSelected(): Boolean {
+        val bgId = selectedId ?: return true
+        val bg = items.find { it.id == bgId } ?: return true
+        if (bg.ability_score_increases.isEmpty()) return true
+        val mode = abilityModeChoices[bgId]
+        if (mode == null) return false // not yet chosen
+        if (!mode) return true // "all +1" — no dropdowns needed
+        // +2/+1 mode: both must be filled
+        val choice = abilityChoices[bgId] ?: return false
+        return choice.first != null && choice.second != null
+    }
+
     class ViewHolder(val binding: CardBackgroundCreateBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -68,10 +104,9 @@ class BackgroundCreateAdapter(
 
         holder.binding.backgroundName.text = bg.name.get()
         holder.binding.radioButton.isChecked = isSelected
-        holder.binding.chevron.rotation = if (isExpanded) 180f else 0f
         holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
-        holder.binding.root.setOnClickListener {
+        holder.binding.headerRow.setOnClickListener {
             if (!isSelected) {
                 onBackgroundSelected(bg.id)
                 setSelected(bg.id)
@@ -167,23 +202,37 @@ class BackgroundCreateAdapter(
                 visibility = View.GONE
             }
 
-            val plus2Label = TextView(ctx).apply {
-                text = "+2:"
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            fun createDropdown(label: String): Pair<View, com.google.android.material.textfield.MaterialAutoCompleteTextView> {
+                val container = LinearLayout(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                        bottomMargin = 8.dp(ctx)
+                    }
+                    orientation = LinearLayout.VERTICAL
+                }
+                val labelView = TextView(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    text = label
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                }
+                container.addView(labelView)
+                val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    inputType = android.text.InputType.TYPE_NULL
+                    threshold = 0
+                    dropDownWidth = 600
+                    minWidth = 0
+                    isFocusableInTouchMode = false
+                    setOnClickListener { showDropDown() }
+                }
+                container.addView(dropdown)
+                return Pair(container, dropdown)
             }
-            dropdownsContainer.addView(plus2Label)
 
-            val plus2Spinner = Spinner(ctx)
-            dropdownsContainer.addView(plus2Spinner)
+            val (plus2Layout, plus2Dropdown) = createDropdown("+2: выберите характеристику")
+            dropdownsContainer.addView(plus2Layout)
 
-            val plus1Label = TextView(ctx).apply {
-                text = "+1:"
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
-            }
-            dropdownsContainer.addView(plus1Label)
-
-            val plus1Spinner = Spinner(ctx)
-            dropdownsContainer.addView(plus1Spinner)
+            val (plus1Layout, plus1Dropdown) = createDropdown("+1: выберите характеристику")
+            dropdownsContainer.addView(plus1Layout)
 
             radioGroup.addView(dropdownsContainer)
 
@@ -194,99 +243,76 @@ class BackgroundCreateAdapter(
             }
             radioGroup.addView(optionB)
 
+            fun optionsForPlus2() = abilities.filter { it != abilityChoices[bg.id]?.second }
+            fun optionsForPlus1() = abilities.filter { it != abilityChoices[bg.id]?.first }
+
+            fun setDropdownText(dropdown: com.google.android.material.textfield.MaterialAutoCompleteTextView, selected: String?) {
+                dropdown.setText(selected?.let { localizeAbility(it) } ?: "", false)
+            }
+
+            fun updatePlus2Dropdown() {
+                val options = optionsForPlus2()
+                plus2Dropdown.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, options.map { localizeAbility(it) }))
+                setDropdownText(plus2Dropdown, abilityChoices[bg.id]?.first)
+            }
+
+            fun updatePlus1Dropdown() {
+                val options = optionsForPlus1()
+                plus1Dropdown.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, options.map { localizeAbility(it) }))
+                setDropdownText(plus1Dropdown, abilityChoices[bg.id]?.second)
+            }
+
+            plus2Dropdown.setOnItemClickListener { _, _, position, _ ->
+                val selected = optionsForPlus2().getOrNull(position)
+                var plus1Ability = abilityChoices[bg.id]?.second
+                if (plus1Ability == selected) plus1Ability = null
+                abilityChoices[bg.id] = Pair(selected, plus1Ability)
+                onAbilityChoiceChanged(bg.id, selected, plus1Ability)
+                plus1Dropdown.post { updatePlus1Dropdown() }
+            }
+
+            plus1Dropdown.setOnItemClickListener { _, _, position, _ ->
+                val selected = optionsForPlus1().getOrNull(position)
+                abilityChoices[bg.id] = Pair(abilityChoices[bg.id]?.first, selected)
+                onAbilityChoiceChanged(bg.id, abilityChoices[bg.id]?.first, selected)
+                plus2Dropdown.post { updatePlus2Dropdown() }
+            }
+
             // Set initial state
             if (currentChoice != null) {
                 radioGroup.check(optionAId)
                 dropdownsContainer.visibility = View.VISIBLE
-                updateSpinnerAdapters(plus2Spinner, plus1Spinner, abilities, currentChoice.first, currentChoice.second)
+                abilityModeChoices[bg.id] = true
+                updatePlus2Dropdown()
+                updatePlus1Dropdown()
+            } else if (abilityModeChoices[bg.id] == false) {
+                radioGroup.check(optionBId)
             } else {
                 radioGroup.check(optionBId)
-            }
-
-            // Update spinner adapters based on selections
-            fun refreshSpinners() {
-                val choice = abilityChoices[bg.id]
-                updateSpinnerAdapters(plus2Spinner, plus1Spinner, abilities, choice?.first, choice?.second)
             }
 
             radioGroup.setOnCheckedChangeListener { _, checkedId ->
                 if (checkedId == optionAId) {
                     dropdownsContainer.visibility = View.VISIBLE
+                    abilityModeChoices[bg.id] = true
+                    onAbilityModeChanged(true)
                     if (abilityChoices[bg.id] == null) {
                         abilityChoices[bg.id] = Pair(null, null)
                     }
-                    refreshSpinners()
+                    plus2Dropdown.post { updatePlus2Dropdown() }
+                    plus1Dropdown.post { updatePlus1Dropdown() }
                 } else if (checkedId == optionBId) {
                     dropdownsContainer.visibility = View.GONE
+                    abilityModeChoices[bg.id] = false
+                    onAbilityModeChanged(false)
                     abilityChoices.remove(bg.id)
                     onAbilityChoiceChanged(bg.id, null, null)
                 }
             }
 
-            plus2Spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                    val plus2Ability = if (pos == 0) null else getAbilityAtPosition(plus2Spinner, abilities, pos)
-                    val plus1Ability = abilityChoices[bg.id]?.second
-                    abilityChoices[bg.id] = Pair(plus2Ability, plus1Ability)
-                    onAbilityChoiceChanged(bg.id, plus2Ability, plus1Ability)
-                    // Refresh +1 spinner to exclude +2 selection
-                    refreshSpinners()
-                }
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            })
-
-            plus1Spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                    val plus2Ability = abilityChoices[bg.id]?.first
-                    val plus1Ability = if (pos == 0) null else getAbilityAtPosition(plus1Spinner, abilities, pos)
-                    abilityChoices[bg.id] = Pair(plus2Ability, plus1Ability)
-                    onAbilityChoiceChanged(bg.id, plus2Ability, plus1Ability)
-                    // Refresh +2 spinner to exclude +1 selection
-                    refreshSpinners()
-                }
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            })
-
             asiContainer.addView(radioGroup)
         }
         container.addView(asiContainer)
-    }
-
-    private fun updateSpinnerAdapters(
-        plus2Spinner: Spinner, plus1Spinner: Spinner,
-        abilities: List<String>, selectedPlus2: String?, selectedPlus1: String?
-    ) {
-        val ctx = plus2Spinner.context
-
-        // +2 options: exclude selected +1
-        val plus2Options = abilities.filter { it != selectedPlus1 }
-        val plus2Names = listOf("+2: выберите характеристику") + plus2Options.map { localizeAbility(it) }
-        plus2Spinner.adapter = android.widget.ArrayAdapter(ctx, android.R.layout.simple_spinner_item, plus2Names).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        if (selectedPlus2 != null) {
-            val idx = plus2Options.indexOf(selectedPlus2)
-            if (idx >= 0) plus2Spinner.setSelection(idx + 1)
-        }
-
-        // +1 options: exclude selected +2
-        val plus1Options = abilities.filter { it != selectedPlus2 }
-        val plus1Names = listOf("+1: выберите характеристику") + plus1Options.map { localizeAbility(it) }
-        plus1Spinner.adapter = android.widget.ArrayAdapter(ctx, android.R.layout.simple_spinner_item, plus1Names).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        if (selectedPlus1 != null) {
-            val idx = plus1Options.indexOf(selectedPlus1)
-            if (idx >= 0) plus1Spinner.setSelection(idx + 1)
-        }
-    }
-
-    private fun getAbilityAtPosition(spinner: Spinner, allAbilities: List<String>, pos: Int): String? {
-        // Get the current adapter's list to find the actual ability at this position
-        val adapter = spinner.adapter as? android.widget.ArrayAdapter<String> ?: return null
-        val item = adapter.getItem(pos) ?: return null
-        // Reverse-localize to find the ability key
-        return allAbilities.find { localizeAbility(it) == item }
     }
 
     private fun buildEquipmentSection(container: LinearLayout, bg: Background, ctx: android.content.Context) {
@@ -304,43 +330,48 @@ class BackgroundCreateAdapter(
         val currentEquipChoice = equipmentChoices[bg.id] ?: 0
         val contentRepo = ContentRepository.get(ctx)
 
-        bg.equipment.forEachIndexed { index, choice ->
-            val optionLabels = mutableListOf<String>()
-
-            choice.options.forEach { option ->
-                if (option.items.isNotEmpty()) {
-                    // List all items
-                    val itemNames = option.items.mapNotNull { itemOpt ->
-                        val itemId = itemOpt.item_id
-                        if (itemId != null) {
-                            contentRepo.resolveName(itemId) ?: itemId
-                        } else null
-                    }
-                    optionLabels.add(itemNames.joinToString(", "))
-                } else if (option.gold != null) {
-                    optionLabels.add("${option.gold} зм")
-                }
-            }
-
-            val label = if (optionLabels.isNotEmpty()) {
-                optionLabels.joinToString(" или ")
-            } else {
-                "Вариант ${index + 1}"
-            }
-
-            radioGroup.addView(RadioButton(ctx).apply {
-                text = label
-                isChecked = index == currentEquipChoice
-                setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        equipmentChoices[bg.id] = index
-                        onEquipmentChoiceChanged(bg.id, index)
+        var radioIndex = 0
+        val radioButtons = mutableListOf<RadioButton>()
+        for (choice in bg.equipment) {
+            for (option in choice.options) {
+                val label = buildOptionLabel(option, contentRepo)
+                val idx = radioIndex
+                val rb = RadioButton(ctx).apply {
+                    text = label
+                    isChecked = idx == currentEquipChoice
+                    setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            // Uncheck all other radio buttons
+                            radioButtons.forEachIndexed { i, other ->
+                                if (i != idx) other.isChecked = false
+                            }
+                            equipmentChoices[bg.id] = idx
+                            onEquipmentChoiceChanged(bg.id, idx)
+                        }
                     }
                 }
-            })
+                radioButtons.add(rb)
+                radioGroup.addView(rb)
+                radioIndex++
+            }
         }
         equipContainer.addView(radioGroup)
         container.addView(equipContainer)
+    }
+
+    private fun buildOptionLabel(option: com.herocraft24.core.model.EquipmentOption, repo: com.herocraft24.core.data.ContentRepository): String {
+        val parts = mutableListOf<String>()
+        if (option.items.isNotEmpty()) {
+            val itemNames = option.items.mapNotNull { itemOpt ->
+                val itemId = itemOpt.item_id
+                if (itemId != null) repo.resolveName(itemId) ?: itemId else null
+            }
+            if (itemNames.isNotEmpty()) parts.add(itemNames.joinToString(", "))
+        }
+        if (option.gold != null) {
+            parts.add("${option.gold} зм")
+        }
+        return if (parts.isNotEmpty()) parts.joinToString(", ") else "Вариант"
     }
 
     private fun makeSection(ctx: android.content.Context, title: String, content: String): View {

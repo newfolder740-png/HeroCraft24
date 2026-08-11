@@ -14,13 +14,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.activity.OnBackPressedCallback
@@ -968,7 +966,7 @@ class ReferenceDetailFragment : Fragment() {
             feature.table?.let { body.addView(createTableView(it)) }
             feature.description2?.let { body.addView(buildRichLinkedTextView(it.get())) }
             if (feature.is_subclass_choice && classObj.subclasses.isNotEmpty()) {
-                body.addView(createSubclassSpinner(classObj, selectedSubclass))
+                body.addView(createSubclassDropdown(classObj, selectedSubclass))
             }
             if (rawDescription.isNotBlank()) {
                 body.addView(TextView(requireContext()).apply {
@@ -1008,42 +1006,41 @@ class ReferenceDetailFragment : Fragment() {
         return card to body
     }
 
-    private fun createSubclassSpinner(classObj: GameClass, selectedSubclass: Subclass?): Spinner {
-        val spinner = Spinner(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(0, dpToPx(8), 0, dpToPx(8))
-            }
-        }
+    private fun createSubclassDropdown(classObj: GameClass, selectedSubclass: Subclass?): View {
         val subclassRefs = classObj.subclasses.mapNotNull { fullId ->
             viewModel.getSubclass(fullId)?.let { fullId to it }
         }
-        val names = listOf("Выберите подкласс") + subclassRefs.map { it.second.name.get() }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, names)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val names = subclassRefs.map { it.second.name.get() }
 
-        val listener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val newId = if (position == 0) null else subclassRefs[position - 1].first
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dpToPx(8), 0, dpToPx(8))
+        }
+
+        val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            inputType = android.text.InputType.TYPE_NULL
+            threshold = 0
+            isFocusableInTouchMode = false
+            hint = "Выберите подкласс"
+            setAdapter(android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, names))
+            setOnClickListener { showDropDown() }
+
+            selectedSubclassId?.let { id ->
+                val index = subclassRefs.indexOfFirst { it.first == id }
+                if (index >= 0) setText(names[index], false)
+            }
+
+            setOnItemClickListener { _, _, pos, _ ->
+                val newId = subclassRefs.getOrNull(pos)?.first
                 if (newId != selectedSubclassId) {
                     selectedSubclassId = newId
                     classFeaturesContainer?.let { rebuildClassFeatures(classObj, it) }
                 }
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.onItemSelectedListener = listener
-
-        selectedSubclassId?.let { id ->
-            val index = subclassRefs.indexOfFirst { it.first == id }
-            if (index >= 0) {
-                spinner.onItemSelectedListener = null
-                spinner.setSelection(index + 1)
-                spinner.onItemSelectedListener = listener
-            }
-        }
-
-        return spinner
+        container.addView(dropdown)
+        return container
     }
 
     private fun localizeItemRarity(rarity: String?): String = UiLocalizer.rarity(rarity)
@@ -1075,7 +1072,7 @@ class ReferenceDetailFragment : Fragment() {
         addSection(getString(R.string.reference_description)) { addLinkedItemDescription(obj.description.get(), "") }
 
         if (!obj.subspecies.isNullOrEmpty()) {
-            addSection("Род") { addView(createSubspeciesSpinner(obj)) }
+            addSection("Род") { addView(createSubspeciesDropdown(obj)) }
         }
 
         addSection(getString(R.string.reference_traits)) {
@@ -1092,38 +1089,37 @@ class ReferenceDetailFragment : Fragment() {
         addSourceSection(obj.source)
     }
 
-    private fun createSubspeciesSpinner(species: Species): Spinner {
-        val spinner = Spinner(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
+    private fun createSubspeciesDropdown(species: Species): View {
         val subspecies = species.subspecies ?: emptyList()
-        val names = listOf("Выберите род") + subspecies.map { it.name.get() }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, names)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val names = subspecies.map { it.name.get() }
 
-        val listener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val newId = if (position == 0) null else subspecies[position - 1].id
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dpToPx(8), 0, dpToPx(8))
+        }
+
+        val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            inputType = android.text.InputType.TYPE_NULL
+            threshold = 0
+            isFocusableInTouchMode = false
+            hint = "Выберите род"
+            setAdapter(android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, names))
+            setOnClickListener { showDropDown() }
+            selectedSubspeciesId?.let { id ->
+                val index = subspecies.indexOfFirst { it.id == id }
+                if (index >= 0) setText(names[index], false)
+            }
+            setOnItemClickListener { _, _, pos, _ ->
+                val newId = subspecies.getOrNull(pos)?.id
                 if (newId != selectedSubspeciesId) {
                     selectedSubspeciesId = newId
                     speciesTraitsContainer?.let { rebuildSpeciesTraits(species, it) }
                 }
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        spinner.onItemSelectedListener = listener
-
-        selectedSubspeciesId?.let { id ->
-            val index = subspecies.indexOfFirst { it.id == id }
-            if (index >= 0) {
-                spinner.onItemSelectedListener = null
-                spinner.setSelection(index + 1)
-                spinner.onItemSelectedListener = listener
-            }
-        }
-
-        return spinner
+        container.addView(dropdown)
+        return container
     }
 
     private fun rebuildSpeciesTraits(species: Species, container: LinearLayout) {
