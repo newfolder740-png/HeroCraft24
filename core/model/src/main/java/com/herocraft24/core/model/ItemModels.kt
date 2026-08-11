@@ -24,6 +24,7 @@ data class Item(
     val attunement_requirements: LocalizedString? = null,
     val cost: Cost? = null,
     val weight: Weight? = null,
+    val contents: List<PackContent> = emptyList(),
     val properties: List<String> = emptyList(),
     val damage: WeaponDamage? = null,
     val armor_class: ArmorClass? = null,
@@ -36,6 +37,12 @@ data class Item(
 data class Cost(
     val amount: Double,
     val unit: String
+)
+
+@Serializable
+data class PackContent(
+    val item_id: String,
+    val quantity: Int = 1
 )
 
 @Serializable

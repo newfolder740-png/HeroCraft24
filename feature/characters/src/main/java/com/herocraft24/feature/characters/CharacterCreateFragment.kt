@@ -869,7 +869,7 @@ class CharacterCreateFragment : Fragment() {
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        val selectedClassId = wizard.classId.substringAfterLast(":", "")
+        val selectedClassId = wizard.classId.substringAfterLast(":")
         adapter.submitList(sortedClasses, selectedClassId.ifEmpty { null })
         classCreateAdapter = adapter
     }

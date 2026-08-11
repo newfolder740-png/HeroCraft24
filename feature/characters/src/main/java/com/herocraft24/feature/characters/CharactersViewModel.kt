@@ -47,7 +47,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             val char = _wizard.value
             val hp = calculateStartingHP(char)
-            repo.save(char.copy(hitPoints = HitPoints(max = hp, current = hp)))
+            val equipment = calculateStartingEquipment(char)
+            repo.save(char.copy(hitPoints = HitPoints(max = hp, current = hp), equipment = equipment))
             _wizardStep.value = 0
         }
     }
@@ -55,7 +56,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     suspend fun finishWizardSuspend() {
         val char = _wizard.value
         val hp = calculateStartingHP(char)
-        repo.save(char.copy(hitPoints = HitPoints(max = hp, current = hp)))
+        val equipment = calculateStartingEquipment(char)
+        repo.save(char.copy(hitPoints = HitPoints(max = hp, current = hp), equipment = equipment))
         _wizard.value = CharacterData()
         _wizardStep.value = 0
     }
@@ -82,9 +84,68 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return 8 + char.proficiencyBonus + modifier(char.abilityScores[ability] ?: 10)
     }
 
+    fun calculateStartingEquipment(char: CharacterData): List<CharacterItem> {
+        val result = mutableListOf<CharacterItem>()
+        android.util.Log.d("InventoryDebug", "calculateStartingEquipment for class=${char.classId}, bg=${char.backgroundId}")
+
+        // Background fixed items
+        val bg = repository.getBackgroundIds().find { it.endsWith(":${char.backgroundId.substringAfterLast(":")}") }
+            ?.let { repository.getBackground(it) }
+        bg?.equipment_items?.forEach { itemId ->
+            result.add(CharacterItem(itemId = itemId))
+        }
+        // Background equipment choices (single index for now)
+        bg?.equipment?.forEachIndexed { index, choice ->
+            if (choice.options.isEmpty()) return@forEachIndexed
+            val optionIndex = char.bgEquipmentChoice.coerceIn(choice.options.indices)
+            val option = choice.options.getOrNull(optionIndex) ?: return@forEachIndexed
+            collectEquipmentOption(option, result)
+        }
+
+        // Class starting equipment
+        val cls = repository.getClass(char.classId)
+        cls?.starting_equipment?.forEachIndexed { index, choice ->
+            if (choice.options.isEmpty()) return@forEachIndexed
+            val optionIndex = char.classEquipmentChoice.coerceIn(choice.options.indices)
+            val option = choice.options.getOrNull(optionIndex) ?: return@forEachIndexed
+            collectEquipmentOption(option, result)
+        }
+
+        return result
+    }
+
+    private fun collectEquipmentOption(option: com.herocraft24.core.model.EquipmentOption, result: MutableList<CharacterItem>) {
+        option.item_id?.let { itemId ->
+            val item = repository.getItem(itemId)
+            if (item?.category == "pack" && item.contents.isNotEmpty()) {
+                item.contents.forEach { content ->
+                    collectEquipmentOption(com.herocraft24.core.model.EquipmentOption(item_id = content.item_id, quantity = content.quantity), result)
+                }
+            } else {
+                result.add(CharacterItem(itemId = itemId, quantity = option.quantity))
+            }
+        }
+        option.items.forEach { collectEquipmentOption(it, result) }
+        option.options.forEach { collectEquipmentOption(it, result) }
+    }
+
     fun calculateStartingHP(char: CharacterData): Int {
         val cls = repository.getClass(char.classId) ?: return 10
-        return cls.hit_die + modifier(char.abilityScores["constitution"] ?: 10)
+        val conScore = char.abilityScores["constitution"] ?: 10
+        // Apply background ability bonus to constitution
+        val effectiveCon = if (char.bgAbilityMode == false || char.bgAbilityMode == null) {
+            // All +1 mode — check if constitution is in the background's ASI list
+            val bg = repository.getBackgroundIds().find { it.endsWith(":${char.backgroundId.substringAfterLast(":")}") }
+                ?.let { repository.getBackground(it) }
+            if (bg?.ability_score_increases?.any { it.ability == "constitution" } == true) conScore + 1
+            else conScore
+        } else if (char.bgAbilityMode == true) {
+            var score = conScore
+            if (char.bgAbilityPlus2 == "constitution") score += 2
+            if (char.bgAbilityPlus1 == "constitution") score += 1
+            score
+        } else conScore
+        return cls.hit_die + modifier(effectiveCon)
     }
 
     fun getClassInfo(classId: String): GameClass? = repository.getClass(classId)
@@ -99,6 +160,18 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun getItemIds() = repository.getItemIds()
     fun getSpell(id: String) = repository.getSpell(id)
     fun getItem(id: String) = repository.getItem(id)
+
+    fun addItemToBackpack(char: CharacterData, itemId: String) {
+        saveCharacter(char.copy(equipment = char.equipment + CharacterItem(itemId = itemId)))
+    }
+
+    fun removeItemFromBackpack(char: CharacterData, itemId: String) {
+        val index = char.equipment.indexOfFirst { it.itemId == itemId }
+        if (index >= 0) {
+            val updated = char.equipment.toMutableList().apply { removeAt(index) }
+            saveCharacter(char.copy(equipment = updated))
+        }
+    }
 
     companion object {
         fun abilityForSkill(skill: String) = when (skill) {

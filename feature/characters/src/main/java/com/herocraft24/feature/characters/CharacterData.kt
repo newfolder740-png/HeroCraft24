@@ -30,6 +30,7 @@ data class CharacterData(
     val equippedWeapon1: String? = null,
     val equippedWeapon2: String? = null,
     val equippedMagicItem1: String? = null,
+    val equippedMagicItems: List<String> = emptyList(),
     val passivePerception: Int = 10,
     val experience: Int = 0,
     val abilityScores: Map<String, Int> = mapOf(

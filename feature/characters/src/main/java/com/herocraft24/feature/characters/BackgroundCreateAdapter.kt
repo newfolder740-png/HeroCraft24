@@ -60,6 +60,7 @@ class BackgroundCreateAdapter(
             val bg = items.find { it.id == id }
             if (bg != null && bg.ability_score_increases.isNotEmpty()) {
                 abilityModeChoices[id] = false
+                onAbilityModeChanged(false)
             }
         }
         if (oldSelected != null) {
