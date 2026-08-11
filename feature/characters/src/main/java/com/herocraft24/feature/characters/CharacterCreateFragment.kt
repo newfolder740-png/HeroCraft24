@@ -85,6 +85,7 @@ class CharacterCreateFragment : Fragment() {
     private fun saveCurrentStepInput() {
         when (step) {
             0 -> saveAbilitiesInput()
+            5 -> saveFeatsInput()
         }
     }
 
@@ -561,6 +562,27 @@ class CharacterCreateFragment : Fragment() {
         vm.updateWizard { it.copy(name = name) }
     }
 
+    private fun saveFeatsInput() {
+        val wizard = vm.wizard.value
+        val featIds = mutableListOf<String>()
+
+        // Feat from background
+        val bgId = wizard.backgroundId
+        if (bgId.isNotEmpty()) {
+            val bg = vm.getAllBackgrounds().find { it.id == bgId }
+            val bgFeatId = bg?.feat
+            if (bgFeatId != null) featIds.add(bgFeatId)
+        }
+
+        // Feats from feature choices (feat_category selections)
+        for ((_, choiceId) in wizard.featureChoices) {
+            val feat = vm.repository.getFeat(choiceId)
+            if (feat != null) featIds.add(choiceId)
+        }
+
+        vm.updateWizard { it.copy(selectedFeats = featIds) }
+    }
+
     private fun renderSpeciesStep(container: FrameLayout) {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_species, container, false)
         container.addView(view)
@@ -814,7 +836,11 @@ class CharacterCreateFragment : Fragment() {
         container.addView(view)
 
         val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
-        val allClasses = vm.getClassIds().mapNotNull { vm.getClassInfo(it) }
+        val classIds = vm.getClassIds()
+        val allClasses = classIds.mapNotNull { vm.getClassInfo(it) }
+        val idToFullId = allClasses.associate { cls ->
+            cls.id to classIds.find { it.endsWith(":${cls.id}") }!!
+        }
         val collator = java.text.Collator.getInstance(java.util.Locale("ru"))
         val sortedClasses = allClasses.sortedWith(compareBy(collator) { it.name.get() })
 
@@ -822,7 +848,7 @@ class CharacterCreateFragment : Fragment() {
         lateinit var adapter: ClassCreateAdapter
         adapter = ClassCreateAdapter(
             onClassSelected = { id ->
-                vm.updateWizard { it.copy(classId = id) }
+                vm.updateWizard { it.copy(classId = idToFullId[id] ?: id) }
                 adapter.setSelected(id)
                 updateNextButtonState()
             },
@@ -843,20 +869,112 @@ class CharacterCreateFragment : Fragment() {
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        adapter.submitList(sortedClasses, wizard.classId)
+        val selectedClassId = wizard.classId.substringAfterLast(":", "")
+        adapter.submitList(sortedClasses, selectedClassId.ifEmpty { null })
         classCreateAdapter = adapter
     }
 
     private fun renderFeaturesStep(container: FrameLayout) {
-        val ll = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        ll.addView(TextView(requireContext()).apply { text = "Умения класса (будет реализовано)" })
-        container.addView(ScrollView(requireContext()).apply { addView(ll) })
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_features, container, false)
+        container.addView(view)
+
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+
+        // Collect level-1 class features + species traits (level 1 or no level)
+        val features = mutableListOf<com.herocraft24.core.model.Feature>()
+
+        // Class features
+        val classId = vm.wizard.value.classId
+        if (classId.isNotEmpty()) {
+            val cls = vm.getClassInfo(classId)
+            if (cls != null) {
+                val l1Features = cls.features
+                    .filter { it.contains("_l1_") }
+                    .mapNotNull { vm.repository.getFeature(it) }
+                    .filter { !it.is_placeholder }
+                features.addAll(l1Features)
+            }
+        }
+
+        // Species traits
+        val speciesId = vm.wizard.value.speciesId
+        if (speciesId.isNotEmpty()) {
+            val species = vm.getAllSpecies().find { it.id == speciesId }
+            val subspeciesId = vm.wizard.value.subspeciesId
+            val selectedSub = subspeciesId?.let { id -> species?.subspecies?.find { it.id == id } }
+            if (species != null) {
+                val effectiveTraits = buildEffectiveTraits(species, selectedSub)
+                for (trait in effectiveTraits) {
+                    val level = trait.level
+                    if (level == null || level == 1) {
+                        features.add(com.herocraft24.core.model.Feature(
+                            id = "trait_${species.id}_${trait.name.get()}",
+                            name = trait.name,
+                            description = trait.description,
+                            level = level
+                        ))
+                    }
+                }
+            }
+        }
+
+        val wizard = vm.wizard.value
+        val adapter = FeaturesCreateAdapter(
+            onFeatureChoiceChanged = { featureId, choiceId ->
+                val updated = wizard.featureChoices.toMutableMap()
+                if (choiceId != null) updated[featureId] = choiceId else updated.remove(featureId)
+                vm.updateWizard { it.copy(featureChoices = updated) }
+            },
+            initialFeatureChoices = wizard.featureChoices
+        )
+
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+        adapter.submitList(features)
+    }
+
+    private fun buildEffectiveTraits(
+        species: com.herocraft24.core.model.Species,
+        selectedSub: com.herocraft24.core.model.SubspeciesInfo?
+    ): List<com.herocraft24.core.model.SpeciesTrait> {
+        val result = mutableListOf<com.herocraft24.core.model.SpeciesTrait>()
+        for (trait in species.traits) {
+            if (trait.is_placeholder && selectedSub != null) {
+                result.addAll(selectedSub.traits)
+            } else {
+                result.add(trait)
+            }
+        }
+        return result
     }
 
     private fun renderFeatsStep(container: FrameLayout) {
-        val ll = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
-        ll.addView(TextView(requireContext()).apply { text = "Черты (будет реализовано)" })
-        container.addView(ScrollView(requireContext()).apply { addView(ll) })
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_feats, container, false)
+        container.addView(view)
+
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
+        val feats = mutableListOf<com.herocraft24.core.model.Feat>()
+        val wizard = vm.wizard.value
+
+        // Feat from background
+        val bgId = wizard.backgroundId
+        if (bgId.isNotEmpty()) {
+            val bg = vm.getAllBackgrounds().find { it.id == bgId }
+            val bgFeatId = bg?.feat
+            if (bgFeatId != null) {
+                vm.repository.getFeat(bgFeatId)?.let { feats.add(it) }
+            }
+        }
+
+        // Feats from feature choices (feat_category selections)
+        for ((_, choiceId) in wizard.featureChoices) {
+            vm.repository.getFeat(choiceId)?.let { feats.add(it) }
+        }
+
+        val adapter = FeatsCreateAdapter()
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+        adapter.submitList(feats)
     }
 
     override fun onDestroyView() {
