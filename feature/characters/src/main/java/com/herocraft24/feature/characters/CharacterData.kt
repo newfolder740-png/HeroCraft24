@@ -50,6 +50,7 @@ data class CharacterData(
     val equipment: List<CharacterItem> = emptyList(),
     val spells: CharacterSpells? = null,
     val spellSlots: Map<String, SpellSlotState> = emptyMap(),
+    val spellcastingAbilityOverride: String? = null,
     val currency: Currency = Currency(),
     val appearance: String = "",
     val backstory: String = "",

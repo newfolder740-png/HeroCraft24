@@ -6,7 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Background
 import com.herocraft24.core.model.GameClass
+import com.herocraft24.core.model.Spell
+import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.model.Species
+import com.herocraft24.core.ui.local.UiLocalizer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -76,12 +79,96 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun saveBonus(ability: String, char: CharacterData): Int =
         modifier(char.abilityScores[ability] ?: 10) + if (ability in char.savingThrows) char.proficiencyBonus else 0
     fun spellAttack(char: CharacterData): Int {
-        val ability = getClassInfo(char.classId)?.spellcasting?.ability ?: "intelligence"
+        val ability = getEffectiveSpellcastingAbility(char)
         return char.proficiencyBonus + modifier(char.abilityScores[ability] ?: 10)
     }
     fun spellDC(char: CharacterData): Int {
-        val ability = getClassInfo(char.classId)?.spellcasting?.ability ?: "intelligence"
+        val ability = getEffectiveSpellcastingAbility(char)
         return 8 + char.proficiencyBonus + modifier(char.abilityScores[ability] ?: 10)
+    }
+
+    fun getEffectiveSpellcastingAbility(char: CharacterData): String {
+        char.spellcastingAbilityOverride?.let { return it }
+        val cls = getClassInfo(char.classId)
+        return cls?.spellcasting?.ability ?: "intelligence"
+    }
+
+    fun setSpellcastingAbilityOverride(charId: String, ability: String?) {
+        val char = getCharacter(charId) ?: return
+        saveCharacter(char.copy(spellcastingAbilityOverride = ability))
+    }
+
+    fun computeSpellSlots(char: CharacterData): SpellSlotsCounter.CasterInfo? {
+        return SpellSlotsCounter.compute(char.classId, char.level, char.subclassId)
+    }
+
+    fun getEffectiveSpellSlots(char: CharacterData): Map<String, SpellSlotState> {
+        val computed = computeSpellSlots(char) ?: return emptyMap()
+        val saved = char.spellSlots
+        return computed.slots.map { (level, total) ->
+            val savedState = saved[level.toString()]
+            level.toString() to SpellSlotState(
+                total = total,
+                used = savedState?.used?.coerceIn(0, total) ?: 0
+            )
+        }.toMap()
+    }
+
+    fun toggleSpellSlot(charId: String, slotLevel: String) {
+        val char = getCharacter(charId) ?: return
+        val effective = getEffectiveSpellSlots(char)
+        val state = effective[slotLevel] ?: return
+        val newUsed = if (state.used < state.total) state.used + 1 else 0
+        val updated = char.spellSlots.toMutableMap().apply { this[slotLevel] = SpellSlotState(state.total, newUsed) }
+        saveCharacter(char.copy(spellSlots = updated))
+    }
+
+    fun addPreparedSpell(charId: String, spellId: String) {
+        val char = getCharacter(charId) ?: return
+        val sp = char.spells ?: CharacterSpells()
+        if (spellId in sp.prepared) return
+        val updated = sp.copy(prepared = sp.prepared + spellId)
+        saveCharacter(char.copy(spells = updated))
+    }
+
+    fun removePreparedSpell(charId: String, spellId: String) {
+        val char = getCharacter(charId) ?: return
+        val sp = char.spells ?: return
+        val updated = sp.copy(prepared = sp.prepared - spellId)
+        saveCharacter(char.copy(spells = updated))
+    }
+
+    fun getAllSpellSummaries(): List<SpellSummary> {
+        val ids = repository.getSpellIds()
+        return ids.mapNotNull { fullId ->
+            val entry = repository.getManifestEntry(fullId) ?: return@mapNotNull null
+            val spell = repository.getSpell(fullId)
+            SpellSummary(
+                fullId = fullId,
+                name = entry.name.get(),
+                level = entry.level ?: 0,
+                school = entry.school ?: "",
+                concentration = entry.concentration ?: false,
+                ritual = entry.ritual ?: false,
+                components = spell?.components ?: emptyList(),
+                classes = entry.classes ?: emptyList(),
+                subclasses = spell?.subclasses ?: emptyList(),
+                castingTime = spell?.casting_time ?: "",
+                damageType = spell?.damage?.damage_type,
+                tags = entry.tags,
+                material = spell?.material,
+                materialHasCost = entry.material_has_cost ?: false,
+                materialConsumable = entry.material_consumable ?: false
+            )
+        }
+    }
+
+    fun getPreparedSpellSummaries(char: CharacterData): List<SpellSummary> {
+        val sp = char.spells ?: return emptyList()
+        val allSummaries = getAllSpellSummaries()
+        val byId = allSummaries.associateBy { it.fullId }
+        val combined = (sp.cantrips + sp.prepared + sp.known).distinct()
+        return combined.mapNotNull { byId[it] }
     }
 
     fun calculateStartingEquipment(char: CharacterData): List<CharacterItem> {
