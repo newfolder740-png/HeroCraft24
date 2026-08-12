@@ -85,8 +85,9 @@ class EquipmentDetailFragment : Fragment() {
                 if (vd != null) addRow("Универсальное", vd)
             }
             if (ac != null) {
-                addRow("КЗ", "${ac.base}${if (ac.dex_bonus) " + Ловкость" else ""}")
-                val maxDex = ac.max_dex
+                val dexCapText = ac.max_dexterity_bonus?.let { " (не более +$it)" } ?: ""
+                addRow("КЗ", "${ac.base}${if (ac.dex_bonus) " + Ловкость$dexCapText" else ""}")
+                val maxDex = ac.max_dexterity_bonus ?: ac.max_dex
                 val minStr = ac.min_strength
                 if (maxDex != null) addRow("Макс Ловкость", "+$maxDex")
                 if (minStr != null) addRow("Мин Сила", "$minStr")

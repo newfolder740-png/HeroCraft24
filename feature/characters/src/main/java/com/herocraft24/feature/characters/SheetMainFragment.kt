@@ -20,10 +20,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import android.util.Log
 import com.herocraft24.core.ui.util.dp
+import com.herocraft24.feature.characters.CharacterData
+
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class SheetMainFragment : Fragment() {
 
     private val vm: CharactersViewModel by activityViewModels()
+    private var charId: String? = null
 
     private val ALL_SKILLS = listOf(
         "athletics" to "strength",
@@ -76,12 +81,18 @@ class SheetMainFragment : Fragment() {
         LayoutInflater.from(requireContext()).inflate(R.layout.fragment_sheet_main, c, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val charId = arguments?.getString("characterId") ?: return
-        val char = vm.getCharacter(charId) ?: return
+        charId = arguments?.getString("characterId") ?: return
         val content = view.findViewById<LinearLayout>(R.id.content)
         content.clipChildren = false
         content.clipToPadding = false
-        render(content, char)
+        
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.characters.collect { list ->
+                charId?.let { id ->
+                    list.find { it.id == id }?.let { render(content, it) }
+                }
+            }
+        }
     }
 
     private fun render(content: LinearLayout, char: CharacterData) {
@@ -293,8 +304,9 @@ class SheetMainFragment : Fragment() {
 
         // Row 4: BM, AC, Shield, Inspiration
         val profCard = labelValue("БМ", formatBonus(profBonus), centered = true, largeValue = true)
-        val acCard = labelValue("КЗ", "${char.armorClass}", centered = true, largeValue = true)
-        val shieldCard = labelValue("Щит", char.equippedShield?.let { vm.resolveEquipmentName(it) ?: it } ?: "—", centered = true, largeValue = true)
+        val totalAc = computeCharacterAC(char, dexMod)
+        val acCard = labelValue("КЗ", "$totalAc", centered = true, largeValue = true)
+        val shieldCard = labelValue("Щит", char.equippedShield?.let { computeShieldBonus(it) } ?: "—", centered = true, largeValue = true)
         val inspirationCard = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
@@ -522,6 +534,76 @@ class SheetMainFragment : Fragment() {
     }
 
     private fun formatBonus(value: Int) = if (value >= 0) "+$value" else "$value"
+
+    private fun computeShieldBonus(composite: String): String {
+        val itemId = composite.substringBefore("|")
+        val variantItemId = composite.substringAfter("|", "").takeIf { it.isNotBlank() }
+        val item = vm.getItem(itemId) ?: return "—"
+        val variant = variantItemId?.let { vm.getItem(it) }
+        val baseAc = item.armor_class?.base ?: variant?.armor_class?.base ?: 0
+        val magicBonus = item.armor_class_bonus ?: 0
+        val total = baseAc + magicBonus
+        return "+$total"
+    }
+
+    /**
+     * Computes the character's total Armor Class from equipped armor and magic items.
+     * Without armor: 10 + dex modifier + magic bonuses.
+     * With armor: armor base + magic bonus + dex modifier (capped by max_dexterity_bonus) + other magic bonuses.
+     */
+    private fun computeCharacterAC(char: CharacterData, dexMod: Int): Int {
+        // Base AC without armor: 10 + dex modifier
+        var ac = 10 + dexMod
+
+        // Check for equipped magical armor with variants
+        val equippedArmor = char.equippedArmor
+        if (equippedArmor != null) {
+            val itemId = equippedArmor.substringBefore("|")
+            val variantItemId = equippedArmor.substringAfter("|", "").takeIf { it.isNotBlank() }
+
+            val item = vm.getItem(itemId)
+            val variantItem = variantItemId?.let { vm.getItem(it) }
+
+            if (item != null) {
+                // Get base AC: try item.armor_class first, then variantItem.armor_class
+                val acInfo = item.armor_class ?: variantItem?.armor_class
+                if (acInfo != null) {
+                    var base = acInfo.base
+                    // Add magic armor_class_bonus on top of base
+                    val magicAcBonus = item.armor_class_bonus ?: 0
+                    base += magicAcBonus
+
+                    // Apply Dex modifier (respects max_dexterity_bonus cap from JSON, falls back to max_dex)
+                    if (acInfo.dex_bonus) {
+                        val maxDex = acInfo.max_dexterity_bonus ?: acInfo.max_dex ?: Integer.MAX_VALUE
+                        val applicableDex = minOf(dexMod, maxDex)
+                        base += applicableDex
+                    }
+                    // If dex_bonus is false, just use base as-is
+
+                    ac = base
+                }
+            }
+        }
+
+        // Add armor_class_bonus from equipped magic items (non-armor items like rings, cloaks)
+        val equippedMagicItems = char.equippedMagicItems
+        for (composite in equippedMagicItems) {
+            val itemId = composite.substringBefore("|")
+            val variantItemId = composite.substringAfter("|", "").takeIf { it.isNotBlank() }
+            val item = vm.getItem(itemId) ?: continue
+
+            // Only add bonus from non-armor magic items (armor already counted above)
+            if (item.category != "armor") {
+                val magicBonus = item.armor_class_bonus ?: 0
+                if (magicBonus > 0) {
+                    ac += magicBonus
+                }
+            }
+        }
+
+        return ac
+    }
 
     private fun resolveColor(attr: Int): Int {
         val ta = requireContext().theme?.obtainStyledAttributes(intArrayOf(attr))

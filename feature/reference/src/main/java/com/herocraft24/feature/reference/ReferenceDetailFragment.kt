@@ -1302,7 +1302,8 @@ class ReferenceDetailFragment : Fragment() {
                     append(it.base)
                     if (it.dex_bonus) {
                         append(" + ")
-                        if (it.max_dex != null) append("Ловкость (макс. +${it.max_dex})") else append("Ловкость")
+                        val maxDex = it.max_dexterity_bonus ?: it.max_dex
+                        if (maxDex != null) append("Ловкость (не более +$maxDex)") else append("Ловкость")
                     }
                 }
                 addRow(getString(R.string.armor_class_label), acText)

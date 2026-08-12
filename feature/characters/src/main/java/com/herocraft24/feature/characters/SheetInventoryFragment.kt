@@ -396,18 +396,30 @@ class SheetInventoryFragment : Fragment() {
             })
         }
         resolved.damage?.let { dmg ->
+            val dmgBonus = resolved.item.damage_bonus
+            val bonusStr = if (dmgBonus != null && dmgBonus > 0) " + $dmgBonus" else ""
             container.addView(TextView(ctx).apply {
-                text = "Урон: ${dmg.damage_dice} ${UiLocalizer.damageType(dmg.damage_type)}${dmg.versatile_dice?.let { " (универсальное $it)" } ?: ""}"
+                text = "Урон: ${dmg.damage_dice}${bonusStr} ${UiLocalizer.damageType(dmg.damage_type)}${dmg.versatile_dice?.let { " (универсальное $it)" } ?: ""}"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
                 setPadding(0, 2.dp(ctx), 0, 0)
             })
         }
-        resolved.armorClass?.let { ac ->
-            container.addView(TextView(ctx).apply {
-                text = "КЗ: ${ac.base}${if (ac.dex_bonus) " + Ловкость" else ""}${ac.max_dex?.let { " (макс +$it)" } ?: ""}${ac.min_strength?.let { ", мин Сила $it" } ?: ""}${if (ac.stealth_disadvantage) ", помеха Скрытности" else ""}"
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
-                setPadding(0, 2.dp(ctx), 0, 0)
-            })
+        if (resolved.category != "shield") {
+            resolved.armorClass?.let { ac ->
+                val acBonus = resolved.item.armor_class_bonus
+                val effectiveBase = ac.base + (acBonus ?: 0)
+                
+                // Build the dex cap text - prefer max_dexterity_bonus from JSON, fall back to max_dex
+                val dexCapText = ac.max_dexterity_bonus?.let { " (не более +$it)" } 
+                    ?: ac.max_dex?.let { " (макс +$it)" } 
+                    ?: ""
+                
+                container.addView(TextView(ctx).apply {
+                    text = "КЗ: ${effectiveBase}${if (ac.dex_bonus) "+ Ловкость$dexCapText" else ""}${ac.min_strength?.let { ", мин Сила $it" } ?: ""}${if (ac.stealth_disadvantage) ", помеха Скрытности" else ""}"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setPadding(0, 2.dp(ctx), 0, 0)
+                })
+            }
         }
         return container
     }

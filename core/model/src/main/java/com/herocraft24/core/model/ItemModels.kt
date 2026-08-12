@@ -30,7 +30,10 @@ data class Item(
     val armor_class: ArmorClass? = null,
     val effects: List<LocalizedString> = emptyList(),
     val table: Table? = null,
-    val description2: LocalizedString? = null
+    val description2: LocalizedString? = null,
+    val attack_bonus: Int? = null,
+    val damage_bonus: Int? = null,
+    val armor_class_bonus: Int? = null
 )
 
 @Serializable
@@ -63,6 +66,7 @@ data class ArmorClass(
     val base: Int,
     val dex_bonus: Boolean = false,
     val max_dex: Int? = null,
+    val max_dexterity_bonus: Int? = null,
     val min_strength: Int? = null,
     val stealth_disadvantage: Boolean = false
 )
