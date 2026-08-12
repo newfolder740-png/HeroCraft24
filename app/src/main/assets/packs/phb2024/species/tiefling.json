@@ -8,7 +8,7 @@
   },
   "description": {
     "en": "Tieflings are either born on the Lower Planes or descended from fiends who dwell there. Each tiefling is linked by blood to a devil, demon, or some other Fiend. This connection to the Lower Planes is a tiefling's heritage, which promises power but has no influence on a tiefling's moral compass.\n\nEach tiefling's choice is whether to embrace or lament their heritage. Three heritage options are described below.\n\nInfernal Legacy. The devilish legacy connects tieflings to Gehenna, the Nine Hells, and the raging battlefields of Acheron. Such tieflings, descended from devils, are characterized by physical traits such as horns, spines, tails, golden eyes, and a faint smell of sulfur or smoke.\n\nAbyssal Legacy. The entropy of the Abyss, the chaos of Pandemonium, and the despair of Carceri resonate in tieflings with Abyssal legacy. Horns, fur, fangs, and distinctive smells are typical physical traits of these tieflings; most of them have demon blood in their veins.\n\nChthonic Legacy. Tieflings with chthonic legacy feel not only the pull of Carceri but also the greed of Gehenna and the gloom of Hades. Some of these tieflings are corpse-like, others possess the unearthly beauty of a succubus, and still others share physical traits with night hags, yugoloths, or other Neutral Evil fiendish ancestors.",
-    "ru": "Тифлинги либо рождаются на Нижних планах, либо происходят от живущих там исчадий. Каждый тифлинг связан кровными узами с дьяволом, демоном или каким-либо другим Исчадием. Эта связь с Нижними планами — наследие тифлинга, которое сулит могущество, но не оказывает влияния на моральный компас тифлинга.\n\nВыбор каждого тифлинга — стоит ему принять или оплакивать свое наследие. Три варианта наследия описаны ниже.\n\nИнфернальное наследие. Дьявольское наследие связывает тифлингов с Геенной, с Девятью преисподними и с бушующими полями сражений Ахерона. Для таких тифлингов, ведущих свой род от дьяволов, характерны такие физические черты, как рожки, шипы, хвосты, золотистые глаза и слабый запах серы или дыма.\n\nНаследие Бездны. Энтропия Бездны, хаос Пандемониума и отчаяние Карцери отзываются в тифлингах с наследием Бездны. Рожки, мех, клыки и специфические запахи - типичные физические черты таких тифлингов; в жилах большинства из них течёт кровь демонов.\n\nХтоническое наследие. Обладающие хтоническим наследием тифлинги ощущают не только притяжение Карцери, но и жадность Геенны и мрак Аида. Некоторые из этих тифлингов страшны, как трупы, другие обладают неземной красотой суккуба, третьи разделяют физические черты с ночными каргами, юголотами или иными Нейтрально-Злыми предками из исчадий."
+    "ru": "Тифлинги либо рождаются на Нижних планах, либо происходят от живущих там исчадий. Каждый тифлинг связан кровными узами с дьяволом, демоном или каким-либо другим Исчадием. Эта связь с Нижними планами — наследие тифлинга, которое сулит могущество, но не оказывает влияния на моральный компас тифлинга.\n\nВыбор каждого тифлинга — стоит ему принять или оплакивать свое наследие. Три варианта наследия описаны ниже.\n\nИнфернальное наследие. Дьявольское наследие связывает тифлингов с Геенной, с Девятью преисподними и с бушующими полями сражений Ахерона. Для таких тифлингов, ведущих свой род от дьяволов, характерны такие физные черты, как рожки, шипы, хвосты, золотистые глаза и слабый запах серы или дыма.\n\nНаследие Бездны. Энтропия Бездны, хаос Пандемониума и отчаяние Карцери отзываются в тифлингах с наследием Бездны. Рожки, мех, клыки и специфические запахи - типичные физические черты таких тифлингов; в жилах большинства из них течёт кровь демонов.\n\nХтоническое наследие. Обладающие хтоническим наследием тифлинги ощущают не только притяжение Карцери, но и жадность Геенны и мрак Аида. Некоторые из этих тифлингов страшны, как трупы, другие обладают неземной красотой суккуба, третьи разделяют физические черты с ночными каргами, юголотами или иными Нейтрально-Злыми предками из исчадий."
   },
   "source": {
     "book": {
@@ -58,7 +58,8 @@
       "description": {
         "en": "You know the Thaumaturgy cantrip. When you cast it with this trait, the spellcasting ability for it is the ability chosen for your Fiendish Legacy trait.",
         "ru": "Вы знаете заговор Чудотворство. Когда вы сотворяете его этой особенностью, заклинательной характеристикой для него будет характеристика, выбранная вами для вашей особенности Наследие исчадий."
-      }
+      },
+      "spell": "phb2024:thaumaturgy"
     }
   ],
   "ability_score_increases": [
@@ -91,7 +92,12 @@
             "en": "You have Resistance to Fire damage. You also know the Fire Bolt cantrip.",
             "ru": "У вас есть Сопротивление урону Огнём. Вы также знаете заговор Огненный снаряд."
           },
-          "level": 1
+          "level": 1,
+          "choice": {
+            "type": "spellcasting_ability",
+            "options": ["intelligence", "wisdom", "charisma"]
+          },
+          "spell": "phb2024:fire_bolt"
         },
         {
           "name": {
@@ -102,7 +108,8 @@
             "en": "You always have Hellish Rebuke prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Адское возмездие. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 3
+          "level": 3,
+          "spell": "phb2024:hellish_rebuke"
         },
         {
           "name": {
@@ -113,7 +120,8 @@
             "en": "You always have Darkness prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Тьма. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 5
+          "level": 5,
+          "spell": "phb2024:darkness"
         }
       ],
       "ability_score_increases": [
@@ -140,7 +148,12 @@
             "en": "You have Resistance to Poison damage. You also know the Poison Spray cantrip.",
             "ru": "У вас есть Сопротивление урону Ядом. Вы также знаете заговор Ядовитые брызги."
           },
-          "level": 1
+          "level": 1,
+          "choice": {
+            "type": "spellcasting_ability",
+            "options": ["intelligence", "wisdom", "charisma"]
+          },
+          "spell": "phb2024:poison_spray"
         },
         {
           "name": {
@@ -151,7 +164,8 @@
             "en": "You always have Ray of Sickness prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Луч болезни. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 3
+          "level": 3,
+          "spell": "phb2024:ray_of_sickness"
         },
         {
           "name": {
@@ -162,7 +176,8 @@
             "en": "You always have Hold Person prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Удержание личности. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 5
+          "level": 5,
+          "spell": "phb2024:hold_person"
         }
       ],
       "ability_score_increases": [
@@ -189,7 +204,12 @@
             "en": "You have Resistance to Necrotic damage. You also know the Chill Touch cantrip.",
             "ru": "У вас есть Сопротивление Некротическому урону. Вы также знаете заговор Леденящее прикосновение."
           },
-          "level": 1
+          "level": 1,
+          "choice": {
+            "type": "spellcasting_ability",
+            "options": ["intelligence", "wisdom", "charisma"]
+          },
+          "spell": "phb2024:chill_touch"
         },
         {
           "name": {
@@ -200,7 +220,8 @@
             "en": "You always have False Life prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Псевдожизнь. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 3
+          "level": 3,
+          "spell": "phb2024:false_life"
         },
         {
           "name": {
@@ -211,7 +232,8 @@
             "en": "You always have Ray of Enfeeblement prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Луч слабости. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
-          "level": 5
+          "level": 5,
+          "spell": "phb2024:ray_of_enfeeblement"
         }
       ],
       "ability_score_increases": [

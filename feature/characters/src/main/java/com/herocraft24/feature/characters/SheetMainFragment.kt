@@ -399,9 +399,14 @@ class SheetMainFragment : Fragment() {
                 val skillsForAb = ALL_SKILLS.filter { it.second == ab }
                 for ((skillId, _) in skillsForAb) {
                     val isProf = skillId in proficientSkills
-                    val skillMod = mod + if (isProf) profBonus else 0
+                    val isExpertise = skillId in char.expertiseSkills
+                    val skillMod = mod + when {
+                        isExpertise -> profBonus * 2
+                        isProf -> profBonus
+                        else -> 0
+                    }
                     val skillName = SKILL_NAMES[skillId] ?: skillId.replaceFirstChar { it.uppercase() }
-                    col.addView(makeSkillRow(ctx, isProf, "${formatBonus(skillMod)} $skillName"))
+                    col.addView(makeSkillRow(ctx, isProf, "${formatBonus(skillMod)} $skillName", expertise = isExpertise))
                 }
 
                 rowLl.addView(col)
@@ -441,9 +446,17 @@ class SheetMainFragment : Fragment() {
         return proficient
     }
 
-    private fun makeSkillRow(ctx: android.content.Context, proficient: Boolean, text: String): TextView {
-        val bullet = if (proficient) "●" else "○"
-        val textColor = if (proficient) 0xFF000000.toInt() else 0xFF999999.toInt()
+    private fun makeSkillRow(ctx: android.content.Context, proficient: Boolean, text: String, expertise: Boolean = false): TextView {
+        val bullet = when {
+            expertise -> "★"
+            proficient -> "●"
+            else -> "○"
+        }
+        val textColor = when {
+            expertise -> 0xFF6750A4.toInt()
+            proficient -> 0xFF000000.toInt()
+            else -> 0xFF999999.toInt()
+        }
         return TextView(ctx).apply {
             this.text = "$bullet $text"
             this.setTextColor(textColor)

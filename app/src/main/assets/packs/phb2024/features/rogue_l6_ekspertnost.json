@@ -1,1 +1,1 @@
-{"id":"rogue_l6_ekspertnost","level":6,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Экспертность"},"description":{"en":"","ru":"Экспертность ещё в двух навыках."},"is_subclass_choice":false,"format_version":1}
+{"id":"rogue_l6_ekspertnost","level":6,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Экспертность"},"description":{"en":"","ru":"Экспертность ещё в двух навыках."},"is_subclass_choice":false,"format_version":1,"choice":{"type":"skill_expertise","count":2}}

@@ -30,14 +30,29 @@
                 android:paddingEnd="6dp"
                 app:rippleColor="@android:color/transparent" />
 
-            <TextView
-                android:id="@+id/toolbar_title"
+            <LinearLayout
+                android:id="@+id/toolbar_title_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:maxLines="1" />
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/toolbar_title_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/toolbar_title_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:maxLines="1" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"

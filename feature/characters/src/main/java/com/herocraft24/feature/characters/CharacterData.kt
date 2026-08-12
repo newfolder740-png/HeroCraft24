@@ -24,6 +24,11 @@ data class CharacterData(
     val bgEquipmentChoice: Int = 0,
     val equipmentChoiceIndex: Int = 0,
     val featureChoices: Map<String, String> = emptyMap(),
+    val featureMultiChoices: Map<String, List<String>> = emptyMap(),
+    val expertiseSkills: Set<String> = emptySet(),
+    val classLevels: Map<String, Int> = emptyMap(),
+    val speciesSpellAbility: String? = null,
+    val asiChoices: Map<String, AsiChoice> = emptyMap(),
     val selectedFeats: List<String> = emptyList(),
     val equippedArmor: String? = null,
     val equippedShield: String? = null,
@@ -97,7 +102,8 @@ data class CharacterSpells(
     val cantrips: List<String> = emptyList(),
     val prepared: List<String> = emptyList(),
     val known: List<String> = emptyList(),
-    val preparedByAbility: Map<String, List<String>> = emptyMap()
+    val preparedByAbility: Map<String, List<String>> = emptyMap(),
+    val innateSpells: Map<String, List<String>> = emptyMap()
 )
 
 @Serializable
@@ -118,4 +124,11 @@ data class Currency(
 data class DeathSaves(
     val successes: Int = 0,
     val failures: Int = 0
+)
+
+@Serializable
+data class AsiChoice(
+    val mode: String = "plus1x2", // "plus2" or "plus1x2"
+    val ability1: String = "",     // e.g. "strength"
+    val ability2: String = ""      // only used in "plus1x2" mode
 )

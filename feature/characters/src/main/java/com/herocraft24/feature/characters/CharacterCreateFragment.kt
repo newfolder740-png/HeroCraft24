@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.herocraft24.core.model.Feature
 import com.herocraft24.feature.characters.databinding.FragmentCharacterCreateBinding
 import com.herocraft24.feature.characters.databinding.FragmentCreateAbilitiesBinding
 import com.herocraft24.feature.characters.R
@@ -911,7 +912,9 @@ class CharacterCreateFragment : Fragment() {
                             id = "trait_${species.id}_${trait.name.get()}",
                             name = trait.name,
                             description = trait.description,
-                            level = level
+                            level = level,
+                            choice = trait.choice,
+                            spell = trait.spell
                         ))
                     }
                 }
@@ -925,7 +928,36 @@ class CharacterCreateFragment : Fragment() {
                 if (choiceId != null) updated[featureId] = choiceId else updated.remove(featureId)
                 vm.updateWizard { it.copy(featureChoices = updated) }
             },
-            initialFeatureChoices = wizard.featureChoices
+            onFeatureMultiChoiceChanged = { featureId, choices ->
+                val updated = wizard.featureMultiChoices.toMutableMap()
+                updated[featureId] = choices
+                vm.updateWizard { it.copy(featureMultiChoices = updated) }
+            },
+            onAsiChoiceChanged = { featureId, asiChoice ->
+                val updated = wizard.asiChoices.toMutableMap()
+                if (asiChoice != null) updated[featureId] = asiChoice else updated.remove(featureId)
+                vm.updateWizard { it.copy(asiChoices = updated) }
+            },
+            onFeatSelected = { parentFeatureId, featId ->
+                if (featId != null) {
+                    val updatedFeats = vm.wizard.value.selectedFeats + featId
+                    vm.updateWizard { it.copy(selectedFeats = updatedFeats) }
+                    // Load the feat and add its card to the adapter
+                    val feat = vm.repository.getFeat(featId)
+                    if (feat != null) {
+                        val featFeature = featToFeature(feat, parentFeatureId)
+                        (recyclerView.adapter as? FeaturesCreateAdapter)?.addFeatCard(parentFeatureId, featFeature)
+                    }
+                } else {
+                    (recyclerView.adapter as? FeaturesCreateAdapter)?.removeFeatCard(parentFeatureId)
+                }
+            },
+            initialFeatureChoices = wizard.featureChoices,
+            initialFeatureMultiChoices = wizard.featureMultiChoices,
+            initialAsiChoices = wizard.asiChoices,
+            proficientSkills = (wizard.classSkillChoices + (vm.getAllBackgrounds().find { it.id == wizard.backgroundId.substringAfterLast(":") }?.skill_proficiencies ?: emptyList())).toSet(),
+            characterLevel = 1,
+            selectedFeats = wizard.selectedFeats.toSet()
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
@@ -981,5 +1013,15 @@ class CharacterCreateFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _abilitiesBinding = null
+    }
+
+    private fun featToFeature(feat: com.herocraft24.core.model.Feat, parentFeatureId: String): Feature {
+        return Feature(
+            id = "featcard_$parentFeatureId",
+            name = feat.name,
+            description = feat.description,
+            level = null,
+            choice = feat.choice
+        )
     }
 }

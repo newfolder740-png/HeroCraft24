@@ -59,8 +59,9 @@ class SheetSpellsFragment : Fragment() {
         val cls = vm.getClassInfo(char.classId)
         val isCaster = cls?.spellcasting != null ||
             SpellSlotsCounter.isSpellcaster(char.classId, char.subclassId)
+        val hasInnateSpells = char.spells?.innateSpells?.any { it.value.isNotEmpty() } == true
 
-        if (!isCaster) {
+        if (!isCaster && !hasInnateSpells) {
             content.addView(TextView(ctx).apply {
                 text = "Этот класс не заклинает заклинания"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
@@ -69,10 +70,14 @@ class SheetSpellsFragment : Fragment() {
             return
         }
 
-        val effectiveAbility = vm.getEffectiveSpellcastingAbility(char)
+        val effectiveAbility = if (isCaster) {
+            vm.getEffectiveSpellcastingAbility(char)
+        } else {
+            char.speciesSpellAbility ?: "charisma"
+        }
         val abMod = vm.modifier(char.abilityScores[effectiveAbility] ?: 10)
-        val spellAttack = vm.spellAttack(char)
-        val spellDC = vm.spellDC(char)
+        val spellAttack = char.proficiencyBonus + abMod
+        val spellDC = 8 + char.proficiencyBonus + abMod
 
         // ── Spell stats table with spellcasting ability dropdown ──
         val statsCard = MaterialCardView(ctx).apply {
@@ -95,12 +100,14 @@ class SheetSpellsFragment : Fragment() {
         content.addView(statsCard)
 
         // ── Spell slots — dynamic frames with 4-pointed stars ──
-        val slots = vm.getEffectiveSpellSlots(char)
-        if (slots.isNotEmpty()) {
-            sectionTitle(content, "Ячейки заклинаний")
-            val sortedSlots = slots.toSortedMap(compareBy<String> { it.toIntOrNull() ?: 0 })
-            for ((level, slot) in sortedSlots) {
-                content.addView(buildSlotFrame(ctx, char.id, level, slot.total, slot.used))
+        if (isCaster) {
+            val slots = vm.getEffectiveSpellSlots(char)
+            if (slots.isNotEmpty()) {
+                sectionTitle(content, "Ячейки заклинаний")
+                val sortedSlots = slots.toSortedMap(compareBy<String> { it.toIntOrNull() ?: 0 })
+                for ((level, slot) in sortedSlots) {
+                    content.addView(buildSlotFrame(ctx, char.id, level, slot.total, slot.used))
+                }
             }
         }
 
@@ -116,24 +123,27 @@ class SheetSpellsFragment : Fragment() {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
-        preparedHeader.addView(AppCompatButton(ctx).apply {
-            text = "+"
-            setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
-            minimumWidth = 0
-            minHeight = 0
-            minWidth = 0
-            minimumHeight = 0
-            background = null
-            textSize = 20f
-            setOnClickListener {
-                SpellPickerDialogFragment.newInstance(char.id, effectiveAbility)
-                    .show(childFragmentManager, "SpellPicker")
-            }
-        })
+        if (isCaster) {
+            preparedHeader.addView(AppCompatButton(ctx).apply {
+                text = "+"
+                setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
+                minimumWidth = 0
+                minHeight = 0
+                minWidth = 0
+                minimumHeight = 0
+                background = null
+                textSize = 20f
+                setOnClickListener {
+                    SpellPickerDialogFragment.newInstance(char.id, effectiveAbility)
+                        .show(childFragmentManager, "SpellPicker")
+                }
+            })
+        }
         content.addView(preparedHeader)
 
         // ── Prepared spell cards for current ability ──
         val preparedSpells = vm.getPreparedSpellSummaries(char, effectiveAbility)
+        val innateSpellIds = vm.getInnateSpellIds(char, effectiveAbility)
         if (preparedSpells.isEmpty()) {
             content.addView(TextView(ctx).apply {
                 text = "Нет подготовленных заклинаний"
@@ -143,7 +153,8 @@ class SheetSpellsFragment : Fragment() {
             })
         } else {
             for (spell in preparedSpells) {
-                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility))
+                val deletable = spell.fullId !in innateSpellIds
+                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility, deletable))
             }
         }
     }
@@ -247,7 +258,8 @@ class SheetSpellsFragment : Fragment() {
         ctx: android.content.Context,
         charId: String,
         spell: SpellSummary,
-        ability: String
+        ability: String,
+        deletable: Boolean = true
     ): View {
         val card = MaterialCardView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
@@ -311,16 +323,18 @@ class SheetSpellsFragment : Fragment() {
 
         cardContent.addView(textContainer)
 
-        val deleteBtn = ImageButton(ctx).apply {
-            setImageResource(R.drawable.ic_delete)
-            background = null
-            setPadding(8.dp(ctx), 8.dp(ctx), 0, 8.dp(ctx))
-            layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
-                gravity = Gravity.CENTER_VERTICAL
+        if (deletable) {
+            val deleteBtn = ImageButton(ctx).apply {
+                setImageResource(R.drawable.ic_delete)
+                background = null
+                setPadding(8.dp(ctx), 8.dp(ctx), 0, 8.dp(ctx))
+                layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+                setOnClickListener { vm.removePreparedSpell(charId, spell.fullId, ability) }
             }
-            setOnClickListener { vm.removePreparedSpell(charId, spell.fullId, ability) }
+            cardContent.addView(deleteBtn)
         }
-        cardContent.addView(deleteBtn)
 
         card.addView(cardContent)
         card.setOnClickListener {

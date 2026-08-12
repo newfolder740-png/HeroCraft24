@@ -1,1 +1,1 @@
-{"id":"ranger_l9_ekspertnost","level":9,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Экспертность"},"description":{"en":"","ru":"Экспертность в двух навыках."},"is_subclass_choice":false,"format_version":1}
+{"id":"ranger_l9_ekspertnost","level":9,"is_placeholder":false,"type":"feature","name":{"en":"","ru":"Экспертность"},"description":{"en":"","ru":"Экспертность в двух навыках."},"is_subclass_choice":false,"format_version":1,"choice":{"type":"skill_expertise","count":2}}

@@ -32,8 +32,14 @@ class CharacterSheetFragment : Fragment() {
         }
 
         val char = vm.getCharacter(charId!!)
-        binding.toolbar.findViewById<android.widget.TextView>(R.id.toolbar_title)?.text = char?.name ?: "Персонаж"
+        binding.toolbar.findViewById<android.widget.TextView>(R.id.toolbar_title_name)?.text = char?.name ?: "Персонаж"
+        val totalLevel = char?.level ?: 1
+        binding.toolbar.findViewById<android.widget.TextView>(R.id.toolbar_title_level)?.text = "Уровень $totalLevel"
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+
+        binding.btnLevelUp.setOnClickListener {
+            findNavController().navigate(R.id.levelUp, Bundle().apply { putString("characterId", charId) })
+        }
 
         val adapter = SheetPagerAdapter(this, charId!!)
         binding.viewPager.adapter = adapter

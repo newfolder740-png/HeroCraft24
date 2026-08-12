@@ -16,7 +16,8 @@ data class Feat(
     val prerequisite: LocalizedString? = null,
     val ability_score_increase: List<AbilityScoreIncrease> = emptyList(),
     val repeatable: Boolean = false,
-    val benefits: List<FeatBenefit> = emptyList()
+    val benefits: List<FeatBenefit> = emptyList(),
+    val choice: FeatureChoice? = null
 )
 
 @Serializable

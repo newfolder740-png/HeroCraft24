@@ -76,7 +76,8 @@ data class Feature(
     val references: List<Reference> = emptyList(),
     val table: Table? = null,
     val description2: LocalizedString? = null,
-    val choice: FeatureChoice? = null
+    val choice: FeatureChoice? = null,
+    val spell: String? = null
 )
 
 @Serializable

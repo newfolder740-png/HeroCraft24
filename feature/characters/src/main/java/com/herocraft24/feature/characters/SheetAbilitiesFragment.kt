@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.herocraft24.core.model.Feat
 import com.herocraft24.core.model.Feature
+import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.feature.characters.databinding.CardFeatureCreateBinding
 import android.graphics.Typeface
@@ -32,16 +33,25 @@ class SheetAbilitiesFragment : Fragment() {
         // Class features
         val cls = vm.getClassInfo(char.classId)
         if (cls != null) {
-            val l1Features = cls.features
-                .filter { it.contains("_l1_") }
-                .mapNotNull { vm.repository.getFeature(it) }
-                .filter { !it.is_placeholder }
-            if (l1Features.isNotEmpty()) {
-                items.add(AbilityItem.SectionHeader("Умения класса"))
-                l1Features.forEach { f ->
-                    val choiceText = char.featureChoices[f.id]?.let { choiceId ->
-                        vm.repository.resolveName(choiceId) ?: choiceId.substringAfterLast(":")
+            val allClassIds = char.classLevels.keys + char.classId
+            val allFeatures = mutableListOf<com.herocraft24.core.model.Feature>()
+            for (cid in allClassIds) {
+                val c = vm.getClassInfo(cid) ?: continue
+                val levelInClass = char.classLevels[cid] ?: if (cid == char.classId) char.level else 0
+                c.features
+                    .filter { featureId ->
+                        val levelMatch = Regex("_l(\\d+)_").find(featureId)
+                        val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                        featureLevel <= levelInClass
                     }
+                    .mapNotNull { vm.repository.getFeature(it) }
+                    .filter { !it.is_placeholder }
+                    .let { allFeatures.addAll(it) }
+            }
+            if (allFeatures.isNotEmpty()) {
+                items.add(AbilityItem.SectionHeader("Умения класса"))
+                allFeatures.forEach { f ->
+                    val choiceText = resolveFeatureChoiceText(char, f)
                     items.add(AbilityItem.FeatureItem(f, choiceText))
                 }
             }
@@ -53,11 +63,12 @@ class SheetAbilitiesFragment : Fragment() {
         val selectedSub = subspeciesId?.let { id -> species?.subspecies?.find { it.id == id } }
         if (species != null) {
             val effectiveTraits = buildEffectiveTraits(species, selectedSub)
-            val level1Traits = effectiveTraits.filter { it.level == null || it.level == 1 }
-            if (level1Traits.isNotEmpty()) {
+            val visibleTraits = effectiveTraits.filter { t -> t.level == null || t.level!! <= char.level }
+            if (visibleTraits.isNotEmpty()) {
                 items.add(AbilityItem.SectionHeader("Умения вида"))
-                level1Traits.forEach { t ->
-                    items.add(AbilityItem.TraitItem(t.name.get(), t.description.get()))
+                visibleTraits.forEach { t ->
+                    val choiceText = resolveTraitChoiceText(char, species.id, t)
+                    items.add(AbilityItem.TraitItem(t.name.get(), t.description.get(), choiceText))
                 }
             }
         }
@@ -78,6 +89,58 @@ class SheetAbilitiesFragment : Fragment() {
         recyclerView.adapter = SheetAbilitiesAdapter(items)
     }
 
+    private fun resolveTraitChoiceText(char: CharacterData, speciesId: String, t: com.herocraft24.core.model.SpeciesTrait): String? {
+        val choice = t.choice ?: return null
+        if (choice.type == "spellcasting_ability") {
+            val traitId = "trait_${speciesId}_${t.name.get()}"
+            val chosen = char.featureChoices[traitId] ?: return null
+            val abilityNames = mapOf(
+                "intelligence" to "Интеллект",
+                "wisdom" to "Мудрость",
+                "charisma" to "Харизма"
+            )
+            return "Заклинательная характеристика: ${abilityNames[chosen] ?: chosen}"
+        }
+        return null
+    }
+
+    private fun resolveFeatureChoiceText(char: CharacterData, f: Feature): String? {
+        val choice = f.choice ?: return null
+        if (choice.type == "skill_expertise") {
+            val skills = char.featureMultiChoices[f.id] ?: return null
+            if (skills.isEmpty()) return null
+            return skills.joinToString(", ") { UiLocalizer.skill(it) }
+        }
+        if (choice.type == "asi_or_feat") {
+            val selectedFeatId = char.featureChoices[f.id] ?: return null
+            val featName = vm.repository.resolveName(selectedFeatId) ?: selectedFeatId.substringAfterLast(":")
+            val asi = char.asiChoices[f.id]
+            if (asi != null) {
+                val asiText = if (asi.mode == "plus1x2") {
+                    val a1 = asiAbilityName(asi.ability1)
+                    val a2 = asiAbilityName(asi.ability2)
+                    if (a1 != null && a2 != null) "$a1 +1, $a2 +1" else featName
+                } else {
+                    val a1 = asiAbilityName(asi.ability1)
+                    if (a1 != null) "$a1 +2" else featName
+                }
+                return "$featName ($asiText)"
+            }
+            return featName
+        }
+        return char.featureChoices[f.id]?.let { choiceId ->
+            vm.repository.resolveName(choiceId) ?: choiceId.substringAfterLast(":")
+        }
+    }
+
+    private fun asiAbilityName(key: String): String? {
+        if (key.isEmpty()) return null
+        return mapOf(
+            "strength" to "Сила", "dexterity" to "Ловкость", "constitution" to "Телосложение",
+            "intelligence" to "Интеллект", "wisdom" to "Мудрость", "charisma" to "Харизма"
+        )[key]
+    }
+
     private fun buildEffectiveTraits(
         species: com.herocraft24.core.model.Species,
         selectedSub: com.herocraft24.core.model.SubspeciesInfo?
@@ -96,7 +159,7 @@ class SheetAbilitiesFragment : Fragment() {
     sealed class AbilityItem {
         data class SectionHeader(val title: String) : AbilityItem()
         data class FeatureItem(val feature: Feature, val choiceText: String? = null) : AbilityItem()
-        data class TraitItem(val name: String, val description: String) : AbilityItem()
+        data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
         data class FeatItem(val feat: Feat) : AbilityItem()
     }
 
@@ -212,6 +275,14 @@ class SheetAbilitiesFragment : Fragment() {
                     setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                     setPadding(0, 0, 0, 8.dp(ctx))
                 })
+                if (item.choiceText != null) {
+                    holder.binding.expandedContent.addView(TextView(ctx).apply {
+                        text = item.choiceText
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setTypeface(typeface, Typeface.BOLD)
+                        setTextColor(0xFF6750A4.toInt())
+                    })
+                }
             }
         }
 

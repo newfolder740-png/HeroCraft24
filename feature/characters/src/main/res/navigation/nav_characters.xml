@@ -21,4 +21,11 @@
         <argument android:name="characterId" app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/levelUp"
+        android:name="com.herocraft24.feature.characters.LevelUpFragment"
+        android:label="Level Up">
+        <argument android:name="characterId" app:argType="string" />
+    </fragment>
+
 </navigation>
