@@ -26,16 +26,19 @@ class SpellDetailSheetDialog : BottomSheetDialogFragment() {
 
     private var spellId: String = ""
     private var charId: String = ""
+    private var ability: String = "intelligence"
 
     companion object {
         private const val ARG_SPELL_ID = "spellId"
         private const val ARG_CHAR_ID = "charId"
+        private const val ARG_ABILITY = "ability"
 
-        fun newInstance(spellId: String, charId: String): SpellDetailSheetDialog {
+        fun newInstance(spellId: String, charId: String, ability: String): SpellDetailSheetDialog {
             return SpellDetailSheetDialog().apply {
                 arguments = Bundle().apply {
                     putString(ARG_SPELL_ID, spellId)
                     putString(ARG_CHAR_ID, charId)
+                    putString(ARG_ABILITY, ability)
                 }
             }
         }
@@ -50,6 +53,7 @@ class SpellDetailSheetDialog : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         spellId = arguments?.getString(ARG_SPELL_ID) ?: ""
         charId = arguments?.getString(ARG_CHAR_ID) ?: ""
+        ability = arguments?.getString(ARG_ABILITY) ?: "intelligence"
 
         val spell = vm.getSpell(spellId)
         if (spell == null) {
@@ -65,7 +69,7 @@ class SpellDetailSheetDialog : BottomSheetDialogFragment() {
         binding.toolbar.setNavigationOnClickListener { dismiss() }
 
         binding.deleteButton.setOnClickListener {
-            vm.removePreparedSpell(charId, spellId)
+            vm.removePreparedSpell(charId, spellId, ability)
             dismiss()
         }
 

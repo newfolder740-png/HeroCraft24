@@ -21,6 +21,7 @@ class SpellPickerDialogFragment : DialogFragment() {
     private val vm: CharactersViewModel by activityViewModels()
 
     private var charId: String? = null
+    private var ability: String? = null
 
     private var allSpells: List<SpellSummary> = emptyList()
     private var filteredSpells: List<SpellSummary> = emptyList()
@@ -31,10 +32,14 @@ class SpellPickerDialogFragment : DialogFragment() {
 
     companion object {
         private const val ARG_CHAR_ID = "characterId"
+        private const val ARG_ABILITY = "ability"
 
-        fun newInstance(characterId: String): SpellPickerDialogFragment {
+        fun newInstance(characterId: String, ability: String): SpellPickerDialogFragment {
             return SpellPickerDialogFragment().apply {
-                arguments = Bundle().apply { putString(ARG_CHAR_ID, characterId) }
+                arguments = Bundle().apply {
+                    putString(ARG_CHAR_ID, characterId)
+                    putString(ARG_ABILITY, ability)
+                }
             }
         }
     }
@@ -42,6 +47,7 @@ class SpellPickerDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         charId = arguments?.getString(ARG_CHAR_ID)
+        ability = arguments?.getString(ARG_ABILITY)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -52,14 +58,15 @@ class SpellPickerDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val char = charId?.let { vm.getCharacter(it) } ?: run { dismiss(); return }
+        val ab = ability ?: vm.getEffectiveSpellcastingAbility(char)
 
         adapter = SpellPickerAdapter(
             onItemClick = { spell ->
-                SpellDetailSheetDialog.newInstance(spell.fullId, char.id)
+                SpellDetailSheetDialog.newInstance(spell.fullId, char.id, ab)
                     .show(childFragmentManager, "SpellDetail")
             },
             onAddClick = { spell ->
-                vm.addPreparedSpell(char.id, spell.fullId)
+                vm.addPreparedSpell(char.id, spell.fullId, ab)
             }
         )
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())

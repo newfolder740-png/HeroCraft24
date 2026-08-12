@@ -123,18 +123,28 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         saveCharacter(char.copy(spellSlots = updated))
     }
 
-    fun addPreparedSpell(charId: String, spellId: String) {
+    fun addPreparedSpell(charId: String, spellId: String, ability: String) {
         val char = getCharacter(charId) ?: return
         val sp = char.spells ?: CharacterSpells()
-        if (spellId in sp.prepared) return
-        val updated = sp.copy(prepared = sp.prepared + spellId)
+        val current = sp.preparedByAbility[ability] ?: emptyList()
+        if (spellId in current) return
+        val updated = sp.copy(
+            preparedByAbility = sp.preparedByAbility.toMutableMap().apply {
+                this[ability] = current + spellId
+            }
+        )
         saveCharacter(char.copy(spells = updated))
     }
 
-    fun removePreparedSpell(charId: String, spellId: String) {
+    fun removePreparedSpell(charId: String, spellId: String, ability: String) {
         val char = getCharacter(charId) ?: return
         val sp = char.spells ?: return
-        val updated = sp.copy(prepared = sp.prepared - spellId)
+        val current = sp.preparedByAbility[ability] ?: return
+        val updated = sp.copy(
+            preparedByAbility = sp.preparedByAbility.toMutableMap().apply {
+                this[ability] = current - spellId
+            }
+        )
         saveCharacter(char.copy(spells = updated))
     }
 
@@ -163,12 +173,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun getPreparedSpellSummaries(char: CharacterData): List<SpellSummary> {
+    fun getPreparedSpellSummaries(char: CharacterData, ability: String): List<SpellSummary> {
         val sp = char.spells ?: return emptyList()
+        val spellIds = sp.preparedByAbility[ability] ?: emptyList()
+        if (spellIds.isEmpty()) return emptyList()
         val allSummaries = getAllSpellSummaries()
         val byId = allSummaries.associateBy { it.fullId }
-        val combined = (sp.cantrips + sp.prepared + sp.known).distinct()
-        return combined.mapNotNull { byId[it] }
+        return spellIds.mapNotNull { byId[it] }
     }
 
     fun calculateStartingEquipment(char: CharacterData): List<CharacterItem> {

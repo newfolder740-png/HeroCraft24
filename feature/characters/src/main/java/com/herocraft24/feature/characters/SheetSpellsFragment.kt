@@ -2,7 +2,6 @@ package com.herocraft24.feature.characters
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputLayout
 import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.ui.local.UiLocalizer
@@ -90,7 +88,6 @@ class SheetSpellsFragment : Fragment() {
             setPadding(12.dp(ctx), 8.dp(ctx), 12.dp(ctx), 8.dp(ctx))
         }
 
-        // Row: Мод. закл. хар. | [dropdown: ИНТ/МДР/ХАР] | +value
         statsTable.addView(buildAbilityDropdownRow(ctx, char, effectiveAbility, abMod))
         statsTable.addView(tableRow("Сл. спасброска", "", "$spellDC"))
         statsTable.addView(tableRow("Бонус атаки", "", formatBonus(spellAttack)))
@@ -129,14 +126,14 @@ class SheetSpellsFragment : Fragment() {
             background = null
             textSize = 20f
             setOnClickListener {
-                SpellPickerDialogFragment.newInstance(char.id)
+                SpellPickerDialogFragment.newInstance(char.id, effectiveAbility)
                     .show(childFragmentManager, "SpellPicker")
             }
         })
         content.addView(preparedHeader)
 
-        // ── Prepared spell cards ──
-        val preparedSpells = vm.getPreparedSpellSummaries(char)
+        // ── Prepared spell cards for current ability ──
+        val preparedSpells = vm.getPreparedSpellSummaries(char, effectiveAbility)
         if (preparedSpells.isEmpty()) {
             content.addView(TextView(ctx).apply {
                 text = "Нет подготовленных заклинаний"
@@ -146,7 +143,7 @@ class SheetSpellsFragment : Fragment() {
             })
         } else {
             for (spell in preparedSpells) {
-                content.addView(buildPreparedSpellCard(ctx, char.id, spell))
+                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility))
             }
         }
     }
@@ -169,33 +166,26 @@ class SheetSpellsFragment : Fragment() {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
         })
 
-        // Dropdown for spellcasting ability
         val dropdownItems = spellcastingAbilities.map { abNames[it] ?: it }
         val dropdown = MaterialAutoCompleteTextView(ctx).apply {
-            hint = "Хар."
             setText(abNames[currentAbility] ?: currentAbility, false)
-            setAdapter(ArrayAdapter(ctx, android.R.layout.simple_list_item_1, dropdownItems))
+            inputType = android.text.InputType.TYPE_NULL
+            threshold = 0
+            dropDownWidth = 600
+            minWidth = 0
+            isFocusableInTouchMode = false
+            setOnClickListener { showDropDown() }
+            setAdapter(ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, dropdownItems))
             setOnItemClickListener { _, _, position, _ ->
                 val selectedAbility = spellcastingAbilities[position]
                 vm.setSpellcastingAbilityOverride(char.id, selectedAbility)
             }
-            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { setMargins(8.dp(ctx), 0, 8.dp(ctx), 0) }
         }
-        val dropdownContext = ContextThemeWrapper(ctx, com.google.android.material.R.style.Widget_Material3_TextInputLayout_OutlinedBox_ExposedDropdownMenu)
-        val dropdownLayout = TextInputLayout(dropdownContext).apply {
-            setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU)
-            isHintEnabled = false
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        dropdownLayout.addView(dropdown)
-        row.addView(dropdownLayout)
+        row.addView(dropdown)
 
         row.addView(TextView(ctx).apply {
             text = formatBonus(abMod)
@@ -256,7 +246,8 @@ class SheetSpellsFragment : Fragment() {
     private fun buildPreparedSpellCard(
         ctx: android.content.Context,
         charId: String,
-        spell: SpellSummary
+        spell: SpellSummary,
+        ability: String
     ): View {
         val card = MaterialCardView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
@@ -276,14 +267,12 @@ class SheetSpellsFragment : Fragment() {
             setPadding(0, 8.dp(ctx), 8.dp(ctx), 8.dp(ctx))
         }
 
-        // Left color bar
         val borderColor = ctx.schoolColor(SpellSchool.fromValue(spell.school))
         cardContent.addView(View(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(4.dp(ctx), LinearLayout.LayoutParams.MATCH_PARENT)
             setBackgroundColor(borderColor)
         })
 
-        // Text content
         val textContainer = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(8.dp(ctx), 0, 0, 0)
@@ -295,14 +284,13 @@ class SheetSpellsFragment : Fragment() {
         })
 
         val levelStr = if (spell.level == 0) "Заговор" else "${spell.level} уровень"
-        val schoolRu = com.herocraft24.core.ui.local.UiLocalizer.school(spell.school)
+        val schoolRu = UiLocalizer.school(spell.school)
         textContainer.addView(TextView(ctx).apply {
             text = "$levelStr • $schoolRu"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setTextColor(resolveColor(android.R.attr.textColorSecondary))
         })
 
-        // Badges
         val badges = mutableListOf<String>()
         if (spell.concentration) badges.add("Концентрация")
         if (spell.ritual) badges.add("Ритуал")
@@ -323,7 +311,6 @@ class SheetSpellsFragment : Fragment() {
 
         cardContent.addView(textContainer)
 
-        // Delete (urn) icon
         val deleteBtn = ImageButton(ctx).apply {
             setImageResource(R.drawable.ic_delete)
             background = null
@@ -331,13 +318,13 @@ class SheetSpellsFragment : Fragment() {
             layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
                 gravity = Gravity.CENTER_VERTICAL
             }
-            setOnClickListener { vm.removePreparedSpell(charId, spell.fullId) }
+            setOnClickListener { vm.removePreparedSpell(charId, spell.fullId, ability) }
         }
         cardContent.addView(deleteBtn)
 
         card.addView(cardContent)
         card.setOnClickListener {
-            SpellDetailSheetDialog.newInstance(spell.fullId, charId)
+            SpellDetailSheetDialog.newInstance(spell.fullId, charId, ability)
                 .show(childFragmentManager, "SpellDetail")
         }
         return card

@@ -96,7 +96,8 @@ data class CharacterItem(
 data class CharacterSpells(
     val cantrips: List<String> = emptyList(),
     val prepared: List<String> = emptyList(),
-    val known: List<String> = emptyList()
+    val known: List<String> = emptyList(),
+    val preparedByAbility: Map<String, List<String>> = emptyMap()
 )
 
 @Serializable
