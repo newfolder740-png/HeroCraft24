@@ -14,12 +14,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.model.ItemCategory
+import com.herocraft24.core.model.ItemRarity
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
+import com.herocraft24.core.ui.widget.FilterBottomSheet
+import com.herocraft24.core.ui.widget.FilterGroup
+import com.herocraft24.core.ui.widget.FilterOption
+import com.herocraft24.core.ui.widget.SearchBarView
+import com.herocraft24.feature.characters.databinding.CardBackpackItemBinding
 import com.herocraft24.feature.characters.databinding.CardFeatureCreateBinding
 import kotlinx.coroutines.launch
 
@@ -30,6 +38,31 @@ class SheetInventoryFragment : Fragment() {
     private var equipmentExpandedPosition: Int = -1
     private var proficiencyExpandedPosition: Int = -1
     private var magicItemExpandedPosition: Int = -1
+
+    private var backpackSearchQuery: String = ""
+    private var backpackSortMode: BackpackSortMode = BackpackSortMode.NAME_ASC
+    private var backpackFilters: BackpackFilters = BackpackFilters()
+    private var backpackItemContainer: LinearLayout? = null
+    private var backpackTitleInner: LinearLayout? = null
+    private var currentCharData: CharacterData? = null
+
+    private enum class BackpackSortMode(val label: String) {
+        NAME_ASC("Имя А–Я"),
+        NAME_DESC("Имя Я–А"),
+        CATEGORY_ASC("Тип А–Я")
+    }
+
+    private data class BackpackFilters(
+        val categories: Set<ItemCategory> = emptySet(),
+        val rarities: Set<ItemRarity> = emptySet(),
+        val weaponCategories: Set<String> = emptySet(),
+        val armorCategories: Set<String> = emptySet(),
+        val magic: Boolean? = null
+    ) {
+        val isActive: Boolean
+            get() = categories.isNotEmpty() || rarities.isNotEmpty() ||
+                weaponCategories.isNotEmpty() || armorCategories.isNotEmpty() || magic != null
+    }
 
     data class EquipmentSlot(
         val title: String,
@@ -226,17 +259,17 @@ class SheetInventoryFragment : Fragment() {
             rippleColor = android.content.res.ColorStateList.valueOf(resolveColor(com.google.android.material.R.attr.colorPrimary))
             setOnClickListener { openBackpackPicker(char, addMode = false) }
         }
-        val backpackTitleInner = LinearLayout(ctx).apply {
+        backpackTitleInner = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(12.dp(ctx), 8.dp(ctx), 12.dp(ctx), 8.dp(ctx))
         }
-        backpackTitleInner.addView(TextView(ctx).apply {
+        backpackTitleInner?.addView(TextView(ctx).apply {
             text = "Рюкзак (Общий вес: ${formatWeight(totalWeight, unit)})"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
-        backpackTitleInner.addView(TextView(ctx).apply {
+        backpackTitleInner?.addView(TextView(ctx).apply {
             text = "−"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
         })
@@ -248,25 +281,246 @@ class SheetInventoryFragment : Fragment() {
             setOnClickListener { openBackpackPicker(char, addMode = true) }
         })
         content.addView(backpackHeader)
-        if (backpackItems.isEmpty()) {
-            content.addView(TextView(ctx).apply {
-                text = "Пусто"
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-                setPadding(0, 4.dp(ctx), 0, 0)
-            })
-        } else {
-            val grouped = backpackItems.groupingBy { it.displayName }.eachCount()
-            val namesText = backpackItems.map { it.displayName }.distinct().joinToString(", ") { displayName ->
-                val count = grouped[displayName] ?: 1
-                if (count > 1) "x$count $displayName" else displayName
-            }
-            content.addView(TextView(ctx).apply {
-                text = namesText
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-                setPadding(0, 4.dp(ctx), 0, 0)
-            })
+
+        // Controls row
+        val controlsRow = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 4.dp(ctx), 0, 4.dp(ctx))
         }
+        val searchBar = SearchBarView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val sortBtn = MaterialButton(ctx).apply {
+            text = "Сорт."
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+        }
+        val filterBtn = MaterialButton(ctx).apply {
+            text = "Фильтр"
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+        }
+        controlsRow.addView(searchBar)
+        controlsRow.addView(sortBtn)
+        controlsRow.addView(filterBtn)
+        content.addView(controlsRow)
+
+        backpackItemContainer = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+        content.addView(backpackItemContainer)
+
+        currentCharData = char
+
+        fun renderBackpackItems() {
+            backpackItemContainer?.removeAllViews()
+            val totalWeight = calculateTotalWeight(backpackItems)
+            val unit = backpackItems.mapNotNull { it.weight?.unit }.firstOrNull() ?: "lb"
+            backpackTitleInner?.getChildAt(0)?.let { (it as? TextView)?.text = "Рюкзак (Общий вес: ${formatWeight(totalWeight, unit)})" }
+
+            var filtered = applyBackpackSearch(backpackItems)
+            filtered = applyBackpackFilters(filtered)
+            filtered = applyBackpackSort(filtered)
+
+            if (filtered.isEmpty()) {
+                backpackItemContainer?.addView(TextView(ctx).apply {
+                    text = "Пусто"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 4.dp(ctx), 0, 0)
+                })
+            } else {
+                val grouped = filtered.groupBy { it.compositeId }
+                for ((_, items) in grouped) {
+                    val first = items.first()
+                    val count = items.size
+                    val card = buildBackpackItemCard(ctx, first, count, char)
+                    backpackItemContainer?.addView(card)
+                }
+            }
+        }
+
+        searchBar.setOnQueryListener { query ->
+            backpackSearchQuery = query.lowercase().trim()
+            renderBackpackItems()
+        }
+        sortBtn.setOnClickListener { showBackpackSortDialog(::renderBackpackItems) }
+        filterBtn.setOnClickListener { showBackpackFilterDialog(::renderBackpackItems) }
+
+        renderBackpackItems()
+
         scrollView?.post { scrollView.scrollTo(0, scrollY) }
+    }
+
+    private fun buildBackpackItemCard(ctx: android.content.Context, item: ResolvedItem, count: Int, char: CharacterData): View {
+        val binding = CardBackpackItemBinding.inflate(LayoutInflater.from(ctx), null, false)
+
+        val displayName = if (count > 1) "x$count ${item.displayName}" else item.displayName
+        binding.itemName.text = displayName
+        binding.itemSubtitle.text = UiLocalizer.category(item.category)
+
+        val rarityColor = getRarityColor(ctx, item.item.rarity)
+        binding.rarityColor.setBackgroundColor(rarityColor)
+
+        binding.removeButton.setOnClickListener {
+            vm.removeItemFromBackpack(char.id, item.id, item.variantId)
+        }
+
+        binding.root.setOnClickListener {
+            BackpackItemDetailDialogFragment.newInstance(item.id, item.variantId)
+                .show(childFragmentManager, "BackpackItemDetail")
+        }
+
+        return binding.root
+    }
+
+    private fun getRarityColor(ctx: android.content.Context, rarity: String?): Int {
+        val resId = when (ItemRarity.fromValue(rarity)) {
+            ItemRarity.NON_MAGIC, ItemRarity.COMMON -> com.herocraft24.core.ui.R.color.rarity_common
+            ItemRarity.UNCOMMON -> com.herocraft24.core.ui.R.color.rarity_uncommon
+            ItemRarity.RARE -> com.herocraft24.core.ui.R.color.rarity_rare
+            ItemRarity.VERY_RARE, ItemRarity.VERY_RARE_ALT -> com.herocraft24.core.ui.R.color.rarity_very_rare
+            ItemRarity.LEGENDARY -> com.herocraft24.core.ui.R.color.rarity_legendary
+            ItemRarity.ARTIFACT -> com.herocraft24.core.ui.R.color.rarity_artifact
+            else -> com.herocraft24.core.ui.R.color.rarity_default
+        }
+        return androidx.core.content.ContextCompat.getColor(ctx, resId)
+    }
+
+    private fun applyBackpackSearch(items: List<ResolvedItem>): List<ResolvedItem> {
+        if (backpackSearchQuery.isBlank()) return items
+        val tokens = backpackSearchQuery.split("\\s+".toRegex()).filter { it.length >= 2 }
+        if (tokens.isEmpty()) return items
+        return items.filter { item ->
+            tokens.all { token ->
+                item.displayName.lowercase().contains(token) ||
+                item.item.tags.any { it.lowercase().contains(token) }
+            }
+        }
+    }
+
+    private fun applyBackpackFilters(items: List<ResolvedItem>): List<ResolvedItem> {
+        return items.filter { item ->
+            if (backpackFilters.categories.isNotEmpty() && ItemCategory.fromValue(item.category) !in backpackFilters.categories) return@filter false
+            if (backpackFilters.rarities.isNotEmpty() && ItemRarity.fromValue(item.item.rarity) !in backpackFilters.rarities) return@filter false
+            if (backpackFilters.weaponCategories.isNotEmpty() && item.item.subcategory.none { it in backpackFilters.weaponCategories }) return@filter false
+            if (backpackFilters.armorCategories.isNotEmpty()) {
+                val matchesArmor = item.item.subcategory.any { it in backpackFilters.armorCategories } ||
+                    (item.item.category == "shield" && "shield" in backpackFilters.armorCategories)
+                if (!matchesArmor) return@filter false
+            }
+            if (backpackFilters.magic != null && item.item.magic != backpackFilters.magic) return@filter false
+            true
+        }
+    }
+
+    private fun applyBackpackSort(items: List<ResolvedItem>): List<ResolvedItem> {
+        return when (backpackSortMode) {
+            BackpackSortMode.NAME_ASC -> items.sortedBy { it.displayName.lowercase() }
+            BackpackSortMode.NAME_DESC -> items.sortedByDescending { it.displayName.lowercase() }
+            BackpackSortMode.CATEGORY_ASC -> items.sortedBy { UiLocalizer.category(it.category) }
+        }
+    }
+
+    private fun showBackpackSortDialog(onUpdate: () -> Unit) {
+        val options = BackpackSortMode.entries.toTypedArray()
+        val labels = options.map { it.label }.toTypedArray()
+        val current = backpackSortMode.ordinal
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Сортировка")
+            .setSingleChoiceItems(labels, current) { dialog, which ->
+                backpackSortMode = options[which]
+                onUpdate()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showBackpackFilterDialog(onUpdate: () -> Unit) {
+        val sheet = FilterBottomSheet()
+        val groups = listOf(
+            FilterGroup("categories", "Тип", listOf(
+                FilterOption("weapon", "Оружие"),
+                FilterOption("armor", "Доспех"),
+                FilterOption("shield", "Щит"),
+                FilterOption("adventuring_gear", "Снаряжение приключений"),
+                FilterOption("pack", "Набор"),
+                FilterOption("tool", "Ремесленный инструмент"),
+                FilterOption("instrument", "Инструмент"),
+                FilterOption("focus", "Фокусировка"),
+                FilterOption("wand", "Волшебная палочка"),
+                FilterOption("rod", "Жезл"),
+                FilterOption("potion", "Зелье"),
+                FilterOption("ring", "Кольцо"),
+                FilterOption("staff", "Посох"),
+                FilterOption("scroll", "Свиток"),
+                FilterOption("wondrous_item", "Чудесная вещь"),
+                FilterOption("ammunition", "Боеприпасы")
+            )),
+            FilterGroup("rarities", "Редкость", listOf(
+                FilterOption("non-magic", "Немагический"),
+                FilterOption("common", "Обычный"),
+                FilterOption("uncommon", "Необычный"),
+                FilterOption("rare", "Редкий"),
+                FilterOption("very-rare", "Очень редкий"),
+                FilterOption("legendary", "Легендарный"),
+                FilterOption("artifact", "Артефакт"),
+                FilterOption("varies", "Редкость варьируется")
+            )),
+            FilterGroup("weapon_categories", "Категория оружия", listOf(
+                FilterOption("simple_melee", "Простое Рукопашное оружие"),
+                FilterOption("martial_melee", "Воинское Рукопашное оружие"),
+                FilterOption("simple_ranged", "Простое Дальнобойное оружие"),
+                FilterOption("martial_ranged", "Воинское Дальнобойное оружие"),
+                FilterOption("ammunition", "Боеприпас")
+            )),
+            FilterGroup("armor_categories", "Категория доспеха", listOf(
+                FilterOption("light_armor", "Лёгкий"),
+                FilterOption("medium_armor", "Средний"),
+                FilterOption("heavy_armor", "Тяжёлый"),
+                FilterOption("shield", "Щит")
+            )),
+            FilterGroup("magic", "Магия", listOf(
+                FilterOption("yes", "Магический"),
+                FilterOption("no", "Немагический")
+            ))
+        )
+        val selectedMap = mutableMapOf<String, Set<String>>()
+        if (backpackFilters.categories.isNotEmpty()) selectedMap["categories"] = backpackFilters.categories.map { it.raw }.toSet()
+        if (backpackFilters.rarities.isNotEmpty()) selectedMap["rarities"] = backpackFilters.rarities.map { it.raw }.toSet()
+        if (backpackFilters.weaponCategories.isNotEmpty()) selectedMap["weapon_categories"] = backpackFilters.weaponCategories
+        if (backpackFilters.armorCategories.isNotEmpty()) selectedMap["armor_categories"] = backpackFilters.armorCategories
+        backpackFilters.magic?.let { selectedMap["magic"] = setOf(if (it) "yes" else "no") }
+        sheet.setGroups(groups)
+        sheet.setSelected(selectedMap)
+        sheet.setCallbacks(
+            onApply = { result ->
+                backpackFilters = backpackFiltersFromMap(result)
+                onUpdate()
+            },
+            onReset = {
+                backpackFilters = BackpackFilters()
+                onUpdate()
+            }
+        )
+        sheet.show(childFragmentManager, FilterBottomSheet.TAG)
+    }
+
+    private fun backpackFiltersFromMap(map: Map<String, Set<String>>): BackpackFilters {
+        return BackpackFilters(
+            categories = (map["categories"] ?: emptySet()).mapNotNull { ItemCategory.fromValue(it) }.toSet(),
+            rarities = (map["rarities"] ?: emptySet()).mapNotNull { ItemRarity.fromValue(it) }.toSet(),
+            weaponCategories = map["weapon_categories"] ?: emptySet(),
+            armorCategories = map["armor_categories"] ?: emptySet(),
+            magic = when {
+                "yes" in (map["magic"] ?: emptySet()) -> true
+                "no" in (map["magic"] ?: emptySet()) -> false
+                else -> null
+            }
+        )
     }
 
     private fun calculateTotalWeight(items: List<ResolvedItem>): Double {

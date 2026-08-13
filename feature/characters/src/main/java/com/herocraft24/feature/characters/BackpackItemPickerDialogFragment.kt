@@ -9,16 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.SearchView
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.chip.Chip
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.model.ItemCategory
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
+import com.herocraft24.core.ui.widget.FilterBottomSheet
+import com.herocraft24.core.ui.widget.FilterGroup
+import com.herocraft24.core.ui.widget.FilterOption
 import com.herocraft24.feature.characters.databinding.DialogBackpackItemPickerBinding
 import kotlinx.coroutines.launch
 
@@ -32,11 +34,23 @@ class BackpackItemPickerDialogFragment : DialogFragment() {
     private var addMode: Boolean = true
 
     private val allItems = mutableListOf<BackpackItemPickerAdapter.Row>()
-    private val categories = mutableListOf<String>()
-    private var selectedCategory: String? = null
     private var searchQuery: String = ""
+    private var sortMode: SortMode = SortMode.NAME_ASC
+    private var activeFilters: ItemFilters = ItemFilters()
 
     private lateinit var adapter: BackpackItemPickerAdapter
+
+    private enum class SortMode(val label: String) {
+        NAME_ASC("Имя А–Я"),
+        NAME_DESC("Имя Я–А"),
+        CATEGORY_ASC("Тип А–Я")
+    }
+
+    private data class ItemFilters(
+        val categories: Set<ItemCategory> = emptySet()
+    ) {
+        val isActive: Boolean get() = categories.isNotEmpty()
+    }
 
     companion object {
         private const val ARG_CHAR_ID = "characterId"
@@ -96,16 +110,13 @@ class BackpackItemPickerDialogFragment : DialogFragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchQuery = newText?.lowercase()?.trim() ?: ""
-                refreshList()
-                return true
-            }
-        })
+        binding.searchBar.setOnQueryListener { query ->
+            searchQuery = query.lowercase().trim()
+            refreshList()
+        }
+        binding.btnSort.setOnClickListener { showSortDialog() }
+        binding.btnFilter.setOnClickListener { showFilterDialog() }
 
-        setupCategoryChips()
         loadItems(char)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -115,20 +126,6 @@ class BackpackItemPickerDialogFragment : DialogFragment() {
                 }
             }
         }
-    }
-    private fun setupCategoryChips() {
-        val chipAll = Chip(requireContext()).apply {
-            text = "Все"
-            isCheckable = true
-            isChecked = true
-            setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    selectedCategory = null
-                    refreshList()
-                }
-            }
-        }
-        binding.categoryChips.addView(chipAll)
     }
 
     private fun loadItems(char: CharacterData) {
@@ -158,48 +155,99 @@ class BackpackItemPickerDialogFragment : DialogFragment() {
                 )
             }
 
-            val distinctCategories = allItems.map { it.item.category }.distinct().sorted()
-            if (distinctCategories != categories) {
-                categories.clear()
-                categories.addAll(distinctCategories)
-                while (binding.categoryChips.childCount > 1) {
-                    binding.categoryChips.removeViewAt(binding.categoryChips.childCount - 1)
-                }
-                for (category in distinctCategories) {
-                    val chip = Chip(requireContext()).apply {
-                        text = UiLocalizer.category(category)
-                        isCheckable = true
-                        setOnCheckedChangeListener { _, isChecked ->
-                            if (isChecked) {
-                                selectedCategory = category
-                                for (i in 0 until binding.categoryChips.childCount) {
-                                    val child = binding.categoryChips.getChildAt(i)
-                                    if (child is Chip && child !== this) child.isChecked = false
-                                }
-                                refreshList()
-                            }
-                        }
-                    }
-                    binding.categoryChips.addView(chip)
-                }
-            }
-
             refreshList()
         }
     }
 
     private fun refreshList() {
-        var filtered = allItems.filter { row ->
-            selectedCategory?.let { row.item.category == it } ?: true
-        }
-        if (searchQuery.isNotBlank()) {
-            filtered = filtered.filter { row ->
-                row.item.name.get().lowercase().contains(searchQuery) ||
-                row.item.category.lowercase().contains(searchQuery)
-            }
-        }
+        var filtered = applySearch(allItems)
+        filtered = applyFilters(filtered)
+        filtered = applySort(filtered)
         adapter.submitList(filtered)
         binding.emptyView.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun applySearch(items: List<BackpackItemPickerAdapter.Row>): List<BackpackItemPickerAdapter.Row> {
+        if (searchQuery.isBlank()) return items
+        val tokens = searchQuery.split("\\s+".toRegex()).filter { it.length >= 2 }
+        if (tokens.isEmpty()) return items
+        return items.filter { row ->
+            tokens.all { token ->
+                row.item.name.get().lowercase().contains(token) ||
+                row.item.category.lowercase().contains(token)
+            }
+        }
+    }
+
+    private fun applyFilters(items: List<BackpackItemPickerAdapter.Row>): List<BackpackItemPickerAdapter.Row> {
+        if (activeFilters.categories.isEmpty()) return items
+        return items.filter { row ->
+            ItemCategory.fromValue(row.item.category) in activeFilters.categories
+        }
+    }
+
+    private fun applySort(items: List<BackpackItemPickerAdapter.Row>): List<BackpackItemPickerAdapter.Row> {
+        return when (sortMode) {
+            SortMode.NAME_ASC -> items.sortedBy { it.item.name.get().lowercase() }
+            SortMode.NAME_DESC -> items.sortedByDescending { it.item.name.get().lowercase() }
+            SortMode.CATEGORY_ASC -> items.sortedBy { UiLocalizer.category(it.item.category) }
+        }
+    }
+
+    private fun showSortDialog() {
+        val options = SortMode.entries.toTypedArray()
+        val labels = options.map { it.label }.toTypedArray()
+        val current = sortMode.ordinal
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Сортировка")
+            .setSingleChoiceItems(labels, current) { dialog, which ->
+                sortMode = options[which]
+                refreshList()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showFilterDialog() {
+        val sheet = FilterBottomSheet()
+        val groups = listOf(
+            FilterGroup("categories", "Тип", listOf(
+                FilterOption("weapon", "Оружие"),
+                FilterOption("armor", "Доспех"),
+                FilterOption("shield", "Щит"),
+                FilterOption("adventuring_gear", "Снаряжение приключений"),
+                FilterOption("pack", "Набор"),
+                FilterOption("tool", "Ремесленный инструмент"),
+                FilterOption("instrument", "Инструмент"),
+                FilterOption("focus", "Фокусировка"),
+                FilterOption("wand", "Волшебная палочка"),
+                FilterOption("rod", "Жезл"),
+                FilterOption("potion", "Зелье"),
+                FilterOption("ring", "Кольцо"),
+                FilterOption("staff", "Посох"),
+                FilterOption("scroll", "Свиток"),
+                FilterOption("wondrous_item", "Чудесная вещь"),
+                FilterOption("ammunition", "Боеприпасы")
+            ))
+        )
+        val selectedMap = mutableMapOf<String, Set<String>>()
+        if (activeFilters.categories.isNotEmpty()) selectedMap["categories"] = activeFilters.categories.map { it.raw }.toSet()
+        sheet.setGroups(groups)
+        sheet.setSelected(selectedMap)
+        sheet.setCallbacks(
+            onApply = { result ->
+                activeFilters = ItemFilters(
+                    categories = (result["categories"] ?: emptySet()).mapNotNull { ItemCategory.fromValue(it) }.toSet()
+                )
+                refreshList()
+            },
+            onReset = {
+                activeFilters = ItemFilters()
+                refreshList()
+            }
+        )
+        sheet.show(childFragmentManager, FilterBottomSheet.TAG)
     }
 
     private fun showVariantPicker(itemId: String, variants: List<Pair<String, Item>>, onSelected: (String) -> Unit) {

@@ -19,15 +19,20 @@ import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.core.widget.NestedScrollView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.chip.Chip
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Feature
 import com.herocraft24.core.model.GameClass
+import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.render.ExpandableCard
+import com.herocraft24.core.ui.widget.FilterBottomSheet
+import com.herocraft24.core.ui.widget.FilterGroup
+import com.herocraft24.core.ui.widget.FilterOption
+import com.herocraft24.core.ui.widget.SearchBarView
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.core.ui.util.resolveColor
 import com.herocraft24.feature.characters.databinding.CardClassCreateBinding
@@ -64,6 +69,34 @@ class LevelUpFragment : Fragment() {
     private var maxNewSpellLevel: Int = 1
     private var baseNewCantrips: Int = 0
     private var baseNewSpells: Int = 0
+
+    // Step 2 search/sort/filter state
+    private var newSearchQuery: String = ""
+    private var newSortMode: SortMode = SortMode.LEVEL_ASC
+    private var newActiveFilters: PreparedSpellFilters = PreparedSpellFilters()
+    private var newAdapter: SpellPickerAdapter? = null
+    private var newCounterView: TextView? = null
+
+    private enum class SortMode(val label: String) {
+        LEVEL_ASC("Уровень ↑"),
+        LEVEL_DESC("Уровень ↓"),
+        NAME_ASC("Имя А–Я"),
+        NAME_DESC("Имя Я–А"),
+        SCHOOL_ASC("Школа А–Я")
+    }
+
+    private data class PreparedSpellFilters(
+        val levels: Set<Int> = emptySet(),
+        val schools: Set<SpellSchool> = emptySet(),
+        val ritual: Boolean? = null,
+        val concentration: Boolean? = null,
+        val components: Set<String> = emptySet(),
+        val castingTimes: Set<String> = emptySet()
+    ) {
+        val isActive: Boolean
+            get() = levels.isNotEmpty() || schools.isNotEmpty() || ritual != null ||
+                concentration != null || components.isNotEmpty() || castingTimes.isNotEmpty()
+    }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _binding = FragmentLevelUpBinding.inflate(i, c, false)
@@ -426,33 +459,47 @@ class LevelUpFragment : Fragment() {
         scroll.addView(content)
         binding.stepContainer.addView(scroll)
 
-        content.addView(TextView(ctx).apply {
-            text = "Заклинания"
+        val mainArrow = TextView(ctx).apply {
+            text = "▼"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            setPadding(0, 0, 8.dp(ctx), 0)
+        }
+        val mainTitle = TextView(ctx).apply {
+            text = cls.name.get()
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            gravity = Gravity.CENTER
-        })
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val mainHeader = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
+        }
+        mainHeader.addView(mainArrow)
+        mainHeader.addView(mainTitle)
+        content.addView(mainHeader)
+
+        val innerContent = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+        content.addView(innerContent)
+
+        mainHeader.setOnClickListener {
+            val wasVisible = innerContent.visibility == View.VISIBLE
+            innerContent.visibility = if (wasVisible) View.GONE else View.VISIBLE
+            mainArrow.text = if (innerContent.visibility == View.VISIBLE) "▼" else "▶"
+        }
 
         // ── New spells section (declare first so current adapter can reference it) ──
-        lateinit var newAdapter: SpellPickerAdapter
-        lateinit var newCounter: TextView
         val newRecycler = RecyclerView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             layoutManager = LinearLayoutManager(ctx)
             isNestedScrollingEnabled = false
+            setHasFixedSize(true)
         }
-        val searchView = androidx.appcompat.widget.SearchView(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            setIconifiedByDefault(false)
-            queryHint = "Поиск заклинания"
-        }
-        val chipGroup = com.google.android.material.chip.ChipGroup(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
-        }
-
         // ── Current sorcerer spells (collapsible) ──
         val arrow = TextView(ctx).apply {
-            text = "▼"
+            text = "▶"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
             setPadding(0, 0, 8.dp(ctx), 0)
         }
@@ -460,25 +507,24 @@ class LevelUpFragment : Fragment() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             layoutManager = LinearLayoutManager(ctx)
             isNestedScrollingEnabled = false
+            setHasFixedSize(true)
+            visibility = View.GONE
         }
+        var currentListSubmitted = false
         val currentHeader = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
-            setOnClickListener {
-                currentRecycler.visibility = if (currentRecycler.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                arrow.text = if (currentRecycler.visibility == View.VISIBLE) "▼" else "▶"
-            }
         }
         val currentTitle = TextView(ctx).apply {
-            text = "Чародей"
+            text = "Подготовленные заклинания"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         currentHeader.addView(arrow)
         currentHeader.addView(currentTitle)
-        content.addView(currentHeader)
-        content.addView(currentRecycler)
+        innerContent.addView(currentHeader)
+        innerContent.addView(currentRecycler)
 
         val currentAdapter = SpellPickerAdapter(
             onItemClick = { spell ->
@@ -493,7 +539,7 @@ class LevelUpFragment : Fragment() {
                     if (isCantrip) removeCantripId = spell.fullId else removeSpellId = spell.fullId
                 }
                 currentRecycler.adapter?.notifyDataSetChanged()
-                refreshNewSpellsSection(newAdapter, newCounter)
+                refreshNewSpellsSection()
                 updateButtons()
             },
             isSelected = { spell ->
@@ -506,12 +552,25 @@ class LevelUpFragment : Fragment() {
             lockedIcon = "🔒"
         )
         currentRecycler.adapter = currentAdapter
-        currentAdapter.submitList(currentSorcererSpells)
+        currentHeader.setOnClickListener {
+            val wasVisible = currentRecycler.visibility == View.VISIBLE
+            currentRecycler.visibility = if (wasVisible) View.GONE else View.VISIBLE
+            arrow.text = if (currentRecycler.visibility == View.VISIBLE) "▼" else "▶"
+            if (!wasVisible && !currentListSubmitted) {
+                currentAdapter.submitList(currentSorcererSpells)
+                currentListSubmitted = true
+            }
+        }
 
         // ── New spells UI ──
-        newCounter = TextView(ctx).apply {
+        newCounterView = TextView(ctx).apply {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             gravity = Gravity.END
+        }
+        val newArrow = TextView(ctx).apply {
+            text = "▼"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            setPadding(0, 0, 8.dp(ctx), 0)
         }
         val newHeader = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -519,20 +578,57 @@ class LevelUpFragment : Fragment() {
             setPadding(0, 24.dp(ctx), 0, 8.dp(ctx))
         }
         val newTitle = TextView(ctx).apply {
-            text = "Новые"
+            text = "Новое"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
-        newCounter.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        newCounterView?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        newHeader.addView(newArrow)
         newHeader.addView(newTitle)
-        newHeader.addView(newCounter)
-        content.addView(newHeader)
-        content.addView(searchView)
-        content.addView(chipGroup)
-        content.addView(newRecycler)
+        newCounterView?.let { newHeader.addView(it) }
+        val newContent = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
 
-        var selectedLevel: Int? = null
-        var searchQuery = ""
+        val searchRow = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val searchBar = SearchBarView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val sortBtn = MaterialButton(ctx).apply {
+            text = "Сорт."
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+            setOnClickListener { showSortDialog() }
+        }
+        val filterBtn = MaterialButton(ctx).apply {
+            text = "Фильтр"
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+            setOnClickListener { showFilterDialog() }
+        }
+        searchRow.addView(searchBar)
+        searchRow.addView(sortBtn)
+        searchRow.addView(filterBtn)
+
+        newContent.addView(searchRow)
+        newContent.addView(newRecycler)
+        innerContent.addView(newHeader)
+        innerContent.addView(newContent)
+        newHeader.setOnClickListener {
+            val wasVisible = newContent.visibility == View.VISIBLE
+            newContent.visibility = if (wasVisible) View.GONE else View.VISIBLE
+            newArrow.text = if (newContent.visibility == View.VISIBLE) "▼" else "▶"
+        }
+
+        newSearchQuery = ""
+        newSortMode = SortMode.LEVEL_ASC
+        newActiveFilters = PreparedSpellFilters()
 
         newAdapter = SpellPickerAdapter(
             onItemClick = { spell ->
@@ -552,8 +648,8 @@ class LevelUpFragment : Fragment() {
                         newSelectedSpells.add(spell.fullId)
                     }
                 }
-                refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
-                updateNewCounter(newCounter)
+                refreshNewSpellsList(newAdapter)
+                updateNewCounter()
                 updateButtons()
             },
             isSelected = { spell ->
@@ -563,50 +659,13 @@ class LevelUpFragment : Fragment() {
         )
         newRecycler.adapter = newAdapter
 
-        fun setupLevelChips() {
-            chipGroup.removeAllViews()
-            val chipAll = Chip(ctx).apply {
-                text = "Все"
-                isCheckable = true
-                isChecked = true
-                setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        selectedLevel = null
-                        uncheckChips(chipGroup, this)
-                        refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
-                    }
-                }
-            }
-            chipGroup.addView(chipAll)
-            val levels = availableNewSpells.map { it.level }.distinct().sorted()
-            for (level in levels) {
-                val chip = Chip(ctx).apply {
-                    text = if (level == 0) "Заговор" else "$level"
-                    isCheckable = true
-                    setOnCheckedChangeListener { _, isChecked ->
-                        if (isChecked) {
-                            selectedLevel = level
-                            uncheckChips(chipGroup, this)
-                            refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
-                        }
-                    }
-                }
-                chipGroup.addView(chip)
-            }
+        searchBar.setOnQueryListener { query ->
+            newSearchQuery = query.lowercase().trim()
+            refreshNewSpellsList(newAdapter)
         }
 
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchQuery = newText?.lowercase()?.trim() ?: ""
-                refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
-                return true
-            }
-        })
-
-        setupLevelChips()
-        refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
-        updateNewCounter(newCounter)
+        refreshNewSpellsList(newAdapter)
+        updateNewCounter()
     }
 
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
@@ -624,13 +683,6 @@ class LevelUpFragment : Fragment() {
                 spell.level <= maxNewSpellLevel
             }
             .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
-    }
-
-    private fun uncheckChips(chipGroup: com.google.android.material.chip.ChipGroup, keep: Chip) {
-        for (i in 0 until chipGroup.childCount) {
-            val child = chipGroup.getChildAt(i)
-            if (child is Chip && child !== keep) child.isChecked = false
-        }
     }
 
     private fun canSelectNewCantrip(): Boolean {
@@ -654,33 +706,196 @@ class LevelUpFragment : Fragment() {
         return newSelectedCantrips.size == requiredCantrips && newSelectedSpells.size == requiredSpells
     }
 
-    private fun refreshNewSpellsList(adapter: SpellPickerAdapter?, selectedLevel: Int?, searchQuery: String) {
+    private fun refreshNewSpellsList(adapter: SpellPickerAdapter?) {
         var filtered = availableNewSpells
-        selectedLevel?.let { lvl -> filtered = filtered.filter { it.level == lvl } }
-        if (searchQuery.isNotBlank()) {
-            val tokens = searchQuery.split("\\s+".toRegex()).filter { it.length >= 2 }
-            if (tokens.isNotEmpty()) {
-                filtered = filtered.filter { spell ->
-                    tokens.all { token ->
-                        spell.name.lowercase().contains(token) ||
-                        spell.school.lowercase().contains(token) ||
-                        spell.tags.any { it.lowercase().contains(token) }
-                    }
-                }
+        filtered = applyNewSearch(filtered)
+        filtered = applyNewFilters(filtered)
+        filtered = applyNewSort(filtered)
+        adapter?.submitList(filtered)
+    }
+
+    private fun applyNewSearch(spells: List<SpellSummary>): List<SpellSummary> {
+        if (newSearchQuery.isBlank()) return spells
+        val tokens = newSearchQuery.split("\\s+".toRegex()).filter { it.length >= 2 }
+        if (tokens.isEmpty()) return spells
+        return spells.filter { spell ->
+            tokens.all { token ->
+                spell.name.lowercase().contains(token) ||
+                spell.tags.any { it.lowercase().contains(token) } ||
+                spell.school.lowercase().contains(token)
             }
         }
-        adapter?.submitList(filtered.sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() }))
     }
 
-    private fun refreshNewSpellsSection(adapter: SpellPickerAdapter?, newCounter: android.widget.TextView) {
-        refreshNewSpellsList(adapter, null, "")
-        updateNewCounter(newCounter)
+    private fun applyNewFilters(spells: List<SpellSummary>): List<SpellSummary> {
+        return spells.filter { spell ->
+            if (newActiveFilters.levels.isNotEmpty() && spell.level !in newActiveFilters.levels) return@filter false
+            if (newActiveFilters.schools.isNotEmpty() && SpellSchool.fromValue(spell.school) !in newActiveFilters.schools) return@filter false
+            if (newActiveFilters.ritual != null && spell.ritual != newActiveFilters.ritual) return@filter false
+            if (newActiveFilters.concentration != null && spell.concentration != newActiveFilters.concentration) return@filter false
+            if (newActiveFilters.components.isNotEmpty() && !matchesComponentFilter(spell, newActiveFilters.components)) return@filter false
+            if (newActiveFilters.castingTimes.isNotEmpty() && !matchesCastingTimeFilter(spell.castingTime, newActiveFilters.castingTimes)) return@filter false
+            true
+        }
     }
 
-    private fun updateNewCounter(newCounter: android.widget.TextView) {
+    private fun applyNewSort(spells: List<SpellSummary>): List<SpellSummary> {
+        return when (newSortMode) {
+            SortMode.LEVEL_ASC -> spells.sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+            SortMode.LEVEL_DESC -> spells.sortedWith(compareByDescending<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+            SortMode.NAME_ASC -> spells.sortedBy { it.name.lowercase() }
+            SortMode.NAME_DESC -> spells.sortedByDescending { it.name.lowercase() }
+            SortMode.SCHOOL_ASC -> spells.sortedWith(compareBy<SpellSummary> { UiLocalizer.school(it.school) }.thenBy { it.name.lowercase() })
+        }
+    }
+
+    private fun matchesComponentFilter(spell: SpellSummary, filterComponents: Set<String>): Boolean {
+        val hasV = "V" in spell.components
+        val hasS = "S" in spell.components
+        val hasM = "M" in spell.components
+        val hasMcost = spell.materialHasCost
+        val hasMconsumed = spell.materialConsumable
+        for (fc in filterComponents) {
+            when (fc) {
+                "V" -> if (!hasV) return false
+                "S" -> if (!hasS) return false
+                "M" -> if (!hasM) return false
+                "M_cost" -> if (!hasMcost) return false
+                "M_consumed" -> if (!hasMconsumed) return false
+                "no_V" -> if (hasV) return false
+                "no_S" -> if (hasS) return false
+                "no_M" -> if (hasM) return false
+            }
+        }
+        return true
+    }
+
+    private fun matchesCastingTimeFilter(castingTime: String, filterTimes: Set<String>): Boolean {
+        val lower = castingTime.lowercase()
+        for (ft in filterTimes) {
+            val matches = when (ft) {
+                "action" -> lower.contains("действие") && !lower.contains("бонус") && !lower.contains("реакция")
+                "bonus" -> lower.contains("бонус")
+                "reaction" -> lower.contains("реакция")
+                "minutes" -> lower.contains("минут")
+                "hours" -> lower.contains("час")
+                else -> false
+            }
+            if (!matches) return false
+        }
+        return true
+    }
+
+    private fun showSortDialog() {
+        val options = SortMode.entries.toTypedArray()
+        val labels = options.map { it.label }.toTypedArray()
+        val current = newSortMode.ordinal
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Сортировка")
+            .setSingleChoiceItems(labels, current) { dialog, which ->
+                newSortMode = options[which]
+                refreshNewSpellsList(newAdapter)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showFilterDialog() {
+        val sheet = FilterBottomSheet()
+        val groups = buildSpellFilterGroups()
+        val selectedMap = mutableMapOf<String, Set<String>>()
+        if (newActiveFilters.levels.isNotEmpty()) selectedMap["levels"] = newActiveFilters.levels.map { it.toString() }.toSet()
+        if (newActiveFilters.schools.isNotEmpty()) selectedMap["schools"] = newActiveFilters.schools.map { it.raw }.toSet()
+        newActiveFilters.ritual?.let { selectedMap["ritual"] = setOf(if (it) "yes" else "no") }
+        newActiveFilters.concentration?.let { selectedMap["concentration"] = setOf(if (it) "yes" else "no") }
+        if (newActiveFilters.components.isNotEmpty()) selectedMap["components"] = newActiveFilters.components
+        if (newActiveFilters.castingTimes.isNotEmpty()) selectedMap["casting_times"] = newActiveFilters.castingTimes
+        sheet.setGroups(groups)
+        sheet.setSelected(selectedMap)
+        sheet.setCallbacks(
+            onApply = { result ->
+                newActiveFilters = filtersFromMap(result)
+                refreshNewSpellsList(newAdapter)
+            },
+            onReset = {
+                newActiveFilters = PreparedSpellFilters()
+                refreshNewSpellsList(newAdapter)
+            }
+        )
+        sheet.show(childFragmentManager, FilterBottomSheet.TAG)
+    }
+
+    private fun buildSpellFilterGroups(): List<FilterGroup> {
+        return listOf(
+            FilterGroup("levels", "Уровень", listOf(
+                FilterOption("0", "Заговор"),
+                FilterOption("1", "1"), FilterOption("2", "2"), FilterOption("3", "3"),
+                FilterOption("4", "4"), FilterOption("5", "5"), FilterOption("6", "6"),
+                FilterOption("7", "7"), FilterOption("8", "8"), FilterOption("9", "9")
+            )),
+            FilterGroup("schools", "Школа", listOf(
+                FilterOption("evocation", "Воплощение"),
+                FilterOption("illusion", "Иллюзия"),
+                FilterOption("necromancy", "Некромантия"),
+                FilterOption("abjuration", "Ограждение"),
+                FilterOption("enchantment", "Очарование"),
+                FilterOption("transmutation", "Преобразование"),
+                FilterOption("conjuration", "Призыв"),
+                FilterOption("divination", "Прорицание")
+            )),
+            FilterGroup("ritual", "Ритуал", listOf(FilterOption("yes", "Да"), FilterOption("no", "Нет"))),
+            FilterGroup("concentration", "Концентрация", listOf(FilterOption("yes", "Да"), FilterOption("no", "Нет"))),
+            FilterGroup("components", "Компоненты", listOf(
+                FilterOption("V", "V"),
+                FilterOption("S", "S"),
+                FilterOption("M", "M"),
+                FilterOption("M_cost", "M со стоимостью"),
+                FilterOption("M_consumed", "M расходуемый"),
+                FilterOption("no_V", "Без V"),
+                FilterOption("no_S", "Без S"),
+                FilterOption("no_M", "Без M")
+            )),
+            FilterGroup("casting_times", "Время сотворения", listOf(
+                FilterOption("action", "Действие"),
+                FilterOption("bonus", "Бонусное действие"),
+                FilterOption("reaction", "Реакция"),
+                FilterOption("minutes", "Минуты"),
+                FilterOption("hours", "Часы")
+            ))
+        )
+    }
+
+    private fun filtersFromMap(map: Map<String, Set<String>>): PreparedSpellFilters {
+        return PreparedSpellFilters(
+            levels = (map["levels"] ?: emptySet()).mapNotNull { it.toIntOrNull() }.toSet(),
+            schools = (map["schools"] ?: emptySet()).mapNotNull { SpellSchool.fromValue(it) }.toSet(),
+            ritual = when {
+                "yes" in (map["ritual"] ?: emptySet()) -> true
+                "no" in (map["ritual"] ?: emptySet()) -> false
+                else -> null
+            },
+            concentration = when {
+                "yes" in (map["concentration"] ?: emptySet()) -> true
+                "no" in (map["concentration"] ?: emptySet()) -> false
+                else -> null
+            },
+            components = map["components"] ?: emptySet(),
+            castingTimes = map["casting_times"] ?: emptySet()
+        )
+    }
+
+    private fun refreshNewSpellsSection() {
+        newSearchQuery = ""
+        newActiveFilters = PreparedSpellFilters()
+        refreshNewSpellsList(newAdapter)
+        updateNewCounter()
+    }
+
+    private fun updateNewCounter() {
         val maxCantrips = baseNewCantrips + if (removeCantripId != null) 1 else 0
         val maxSpells = baseNewSpells + if (removeSpellId != null) 1 else 0
-        newCounter.text = "Заговоры: ${newSelectedCantrips.size}/$maxCantrips, Заклинания: ${newSelectedSpells.size}/$maxSpells"
+        newCounterView?.text = "Заговоры: ${newSelectedCantrips.size}/$maxCantrips, Заклинания: ${newSelectedSpells.size}/$maxSpells"
     }
 
     // ── Perform Level Up ──

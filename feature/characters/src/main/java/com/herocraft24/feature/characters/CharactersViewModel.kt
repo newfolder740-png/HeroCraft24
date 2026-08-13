@@ -22,6 +22,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     val characters: StateFlow<List<CharacterData>> = repo.characters
 
+    private var allSpellSummariesCache: List<SpellSummary>? = null
+
     private val _editingCharacter = MutableStateFlow<CharacterData?>(null)
     val editingCharacter: StateFlow<CharacterData?> = _editingCharacter
 
@@ -35,6 +37,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         repository.initialize()
         viewModelScope.launch {
             repo.loadAll()
+            getAllSpellSummaries()
         }
     }
 
@@ -356,8 +359,9 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun getAllSpellSummaries(): List<SpellSummary> {
+        allSpellSummariesCache?.let { return it }
         val ids = repository.getSpellIds()
-        return ids.mapNotNull { fullId ->
+        val result = ids.mapNotNull { fullId ->
             val entry = repository.getManifestEntry(fullId) ?: return@mapNotNull null
             val spell = repository.getSpell(fullId)
             SpellSummary(
@@ -378,6 +382,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 materialConsumable = entry.material_consumable ?: false
             )
         }
+        allSpellSummariesCache = result
+        return result
     }
 
     fun getPreparedSpellSummaries(char: CharacterData, ability: String): List<SpellSummary> {
