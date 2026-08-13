@@ -64,7 +64,11 @@
       "description": {
         "en": "You know the Light cantrip. Your spellcasting ability for it is Charisma.",
         "ru": "Вы знаете заговор Свет. Ваша заклинательная характеристика для него — Харизма."
-      }
+      },
+      "level": 1,
+      "spell": "phb2024:light",
+      "always_prepared": true,
+      "spellcasting_ability": "charisma"
     },
     {
       "name": {

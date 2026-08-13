@@ -78,7 +78,8 @@ data class Feature(
     val description2: LocalizedString? = null,
     val choice: FeatureChoice? = null,
     val spell: String? = null,
-    val resource: FeatureResource? = null
+    val resource: FeatureResource? = null,
+    val always_prepared: Map<String, List<String>> = emptyMap()
 )
 
 @Serializable

@@ -97,7 +97,8 @@
             "type": "spellcasting_ability",
             "options": ["intelligence", "wisdom", "charisma"]
           },
-          "spell": "phb2024:fire_bolt"
+          "spell": "phb2024:fire_bolt",
+          "always_prepared": true
         },
         {
           "name": {
@@ -109,7 +110,8 @@
             "ru": "У вас всегда подготовлено заклинание Адское возмездие. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 3,
-          "spell": "phb2024:hellish_rebuke"
+          "spell": "phb2024:hellish_rebuke",
+          "always_prepared": true
         },
         {
           "name": {
@@ -121,7 +123,8 @@
             "ru": "У вас всегда подготовлено заклинание Тьма. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 5,
-          "spell": "phb2024:darkness"
+          "spell": "phb2024:darkness",
+          "always_prepared": true
         }
       ],
       "ability_score_increases": [
@@ -153,7 +156,8 @@
             "type": "spellcasting_ability",
             "options": ["intelligence", "wisdom", "charisma"]
           },
-          "spell": "phb2024:poison_spray"
+          "spell": "phb2024:poison_spray",
+          "always_prepared": true
         },
         {
           "name": {
@@ -165,7 +169,8 @@
             "ru": "У вас всегда подготовлено заклинание Луч болезни. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 3,
-          "spell": "phb2024:ray_of_sickness"
+          "spell": "phb2024:ray_of_sickness",
+          "always_prepared": true
         },
         {
           "name": {
@@ -177,7 +182,8 @@
             "ru": "У вас всегда подготовлено заклинание Удержание личности. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 5,
-          "spell": "phb2024:hold_person"
+          "spell": "phb2024:hold_person",
+          "always_prepared": true
         }
       ],
       "ability_score_increases": [
@@ -209,7 +215,8 @@
             "type": "spellcasting_ability",
             "options": ["intelligence", "wisdom", "charisma"]
           },
-          "spell": "phb2024:chill_touch"
+          "spell": "phb2024:chill_touch",
+          "always_prepared": true
         },
         {
           "name": {
@@ -221,7 +228,8 @@
             "ru": "У вас всегда подготовлено заклинание Псевдожизнь. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 3,
-          "spell": "phb2024:false_life"
+          "spell": "phb2024:false_life",
+          "always_prepared": true
         },
         {
           "name": {
@@ -233,7 +241,8 @@
             "ru": "У вас всегда подготовлено заклинание Луч слабости. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
           },
           "level": 5,
-          "spell": "phb2024:ray_of_enfeeblement"
+          "spell": "phb2024:ray_of_enfeeblement",
+          "always_prepared": true
         }
       ],
       "ability_score_increases": [

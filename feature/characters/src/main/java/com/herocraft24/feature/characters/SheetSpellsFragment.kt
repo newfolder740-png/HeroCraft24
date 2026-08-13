@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -144,6 +145,7 @@ class SheetSpellsFragment : Fragment() {
         // ── Prepared spell cards for current ability ──
         val preparedSpells = vm.getPreparedSpellSummaries(char, effectiveAbility)
         val innateSpellIds = vm.getInnateSpellIds(char, effectiveAbility)
+        val alwaysPreparedIds = vm.getAlwaysPreparedSpellIds(char, effectiveAbility)
         if (preparedSpells.isEmpty()) {
             content.addView(TextView(ctx).apply {
                 text = "Нет подготовленных заклинаний"
@@ -153,8 +155,9 @@ class SheetSpellsFragment : Fragment() {
             })
         } else {
             for (spell in preparedSpells) {
-                val deletable = spell.fullId !in innateSpellIds
-                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility, deletable))
+                val alwaysPrepared = spell.fullId in alwaysPreparedIds
+                val deletable = spell.fullId !in innateSpellIds && !alwaysPrepared
+                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility, deletable, alwaysPrepared))
             }
         }
     }
@@ -244,7 +247,11 @@ class SheetSpellsFragment : Fragment() {
                 setPadding(4.dp(ctx), 4.dp(ctx), 4.dp(ctx), 4.dp(ctx))
                 layoutParams = LinearLayout.LayoutParams(36.dp(ctx), 36.dp(ctx))
                 setOnClickListener {
-                    vm.toggleSpellSlot(charId, level)
+                    if (isFilled) {
+                        vm.decrementSpellSlot(charId, level)
+                    } else {
+                        vm.incrementSpellSlot(charId, level)
+                    }
                 }
             }
             starsRow.addView(star)
@@ -259,7 +266,8 @@ class SheetSpellsFragment : Fragment() {
         charId: String,
         spell: SpellSummary,
         ability: String,
-        deletable: Boolean = true
+        deletable: Boolean = true,
+        alwaysPrepared: Boolean = false
     ): View {
         val card = MaterialCardView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
@@ -323,7 +331,16 @@ class SheetSpellsFragment : Fragment() {
 
         cardContent.addView(textContainer)
 
-        if (deletable) {
+        if (alwaysPrepared) {
+            cardContent.addView(ImageView(ctx).apply {
+                setImageResource(android.R.drawable.ic_lock_idle_lock)
+                background = null
+                setPadding(8.dp(ctx), 8.dp(ctx), 0, 8.dp(ctx))
+                layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+            })
+        } else if (deletable) {
             val deleteBtn = ImageButton(ctx).apply {
                 setImageResource(R.drawable.ic_delete)
                 background = null

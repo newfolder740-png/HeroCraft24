@@ -38,7 +38,9 @@ data class SpeciesTrait(
     val table: Table? = null,
     val description2: LocalizedString? = null,
     val choice: FeatureChoice? = null,
-    val spell: String? = null
+    val spell: String? = null,
+    val always_prepared: Boolean = false,
+    val spellcasting_ability: String? = null
 )
 
 @Serializable

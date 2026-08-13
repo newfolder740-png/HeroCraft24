@@ -16,8 +16,10 @@ class SpellPickerAdapter(
     private val onItemClick: (SpellSummary) -> Unit,
     private val onAddClick: (SpellSummary) -> Unit,
     private val isSelected: (SpellSummary) -> Boolean = { false },
+    private val isLocked: (SpellSummary) -> Boolean = { false },
     private val selectedIcon: String = "✓",
-    private val unselectedIcon: String = "+"
+    private val unselectedIcon: String = "+",
+    private val lockedIcon: String = "🔒"
 ) : RecyclerView.Adapter<SpellPickerAdapter.VH>() {
 
     private var items: List<SpellSummary> = emptyList()
@@ -45,8 +47,9 @@ class SpellPickerAdapter(
         holder.binding.schoolColor.setBackgroundColor(ctx.schoolColor(SpellSchool.fromValue(spell.school)))
 
         val selected = isSelected(spell)
-        holder.binding.actionButton.text = if (selected) selectedIcon else unselectedIcon
-        holder.binding.actionButton.setOnClickListener { onAddClick(spell) }
+        val locked = isLocked(spell)
+        holder.binding.actionButton.text = if (locked) lockedIcon else if (selected) selectedIcon else unselectedIcon
+        holder.binding.actionButton.setOnClickListener { if (!locked) onAddClick(spell) }
         holder.binding.root.setOnClickListener { onItemClick(spell) }
 
         buildBadges(holder.binding.badges, spell)

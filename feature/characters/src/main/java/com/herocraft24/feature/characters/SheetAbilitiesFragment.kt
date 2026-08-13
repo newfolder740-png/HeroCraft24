@@ -37,7 +37,9 @@ class SheetAbilitiesFragment : Fragment() {
                     recyclerView.layoutManager = LinearLayoutManager(requireContext())
                     recyclerView.adapter = SheetAbilitiesAdapter(
                         items = buildItems(it),
-                        onToggleResource = { featureId -> vm.toggleFeatureResource(charId, featureId) }
+                        onToggleResource = { featureId -> vm.toggleFeatureResource(charId, featureId) },
+                        onIncrementResource = { featureId -> vm.incrementFeatureResource(charId, featureId) },
+                        onDecrementResource = { featureId -> vm.decrementFeatureResource(charId, featureId) }
                     )
                 }
             }
@@ -241,7 +243,9 @@ class SheetAbilitiesFragment : Fragment() {
 
     class SheetAbilitiesAdapter(
         private val items: List<AbilityItem>,
-        private val onToggleResource: ((String) -> Unit)? = null
+        private val onToggleResource: ((String) -> Unit)? = null,
+        private val onIncrementResource: ((String) -> Unit)? = null,
+        private val onDecrementResource: ((String) -> Unit)? = null
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private var expandedPosition = -1
 
@@ -325,30 +329,48 @@ class SheetAbilitiesFragment : Fragment() {
                     android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             })
-            val shapesRow = android.widget.LinearLayout(ctx).apply {
-                orientation = android.widget.LinearLayout.HORIZONTAL
+            val shapesContainer = android.widget.LinearLayout(ctx).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
                 setPadding(0, 4.dp(ctx), 0, 0)
             }
             val filledRes = when (item.shape) {
+                "flame" -> R.drawable.ic_resource_flame_filled
                 "hexagon" -> R.drawable.ic_resource_hexagon_filled
                 else -> R.drawable.ic_resource_hexagon_filled
             }
             val emptyRes = when (item.shape) {
+                "flame" -> R.drawable.ic_resource_flame_empty
                 "hexagon" -> R.drawable.ic_resource_hexagon_empty
                 else -> R.drawable.ic_resource_hexagon_empty
             }
+
+            // Split resource markers into rows of up to 10 so they fit on small screens.
+            val perRow = 10
+            var currentRow: android.widget.LinearLayout? = null
             for (i in 0 until item.total) {
+                if (i % perRow == 0) {
+                    currentRow = android.widget.LinearLayout(ctx).apply {
+                        orientation = android.widget.LinearLayout.HORIZONTAL
+                    }
+                    shapesContainer.addView(currentRow)
+                }
                 val isFilled = i < (item.total - item.used)
                 val shape = android.widget.ImageButton(ctx).apply {
                     setImageResource(if (isFilled) filledRes else emptyRes)
                     background = null
-                    setPadding(4.dp(ctx), 4.dp(ctx), 4.dp(ctx), 4.dp(ctx))
-                    layoutParams = android.widget.LinearLayout.LayoutParams(36.dp(ctx), 36.dp(ctx))
-                    setOnClickListener { onToggleResource?.invoke(item.featureId) }
+                    setPadding(2.dp(ctx), 2.dp(ctx), 2.dp(ctx), 2.dp(ctx))
+                    layoutParams = android.widget.LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx))
+                    setOnClickListener {
+                        if (isFilled) {
+                            onDecrementResource?.invoke(item.featureId)
+                        } else {
+                            onIncrementResource?.invoke(item.featureId)
+                        }
+                    }
                 }
-                shapesRow.addView(shape)
+                currentRow?.addView(shape)
             }
-            inner.addView(shapesRow)
+            inner.addView(shapesContainer)
             card.addView(inner)
         }
 

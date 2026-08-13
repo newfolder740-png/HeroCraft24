@@ -985,7 +985,8 @@ class CharacterCreateFragment : Fragment() {
             proficientSkills = (wizard.classSkillChoices + (vm.getAllBackgrounds().find { it.id == wizard.backgroundId.substringAfterLast(":") }?.skill_proficiencies ?: emptyList())).toSet(),
             characterLevel = 1,
             selectedFeats = wizard.selectedFeats.toSet(),
-            classId = wizard.classId
+            classId = wizard.classId,
+            allowEpicBoons = false
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())

@@ -352,7 +352,8 @@ class LevelUpFragment : Fragment() {
             proficientSkills = proficientSkills,
             characterLevel = ch.level + 1,
             selectedFeats = ch.feats.toSet(),
-            classId = selectedClass
+            classId = selectedClass,
+            allowEpicBoons = nextTotalLevel >= 19
         )
 
         recyclerView.adapter = featuresAdapter
@@ -447,18 +448,34 @@ class LevelUpFragment : Fragment() {
             setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
         }
 
-        // ── Current sorcerer spells ──
-        content.addView(TextView(ctx).apply {
-            text = "Чародей"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
-            setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
-        })
-
+        // ── Current sorcerer spells (collapsible) ──
+        val arrow = TextView(ctx).apply {
+            text = "▼"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            setPadding(0, 0, 8.dp(ctx), 0)
+        }
         val currentRecycler = RecyclerView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             layoutManager = LinearLayoutManager(ctx)
             isNestedScrollingEnabled = false
         }
+        val currentHeader = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
+            setOnClickListener {
+                currentRecycler.visibility = if (currentRecycler.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                arrow.text = if (currentRecycler.visibility == View.VISIBLE) "▼" else "▶"
+            }
+        }
+        val currentTitle = TextView(ctx).apply {
+            text = "Чародей"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        currentHeader.addView(arrow)
+        currentHeader.addView(currentTitle)
+        content.addView(currentHeader)
         content.addView(currentRecycler)
 
         val currentAdapter = SpellPickerAdapter(
@@ -480,27 +497,36 @@ class LevelUpFragment : Fragment() {
                 (spell.level == 0 && removeCantripId == spell.fullId) ||
                 (spell.level > 0 && removeSpellId == spell.fullId)
             },
+            isLocked = { spell -> spell.fullId in (ch.spells?.alwaysPreparedSpells?.get(ability)?.toSet() ?: emptySet()) },
             selectedIcon = "✕",
-            unselectedIcon = "–"
+            unselectedIcon = "–",
+            lockedIcon = "🔒"
         )
         currentRecycler.adapter = currentAdapter
         currentAdapter.submitList(currentSorcererSpells)
 
         // ── New spells UI ──
-        content.addView(TextView(ctx).apply {
+        newCounter = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            gravity = Gravity.END
+        }
+        val newHeader = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 24.dp(ctx), 0, 8.dp(ctx))
+        }
+        val newTitle = TextView(ctx).apply {
             text = "Новые"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
-            setPadding(0, 24.dp(ctx), 0, 8.dp(ctx))
-        })
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        newCounter.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        newHeader.addView(newTitle)
+        newHeader.addView(newCounter)
+        content.addView(newHeader)
         content.addView(searchView)
         content.addView(chipGroup)
         content.addView(newRecycler)
-
-        newCounter = TextView(ctx).apply {
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
-            setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
-        }
-        content.addView(newCounter)
 
         var selectedLevel: Int? = null
         var searchQuery = ""
@@ -583,12 +609,7 @@ class LevelUpFragment : Fragment() {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
         val sources = ch.spells?.innateSpellSources ?: emptyMap()
-        val sorcererIds = if (sources.isNotEmpty()) {
-            innate.filter { sources[it] == selectedClass }
-        } else {
-            // Fallback for characters created before source tracking
-            innate
-        }
+        val sorcererIds = innate.filter { sources[it] == selectedClass }
         currentSorcererSpells = allSpells
             .filter { it.fullId in sorcererIds }
             .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })

@@ -27,7 +27,8 @@ class FeaturesCreateAdapter(
     private val proficientSkills: Set<String> = emptySet(),
     private val characterLevel: Int = 1,
     private val selectedFeats: Set<String> = emptySet(),
-    private val classId: String = ""
+    private val classId: String = "",
+    private val allowEpicBoons: Boolean = false
 ) : RecyclerView.Adapter<FeaturesCreateAdapter.ViewHolder>() {
 
     private var baseItems: List<Feature> = emptyList()
@@ -436,7 +437,7 @@ class FeaturesCreateAdapter(
         val availableFeatIds = mutableListOf<String>()
         for (featId in allFeatIds) {
             val feat = contentRepo.getFeat(featId) ?: continue
-            if (feat.category == "epic_boon" && characterLevel < 19) continue
+            if (feat.category == "epic_boon" && !allowEpicBoons) continue
             val localFeatId = featId.substringAfterLast(":")
             if (localFeatId in selectedFeats && !feat.repeatable) continue
             availableFeatIds.add(featId)

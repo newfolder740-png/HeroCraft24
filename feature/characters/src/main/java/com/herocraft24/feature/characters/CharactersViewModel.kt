@@ -69,15 +69,16 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             }
             val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
 
-            val (speciesSpellAbility, speciesInnate) = buildSpeciesInnateSpells(charWithAsi, 1)
-            val (classInnate, classSources) = buildClassFeatureInnateSpells(charWithAsi)
+            val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
+            val (classInnate, classSources, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
             val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
+            val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
             val sp = char.spells ?: CharacterSpells()
             repo.save(charWithAsi.copy(
                 hitPoints = HitPoints(max = hp, current = hp),
                 equipment = equipment,
                 speciesSpellAbility = speciesSpellAbility,
-                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources)
+                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources, alwaysPreparedSpells = alwaysPrepared)
             ))
             _wizardStep.value = 0
         }
@@ -104,15 +105,16 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         }
         val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
 
-        val (speciesSpellAbility, speciesInnate) = buildSpeciesInnateSpells(charWithAsi, 1)
-        val (classInnate, classSources) = buildClassFeatureInnateSpells(charWithAsi)
+        val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
+        val (classInnate, classSources, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
         val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
+        val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
         val sp = char.spells ?: CharacterSpells()
         repo.save(charWithAsi.copy(
             hitPoints = HitPoints(max = hp, current = hp),
             equipment = equipment,
             speciesSpellAbility = speciesSpellAbility,
-            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources)
+            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources, alwaysPreparedSpells = alwaysPrepared)
         ))
         _wizard.value = CharacterData()
         _wizardStep.value = 0
@@ -194,7 +196,29 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         saveCharacter(char.copy(spellSlots = updated))
     }
 
-    fun resolveResourceTotal(formula: String, char: CharacterData): Int {
+    fun incrementSpellSlot(charId: String, slotLevel: String) {
+        val char = getCharacter(charId) ?: return
+        val effective = getEffectiveSpellSlots(char)
+        val state = effective[slotLevel] ?: return
+        if (state.used <= 0) return
+        val updated = char.spellSlots.toMutableMap().apply {
+            this[slotLevel] = SpellSlotState(state.total, state.used - 1)
+        }
+        saveCharacter(char.copy(spellSlots = updated))
+    }
+
+    fun decrementSpellSlot(charId: String, slotLevel: String) {
+        val char = getCharacter(charId) ?: return
+        val effective = getEffectiveSpellSlots(char)
+        val state = effective[slotLevel] ?: return
+        if (state.used >= state.total) return
+        val updated = char.spellSlots.toMutableMap().apply {
+            this[slotLevel] = SpellSlotState(state.total, state.used + 1)
+        }
+        saveCharacter(char.copy(spellSlots = updated))
+    }
+
+    fun resolveResourceTotal(formula: String, char: CharacterData, classId: String? = null): Int {
         return when {
             formula.startsWith("max(") -> {
                 // Parse "max(charisma_modifier,1)" pattern
@@ -204,7 +228,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 val second = parts.getOrNull(1)?.trim()?.toIntOrNull() ?: 1
                 kotlin.math.max(first, second)
             }
-            else -> resolveResourcePart(formula, char)
+            formula.startsWith("class_table:") -> {
+                // Parse "class_table:<key>" to lookup the current level row of a class table.
+                val tableKey = formula.removePrefix("class_table:")
+                val targetClassId = classId ?: char.classId
+                val levelInClass = char.classLevels[targetClassId] ?: if (targetClassId == char.classId) char.level else 0
+                val cls = getClassInfo(targetClassId) ?: return 0
+                cls.class_table?.rows?.find { it.level == levelInClass }?.values?.get(tableKey)?.toIntOrNull() ?: 0
+            }
+            else -> formula.toIntOrNull() ?: resolveResourcePart(formula, char)
         }
     }
 
@@ -218,7 +250,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             "intelligence_modifier" -> modifier(scores["intelligence"] ?: 10)
             "wisdom_modifier" -> modifier(scores["wisdom"] ?: 10)
             "proficiency_bonus" -> char.proficiencyBonus
-            else -> part.toIntOrNull() ?: 0
+            else -> 0
         }
     }
 
@@ -238,7 +270,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 .mapNotNull { featureId -> repository.getFeature(featureId)?.let { featureId to it } }
                 .filter { (_, feature) -> feature.resource != null }
                 .forEach { (fullFeatureId, feature) ->
-                    val total = resolveResourceTotal(feature.resource!!.count_formula, char)
+                    val total = resolveResourceTotal(feature.resource!!.count_formula, char, cid)
                     val saved = char.featureResources[fullFeatureId]
                     result[fullFeatureId] = FeatureResourceState(total = total, used = saved?.used ?: 0)
                 }
@@ -256,7 +288,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     .mapNotNull { featureId -> repository.getFeature(featureId)?.let { featureId to it } }
                     .filter { (_, feature) -> feature.resource != null }
                     .forEach { (fullFeatureId, feature) ->
-                        val total = resolveResourceTotal(feature.resource!!.count_formula, char)
+                        val total = resolveResourceTotal(feature.resource!!.count_formula, char, char.classId)
                         val saved = char.featureResources[fullFeatureId]
                         result[fullFeatureId] = FeatureResourceState(total = total, used = saved?.used ?: 0)
                     }
@@ -272,6 +304,28 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val newUsed = if (state.used < state.total) state.used + 1 else 0
         val updated = char.featureResources.toMutableMap().apply {
             this[featureId] = FeatureResourceState(state.total, newUsed)
+        }
+        saveCharacter(char.copy(featureResources = updated))
+    }
+
+    fun incrementFeatureResource(charId: String, featureId: String) {
+        val char = getCharacter(charId) ?: return
+        val resources = getEffectiveFeatureResources(char)
+        val state = resources[featureId] ?: return
+        if (state.used <= 0) return
+        val updated = char.featureResources.toMutableMap().apply {
+            this[featureId] = FeatureResourceState(state.total, state.used - 1)
+        }
+        saveCharacter(char.copy(featureResources = updated))
+    }
+
+    fun decrementFeatureResource(charId: String, featureId: String) {
+        val char = getCharacter(charId) ?: return
+        val resources = getEffectiveFeatureResources(char)
+        val state = resources[featureId] ?: return
+        if (state.used >= state.total) return
+        val updated = char.featureResources.toMutableMap().apply {
+            this[featureId] = FeatureResourceState(state.total, state.used + 1)
         }
         saveCharacter(char.copy(featureResources = updated))
     }
@@ -340,6 +394,11 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun getInnateSpellIds(char: CharacterData, ability: String): Set<String> {
         val sp = char.spells ?: return emptySet()
         return (sp.innateSpells[ability] ?: emptyList()).toSet()
+    }
+
+    fun getAlwaysPreparedSpellIds(char: CharacterData, ability: String): Set<String> {
+        val sp = char.spells ?: return emptySet()
+        return (sp.alwaysPreparedSpells[ability] ?: emptyList()).toSet()
     }
 
     fun calculateStartingEquipment(char: CharacterData): List<CharacterItem> {
@@ -507,10 +566,10 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun buildSpeciesInnateSpells(char: CharacterData, upToLevel: Int): Pair<String?, Map<String, List<String>>> {
+    fun buildSpeciesInnateSpells(char: CharacterData, upToLevel: Int): Triple<String?, Map<String, List<String>>, Map<String, List<String>>> {
         val speciesId = char.speciesId.substringAfterLast(":")
         val species = getSpeciesIds().mapNotNull { getSpeciesInfo(it) }.find { it.id == speciesId }
-            ?: return null to emptyMap()
+            ?: return Triple(null, emptyMap<String, List<String>>(), emptyMap<String, List<String>>())
         val selectedSub = char.subspeciesId?.let { id -> species.subspecies?.find { it.id == id } }
 
         val effectiveTraits = mutableListOf<com.herocraft24.core.model.SpeciesTrait>()
@@ -522,7 +581,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
-        // Find the spellcasting ability choice from featureChoices
+        // Find the spellcasting ability choice from featureChoices or a fixed trait ability
         var speciesSpellAbility: String? = char.speciesSpellAbility
         for (trait in effectiveTraits) {
             if (trait.choice?.type == "spellcasting_ability") {
@@ -530,23 +589,35 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 char.featureChoices[traitId]?.let { speciesSpellAbility = it }
             }
         }
+        if (speciesSpellAbility == null) {
+            // Fallback to a fixed spellcasting ability declared on any trait
+            speciesSpellAbility = effectiveTraits.firstOrNull { it.spellcasting_ability != null }?.spellcasting_ability
+        }
 
         val innateSpells = mutableMapOf<String, MutableList<String>>()
+        val alwaysPrepared = mutableMapOf<String, MutableList<String>>()
         // Preserve existing innate spells
         char.spells?.innateSpells?.forEach { (ability, spells) ->
             innateSpells[ability] = spells.toMutableList()
         }
+        char.spells?.alwaysPreparedSpells?.forEach { (ability, spells) ->
+            alwaysPrepared[ability] = spells.toMutableList()
+        }
 
-        val ability = speciesSpellAbility ?: return speciesSpellAbility to innateSpells.mapValues { it.value.toList() }
+        val ability = speciesSpellAbility ?: return Triple(speciesSpellAbility, innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
         for (trait in effectiveTraits) {
             val spell = trait.spell ?: continue
             val traitLevel = trait.level ?: continue
             if (traitLevel > upToLevel) continue
             val list = innateSpells.getOrPut(ability) { mutableListOf() }
             if (spell !in list) list.add(spell)
+            if (trait.always_prepared) {
+                val apList = alwaysPrepared.getOrPut(ability) { mutableListOf() }
+                if (spell !in apList) apList.add(spell)
+            }
         }
 
-        return speciesSpellAbility to innateSpells.mapValues { it.value.toList() }
+        return Triple(speciesSpellAbility, innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
     }
 
     fun addSpeciesInnateSpellsAtLevel(char: CharacterData, newLevel: Int): CharacterData {
@@ -564,20 +635,27 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
-        val ability = char.speciesSpellAbility ?: return char
+        val ability = char.speciesSpellAbility
+            ?: effectiveTraits.firstOrNull { it.spellcasting_ability != null }?.spellcasting_ability
+            ?: return char
         val sp = char.spells ?: CharacterSpells()
         val innateMap = sp.innateSpells.toMutableMap()
+        val alwaysPreparedMap = sp.alwaysPreparedSpells.toMutableMap()
         val spellList = innateMap.getOrPut(ability) { mutableListOf() }.toMutableList()
+        val alwaysPreparedList = alwaysPreparedMap.getOrPut(ability) { mutableListOf() }.toMutableList()
 
         for (trait in effectiveTraits) {
             val spell = trait.spell ?: continue
             val traitLevel = trait.level ?: continue
             if (traitLevel != newLevel) continue
             if (spell !in spellList) spellList.add(spell)
+            if (trait.always_prepared && spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
         }
 
         innateMap[ability] = spellList
-        return char.copy(spells = sp.copy(innateSpells = innateMap))
+        alwaysPreparedMap[ability] = alwaysPreparedList
+        val updated = char.copy(spells = sp.copy(innateSpells = innateMap, alwaysPreparedSpells = alwaysPreparedMap))
+        return if (char.speciesSpellAbility == null) updated.copy(speciesSpellAbility = ability) else updated
     }
 
     private fun getSpeciesInfo(fullId: String): Species? = repository.getSpecies(fullId)
@@ -595,13 +673,17 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return result.mapValues { it.value.toList() }
     }
 
-    fun buildClassFeatureInnateSpells(char: CharacterData): Pair<Map<String, List<String>>, Map<String, String>> {
+    fun buildClassFeatureInnateSpells(char: CharacterData): Triple<Map<String, List<String>>, Map<String, String>, Map<String, List<String>>> {
         val innateSpells = mutableMapOf<String, MutableList<String>>()
         val spellSources = mutableMapOf<String, String>()
+        val alwaysPrepared = mutableMapOf<String, MutableList<String>>()
         char.spells?.innateSpells?.forEach { (ability, spells) ->
             innateSpells[ability] = spells.toMutableList()
         }
         char.spells?.innateSpellSources?.let { spellSources.putAll(it) }
+        char.spells?.alwaysPreparedSpells?.forEach { (ability, spells) ->
+            alwaysPrepared[ability] = spells.toMutableList()
+        }
 
         val allClassIds = (char.classLevels.keys + char.classId).distinct()
         for (classId in allClassIds) {
@@ -618,6 +700,21 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     if (spell !in list) list.add(spell)
                     spellSources[spell] = classId
                 }
+                // Always-prepared spells from feature (e.g. Warlock Contact Patron)
+                for ((requiredLevel, spells) in feature.always_prepared) {
+                    if (levelInClass < requiredLevel.toIntOrNull() ?: continue) continue
+                    val innateList = innateSpells.getOrPut(spellAbility) { mutableListOf() }
+                    for (spell in spells) {
+                        if (spell !in innateList) {
+                            innateList.add(spell)
+                            spellSources[spell] = classId
+                        }
+                    }
+                    val apList = alwaysPrepared.getOrPut(spellAbility) { mutableListOf() }
+                    for (spell in spells) {
+                        if (spell !in apList) apList.add(spell)
+                    }
+                }
                 // Class spell choices (e.g. Sorcerer Spellcasting)
                 if (feature.choice?.type == "class_spells") {
                     val selected = char.featureMultiChoices[feature.id] ?: emptyList()
@@ -633,16 +730,33 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 }
             }
 
-            // Also check subclass features
-            val subclassId = char.subclassId
-            if (subclassId != null) {
-                val subclass = cls.subclasses.find { it == subclassId || it.substringAfterLast(":") == subclassId }
-                // Subclass features are not stored on GameClass.subclasses directly
-                // They are stored as features with subclass-related IDs
+            // Subclass features
+            val subclassId = char.subclassId ?: continue
+            val subclass = repository.getSubclass(subclassId) ?: continue
+            if (subclass.class_id != classId) continue
+            for (featureId in subclass.features) {
+                val feature = repository.getFeature(featureId) ?: continue
+                val featureLevel = feature.level ?: continue
+                if (featureLevel > levelInClass) continue
+                // Always-prepared subclass spells keyed by level thresholds
+                for ((requiredLevel, spells) in feature.always_prepared) {
+                    if (levelInClass < requiredLevel.toIntOrNull() ?: continue) continue
+                    val innateList = innateSpells.getOrPut(spellAbility) { mutableListOf() }
+                    for (spell in spells) {
+                        if (spell !in innateList) {
+                            innateList.add(spell)
+                            spellSources[spell] = classId
+                        }
+                    }
+                    val apList = alwaysPrepared.getOrPut(spellAbility) { mutableListOf() }
+                    for (spell in spells) {
+                        if (spell !in apList) apList.add(spell)
+                    }
+                }
             }
         }
 
-        return innateSpells.mapValues { it.value.toList() } to spellSources.toMap()
+        return Triple(innateSpells.mapValues { it.value.toList() }, spellSources.toMap(), alwaysPrepared.mapValues { it.value.toList() })
     }
 
     fun addClassFeatureSpellsAtLevel(char: CharacterData, classId: String, newClassLevel: Int): CharacterData {
@@ -650,26 +764,79 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val spellAbility = cls.spellcasting?.ability ?: return char
         val sp = char.spells ?: CharacterSpells()
         val innateMap = sp.innateSpells.toMutableMap()
+        val sourceMap = sp.innateSpellSources.toMutableMap()
+        val alwaysPreparedMap = sp.alwaysPreparedSpells.toMutableMap()
         val spellList = innateMap.getOrPut(spellAbility) { mutableListOf() }.toMutableList()
+        val alwaysPreparedList = alwaysPreparedMap.getOrPut(spellAbility) { mutableListOf() }.toMutableList()
 
         for (featureId in cls.features) {
             val feature = repository.getFeature(featureId) ?: continue
             val featureLevel = feature.level ?: continue
-            if (featureLevel != newClassLevel) continue
+            if (featureLevel > newClassLevel) continue
             feature.spell?.let { spell ->
-                if (spell !in spellList) spellList.add(spell)
+                if (featureLevel == newClassLevel && spell !in spellList) {
+                    spellList.add(spell)
+                    sourceMap[spell] = classId
+                }
+            }
+            for ((requiredLevel, spells) in feature.always_prepared) {
+                if (newClassLevel < requiredLevel.toIntOrNull() ?: continue) continue
+                for (spell in spells) {
+                    if (spell !in spellList) {
+                        spellList.add(spell)
+                        sourceMap[spell] = classId
+                    }
+                    if (spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
+                }
             }
             // Class spell choices (e.g. Sorcerer Spellcasting)
             if (feature.choice?.type == "class_spells") {
                 val selected = char.featureMultiChoices[feature.id] ?: emptyList()
                 for (spell in selected) {
-                    if (spell !in spellList) spellList.add(spell)
+                    if (spell !in spellList) {
+                        spellList.add(spell)
+                        sourceMap[spell] = classId
+                    }
+                }
+            }
+        }
+
+        // Also process subclass features gained at this level
+        val subclassId = char.subclassId
+        if (subclassId != null) {
+            val subclass = repository.getSubclass(subclassId) ?: return char
+            if (subclass.class_id == classId) {
+                for (featureId in subclass.features) {
+                    val feature = repository.getFeature(featureId) ?: continue
+                    val featureLevel = feature.level ?: continue
+                    if (featureLevel > newClassLevel) continue
+                    feature.spell?.let { spell ->
+                        if (featureLevel == newClassLevel && spell !in spellList) {
+                            spellList.add(spell)
+                            sourceMap[spell] = classId
+                        }
+                    }
+                    for ((requiredLevel, spells) in feature.always_prepared) {
+                        if (newClassLevel < requiredLevel.toIntOrNull() ?: continue) continue
+                        for (spell in spells) {
+                            if (spell !in spellList) {
+                                spellList.add(spell)
+                                sourceMap[spell] = classId
+                            }
+                            if (spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
+                        }
+                    }
                 }
             }
         }
 
         innateMap[spellAbility] = spellList
-        return char.copy(spells = sp.copy(innateSpells = innateMap))
+        alwaysPreparedMap[spellAbility] = alwaysPreparedList
+        return char.copy(spells = sp.copy(
+            innateSpells = innateMap,
+            innateSpellSources = sourceMap,
+            alwaysPreparedSpells = alwaysPreparedMap
+        ))
     }
 
     data class LevelUpSpellGain(val cantrips: Int, val spells: Int)
@@ -714,8 +881,9 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             sourceMap[spellId] = classId
         }
 
-        removeIfPresent(removeCantrip)
-        removeIfPresent(removeSpell)
+        val alwaysPreparedIds = sp.alwaysPreparedSpells[ability]?.toSet() ?: emptySet()
+        if (removeCantrip != null && removeCantrip !in alwaysPreparedIds) removeIfPresent(removeCantrip)
+        if (removeSpell != null && removeSpell !in alwaysPreparedIds) removeIfPresent(removeSpell)
         newCantrips.forEach(::addIfAbsent)
         newSpells.forEach(::addIfAbsent)
 
