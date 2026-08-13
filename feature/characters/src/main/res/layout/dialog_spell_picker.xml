@@ -54,4 +54,12 @@
             android:text="Нет заклинаний"
             android:visibility="gone" />
     </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/confirmButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Подтвердить"
+        android:visibility="gone" />
 </LinearLayout>

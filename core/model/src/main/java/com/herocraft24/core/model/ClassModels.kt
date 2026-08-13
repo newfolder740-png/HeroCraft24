@@ -86,7 +86,10 @@ data class FeatureChoice(
     val type: String, // "feat_category" | "skill" | etc.
     val category: String? = null, // e.g. "fighting_style"
     val count: Int = 1,
-    val options: List<String> = emptyList() // list of feat/item IDs
+    val options: List<String> = emptyList(), // list of feat/item IDs
+    val cantrips: Int = 0,
+    val spells: Int = 0,
+    val class_filter: String? = null
 )
 
 @Serializable

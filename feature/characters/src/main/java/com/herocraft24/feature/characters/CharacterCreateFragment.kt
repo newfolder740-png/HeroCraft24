@@ -889,10 +889,14 @@ class CharacterCreateFragment : Fragment() {
         if (classId.isNotEmpty()) {
             val cls = vm.getClassInfo(classId)
             if (cls != null) {
-                val l1Features = cls.features
-                    .filter { it.contains("_l1_") }
-                    .mapNotNull { vm.repository.getFeature(it) }
-                    .filter { !it.is_placeholder }
+                val l1FeatureIds = cls.features.filter { it.contains("_l1_") }
+                android.util.Log.d("ClassSpellsDebug", "Class $classId L1 feature IDs: $l1FeatureIds")
+                val l1Features = l1FeatureIds.mapNotNull { id ->
+                    val f = vm.repository.getFeature(id)
+                    if (f == null) android.util.Log.d("ClassSpellsDebug", "Failed to load feature: $id")
+                    f
+                }.filter { !it.is_placeholder }
+                android.util.Log.d("ClassSpellsDebug", "Class $classId L1 features: ${l1Features.map { it.id + " choice=" + it.choice?.type }}")
                 features.addAll(l1Features)
             }
         }
@@ -958,6 +962,22 @@ class CharacterCreateFragment : Fragment() {
                     if (subclassId != null) updatedChoices[featureId] = subclassId else updatedChoices.remove(featureId)
                     it.copy(featureChoices = updatedChoices, subclassId = subclassId)
                 }
+            },
+            onPickClassSpells = { featureId, current, choice ->
+                val ch = vm.wizard.value
+                val ability = vm.getClassInfo(ch.classId)?.spellcasting?.ability ?: "intelligence"
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = choice.class_filter ?: "",
+                    cantrips = choice.cantrips,
+                    spells = choice.spells,
+                    selected = current,
+                    charId = ch.id,
+                    ability = ability
+                ).apply {
+                    setOnResultListener { selected ->
+                        (recyclerView.adapter as? FeaturesCreateAdapter)?.updateClassSpells(featureId, selected)
+                    }
+                }.show(childFragmentManager, "ClassSpellPicker")
             },
             initialFeatureChoices = wizard.featureChoices,
             initialFeatureMultiChoices = wizard.featureMultiChoices,

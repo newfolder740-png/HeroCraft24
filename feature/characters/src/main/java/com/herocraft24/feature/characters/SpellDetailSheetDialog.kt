@@ -148,7 +148,7 @@ class SpellDetailSheetDialog : BottomSheetDialogFragment() {
 
     private fun localizeComponent(c: String): String = when (c.uppercase()) {
         "V" -> "В"
-        "S" -> "Ж"
+        "S" -> "С"
         "M" -> "М"
         else -> c
     }

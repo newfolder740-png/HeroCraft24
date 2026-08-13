@@ -1,1 +1,1 @@
-{"id":"phb2024:sorcerer_l10_metamagic","type":"feature","format_version":1,"name":{"en":"","ru":"Метамагия"},"description":{"en":"","ru":"Вы получаете ещё два варианта Метамагии."},"level":10,"is_placeholder":false,"is_subclass_choice":false}
+{"id":"phb2024:sorcerer_l10_metamagic","type":"feature","format_version":1,"name":{"en":"","ru":"Метамагия"},"description":{"en":"","ru":"Вы получаете ещё два варианта Метамагии."},"level":10,"is_placeholder":false,"is_subclass_choice":false,"choice":{"type":"metamagic","count":2}}

@@ -122,6 +122,24 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     // Computed
     fun modifier(score: Int) = kotlin.math.floor((score - 10).toDouble() / 2).toInt()
+
+    fun getEffectiveAbilityScores(char: CharacterData): Map<String, Int> {
+        val scores = char.abilityScores.toMutableMap()
+        val bgId = char.backgroundId.substringAfterLast(":")
+        val bg = getAllBackgrounds().find { it.id == bgId }
+        if (bg != null && bg.ability_score_increases.isNotEmpty()) {
+            val mode = char.bgAbilityMode
+            if (mode == false || mode == null) {
+                for (asi in bg.ability_score_increases) {
+                    scores[asi.ability] = (scores[asi.ability] ?: 10) + 1
+                }
+            } else if (mode == true) {
+                char.bgAbilityPlus2?.let { scores[it] = (scores[it] ?: 10) + 2 }
+                char.bgAbilityPlus1?.let { scores[it] = (scores[it] ?: 10) + 1 }
+            }
+        }
+        return scores
+    }
     fun skillBonus(skill: SkillState, char: CharacterData): Int {
         val mod = modifier(char.abilityScores[abilityForSkill(skill.skill)] ?: 10)
         var bonus = if (skill.proficient) char.proficiencyBonus else 0
@@ -176,13 +194,6 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun resolveResourceTotal(formula: String, char: CharacterData): Int {
-        val chaMod = modifier(char.abilityScores["charisma"] ?: 10)
-        val conMod = modifier(char.abilityScores["constitution"] ?: 10)
-        val strMod = modifier(char.abilityScores["strength"] ?: 10)
-        val dexMod = modifier(char.abilityScores["dexterity"] ?: 10)
-        val intMod = modifier(char.abilityScores["intelligence"] ?: 10)
-        val wisMod = modifier(char.abilityScores["wisdom"] ?: 10)
-        val profBonus = char.proficiencyBonus
         return when {
             formula.startsWith("max(") -> {
                 // Parse "max(charisma_modifier,1)" pattern
@@ -197,21 +208,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun resolveResourcePart(part: String, char: CharacterData): Int {
-        val chaMod = modifier(char.abilityScores["charisma"] ?: 10)
-        val conMod = modifier(char.abilityScores["constitution"] ?: 10)
-        val strMod = modifier(char.abilityScores["strength"] ?: 10)
-        val dexMod = modifier(char.abilityScores["dexterity"] ?: 10)
-        val intMod = modifier(char.abilityScores["intelligence"] ?: 10)
-        val wisMod = modifier(char.abilityScores["wisdom"] ?: 10)
-        val profBonus = char.proficiencyBonus
+        val scores = getEffectiveAbilityScores(char)
         return when (part) {
-            "charisma_modifier" -> chaMod
-            "constitution_modifier" -> conMod
-            "strength_modifier" -> strMod
-            "dexterity_modifier" -> dexMod
-            "intelligence_modifier" -> intMod
-            "wisdom_modifier" -> wisMod
-            "proficiency_bonus" -> profBonus
+            "charisma_modifier" -> modifier(scores["charisma"] ?: 10)
+            "constitution_modifier" -> modifier(scores["constitution"] ?: 10)
+            "strength_modifier" -> modifier(scores["strength"] ?: 10)
+            "dexterity_modifier" -> modifier(scores["dexterity"] ?: 10)
+            "intelligence_modifier" -> modifier(scores["intelligence"] ?: 10)
+            "wisdom_modifier" -> modifier(scores["wisdom"] ?: 10)
+            "proficiency_bonus" -> char.proficiencyBonus
             else -> part.toIntOrNull() ?: 0
         }
     }
@@ -603,11 +608,22 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
             for (featureId in cls.features) {
                 val feature = repository.getFeature(featureId) ?: continue
-                val spell = feature.spell ?: continue
                 val featureLevel = feature.level ?: continue
                 if (featureLevel > levelInClass) continue
-                val list = innateSpells.getOrPut(spellAbility) { mutableListOf() }
-                if (spell !in list) list.add(spell)
+                feature.spell?.let { spell ->
+                    val list = innateSpells.getOrPut(spellAbility) { mutableListOf() }
+                    if (spell !in list) list.add(spell)
+                }
+                // Class spell choices (e.g. Sorcerer Spellcasting)
+                if (feature.choice?.type == "class_spells") {
+                    val selected = char.featureMultiChoices[feature.id] ?: emptyList()
+                    if (selected.isNotEmpty()) {
+                        val list = innateSpells.getOrPut(spellAbility) { mutableListOf() }
+                        for (spell in selected) {
+                            if (spell !in list) list.add(spell)
+                        }
+                    }
+                }
             }
 
             // Also check subclass features
@@ -631,10 +647,18 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
         for (featureId in cls.features) {
             val feature = repository.getFeature(featureId) ?: continue
-            val spell = feature.spell ?: continue
             val featureLevel = feature.level ?: continue
             if (featureLevel != newClassLevel) continue
-            if (spell !in spellList) spellList.add(spell)
+            feature.spell?.let { spell ->
+                if (spell !in spellList) spellList.add(spell)
+            }
+            // Class spell choices (e.g. Sorcerer Spellcasting)
+            if (feature.choice?.type == "class_spells") {
+                val selected = char.featureMultiChoices[feature.id] ?: emptyList()
+                for (spell in selected) {
+                    if (spell !in spellList) spellList.add(spell)
+                }
+            }
         }
 
         innateMap[spellAbility] = spellList

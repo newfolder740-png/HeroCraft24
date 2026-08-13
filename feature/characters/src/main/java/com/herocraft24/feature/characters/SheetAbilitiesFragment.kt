@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.herocraft24.core.model.Feat
 import com.herocraft24.core.model.Feature
+import com.herocraft24.core.model.Metamagic
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.feature.characters.databinding.CardFeatureCreateBinding
 import android.graphics.Typeface
+import kotlinx.coroutines.launch
 
 class SheetAbilitiesFragment : Fragment() {
 
@@ -25,9 +28,23 @@ class SheetAbilitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val charId = arguments?.getString("characterId") ?: return
-        val char = vm.getCharacter(charId) ?: return
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.characters.collect { list ->
+                val char = list.find { it.id == charId } ?: vm.getCharacter(charId)
+                char?.let {
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.adapter = SheetAbilitiesAdapter(
+                        items = buildItems(it),
+                        onToggleResource = { featureId -> vm.toggleFeatureResource(charId, featureId) }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun buildItems(char: CharacterData): List<AbilityItem> {
         val items = mutableListOf<AbilityItem>()
 
         // Feature resource cards (above class features)
@@ -46,6 +63,7 @@ class SheetAbilitiesFragment : Fragment() {
 
         // Class features
         val cls = vm.getClassInfo(char.classId)
+        val selectedMetamagicIds = mutableSetOf<String>()
         if (cls != null) {
             val allClassIds = char.classLevels.keys + char.classId
             val allFeatures = mutableListOf<com.herocraft24.core.model.Feature>()
@@ -70,6 +88,13 @@ class SheetAbilitiesFragment : Fragment() {
                 }
             }
 
+            // Collect metamagic selections from class features
+            for (f in allFeatures) {
+                if (f.choice?.type == "metamagic") {
+                    char.featureMultiChoices[f.id]?.let { selectedMetamagicIds.addAll(it) }
+                }
+            }
+
             // Subclass features
             if (char.subclassId != null) {
                 val subclass = vm.repository.getSubclass(char.subclassId!!)
@@ -89,7 +114,21 @@ class SheetAbilitiesFragment : Fragment() {
                             items.add(AbilityItem.FeatureItem(f, choiceText))
                         }
                     }
+
+                    // Collect metamagic selections from subclass features (if any)
+                    for (f in subFeatures) {
+                        if (f.choice?.type == "metamagic") {
+                            char.featureMultiChoices[f.id]?.let { selectedMetamagicIds.addAll(it) }
+                        }
+                    }
                 }
+            }
+
+            // Metamagic section
+            val metamagics = selectedMetamagicIds.mapNotNull { vm.repository.getMetamagic(it) }
+            if (metamagics.isNotEmpty()) {
+                items.add(AbilityItem.SectionHeader("Метамагия"))
+                metamagics.forEach { items.add(AbilityItem.MetamagicItem(it)) }
             }
         }
 
@@ -121,11 +160,7 @@ class SheetAbilitiesFragment : Fragment() {
             feats.forEach { items.add(AbilityItem.FeatItem(it)) }
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = SheetAbilitiesAdapter(
-            items = items,
-            onToggleResource = { featureId -> vm.toggleFeatureResource(charId, featureId) }
-        )
+        return items
     }
 
     private fun resolveTraitChoiceText(char: CharacterData, speciesId: String, t: com.herocraft24.core.model.SpeciesTrait): String? {
@@ -201,6 +236,7 @@ class SheetAbilitiesFragment : Fragment() {
         data class FeatureItem(val feature: Feature, val choiceText: String? = null) : AbilityItem()
         data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
         data class FeatItem(val feat: Feat) : AbilityItem()
+        data class MetamagicItem(val metamagic: Metamagic) : AbilityItem()
     }
 
     class SheetAbilitiesAdapter(
@@ -214,6 +250,7 @@ class SheetAbilitiesFragment : Fragment() {
         private val TYPE_TRAIT = 2
         private val TYPE_FEAT = 3
         private val TYPE_RESOURCE = 4
+        private val TYPE_METAMAGIC = 5
 
         override fun getItemViewType(position: Int) = when (items[position]) {
             is AbilityItem.SectionHeader -> TYPE_HEADER
@@ -221,6 +258,7 @@ class SheetAbilitiesFragment : Fragment() {
             is AbilityItem.TraitItem -> TYPE_TRAIT
             is AbilityItem.FeatItem -> TYPE_FEAT
             is AbilityItem.ResourceCard -> TYPE_RESOURCE
+            is AbilityItem.MetamagicItem -> TYPE_METAMAGIC
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -238,6 +276,7 @@ class SheetAbilitiesFragment : Fragment() {
                     setCardBackgroundColor(resolveColorAttr(context, com.google.android.material.R.attr.colorSurfaceContainer))
                     strokeWidth = 0
                 })
+                TYPE_METAMAGIC -> MetamagicViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
                 else -> FeatureViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
             }
         }
@@ -250,6 +289,11 @@ class SheetAbilitiesFragment : Fragment() {
                 is ResourceViewHolder -> {
                     val item = items[position] as AbilityItem.ResourceCard
                     bindResource(holder, item)
+                }
+                is MetamagicViewHolder -> {
+                    val item = items[position] as AbilityItem.MetamagicItem
+                    val isExpanded = position == expandedPosition
+                    bindMetamagic(holder, item, position, isExpanded)
                 }
                 is FeatureViewHolder -> {
                     val item = items[position]
@@ -313,6 +357,35 @@ class SheetAbilitiesFragment : Fragment() {
             val color = ta?.getColor(0, 0) ?: 0
             ta?.recycle()
             return color
+        }
+
+        private fun bindMetamagic(holder: MetamagicViewHolder, item: AbilityItem.MetamagicItem, position: Int, isExpanded: Boolean) {
+            val m = item.metamagic
+            holder.binding.featureTitle.text = m.name.get()
+            holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
+            holder.binding.headerRow.setOnClickListener {
+                val prev = expandedPosition
+                expandedPosition = if (isExpanded) -1 else position
+                if (prev >= 0) notifyItemChanged(prev)
+                if (expandedPosition >= 0) notifyItemChanged(expandedPosition)
+            }
+            if (isExpanded) {
+                holder.binding.expandedContent.removeAllViews()
+                val ctx = holder.binding.expandedContent.context
+                holder.binding.expandedContent.addView(TextView(ctx).apply {
+                    text = m.description.get()
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 0, 0, 8.dp(ctx))
+                })
+                if (m.cost.isNotEmpty()) {
+                    holder.binding.expandedContent.addView(TextView(ctx).apply {
+                        text = "Стоимость: ${m.cost}"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setTypeface(typeface, Typeface.BOLD)
+                        setTextColor(0xFF6750A4.toInt())
+                    })
+                }
+            }
         }
 
         private fun bindFeature(holder: FeatureViewHolder, item: AbilityItem.FeatureItem, position: Int, isExpanded: Boolean) {
@@ -398,6 +471,7 @@ class SheetAbilitiesFragment : Fragment() {
 
         class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         class ResourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+        class MetamagicViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
         class FeatureViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

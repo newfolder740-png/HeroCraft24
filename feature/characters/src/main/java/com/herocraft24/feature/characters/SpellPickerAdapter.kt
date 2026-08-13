@@ -14,7 +14,8 @@ import com.herocraft24.feature.characters.databinding.CardPreparedSpellBinding
 
 class SpellPickerAdapter(
     private val onItemClick: (SpellSummary) -> Unit,
-    private val onAddClick: (SpellSummary) -> Unit
+    private val onAddClick: (SpellSummary) -> Unit,
+    private val isSelected: (SpellSummary) -> Boolean = { false }
 ) : RecyclerView.Adapter<SpellPickerAdapter.VH>() {
 
     private var items: List<SpellSummary> = emptyList()
@@ -41,7 +42,8 @@ class SpellPickerAdapter(
         holder.binding.spellSubtitle.text = buildSubtitle(spell, ctx)
         holder.binding.schoolColor.setBackgroundColor(ctx.schoolColor(SpellSchool.fromValue(spell.school)))
 
-        holder.binding.actionButton.text = "+"
+        val selected = isSelected(spell)
+        holder.binding.actionButton.text = if (selected) "✓" else "+"
         holder.binding.actionButton.setOnClickListener { onAddClick(spell) }
         holder.binding.root.setOnClickListener { onItemClick(spell) }
 
@@ -74,9 +76,16 @@ class SpellPickerAdapter(
         }
     }
 
+    private fun resolveColor(ctx: android.content.Context, attr: Int): Int {
+        val ta = ctx.theme?.obtainStyledAttributes(intArrayOf(attr))
+        val color = ta?.getColor(0, 0) ?: 0
+        ta?.recycle()
+        return color
+    }
+
     private fun localizeComponent(c: String): String = when (c.uppercase()) {
         "V" -> "В"
-        "S" -> "Ж"
+        "S" -> "С"
         "M" -> "М"
         else -> c
     }

@@ -98,6 +98,9 @@ class ContentRepository private constructor(private val context: Context) {
     fun getItemIds(): List<String> = getManifestIds { it.items }
     fun getFeatureIds(): List<String> = getManifestIds { it.features }
     fun getSubclassIds(): List<String> = getManifestIds { it.subclasses }
+    fun getMetamagicIds(): List<String> = getManifestIds { it.metamagics }
+    fun getManeuverIds(): List<String> = getManifestIds { it.maneuvers }
+    fun getSchemIds(): List<String> = getManifestIds { it.schems }
 
     private fun getManifestIds(selector: (ManifestObjects) -> List<ManifestEntry>): List<String> {
         val ids = mutableListOf<String>()

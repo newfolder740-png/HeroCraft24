@@ -316,6 +316,22 @@ class LevelUpFragment : Fragment() {
                 }
                 updateButtons()
             },
+            onPickClassSpells = { featureId, current, choice ->
+                val clsId = selectedClassId ?: char?.classId ?: ""
+                val ability = clsId.let { it -> if (it.isNotBlank()) vm.getClassInfo(it)?.spellcasting?.ability else null } ?: "intelligence"
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = choice.class_filter ?: "",
+                    cantrips = choice.cantrips,
+                    spells = choice.spells,
+                    selected = current,
+                    charId = charId ?: char?.id ?: "",
+                    ability = ability
+                ).apply {
+                    setOnResultListener { selected ->
+                        featuresAdapter?.updateClassSpells(featureId, selected)
+                    }
+                }.show(childFragmentManager, "ClassSpellPicker")
+            },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
@@ -470,10 +486,11 @@ class LevelUpFragment : Fragment() {
             }
         }
 
-        // Compute new HP: add hit die + CON mod
+        // Compute new HP: add hit die + CON mod (effective, with background bonus)
         val hitDie = cls?.hit_die ?: 6
         val hpRoll = (1..hitDie).random()
-        val conMod = vm.modifier(ch.abilityScores["constitution"] ?: 10)
+        val effectiveScores = vm.getEffectiveAbilityScores(ch)
+        val conMod = vm.modifier(effectiveScores["constitution"] ?: 10)
         val newMaxHp = ch.hitPoints.max + hpRoll + conMod
         val newCurrentHp = ch.hitPoints.current + hpRoll + conMod
 

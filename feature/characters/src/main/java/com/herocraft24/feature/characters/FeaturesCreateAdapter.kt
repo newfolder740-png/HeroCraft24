@@ -20,6 +20,7 @@ class FeaturesCreateAdapter(
     private val onAsiChoiceChanged: (String, AsiChoice?) -> Unit = { _, _ -> },
     private val onFeatSelected: (String, String?) -> Unit = { _, _ -> },
     private val onSubclassSelected: (String, String?) -> Unit = { _, _ -> },
+    private val onPickClassSpells: (String, List<String>, com.herocraft24.core.model.FeatureChoice) -> Unit = { _, _, _ -> },
     private val initialFeatureChoices: Map<String, String> = emptyMap(),
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
     private val initialAsiChoices: Map<String, AsiChoice> = emptyMap(),
@@ -102,6 +103,15 @@ class FeaturesCreateAdapter(
                     val choices = featureMultiChoices[feature.id] ?: return false
                     if (choices.size < choice.count || choices.any { it == null }) return false
                 }
+                "metamagic" -> {
+                    val choices = featureMultiChoices[feature.id] ?: return false
+                    if (choices.size < choice.count || choices.any { it == null }) return false
+                }
+                "class_spells" -> {
+                    val choices = featureMultiChoices[feature.id] ?: return false
+                    val selectedCount = choices.count { it != null }
+                    if (selectedCount < choice.cantrips + choice.spells) return false
+                }
                 "spellcasting_ability" -> {
                     if (featureChoices[feature.id] == null) return false
                 }
@@ -181,6 +191,8 @@ class FeaturesCreateAdapter(
         when (choice.type) {
             "skill_expertise" -> buildSkillExpertiseChoice(container, feature, choice)
             "spellcasting_ability" -> buildSpellcastingAbilityChoice(container, feature, choice)
+            "metamagic" -> buildMetamagicChoice(container, feature, choice)
+            "class_spells" -> buildClassSpellsChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
             "asi" -> {
                 // For feat cards, use the parent feature ID as the asiChoices key
@@ -240,6 +252,119 @@ class FeaturesCreateAdapter(
                 proficientSkills.filter { it !in exclude }.sortedBy { UiLocalizer.skill(it) }.map { UiLocalizer.skill(it) }))
         }
         container.addView(choiceContainer)
+    }
+
+    // ── Metamagic ──
+
+    private fun buildMetamagicChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val allMetamagicIds = contentRepo.getMetamagicIds().sortedBy { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+        val count = choice.count
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите $count варианта метамагии:"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        if (!featureMultiChoices.containsKey(feature.id)) {
+            featureMultiChoices[feature.id] = MutableList(count) { null }
+        }
+
+        fun metamagicName(fullId: String?): String = fullId?.let { contentRepo.resolveName(it) ?: it.substringAfterLast(":") } ?: ""
+
+        val dropdowns = mutableListOf<com.google.android.material.textfield.MaterialAutoCompleteTextView>()
+        for (i in 0 until count) {
+            val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                hint = "Выберите метамагию"; setOnClickListener { showDropDown() }
+                featureMultiChoices[feature.id]?.getOrNull(i)?.let { setText(metamagicName(it), false) }
+                setOnItemClickListener { _, _, pos, _ ->
+                    val currentChoices = featureMultiChoices[feature.id] ?: return@setOnItemClickListener
+                    val otherSelected = currentChoices.mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
+                    val available = allMetamagicIds.filter { it !in otherSelected }
+                    val selected = available.getOrNull(pos) ?: return@setOnItemClickListener
+                    currentChoices[i] = selected; featureMultiChoices[feature.id] = currentChoices
+                    onFeatureMultiChoiceChanged(feature.id, currentChoices.filterNotNull())
+                    dropdowns.forEachIndexed { idx, dd ->
+                        if (idx != i) {
+                            val otherExclude = currentChoices.mapIndexedNotNull { j, s -> if (j != idx) s else null }.toSet()
+                            dd.setAdapter(android.widget.ArrayAdapter(dd.context, android.R.layout.simple_dropdown_item_1line,
+                                allMetamagicIds.filter { it !in otherExclude }.map { metamagicName(it) }))
+                        }
+                    }
+                }
+            }
+            dropdowns.add(dropdown); choiceContainer.addView(dropdown)
+        }
+        dropdowns.forEachIndexed { i, dropdown ->
+            val exclude = (featureMultiChoices[feature.id] ?: return@forEachIndexed).mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
+            dropdown.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line,
+                allMetamagicIds.filter { it !in exclude }.map { metamagicName(it) }))
+        }
+        container.addView(choiceContainer)
+    }
+
+    // ── Class Spells ──
+
+    private fun buildClassSpellsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите ${choice.cantrips} заговора и ${choice.spells} заклинания 1-го уровня"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        if (!featureMultiChoices.containsKey(feature.id)) {
+            featureMultiChoices[feature.id] = mutableListOf()
+        }
+
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selected = featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList()
+            if (selected.isEmpty()) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Заклинания не выбраны"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                for (spellId in selected) {
+                    val name = contentRepo.resolveName(spellId) ?: spellId.substringAfterLast(":")
+                    selectedContainer.addView(TextView(ctx).apply {
+                        text = "• $name"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                    })
+                }
+            }
+        }
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать заклинания"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                onPickClassSpells(feature.id, featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList(), choice)
+            }
+        }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
+        container.addView(choiceContainer)
+    }
+
+    fun updateClassSpells(featureId: String, selected: List<String>) {
+        featureMultiChoices[featureId] = selected.toMutableList()
+        onFeatureMultiChoiceChanged(featureId, selected)
+        notifyDataSetChanged()
     }
 
     // ── Spellcasting Ability ──
