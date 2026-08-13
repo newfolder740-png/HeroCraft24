@@ -15,7 +15,9 @@ import com.herocraft24.feature.characters.databinding.CardPreparedSpellBinding
 class SpellPickerAdapter(
     private val onItemClick: (SpellSummary) -> Unit,
     private val onAddClick: (SpellSummary) -> Unit,
-    private val isSelected: (SpellSummary) -> Boolean = { false }
+    private val isSelected: (SpellSummary) -> Boolean = { false },
+    private val selectedIcon: String = "✓",
+    private val unselectedIcon: String = "+"
 ) : RecyclerView.Adapter<SpellPickerAdapter.VH>() {
 
     private var items: List<SpellSummary> = emptyList()
@@ -43,7 +45,7 @@ class SpellPickerAdapter(
         holder.binding.schoolColor.setBackgroundColor(ctx.schoolColor(SpellSchool.fromValue(spell.school)))
 
         val selected = isSelected(spell)
-        holder.binding.actionButton.text = if (selected) "✓" else "+"
+        holder.binding.actionButton.text = if (selected) selectedIcon else unselectedIcon
         holder.binding.actionButton.setOnClickListener { onAddClick(spell) }
         holder.binding.root.setOnClickListener { onItemClick(spell) }
 

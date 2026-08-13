@@ -89,7 +89,14 @@ data class FeatureChoice(
     val options: List<String> = emptyList(), // list of feat/item IDs
     val cantrips: Int = 0,
     val spells: Int = 0,
-    val class_filter: String? = null
+    val class_filter: String? = null,
+    val level_up: FeatureLevelUp? = null
+)
+
+@Serializable
+data class FeatureLevelUp(
+    val replace_cantrips: Int = 0,
+    val replace_spells: Int = 0
 )
 
 @Serializable

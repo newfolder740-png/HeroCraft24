@@ -104,7 +104,8 @@ data class CharacterSpells(
     val prepared: List<String> = emptyList(),
     val known: List<String> = emptyList(),
     val preparedByAbility: Map<String, List<String>> = emptyMap(),
-    val innateSpells: Map<String, List<String>> = emptyMap()
+    val innateSpells: Map<String, List<String>> = emptyMap(),
+    val innateSpellSources: Map<String, String> = emptyMap()
 )
 
 @Serializable

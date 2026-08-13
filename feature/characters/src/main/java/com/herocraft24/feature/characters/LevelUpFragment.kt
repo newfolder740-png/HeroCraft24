@@ -18,11 +18,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.widget.NestedScrollView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Feature
 import com.herocraft24.core.model.GameClass
+import com.herocraft24.core.model.SpellSummary
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.render.ExpandableCard
 import com.herocraft24.core.ui.util.dp
@@ -50,6 +53,17 @@ class LevelUpFragment : Fragment() {
 
     // Character state
     private var char: CharacterData? = null
+
+    // Step 2 (spells) state
+    private var removeCantripId: String? = null
+    private var removeSpellId: String? = null
+    private val newSelectedCantrips = mutableListOf<String>()
+    private val newSelectedSpells = mutableListOf<String>()
+    private var currentSorcererSpells: List<SpellSummary> = emptyList()
+    private var availableNewSpells: List<SpellSummary> = emptyList()
+    private var maxNewSpellLevel: Int = 1
+    private var baseNewCantrips: Int = 0
+    private var baseNewSpells: Int = 0
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
         _binding = FragmentLevelUpBinding.inflate(i, c, false)
@@ -345,27 +359,297 @@ class LevelUpFragment : Fragment() {
         featuresAdapter?.submitList(features)
     }
 
-    // ── Step 2: Spells (placeholder) ──
+    // ── Step 2: Spells ──
 
     private fun renderSpellsStep() {
         val ctx = requireContext()
-        val container = binding.stepContainer
+        val ch = char ?: return
+        val selectedClass = selectedClassId ?: return
+        val cls = vm.getClassInfo(selectedClass) ?: return
+        val spellFeature = cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .find { feature ->
+                val choice = feature.choice
+                choice != null && choice.type == "class_spells" && choice.level_up != null
+            }
 
-        val title = TextView(ctx).apply {
+        if (spellFeature == null) {
+            val title = TextView(ctx).apply {
+                text = "Заклинания"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+                gravity = Gravity.CENTER
+            }
+            binding.stepContainer.addView(title)
+            val placeholder = TextView(ctx).apply {
+                text = "Выбор заклинаний будет доступен в будущей версии"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                setTextColor(resolveColor(com.google.android.material.R.attr.colorOnSurfaceVariant))
+                gravity = Gravity.CENTER
+                setPadding(0, 32.dp(ctx), 0, 0)
+            }
+            binding.stepContainer.addView(placeholder)
+            return
+        }
+
+        renderSorcererSpellsStep(ch, selectedClass, spellFeature)
+    }
+
+    private fun renderSorcererSpellsStep(ch: CharacterData, selectedClass: String, spellFeature: Feature) {
+        val ctx = requireContext()
+        val cls = vm.getClassInfo(selectedClass) ?: return
+        val ability = cls.spellcasting?.ability ?: return
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        val newClassLevel = currentClassLevel + 1
+        val gain = vm.getClassLevelSpellGain(selectedClass, currentClassLevel, newClassLevel)
+        baseNewCantrips = gain.cantrips
+        baseNewSpells = gain.spells
+
+        val newRow = cls.class_table?.rows?.find { it.level == newClassLevel }
+        maxNewSpellLevel = newRow?.values?.entries
+            ?.filter { it.key.startsWith("slot") && it.value.toIntOrNull() ?: 0 > 0 }
+            ?.maxOfOrNull { it.key.removePrefix("slot").toIntOrNull() ?: 0 }
+            ?: 1
+
+        loadSorcererSpellData(ch, selectedClass, ability)
+
+        val scroll = NestedScrollView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            isFillViewport = true
+        }
+        val content = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+        scroll.addView(content)
+        binding.stepContainer.addView(scroll)
+
+        content.addView(TextView(ctx).apply {
             text = "Заклинания"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
             gravity = Gravity.CENTER
-        }
-        container.addView(title)
+        })
 
-        val placeholder = TextView(ctx).apply {
-            text = "Выбор заклинаний будет доступен в будущей версии"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-            setTextColor(resolveColor(com.google.android.material.R.attr.colorOnSurfaceVariant))
-            gravity = Gravity.CENTER
-            setPadding(0, 32.dp(ctx), 0, 0)
+        // ── New spells section (declare first so current adapter can reference it) ──
+        lateinit var newAdapter: SpellPickerAdapter
+        lateinit var newCounter: TextView
+        val newRecycler = RecyclerView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutManager = LinearLayoutManager(ctx)
+            isNestedScrollingEnabled = false
         }
-        container.addView(placeholder)
+        val searchView = androidx.appcompat.widget.SearchView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setIconifiedByDefault(false)
+            queryHint = "Поиск заклинания"
+        }
+        val chipGroup = com.google.android.material.chip.ChipGroup(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
+        }
+
+        // ── Current sorcerer spells ──
+        content.addView(TextView(ctx).apply {
+            text = "Чародей"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
+            setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
+        })
+
+        val currentRecycler = RecyclerView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutManager = LinearLayoutManager(ctx)
+            isNestedScrollingEnabled = false
+        }
+        content.addView(currentRecycler)
+
+        val currentAdapter = SpellPickerAdapter(
+            onItemClick = { spell ->
+                SpellDetailSheetDialog.newInstance(spell.fullId, ch.id, ability).show(childFragmentManager, "SpellDetail")
+            },
+            onAddClick = { spell ->
+                val isCantrip = spell.level == 0
+                if ((isCantrip && removeCantripId == spell.fullId) || (!isCantrip && removeSpellId == spell.fullId)) {
+                    if (isCantrip) removeCantripId = null else removeSpellId = null
+                    trimNewSelections()
+                } else {
+                    if (isCantrip) removeCantripId = spell.fullId else removeSpellId = spell.fullId
+                }
+                currentRecycler.adapter?.notifyDataSetChanged()
+                refreshNewSpellsSection(newAdapter, newCounter)
+            },
+            isSelected = { spell ->
+                (spell.level == 0 && removeCantripId == spell.fullId) ||
+                (spell.level > 0 && removeSpellId == spell.fullId)
+            },
+            selectedIcon = "✕",
+            unselectedIcon = "–"
+        )
+        currentRecycler.adapter = currentAdapter
+        currentAdapter.submitList(currentSorcererSpells)
+
+        // ── New spells UI ──
+        content.addView(TextView(ctx).apply {
+            text = "Новые"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
+            setPadding(0, 24.dp(ctx), 0, 8.dp(ctx))
+        })
+        content.addView(searchView)
+        content.addView(chipGroup)
+        content.addView(newRecycler)
+
+        newCounter = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
+        }
+        content.addView(newCounter)
+
+        var selectedLevel: Int? = null
+        var searchQuery = ""
+
+        newAdapter = SpellPickerAdapter(
+            onItemClick = { spell ->
+                SpellDetailSheetDialog.newInstance(spell.fullId, ch.id, ability).show(childFragmentManager, "SpellDetail")
+            },
+            onAddClick = { spell ->
+                if (spell.level == 0) {
+                    if (spell.fullId in newSelectedCantrips) {
+                        newSelectedCantrips.remove(spell.fullId)
+                    } else if (canSelectNewCantrip()) {
+                        newSelectedCantrips.add(spell.fullId)
+                    }
+                } else {
+                    if (spell.fullId in newSelectedSpells) {
+                        newSelectedSpells.remove(spell.fullId)
+                    } else if (canSelectNewSpell()) {
+                        newSelectedSpells.add(spell.fullId)
+                    }
+                }
+                refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
+                updateNewCounter(newCounter)
+            },
+            isSelected = { spell ->
+                (spell.level == 0 && spell.fullId in newSelectedCantrips) ||
+                (spell.level > 0 && spell.fullId in newSelectedSpells)
+            }
+        )
+        newRecycler.adapter = newAdapter
+
+        fun setupLevelChips() {
+            chipGroup.removeAllViews()
+            val chipAll = Chip(ctx).apply {
+                text = "Все"
+                isCheckable = true
+                isChecked = true
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        selectedLevel = null
+                        uncheckChips(chipGroup, this)
+                        refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
+                    }
+                }
+            }
+            chipGroup.addView(chipAll)
+            val levels = availableNewSpells.map { it.level }.distinct().sorted()
+            for (level in levels) {
+                val chip = Chip(ctx).apply {
+                    text = if (level == 0) "Заговор" else "$level"
+                    isCheckable = true
+                    setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            selectedLevel = level
+                            uncheckChips(chipGroup, this)
+                            refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
+                        }
+                    }
+                }
+                chipGroup.addView(chip)
+            }
+        }
+
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchQuery = newText?.lowercase()?.trim() ?: ""
+                refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
+                return true
+            }
+        })
+
+        setupLevelChips()
+        refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
+        updateNewCounter(newCounter)
+    }
+
+    private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
+        val allSpells = vm.getAllSpellSummaries()
+        val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
+        val sources = ch.spells?.innateSpellSources ?: emptyMap()
+        val sorcererIds = if (sources.isNotEmpty()) {
+            innate.filter { sources[it] == selectedClass }
+        } else {
+            // Fallback for characters created before source tracking
+            innate
+        }
+        currentSorcererSpells = allSpells
+            .filter { it.fullId in sorcererIds }
+            .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+
+        availableNewSpells = allSpells
+            .filter { spell ->
+                spell.classes.any { it == selectedClass || it.substringAfterLast(":") == selectedClass.substringAfterLast(":") } &&
+                spell.level <= maxNewSpellLevel
+            }
+            .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+    }
+
+    private fun uncheckChips(chipGroup: com.google.android.material.chip.ChipGroup, keep: Chip) {
+        for (i in 0 until chipGroup.childCount) {
+            val child = chipGroup.getChildAt(i)
+            if (child is Chip && child !== keep) child.isChecked = false
+        }
+    }
+
+    private fun canSelectNewCantrip(): Boolean {
+        val max = baseNewCantrips + if (removeCantripId != null) 1 else 0
+        return newSelectedCantrips.size < max
+    }
+
+    private fun canSelectNewSpell(): Boolean {
+        val max = baseNewSpells + if (removeSpellId != null) 1 else 0
+        return newSelectedSpells.size < max
+    }
+
+    private fun trimNewSelections() {
+        while (newSelectedCantrips.size > baseNewCantrips) newSelectedCantrips.removeAt(newSelectedCantrips.lastIndex)
+        while (newSelectedSpells.size > baseNewSpells) newSelectedSpells.removeAt(newSelectedSpells.lastIndex)
+    }
+
+    private fun refreshNewSpellsList(adapter: SpellPickerAdapter?, selectedLevel: Int?, searchQuery: String) {
+        var filtered = availableNewSpells
+        selectedLevel?.let { lvl -> filtered = filtered.filter { it.level == lvl } }
+        if (searchQuery.isNotBlank()) {
+            val tokens = searchQuery.split("\\s+".toRegex()).filter { it.length >= 2 }
+            if (tokens.isNotEmpty()) {
+                filtered = filtered.filter { spell ->
+                    tokens.all { token ->
+                        spell.name.lowercase().contains(token) ||
+                        spell.school.lowercase().contains(token) ||
+                        spell.tags.any { it.lowercase().contains(token) }
+                    }
+                }
+            }
+        }
+        adapter?.submitList(filtered.sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() }))
+    }
+
+    private fun refreshNewSpellsSection(adapter: SpellPickerAdapter?, newCounter: android.widget.TextView) {
+        refreshNewSpellsList(adapter, null, "")
+        updateNewCounter(newCounter)
+    }
+
+    private fun updateNewCounter(newCounter: android.widget.TextView) {
+        val maxCantrips = baseNewCantrips + if (removeCantripId != null) 1 else 0
+        val maxSpells = baseNewSpells + if (removeSpellId != null) 1 else 0
+        newCounter.text = "Заговоры: ${newSelectedCantrips.size}/$maxCantrips, Заклинания: ${newSelectedSpells.size}/$maxSpells"
     }
 
     // ── Perform Level Up ──
@@ -520,6 +804,13 @@ class LevelUpFragment : Fragment() {
         val newClassLevel = currentClassLevel + 1
         val withInnateSpells = vm.addClassFeatureSpellsAtLevel(withSpeciesInnate, selectedClass, newClassLevel)
 
+        // Apply sorcerer level-up spell replacement/learning
+        val withSorcererSpells = if (selectedClass.substringAfterLast(":").startsWith("sorcerer")) {
+            vm.applySorcererLevelUpSpells(withInnateSpells, selectedClass, removeCantripId, removeSpellId, newSelectedCantrips, newSelectedSpells)
+        } else {
+            withInnateSpells
+        }
+
         // If a spellcasting_ability choice was made during this level-up, store it
         val finalChar = if (updated.speciesSpellAbility == null) {
             val speciesId = updated.speciesId.substringAfterLast(":")
@@ -535,8 +826,8 @@ class LevelUpFragment : Fragment() {
                     }
                 }
             }
-            if (foundAbility != null) withInnateSpells.copy(speciesSpellAbility = foundAbility) else withInnateSpells
-        } else withInnateSpells
+            if (foundAbility != null) withSorcererSpells.copy(speciesSpellAbility = foundAbility) else withSorcererSpells
+        } else withSorcererSpells
 
         vm.saveCharacter(finalChar)
 
