@@ -175,6 +175,101 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         saveCharacter(char.copy(spellSlots = updated))
     }
 
+    fun resolveResourceTotal(formula: String, char: CharacterData): Int {
+        val chaMod = modifier(char.abilityScores["charisma"] ?: 10)
+        val conMod = modifier(char.abilityScores["constitution"] ?: 10)
+        val strMod = modifier(char.abilityScores["strength"] ?: 10)
+        val dexMod = modifier(char.abilityScores["dexterity"] ?: 10)
+        val intMod = modifier(char.abilityScores["intelligence"] ?: 10)
+        val wisMod = modifier(char.abilityScores["wisdom"] ?: 10)
+        val profBonus = char.proficiencyBonus
+        return when {
+            formula.startsWith("max(") -> {
+                // Parse "max(charisma_modifier,1)" pattern
+                val inner = formula.removePrefix("max(").removeSuffix(")")
+                val parts = inner.split(",")
+                val first = resolveResourcePart(parts[0].trim(), char)
+                val second = parts.getOrNull(1)?.trim()?.toIntOrNull() ?: 1
+                kotlin.math.max(first, second)
+            }
+            else -> resolveResourcePart(formula, char)
+        }
+    }
+
+    private fun resolveResourcePart(part: String, char: CharacterData): Int {
+        val chaMod = modifier(char.abilityScores["charisma"] ?: 10)
+        val conMod = modifier(char.abilityScores["constitution"] ?: 10)
+        val strMod = modifier(char.abilityScores["strength"] ?: 10)
+        val dexMod = modifier(char.abilityScores["dexterity"] ?: 10)
+        val intMod = modifier(char.abilityScores["intelligence"] ?: 10)
+        val wisMod = modifier(char.abilityScores["wisdom"] ?: 10)
+        val profBonus = char.proficiencyBonus
+        return when (part) {
+            "charisma_modifier" -> chaMod
+            "constitution_modifier" -> conMod
+            "strength_modifier" -> strMod
+            "dexterity_modifier" -> dexMod
+            "intelligence_modifier" -> intMod
+            "wisdom_modifier" -> wisMod
+            "proficiency_bonus" -> profBonus
+            else -> part.toIntOrNull() ?: 0
+        }
+    }
+
+    fun getEffectiveFeatureResources(char: CharacterData): Map<String, FeatureResourceState> {
+        val result = mutableMapOf<String, FeatureResourceState>()
+        // Collect features with resources from all classes
+        val allClassIds = char.classLevels.keys + char.classId
+        for (cid in allClassIds) {
+            val c = getClassInfo(cid) ?: continue
+            val levelInClass = char.classLevels[cid] ?: if (cid == char.classId) char.level else 0
+            c.features
+                .filter { featureId ->
+                    val levelMatch = Regex("_l(\\d+)_").find(featureId)
+                    val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                    featureLevel <= levelInClass
+                }
+                .mapNotNull { featureId -> repository.getFeature(featureId)?.let { featureId to it } }
+                .filter { (_, feature) -> feature.resource != null }
+                .forEach { (fullFeatureId, feature) ->
+                    val total = resolveResourceTotal(feature.resource!!.count_formula, char)
+                    val saved = char.featureResources[fullFeatureId]
+                    result[fullFeatureId] = FeatureResourceState(total = total, used = saved?.used ?: 0)
+                }
+        }
+        // Also from subclass
+        if (char.subclassId != null) {
+            val subclass = repository.getSubclass(char.subclassId!!)
+            if (subclass != null) {
+                subclass.features
+                    .filter { featureId ->
+                        val levelMatch = Regex("_l(\\d+)_").find(featureId)
+                        val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                        featureLevel <= char.level
+                    }
+                    .mapNotNull { featureId -> repository.getFeature(featureId)?.let { featureId to it } }
+                    .filter { (_, feature) -> feature.resource != null }
+                    .forEach { (fullFeatureId, feature) ->
+                        val total = resolveResourceTotal(feature.resource!!.count_formula, char)
+                        val saved = char.featureResources[fullFeatureId]
+                        result[fullFeatureId] = FeatureResourceState(total = total, used = saved?.used ?: 0)
+                    }
+            }
+        }
+        return result
+    }
+
+    fun toggleFeatureResource(charId: String, featureId: String) {
+        val char = getCharacter(charId) ?: return
+        val resources = getEffectiveFeatureResources(char)
+        val state = resources[featureId] ?: return
+        val newUsed = if (state.used < state.total) state.used + 1 else 0
+        val updated = char.featureResources.toMutableMap().apply {
+            this[featureId] = FeatureResourceState(state.total, newUsed)
+        }
+        saveCharacter(char.copy(featureResources = updated))
+    }
+
     fun addPreparedSpell(charId: String, spellId: String, ability: String) {
         val char = getCharacter(charId) ?: return
         val sp = char.spells ?: CharacterSpells()

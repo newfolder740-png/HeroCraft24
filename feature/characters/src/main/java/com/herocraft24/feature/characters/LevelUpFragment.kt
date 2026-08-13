@@ -12,7 +12,10 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -215,7 +218,6 @@ class LevelUpFragment : Fragment() {
         // Class features at nextClassLevel
         cls.features
             .filter { featureId ->
-                // featureId is like "phb2024:bard_l2_ekspertnost"
                 val localId = featureId.substringAfterLast(":")
                 val levelMatch = Regex("_l(\\d+)_").find(localId)
                 val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
@@ -224,6 +226,23 @@ class LevelUpFragment : Fragment() {
             .mapNotNull { vm.repository.getFeature(it) }
             .filter { !it.is_placeholder }
             .let { features.addAll(it) }
+
+        // Subclass features at nextClassLevel (if subclass already chosen)
+        if (ch.subclassId != null) {
+            val subclass = vm.repository.getSubclass(ch.subclassId!!)
+            if (subclass != null) {
+                subclass.features
+                    .filter { featureId ->
+                        val localId = featureId.substringAfterLast(":")
+                        val levelMatch = Regex("_l(\\d+)_").find(localId)
+                        val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                        featureLevel == nextClassLevel
+                    }
+                    .mapNotNull { vm.repository.getFeature(it) }
+                    .filter { !it.is_placeholder }
+                    .let { features.addAll(it) }
+            }
+        }
 
         // Species traits at nextTotalLevel
         val species = vm.getAllSpecies().find { it.id == ch.speciesId.substringAfterLast(":") }
@@ -274,12 +293,36 @@ class LevelUpFragment : Fragment() {
                 }
                 updateButtons()
             },
+            onSubclassSelected = { featureId, subclassId ->
+                // Store subclass choice in featureChoices
+                if (subclassId != null) featureChoices[featureId] = subclassId else featureChoices.remove(featureId)
+                // Show subclass features immediately
+                featuresAdapter?.removeSubclassFeatures()
+                if (subclassId != null) {
+                    val subclass = vm.repository.getSubclass(subclassId)
+                    if (subclass != null) {
+                        val nextClsLevel = currentClassLevel + 1
+                        val subFeatures = subclass.features
+                            .filter { fid ->
+                                val localId = fid.substringAfterLast(":")
+                                val lm = Regex("_l(\\d+)_").find(localId)
+                                val fl = lm?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                                fl == nextClsLevel
+                            }
+                            .mapNotNull { vm.repository.getFeature(it) }
+                            .filter { !it.is_placeholder }
+                        featuresAdapter?.addSubclassFeatures(subFeatures)
+                    }
+                }
+                updateButtons()
+            },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
             proficientSkills = proficientSkills,
             characterLevel = ch.level + 1,
-            selectedFeats = ch.feats.toSet()
+            selectedFeats = ch.feats.toSet(),
+            classId = selectedClass
         )
 
         recyclerView.adapter = featuresAdapter
@@ -343,6 +386,24 @@ class LevelUpFragment : Fragment() {
             }
             ?.let { newFeatures.addAll(it) }
 
+        // Also add subclass features if subclass already chosen
+        val effectiveSubclassId = featureChoices.values.firstOrNull { fc ->
+            featuresAdapter?.currentBaseItems?.any { it.choice?.type == "subclass" && featureChoices[it.id] == fc } == true
+        } ?: ch.subclassId
+        if (effectiveSubclassId != null) {
+            val subclass = vm.repository.getSubclass(effectiveSubclassId)
+            if (subclass != null) {
+                subclass.features
+                    .filter { featureId ->
+                        val localId = featureId.substringAfterLast(":")
+                        val levelMatch = Regex("_l(\\d+)_").find(localId)
+                        val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                        featureLevel == currentClassLevel + 1
+                    }
+                    .let { newFeatures.addAll(it) }
+            }
+        }
+
         // Collect expertise skills from featureMultiChoices
         val newExpertiseSkills = ch.expertiseSkills.toMutableSet()
         for ((_, choices) in featureMultiChoices) {
@@ -357,7 +418,7 @@ class LevelUpFragment : Fragment() {
         mergedFeatureMultiChoices.putAll(featureMultiChoices)
 
         // Add new features to the character's features list
-        val mergedFeatures = (ch.features + newFeatures).distinct()
+        val mergedFeatures = (ch.features + newFeatures).distinct().toMutableList()
 
         // Collect chosen feats from asi_or_feat choices
         val newFeats = ch.feats.toMutableList()
@@ -366,6 +427,27 @@ class LevelUpFragment : Fragment() {
             if (feature.choice?.type != "asi_or_feat") continue
             if (featId != null && featId !in newFeats) {
                 newFeats.add(featId)
+            }
+        }
+
+        // Handle subclass selection
+        var updatedSubclassId = ch.subclassId
+        for ((featureId, subclassId) in featureChoices) {
+            val feature = featuresAdapter?.currentBaseItems?.find { it.id == featureId } ?: continue
+            if (feature.choice?.type != "subclass") continue
+            if (subclassId != null) {
+                updatedSubclassId = subclassId
+                // Add subclass features at this level
+                val subclass = vm.repository.getSubclass(subclassId)
+                if (subclass != null) {
+                    val newSubLevel = currentClassLevel + 1
+                    for (subFeatureId in subclass.features) {
+                        val subFeature = vm.repository.getFeature(subFeatureId)
+                        if (subFeature != null && (subFeature.level == null || subFeature.level == newSubLevel) && subFeatureId !in mergedFeatures) {
+                            mergedFeatures.add(subFeatureId)
+                        }
+                    }
+                }
             }
         }
 
@@ -390,13 +472,15 @@ class LevelUpFragment : Fragment() {
 
         // Compute new HP: add hit die + CON mod
         val hitDie = cls?.hit_die ?: 6
+        val hpRoll = (1..hitDie).random()
         val conMod = vm.modifier(ch.abilityScores["constitution"] ?: 10)
-        val newMaxHp = ch.hitPoints.max + hitDie + conMod
-        val newCurrentHp = ch.hitPoints.current + hitDie + conMod
+        val newMaxHp = ch.hitPoints.max + hpRoll + conMod
+        val newCurrentHp = ch.hitPoints.current + hpRoll + conMod
 
         val updated = ch.copy(
             level = newTotalLevel,
             classLevels = updatedClassLevels,
+            subclassId = updatedSubclassId,
             proficiencyBonus = newProfBonus,
             features = mergedFeatures,
             featureChoices = mergedFeatureChoices,
@@ -438,7 +522,12 @@ class LevelUpFragment : Fragment() {
         } else withInnateSpells
 
         vm.saveCharacter(finalChar)
-        findNavController().navigateUp()
+
+        // Wait for the save to complete and StateFlow to update before navigating back
+        lifecycleScope.launch {
+            kotlinx.coroutines.delay(150)
+            findNavController().navigateUp()
+        }
     }
 
     // ── Helpers ──

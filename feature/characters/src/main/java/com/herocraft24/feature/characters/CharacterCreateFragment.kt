@@ -952,12 +952,20 @@ class CharacterCreateFragment : Fragment() {
                     (recyclerView.adapter as? FeaturesCreateAdapter)?.removeFeatCard(parentFeatureId)
                 }
             },
+            onSubclassSelected = { featureId, subclassId ->
+                vm.updateWizard {
+                    val updatedChoices = it.featureChoices.toMutableMap()
+                    if (subclassId != null) updatedChoices[featureId] = subclassId else updatedChoices.remove(featureId)
+                    it.copy(featureChoices = updatedChoices, subclassId = subclassId)
+                }
+            },
             initialFeatureChoices = wizard.featureChoices,
             initialFeatureMultiChoices = wizard.featureMultiChoices,
             initialAsiChoices = wizard.asiChoices,
             proficientSkills = (wizard.classSkillChoices + (vm.getAllBackgrounds().find { it.id == wizard.backgroundId.substringAfterLast(":") }?.skill_proficiencies ?: emptyList())).toSet(),
             characterLevel = 1,
-            selectedFeats = wizard.selectedFeats.toSet()
+            selectedFeats = wizard.selectedFeats.toSet(),
+            classId = wizard.classId
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())

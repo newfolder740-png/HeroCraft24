@@ -77,7 +77,8 @@ data class Feature(
     val table: Table? = null,
     val description2: LocalizedString? = null,
     val choice: FeatureChoice? = null,
-    val spell: String? = null
+    val spell: String? = null,
+    val resource: FeatureResource? = null
 )
 
 @Serializable
@@ -86,6 +87,13 @@ data class FeatureChoice(
     val category: String? = null, // e.g. "fighting_style"
     val count: Int = 1,
     val options: List<String> = emptyList() // list of feat/item IDs
+)
+
+@Serializable
+data class FeatureResource(
+    val shape: String = "star",       // "star" | "hexagon" | "diamond" | "circle"
+    val count_formula: String = "",   // e.g. "max(charisma_modifier,1)" or "proficiency_bonus" or "5"
+    val refresh: String = "long_rest" // "long_rest" | "short_rest" | "none"
 )
 
 @Serializable

@@ -30,6 +30,20 @@ class SheetAbilitiesFragment : Fragment() {
 
         val items = mutableListOf<AbilityItem>()
 
+        // Feature resource cards (above class features)
+        val featureResources = vm.getEffectiveFeatureResources(char)
+        for ((featureId, state) in featureResources) {
+            val feature = vm.repository.getFeature(featureId) ?: continue
+            val res = feature.resource ?: continue
+            items.add(AbilityItem.ResourceCard(
+                featureId = featureId,
+                title = feature.name.get(),
+                shape = res.shape,
+                total = state.total,
+                used = state.used
+            ))
+        }
+
         // Class features
         val cls = vm.getClassInfo(char.classId)
         if (cls != null) {
@@ -53,6 +67,28 @@ class SheetAbilitiesFragment : Fragment() {
                 allFeatures.forEach { f ->
                     val choiceText = resolveFeatureChoiceText(char, f)
                     items.add(AbilityItem.FeatureItem(f, choiceText))
+                }
+            }
+
+            // Subclass features
+            if (char.subclassId != null) {
+                val subclass = vm.repository.getSubclass(char.subclassId!!)
+                if (subclass != null) {
+                    val subFeatures = subclass.features
+                        .filter { featureId ->
+                            val levelMatch = Regex("_l(\\d+)_").find(featureId)
+                            val featureLevel = levelMatch?.groupValues?.get(1)?.toIntOrNull() ?: return@filter false
+                            featureLevel <= char.level
+                        }
+                        .mapNotNull { vm.repository.getFeature(it) }
+                        .filter { !it.is_placeholder }
+                    if (subFeatures.isNotEmpty()) {
+                        items.add(AbilityItem.SectionHeader("Умения подкласса"))
+                        subFeatures.forEach { f ->
+                            val choiceText = resolveFeatureChoiceText(char, f)
+                            items.add(AbilityItem.FeatureItem(f, choiceText))
+                        }
+                    }
                 }
             }
         }
@@ -86,7 +122,10 @@ class SheetAbilitiesFragment : Fragment() {
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = SheetAbilitiesAdapter(items)
+        recyclerView.adapter = SheetAbilitiesAdapter(
+            items = items,
+            onToggleResource = { featureId -> vm.toggleFeatureResource(charId, featureId) }
+        )
     }
 
     private fun resolveTraitChoiceText(char: CharacterData, speciesId: String, t: com.herocraft24.core.model.SpeciesTrait): String? {
@@ -158,24 +197,30 @@ class SheetAbilitiesFragment : Fragment() {
 
     sealed class AbilityItem {
         data class SectionHeader(val title: String) : AbilityItem()
+        data class ResourceCard(val featureId: String, val title: String, val shape: String, val total: Int, val used: Int) : AbilityItem()
         data class FeatureItem(val feature: Feature, val choiceText: String? = null) : AbilityItem()
         data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
         data class FeatItem(val feat: Feat) : AbilityItem()
     }
 
-    class SheetAbilitiesAdapter(private val items: List<AbilityItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class SheetAbilitiesAdapter(
+        private val items: List<AbilityItem>,
+        private val onToggleResource: ((String) -> Unit)? = null
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private var expandedPosition = -1
 
         private val TYPE_HEADER = 0
         private val TYPE_FEATURE = 1
         private val TYPE_TRAIT = 2
         private val TYPE_FEAT = 3
+        private val TYPE_RESOURCE = 4
 
         override fun getItemViewType(position: Int) = when (items[position]) {
             is AbilityItem.SectionHeader -> TYPE_HEADER
             is AbilityItem.FeatureItem -> TYPE_FEATURE
             is AbilityItem.TraitItem -> TYPE_TRAIT
             is AbilityItem.FeatItem -> TYPE_FEAT
+            is AbilityItem.ResourceCard -> TYPE_RESOURCE
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -185,6 +230,14 @@ class SheetAbilitiesFragment : Fragment() {
                     setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
                     setPadding(0, 12.dp(parent.context), 0, 4.dp(parent.context))
                 })
+                TYPE_RESOURCE -> ResourceViewHolder(com.google.android.material.card.MaterialCardView(parent.context).apply {
+                    layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT).apply {
+                        setMargins(0, 4.dp(parent.context), 0, 4.dp(parent.context))
+                    }
+                    radius = 12f
+                    setCardBackgroundColor(resolveColorAttr(context, com.google.android.material.R.attr.colorSurfaceContainer))
+                    strokeWidth = 0
+                })
                 else -> FeatureViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
             }
         }
@@ -193,6 +246,10 @@ class SheetAbilitiesFragment : Fragment() {
             when (holder) {
                 is HeaderViewHolder -> {
                     (holder.itemView as TextView).text = (items[position] as AbilityItem.SectionHeader).title
+                }
+                is ResourceViewHolder -> {
+                    val item = items[position] as AbilityItem.ResourceCard
+                    bindResource(holder, item)
                 }
                 is FeatureViewHolder -> {
                     val item = items[position]
@@ -205,6 +262,57 @@ class SheetAbilitiesFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        private fun bindResource(holder: ResourceViewHolder, item: AbilityItem.ResourceCard) {
+            val card = holder.itemView as com.google.android.material.card.MaterialCardView
+            card.removeAllViews()
+            val ctx = card.context
+
+            val inner = android.widget.LinearLayout(ctx).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                setPadding(12.dp(ctx), 8.dp(ctx), 12.dp(ctx), 8.dp(ctx))
+            }
+            inner.addView(TextView(ctx).apply {
+                text = item.title
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelMedium)
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            })
+            val shapesRow = android.widget.LinearLayout(ctx).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                setPadding(0, 4.dp(ctx), 0, 0)
+            }
+            val filledRes = when (item.shape) {
+                "hexagon" -> R.drawable.ic_resource_hexagon_filled
+                else -> R.drawable.ic_resource_hexagon_filled
+            }
+            val emptyRes = when (item.shape) {
+                "hexagon" -> R.drawable.ic_resource_hexagon_empty
+                else -> R.drawable.ic_resource_hexagon_empty
+            }
+            for (i in 0 until item.total) {
+                val isFilled = i < (item.total - item.used)
+                val shape = android.widget.ImageButton(ctx).apply {
+                    setImageResource(if (isFilled) filledRes else emptyRes)
+                    background = null
+                    setPadding(4.dp(ctx), 4.dp(ctx), 4.dp(ctx), 4.dp(ctx))
+                    layoutParams = android.widget.LinearLayout.LayoutParams(36.dp(ctx), 36.dp(ctx))
+                    setOnClickListener { onToggleResource?.invoke(item.featureId) }
+                }
+                shapesRow.addView(shape)
+            }
+            inner.addView(shapesRow)
+            card.addView(inner)
+        }
+
+        private fun resolveColorAttr(ctx: android.content.Context, attr: Int): Int {
+            val ta = ctx.theme?.obtainStyledAttributes(intArrayOf(attr))
+            val color = ta?.getColor(0, 0) ?: 0
+            ta?.recycle()
+            return color
         }
 
         private fun bindFeature(holder: FeatureViewHolder, item: AbilityItem.FeatureItem, position: Int, isExpanded: Boolean) {
@@ -289,6 +397,7 @@ class SheetAbilitiesFragment : Fragment() {
         override fun getItemCount() = items.size
 
         class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+        class ResourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         class FeatureViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

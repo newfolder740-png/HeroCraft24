@@ -30,6 +30,7 @@ data class CharacterData(
     val speciesSpellAbility: String? = null,
     val asiChoices: Map<String, AsiChoice> = emptyMap(),
     val selectedFeats: List<String> = emptyList(),
+    val featureResources: Map<String, FeatureResourceState> = emptyMap(),
     val equippedArmor: String? = null,
     val equippedShield: String? = null,
     val equippedWeapon1: String? = null,
@@ -131,4 +132,10 @@ data class AsiChoice(
     val mode: String = "plus1x2", // "plus2" or "plus1x2"
     val ability1: String = "",     // e.g. "strength"
     val ability2: String = ""      // only used in "plus1x2" mode
+)
+
+@Serializable
+data class FeatureResourceState(
+    val total: Int = 0,
+    val used: Int = 0
 )

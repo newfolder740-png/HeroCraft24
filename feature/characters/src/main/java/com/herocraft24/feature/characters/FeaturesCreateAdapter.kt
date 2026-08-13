@@ -19,18 +19,22 @@ class FeaturesCreateAdapter(
     private val onFeatureMultiChoiceChanged: (String, List<String>) -> Unit = { _, _ -> },
     private val onAsiChoiceChanged: (String, AsiChoice?) -> Unit = { _, _ -> },
     private val onFeatSelected: (String, String?) -> Unit = { _, _ -> },
+    private val onSubclassSelected: (String, String?) -> Unit = { _, _ -> },
     private val initialFeatureChoices: Map<String, String> = emptyMap(),
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
     private val initialAsiChoices: Map<String, AsiChoice> = emptyMap(),
     private val proficientSkills: Set<String> = emptySet(),
     private val characterLevel: Int = 1,
-    private val selectedFeats: Set<String> = emptySet()
+    private val selectedFeats: Set<String> = emptySet(),
+    private val classId: String = ""
 ) : RecyclerView.Adapter<FeaturesCreateAdapter.ViewHolder>() {
 
     private var baseItems: List<Feature> = emptyList()
     // featCards: parentFeatureId → synthetic Feature from Feat
     private val featCards = mutableMapOf<String, Feature>()
-    // Combined display list (base items + feat cards inserted after their parent)
+    // Subclass features added dynamically when subclass is selected
+    private var subclassFeatures: List<Feature> = emptyList()
+    // Combined display list (base items + feat cards + subclass features)
     private var displayItems: List<Feature> = emptyList()
 
     private var expandedPosition = -1
@@ -67,12 +71,25 @@ class FeaturesCreateAdapter(
         rebuildDisplayItems()
     }
 
+    /** Add subclass features (displayed after the subclass choice feature) */
+    fun addSubclassFeatures(features: List<Feature>) {
+        subclassFeatures = features
+        rebuildDisplayItems()
+    }
+
+    /** Remove subclass features (when subclass choice is cleared) */
+    fun removeSubclassFeatures() {
+        subclassFeatures = emptyList()
+        rebuildDisplayItems()
+    }
+
     private fun rebuildDisplayItems() {
         val result = mutableListOf<Feature>()
         for (item in baseItems) {
             result.add(item)
             featCards[item.id]?.let { featCard -> result.add(featCard) }
         }
+        result.addAll(subclassFeatures)
         displayItems = result
         notifyDataSetChanged()
     }
@@ -98,6 +115,9 @@ class FeaturesCreateAdapter(
                             if (asi.ability1.isEmpty()) return false
                         }
                     }
+                }
+                "subclass" -> {
+                    if (featureChoices[feature.id] == null) return false
                 }
                 "asi" -> {
                     val parentFeatureId = featCards.entries.find { it.value.id == feature.id }?.key ?: feature.id
@@ -167,6 +187,7 @@ class FeaturesCreateAdapter(
                 val parentFeatureId = featCards.entries.find { it.value.id == feature.id }?.key ?: feature.id
                 buildAsiChoice(container, parentFeatureId, choice)
             }
+            "subclass" -> buildSubclassChoice(container, feature)
             else -> if (choice.options.isNotEmpty()) buildFeatCategoryChoice(container, feature, choice)
         }
     }
@@ -430,4 +451,41 @@ class FeaturesCreateAdapter(
         "intelligence" to "Интеллект", "wisdom" to "Мудрость", "charisma" to "Харизма"
     )
     private val allAbilityKeys = listOf("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
+
+    // ── Subclass Choice ──
+
+    private fun buildSubclassChoice(container: LinearLayout, feature: Feature) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите подкласс:"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        // Resolve the class ID to get its subclasses
+        val fullClassId = if (classId.contains(":")) classId else "phb2024:$classId"
+        val gameClass = contentRepo.getClass(fullClassId)
+        val subclassIds = gameClass?.subclasses ?: emptyList()
+        val subclassNames = subclassIds.mapNotNull { id -> contentRepo.resolveName(id) ?: id.substringAfterLast(":") }
+
+        choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+            hint = "Выберите подкласс"; setOnClickListener { showDropDown() }
+            setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, subclassNames))
+            featureChoices[feature.id]?.let { selectedId ->
+                val idx = subclassIds.indexOf(selectedId)
+                if (idx >= 0) setText(subclassNames[idx], false)
+            }
+            setOnItemClickListener { _, _, pos, _ ->
+                val selectedId = subclassIds.getOrNull(pos)
+                featureChoices[feature.id] = selectedId
+                onFeatureChoiceChanged(feature.id, selectedId)
+                onSubclassSelected(feature.id, selectedId)
+            }
+        })
+        container.addView(choiceContainer)
+    }
 }
