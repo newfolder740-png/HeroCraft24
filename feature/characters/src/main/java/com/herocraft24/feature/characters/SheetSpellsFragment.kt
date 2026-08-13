@@ -2,19 +2,24 @@ package com.herocraft24.feature.characters
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.herocraft24.core.model.SpellSummary
@@ -22,6 +27,9 @@ import com.herocraft24.core.model.SpellSchool
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.core.ui.util.schoolColor
+import com.herocraft24.core.ui.widget.FilterBottomSheet
+import com.herocraft24.core.ui.widget.FilterGroup
+import com.herocraft24.core.ui.widget.FilterOption
 import kotlinx.coroutines.launch
 
 class SheetSpellsFragment : Fragment() {
@@ -34,6 +42,31 @@ class SheetSpellsFragment : Fragment() {
     )
 
     private val spellcastingAbilities = listOf("intelligence", "wisdom", "charisma")
+
+    private enum class SortMode(val label: String) {
+        LEVEL_ASC("Уровень ↑"),
+        LEVEL_DESC("Уровень ↓"),
+        NAME_ASC("Имя А–Я"),
+        NAME_DESC("Имя Я–А"),
+        SCHOOL_ASC("Школа А–Я")
+    }
+
+    private data class PreparedSpellFilters(
+        val levels: Set<Int> = emptySet(),
+        val schools: Set<SpellSchool> = emptySet(),
+        val ritual: Boolean? = null,
+        val concentration: Boolean? = null,
+        val components: Set<String> = emptySet(),
+        val castingTimes: Set<String> = emptySet()
+    ) {
+        val isActive: Boolean
+            get() = levels.isNotEmpty() || schools.isNotEmpty() || ritual != null ||
+                concentration != null || components.isNotEmpty() || castingTimes.isNotEmpty()
+    }
+
+    private var searchQuery: String = ""
+    private var sortMode: SortMode = SortMode.LEVEL_ASC
+    private var activeFilters: PreparedSpellFilters = PreparedSpellFilters()
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View =
         LayoutInflater.from(requireContext()).inflate(R.layout.fragment_sheet_spells, c, false)
@@ -142,12 +175,100 @@ class SheetSpellsFragment : Fragment() {
         }
         content.addView(preparedHeader)
 
-        // ── Prepared spell cards for current ability ──
-        val preparedSpells = vm.getPreparedSpellSummaries(char, effectiveAbility)
-        val innateSpellIds = vm.getInnateSpellIds(char, effectiveAbility)
-        val alwaysPreparedIds = vm.getAlwaysPreparedSpellIds(char, effectiveAbility)
+        // ── Prepared spells controls ──
+        content.addView(buildPreparedControls(ctx))
+
+        // ── Prepared spell cards container ──
+        currentPreparedContainer = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+        currentChar = char
+        currentAbility = effectiveAbility
+        content.addView(currentPreparedContainer)
+        renderPreparedSpells()
+    }
+
+    private var currentPreparedContainer: LinearLayout? = null
+    private var currentChar: CharacterData? = null
+    private var currentAbility: String = "intelligence"
+
+    private fun buildPreparedControls(ctx: android.content.Context): View {
+        val container = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, 4.dp(ctx), 0, 8.dp(ctx))
+        }
+
+        // Search row
+        val searchRow = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val searchInput = EditText(ctx).apply {
+            hint = "Поиск"
+            setText(searchQuery)
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    searchQuery = s?.toString()?.trim() ?: ""
+                    renderPreparedSpells()
+                }
+            })
+        }
+        searchRow.addView(searchInput)
+
+        val sortBtn = MaterialButton(ctx).apply {
+            text = "Сорт."
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+            setOnClickListener { showSortDialog() }
+        }
+        val filterBtn = MaterialButton(ctx).apply {
+            text = "Фильтр"
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+            setOnClickListener { showFilterDialog() }
+        }
+        val clearFiltersBtn = MaterialButton(ctx).apply {
+            text = "Сброс"
+            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            minWidth = 0
+            minimumWidth = 0
+            isVisible = activeFilters.isActive
+            setOnClickListener {
+                activeFilters = PreparedSpellFilters()
+                renderPreparedSpells()
+            }
+        }
+        searchRow.addView(sortBtn)
+        searchRow.addView(filterBtn)
+        searchRow.addView(clearFiltersBtn)
+        container.addView(searchRow)
+
+        return container
+    }
+
+    private fun renderPreparedSpells() {
+        val container = currentPreparedContainer ?: return
+        val char = currentChar ?: return
+        val ability = currentAbility
+        val ctx = requireContext()
+        container.removeAllViews()
+
+        var preparedSpells = vm.getPreparedSpellSummaries(char, ability)
+        preparedSpells = applySearch(preparedSpells)
+        preparedSpells = applyFilters(preparedSpells)
+        preparedSpells = applySort(preparedSpells)
+
+        val innateSpellIds = vm.getInnateSpellIds(char, ability)
+        val alwaysPreparedIds = vm.getAlwaysPreparedSpellIds(char, ability)
+
         if (preparedSpells.isEmpty()) {
-            content.addView(TextView(ctx).apply {
+            container.addView(TextView(ctx).apply {
                 text = "Нет подготовленных заклинаний"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
                 setTextColor(0xFF666666.toInt())
@@ -157,9 +278,193 @@ class SheetSpellsFragment : Fragment() {
             for (spell in preparedSpells) {
                 val alwaysPrepared = spell.fullId in alwaysPreparedIds
                 val deletable = spell.fullId !in innateSpellIds && !alwaysPrepared
-                content.addView(buildPreparedSpellCard(ctx, char.id, spell, effectiveAbility, deletable, alwaysPrepared))
+                container.addView(buildPreparedSpellCard(ctx, char.id, spell, ability, deletable, alwaysPrepared))
             }
         }
+
+        // Update "clear filters" button visibility if needed
+        (currentPreparedContainer?.parent as? ViewGroup)?.let { parent ->
+            val controls = parent.getChildAt(parent.indexOfChild(container) - 1) as? LinearLayout
+            controls?.let { updateClearFiltersVisibility(it) }
+        }
+    }
+
+    private fun updateClearFiltersVisibility(controls: LinearLayout) {
+        var clearBtn: MaterialButton? = null
+        for (i in 0 until controls.childCount) {
+            val child = controls.getChildAt(i)
+            if (child is LinearLayout) {
+                for (j in 0 until child.childCount) {
+                    val btn = child.getChildAt(j)
+                    if (btn is MaterialButton && btn.text == "Сброс") {
+                        clearBtn = btn
+                    }
+                }
+            }
+        }
+        clearBtn?.isVisible = activeFilters.isActive
+    }
+
+    private fun applySearch(spells: List<SpellSummary>): List<SpellSummary> {
+        if (searchQuery.isBlank()) return spells
+        val tokens = searchQuery.lowercase().split("\\s+".toRegex()).filter { it.length >= 2 }
+        if (tokens.isEmpty()) return spells
+        return spells.filter { spell ->
+            tokens.all { token ->
+                spell.name.lowercase().contains(token) ||
+                spell.tags.any { it.lowercase().contains(token) } ||
+                spell.school.lowercase().contains(token)
+            }
+        }
+    }
+
+    private fun applyFilters(spells: List<SpellSummary>): List<SpellSummary> {
+        return spells.filter { spell ->
+            if (activeFilters.levels.isNotEmpty() && spell.level !in activeFilters.levels) return@filter false
+            if (activeFilters.schools.isNotEmpty() && SpellSchool.fromValue(spell.school) !in activeFilters.schools) return@filter false
+            if (activeFilters.ritual != null && spell.ritual != activeFilters.ritual) return@filter false
+            if (activeFilters.concentration != null && spell.concentration != activeFilters.concentration) return@filter false
+            if (activeFilters.components.isNotEmpty() && !matchesComponentFilter(spell, activeFilters.components)) return@filter false
+            if (activeFilters.castingTimes.isNotEmpty() && !matchesCastingTimeFilter(spell.castingTime, activeFilters.castingTimes)) return@filter false
+            true
+        }
+    }
+
+    private fun applySort(spells: List<SpellSummary>): List<SpellSummary> {
+        return when (sortMode) {
+            SortMode.LEVEL_ASC -> spells.sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+            SortMode.LEVEL_DESC -> spells.sortedWith(compareByDescending<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+            SortMode.NAME_ASC -> spells.sortedBy { it.name.lowercase() }
+            SortMode.NAME_DESC -> spells.sortedByDescending { it.name.lowercase() }
+            SortMode.SCHOOL_ASC -> spells.sortedWith(compareBy<SpellSummary> { UiLocalizer.school(it.school) }.thenBy { it.name.lowercase() })
+        }
+    }
+
+    private fun showSortDialog() {
+        val options = SortMode.entries.toTypedArray()
+        val labels = options.map { it.label }.toTypedArray()
+        val current = sortMode.ordinal
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Сортировка")
+            .setSingleChoiceItems(labels, current) { dialog, which ->
+                sortMode = options[which]
+                renderPreparedSpells()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showFilterDialog() {
+        val sheet = FilterBottomSheet()
+        val groups = buildPreparedFilterGroups()
+        val selectedMap = mutableMapOf<String, Set<String>>()
+        if (activeFilters.levels.isNotEmpty()) selectedMap["levels"] = activeFilters.levels.map { it.toString() }.toSet()
+        if (activeFilters.schools.isNotEmpty()) selectedMap["schools"] = activeFilters.schools.map { it.raw }.toSet()
+        activeFilters.ritual?.let { selectedMap["ritual"] = setOf(if (it) "yes" else "no") }
+        activeFilters.concentration?.let { selectedMap["concentration"] = setOf(if (it) "yes" else "no") }
+        if (activeFilters.components.isNotEmpty()) selectedMap["components"] = activeFilters.components
+        if (activeFilters.castingTimes.isNotEmpty()) selectedMap["casting_times"] = activeFilters.castingTimes
+        sheet.setGroups(groups)
+        sheet.setSelected(selectedMap)
+        sheet.setCallbacks(
+            onApply = { result ->
+                activeFilters = filtersFromMap(result)
+                renderPreparedSpells()
+            },
+            onReset = {
+                activeFilters = PreparedSpellFilters()
+                renderPreparedSpells()
+            }
+        )
+        sheet.show(childFragmentManager, FilterBottomSheet.TAG)
+    }
+
+    private fun buildPreparedFilterGroups(): List<FilterGroup> {
+        return listOf(
+            FilterGroup("levels", "Уровень", listOf(
+                FilterOption("0", "Заговор"),
+                FilterOption("1", "1"), FilterOption("2", "2"), FilterOption("3", "3"),
+                FilterOption("4", "4"), FilterOption("5", "5"), FilterOption("6", "6"),
+                FilterOption("7", "7"), FilterOption("8", "8"), FilterOption("9", "9")
+            )),
+            FilterGroup("schools", "Школа", listOf(
+                FilterOption("evocation", "Воплощение"),
+                FilterOption("illusion", "Иллюзия"),
+                FilterOption("necromancy", "Некромантия"),
+                FilterOption("abjuration", "Ограждение"),
+                FilterOption("enchantment", "Очарование"),
+                FilterOption("transmutation", "Преобразование"),
+                FilterOption("conjuration", "Призыв"),
+                FilterOption("divination", "Прорицание")
+            )),
+            FilterGroup("ritual", "Ритуал", listOf(FilterOption("yes", "Да"), FilterOption("no", "Нет"))),
+            FilterGroup("concentration", "Концентрация", listOf(FilterOption("yes", "Да"), FilterOption("no", "Нет"))),
+            FilterGroup("components", "Компоненты", listOf(
+                FilterOption("V", "V"),
+                FilterOption("S", "S"),
+                FilterOption("M", "M"),
+                FilterOption("M_cost", "M со стоимостью"),
+                FilterOption("M_consumed", "M расходуемый"),
+                FilterOption("no_V", "Без V"),
+                FilterOption("no_S", "Без S"),
+                FilterOption("no_M", "Без M")
+            )),
+            FilterGroup("casting_times", "Время сотворения", listOf(
+                FilterOption("action", "Действие"),
+                FilterOption("bonus", "Бонусное действие"),
+                FilterOption("reaction", "Реакция"),
+                FilterOption("minutes", "Минуты"),
+                FilterOption("hours", "Часы")
+            ))
+        )
+    }
+
+    private fun filtersFromMap(map: Map<String, Set<String>>): PreparedSpellFilters {
+        return PreparedSpellFilters(
+            levels = map["levels"]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet(),
+            schools = map["schools"]?.mapNotNull { schoolFromString(it) }?.toSet() ?: emptySet(),
+            ritual = map["ritual"]?.firstOrNull()?.let { it == "yes" },
+            concentration = map["concentration"]?.firstOrNull()?.let { it == "yes" },
+            components = map["components"] ?: emptySet(),
+            castingTimes = map["casting_times"] ?: emptySet()
+        )
+    }
+
+    private fun schoolFromString(value: String): SpellSchool? =
+        try { SpellSchool.fromValue(value) } catch (_: Exception) { null }
+
+    private fun matchesComponentFilter(spell: SpellSummary, filterComponents: Set<String>): Boolean {
+        for (fc in filterComponents) {
+            val matches = when (fc) {
+                "V" -> "V" in spell.components
+                "S" -> "S" in spell.components
+                "M" -> "M" in spell.components
+                "M_cost" -> "M" in spell.components && spell.materialHasCost
+                "M_consumed" -> "M" in spell.components && spell.materialConsumable
+                "no_V" -> "V" !in spell.components
+                "no_S" -> "S" !in spell.components
+                "no_M" -> "M" !in spell.components
+                else -> false
+            }
+            if (!matches) return false
+        }
+        return true
+    }
+
+    private fun matchesCastingTimeFilter(castingTime: String, filterTimes: Set<String>): Boolean {
+        for (ft in filterTimes) {
+            val matches = when (ft) {
+                "action" -> castingTime.startsWith("Действие") || castingTime.contains("Действие")
+                "bonus" -> castingTime.contains("Бонусное действие")
+                "reaction" -> castingTime.contains("Реакция")
+                "minutes" -> castingTime.contains("минут") || castingTime.contains("Минут")
+                "hours" -> castingTime.contains("час") || castingTime.contains("Час")
+                else -> false
+            }
+            if (matches) return true
+        }
+        return false
     }
 
     private fun buildAbilityDropdownRow(

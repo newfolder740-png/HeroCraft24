@@ -31,6 +31,7 @@ class CharacterCreateFragment : Fragment() {
     // Adapter references for validation
     private var classCreateAdapter: ClassCreateAdapter? = null
     private var backgroundCreateAdapter: BackgroundCreateAdapter? = null
+    private var featuresCreateAdapter: FeaturesCreateAdapter? = null
 
     // Abilities step binding
     private var _abilitiesBinding: FragmentCreateAbilitiesBinding? = null
@@ -129,6 +130,10 @@ class CharacterCreateFragment : Fragment() {
                     classCreateAdapter?.areAllSkillsSelected() ?: true
                 }
             }
+            4 -> {
+                // Features step: all required feature choices (including class spells) must be made
+                featuresCreateAdapter?.areAllChoicesMade() ?: true
+            }
             else -> true
         }
         binding.btnNext.isEnabled = canProceed
@@ -144,6 +149,7 @@ class CharacterCreateFragment : Fragment() {
         _abilitiesBinding = null
         classCreateAdapter = null
         backgroundCreateAdapter = null
+        featuresCreateAdapter = null
 
         when (step) {
             0 -> renderAbilitiesStep(container)
@@ -926,21 +932,24 @@ class CharacterCreateFragment : Fragment() {
         }
 
         val wizard = vm.wizard.value
-        val adapter = FeaturesCreateAdapter(
+        featuresCreateAdapter = FeaturesCreateAdapter(
             onFeatureChoiceChanged = { featureId, choiceId ->
                 val updated = wizard.featureChoices.toMutableMap()
                 if (choiceId != null) updated[featureId] = choiceId else updated.remove(featureId)
                 vm.updateWizard { it.copy(featureChoices = updated) }
+                updateNextButtonState()
             },
             onFeatureMultiChoiceChanged = { featureId, choices ->
                 val updated = wizard.featureMultiChoices.toMutableMap()
                 updated[featureId] = choices
                 vm.updateWizard { it.copy(featureMultiChoices = updated) }
+                updateNextButtonState()
             },
             onAsiChoiceChanged = { featureId, asiChoice ->
                 val updated = wizard.asiChoices.toMutableMap()
                 if (asiChoice != null) updated[featureId] = asiChoice else updated.remove(featureId)
                 vm.updateWizard { it.copy(asiChoices = updated) }
+                updateNextButtonState()
             },
             onFeatSelected = { parentFeatureId, featId ->
                 if (featId != null) {
@@ -950,11 +959,12 @@ class CharacterCreateFragment : Fragment() {
                     val feat = vm.repository.getFeat(featId)
                     if (feat != null) {
                         val featFeature = featToFeature(feat, parentFeatureId)
-                        (recyclerView.adapter as? FeaturesCreateAdapter)?.addFeatCard(parentFeatureId, featFeature)
+                        featuresCreateAdapter?.addFeatCard(parentFeatureId, featFeature)
                     }
                 } else {
-                    (recyclerView.adapter as? FeaturesCreateAdapter)?.removeFeatCard(parentFeatureId)
+                    featuresCreateAdapter?.removeFeatCard(parentFeatureId)
                 }
+                updateNextButtonState()
             },
             onSubclassSelected = { featureId, subclassId ->
                 vm.updateWizard {
@@ -962,6 +972,7 @@ class CharacterCreateFragment : Fragment() {
                     if (subclassId != null) updatedChoices[featureId] = subclassId else updatedChoices.remove(featureId)
                     it.copy(featureChoices = updatedChoices, subclassId = subclassId)
                 }
+                updateNextButtonState()
             },
             onPickClassSpells = { featureId, current, choice ->
                 val ch = vm.wizard.value
@@ -975,7 +986,8 @@ class CharacterCreateFragment : Fragment() {
                     ability = ability
                 ).apply {
                     setOnResultListener { selected ->
-                        (recyclerView.adapter as? FeaturesCreateAdapter)?.updateClassSpells(featureId, selected)
+                        featuresCreateAdapter?.updateClassSpells(featureId, selected)
+                        updateNextButtonState()
                     }
                 }.show(childFragmentManager, "ClassSpellPicker")
             },
@@ -990,8 +1002,9 @@ class CharacterCreateFragment : Fragment() {
         )
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
-        adapter.submitList(features)
+        recyclerView.adapter = featuresCreateAdapter
+        featuresCreateAdapter?.submitList(features)
+        updateNextButtonState()
     }
 
     private fun buildEffectiveTraits(

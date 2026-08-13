@@ -113,6 +113,7 @@ class LevelUpFragment : Fragment() {
             binding.btnNext.text = "Level-Up"
             binding.btnNext.isEnabled = when (step) {
                 1 -> featuresAdapter?.areAllChoicesMade() ?: true
+                2 -> areSpellSelectionsComplete()
                 else -> true
             }
         } else {
@@ -120,6 +121,7 @@ class LevelUpFragment : Fragment() {
             binding.btnNext.isEnabled = when (step) {
                 0 -> selectedClass != null
                 1 -> featuresAdapter?.areAllChoicesMade() ?: true
+                2 -> areSpellSelectionsComplete()
                 else -> true
             }
         }
@@ -492,6 +494,7 @@ class LevelUpFragment : Fragment() {
                 }
                 currentRecycler.adapter?.notifyDataSetChanged()
                 refreshNewSpellsSection(newAdapter, newCounter)
+                updateButtons()
             },
             isSelected = { spell ->
                 (spell.level == 0 && removeCantripId == spell.fullId) ||
@@ -551,6 +554,7 @@ class LevelUpFragment : Fragment() {
                 }
                 refreshNewSpellsList(newAdapter, selectedLevel, searchQuery)
                 updateNewCounter(newCounter)
+                updateButtons()
             },
             isSelected = { spell ->
                 (spell.level == 0 && spell.fullId in newSelectedCantrips) ||
@@ -642,6 +646,12 @@ class LevelUpFragment : Fragment() {
     private fun trimNewSelections() {
         while (newSelectedCantrips.size > baseNewCantrips) newSelectedCantrips.removeAt(newSelectedCantrips.lastIndex)
         while (newSelectedSpells.size > baseNewSpells) newSelectedSpells.removeAt(newSelectedSpells.lastIndex)
+    }
+
+    private fun areSpellSelectionsComplete(): Boolean {
+        val requiredCantrips = baseNewCantrips + if (removeCantripId != null) 1 else 0
+        val requiredSpells = baseNewSpells + if (removeSpellId != null) 1 else 0
+        return newSelectedCantrips.size == requiredCantrips && newSelectedSpells.size == requiredSpells
     }
 
     private fun refreshNewSpellsList(adapter: SpellPickerAdapter?, selectedLevel: Int?, searchQuery: String) {

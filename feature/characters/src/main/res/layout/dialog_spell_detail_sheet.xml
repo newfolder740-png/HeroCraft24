@@ -29,14 +29,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/deleteButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Убрать из подготовленных"
-        app:icon="@drawable/ic_delete"
-        app:iconGravity="textStart" />
-
 </LinearLayout>

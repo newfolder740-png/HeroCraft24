@@ -68,11 +68,6 @@ class SpellDetailSheetDialog : BottomSheetDialogFragment() {
         binding.toolbar.title = s.name.get()
         binding.toolbar.setNavigationOnClickListener { dismiss() }
 
-        binding.deleteButton.setOnClickListener {
-            vm.removePreparedSpell(charId, spellId, ability)
-            dismiss()
-        }
-
         val ctx = requireContext()
         val target = binding.detailContent
         target.removeAllViews()
