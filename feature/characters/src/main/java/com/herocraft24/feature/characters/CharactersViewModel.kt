@@ -397,6 +397,10 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return spellIds.mapNotNull { byId[it] }
     }
 
+    fun getSpellSource(char: CharacterData, spellFullId: String): String? {
+        return char.spells?.innateSpellSources?.get(spellFullId)
+    }
+
     fun getInnateSpellIds(char: CharacterData, ability: String): Set<String> {
         val sp = char.spells ?: return emptySet()
         return (sp.innateSpells[ability] ?: emptyList()).toSet()

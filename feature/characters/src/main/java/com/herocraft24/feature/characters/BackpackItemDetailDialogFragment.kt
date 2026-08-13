@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.herocraft24.core.model.Cost
 import com.herocraft24.core.model.Item
 import com.herocraft24.core.model.Weight
@@ -23,7 +23,7 @@ import com.herocraft24.core.ui.util.FormatUtils
 import com.herocraft24.core.ui.util.ItemLinkifier
 import com.herocraft24.feature.characters.databinding.DialogBackpackItemDetailBinding
 
-class BackpackItemDetailDialogFragment : DialogFragment() {
+class BackpackItemDetailDialogFragment : BottomSheetDialogFragment() {
 
     private var _binding: DialogBackpackItemDetailBinding? = null
     private val binding get() = _binding!!
@@ -254,11 +254,6 @@ class BackpackItemDetailDialogFragment : DialogFragment() {
     private fun localizeCategory(c: String): String = UiLocalizer.category(c)
     private fun localizeSubcategory(s: String): String = UiLocalizer.subcategory(s)
     private fun localizeRarity(rarity: String): String = UiLocalizer.rarity(rarity)
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

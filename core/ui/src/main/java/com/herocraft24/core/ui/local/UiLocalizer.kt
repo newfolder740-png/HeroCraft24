@@ -296,4 +296,22 @@ object UiLocalizer {
         "survival" -> "Выживание"
         else -> skill.replaceFirstChar { it.uppercase() }
     }
+
+    // ─── Class names ─────────────────────────────────────────────────
+    fun className(value: String?): String = when (value?.lowercase()) {
+        "barbarian" -> "Варвар"
+        "bard" -> "Бард"
+        "cleric" -> "Жрец"
+        "druid" -> "Друид"
+        "fighter" -> "Воин"
+        "monk" -> "Монах"
+        "paladin" -> "Паладин"
+        "ranger" -> "Следопыт"
+        "rogue" -> "Плут"
+        "sorcerer" -> "Чародей"
+        "warlock" -> "Колдун"
+        "wizard" -> "Волшебник"
+        "artificer" -> "Артефактор"
+        else -> value?.replaceFirstChar { it.uppercase() } ?: ""
+    }
 }

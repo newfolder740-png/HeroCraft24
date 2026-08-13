@@ -2,20 +2,18 @@ package com.herocraft24.feature.characters
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +28,7 @@ import com.herocraft24.core.ui.util.schoolColor
 import com.herocraft24.core.ui.widget.FilterBottomSheet
 import com.herocraft24.core.ui.widget.FilterGroup
 import com.herocraft24.core.ui.widget.FilterOption
+import com.herocraft24.core.ui.widget.SearchBarView
 import kotlinx.coroutines.launch
 
 class SheetSpellsFragment : Fragment() {
@@ -203,50 +202,67 @@ class SheetSpellsFragment : Fragment() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val searchInput = EditText(ctx).apply {
-            hint = "Поиск"
-            setText(searchQuery)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+        val searchInput = SearchBarView(ctx).apply {
+            setOnQueryListener { query ->
+                searchQuery = query.trim()
+                renderPreparedSpells()
+            }
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: Editable?) {
-                    searchQuery = s?.toString()?.trim() ?: ""
-                    renderPreparedSpells()
-                }
-            })
         }
         searchRow.addView(searchInput)
 
         val sortBtn = MaterialButton(ctx).apply {
             text = "Сорт."
-            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            setPadding(6.dp(ctx), 0, 6.dp(ctx), 0)
             minWidth = 0
             minimumWidth = 0
+            elevation = 0f
+            isClickable = true
+            setBackgroundColor(ContextCompat.getColor(ctx, com.google.android.material.R.color.m3_sys_color_light_surface_container_high))
+            strokeColor = ContextCompat.getColorStateList(ctx, com.google.android.material.R.color.m3_sys_color_light_outline_variant)
+            strokeWidth = 1
             setOnClickListener { showSortDialog() }
         }
+        sortBtn.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { marginStart = 8.dp(ctx) }
+
         val filterBtn = MaterialButton(ctx).apply {
             text = "Фильтр"
-            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
+            setPadding(6.dp(ctx), 0, 6.dp(ctx), 0)
             minWidth = 0
             minimumWidth = 0
+            elevation = 0f
+            isClickable = true
+            setBackgroundColor(ContextCompat.getColor(ctx, com.google.android.material.R.color.m3_sys_color_light_surface_container_high))
+            strokeColor = ContextCompat.getColorStateList(ctx, com.google.android.material.R.color.m3_sys_color_light_outline_variant)
+            strokeWidth = 1
             setOnClickListener { showFilterDialog() }
         }
-        val clearFiltersBtn = MaterialButton(ctx).apply {
-            text = "Сброс"
-            setPadding(8.dp(ctx), 0, 8.dp(ctx), 0)
-            minWidth = 0
-            minimumWidth = 0
-            isVisible = activeFilters.isActive
+        filterBtn.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { marginEnd = 8.dp(ctx) }
+
+        val clearFiltersImg = ImageView(ctx).apply {
+            setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+            scaleType = ImageView.ScaleType.CENTER_INSIDE
+            layoutParams = LinearLayout.LayoutParams(42.dp(ctx), 42.dp(ctx)).apply {
+                gravity = Gravity.CENTER_VERTICAL
+            }
+            visibility = if (activeFilters.isActive) View.VISIBLE else View.INVISIBLE
+            setPadding(6.dp(ctx), 6.dp(ctx), 6.dp(ctx), 6.dp(ctx))
             setOnClickListener {
                 activeFilters = PreparedSpellFilters()
                 renderPreparedSpells()
             }
         }
+
         searchRow.addView(sortBtn)
         searchRow.addView(filterBtn)
-        searchRow.addView(clearFiltersBtn)
+        clearFiltersImg.visibility = if (activeFilters.isActive) View.VISIBLE else View.INVISIBLE
+        searchRow.addView(clearFiltersImg)
         container.addView(searchRow)
 
         return container
@@ -278,7 +294,7 @@ class SheetSpellsFragment : Fragment() {
             for (spell in preparedSpells) {
                 val alwaysPrepared = spell.fullId in alwaysPreparedIds
                 val deletable = spell.fullId !in innateSpellIds && !alwaysPrepared
-                container.addView(buildPreparedSpellCard(ctx, char.id, spell, ability, deletable, alwaysPrepared))
+                container.addView(buildPreparedSpellCard(ctx, char, spell, ability, deletable, alwaysPrepared))
             }
         }
 
@@ -568,7 +584,7 @@ class SheetSpellsFragment : Fragment() {
 
     private fun buildPreparedSpellCard(
         ctx: android.content.Context,
-        charId: String,
+        char: CharacterData,
         spell: SpellSummary,
         ability: String,
         deletable: Boolean = true,
@@ -576,9 +592,10 @@ class SheetSpellsFragment : Fragment() {
     ): View {
         val card = MaterialCardView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(0, 2.dp(ctx), 0, 2.dp(ctx))
+                setMargins(16.dp(ctx), 4.dp(ctx), 16.dp(ctx), 4.dp(ctx))
             }
-            radius = 12f
+            radius = 36f
+            cardElevation = 0f
             setCardBackgroundColor(resolveColor(com.google.android.material.R.attr.colorSurfaceContainerHigh))
             strokeWidth = 0
             isClickable = true
@@ -589,18 +606,19 @@ class SheetSpellsFragment : Fragment() {
         }
         val cardContent = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
-            setPadding(0, 8.dp(ctx), 8.dp(ctx), 8.dp(ctx))
+            setPadding(12.dp(ctx), 12.dp(ctx), 12.dp(ctx), 12.dp(ctx))
         }
 
         val borderColor = ctx.schoolColor(SpellSchool.fromValue(spell.school))
         cardContent.addView(View(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(4.dp(ctx), LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LinearLayout.LayoutParams(4.dp(ctx), LinearLayout.LayoutParams.MATCH_PARENT).apply {
+                marginEnd = 12.dp(ctx)
+            }
             setBackgroundColor(borderColor)
         })
 
         val textContainer = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(8.dp(ctx), 0, 0, 0)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         textContainer.addView(TextView(ctx).apply {
@@ -610,8 +628,15 @@ class SheetSpellsFragment : Fragment() {
 
         val levelStr = if (spell.level == 0) "Заговор" else "${spell.level} уровень"
         val schoolRu = UiLocalizer.school(spell.school)
+        // Get class from innateSpellSources (the actual source of the spell for this character)
+        val sourceClassId = vm.getSpellSource(char, spell.fullId)
+        val classStr = if (sourceClassId != null) {
+            " • " + (vm.getClassInfo(sourceClassId)?.name?.get() ?: UiLocalizer.className(sourceClassId))
+        } else {
+            " "
+        }
         textContainer.addView(TextView(ctx).apply {
-            text = "$levelStr • $schoolRu"
+            text = "$levelStr • $schoolRu$classStr"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setTextColor(resolveColor(android.R.attr.textColorSecondary))
         })
@@ -653,14 +678,14 @@ class SheetSpellsFragment : Fragment() {
                 layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }
-                setOnClickListener { vm.removePreparedSpell(charId, spell.fullId, ability) }
+                setOnClickListener { vm.removePreparedSpell(char.id, spell.fullId, ability) }
             }
             cardContent.addView(deleteBtn)
         }
 
         card.addView(cardContent)
         card.setOnClickListener {
-            SpellDetailSheetDialog.newInstance(spell.fullId, charId, ability)
+            SpellDetailSheetDialog.newInstance(spell.fullId, char.id, ability)
                 .show(childFragmentManager, "SpellDetail")
         }
         return card

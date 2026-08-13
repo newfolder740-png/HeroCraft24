@@ -2,8 +2,11 @@ package com.herocraft24.feature.characters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.herocraft24.core.model.Item
+import com.herocraft24.core.model.ItemRarity
+import com.herocraft24.core.ui.R
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.feature.characters.databinding.ItemBackpackPickerBinding
 
@@ -52,5 +55,21 @@ class BackpackItemPickerAdapter(
         } else {
             holder.binding.itemCount.visibility = android.view.View.GONE
         }
+
+        val rarityColor = getRarityColor(holder.itemView.context, item.rarity)
+        holder.binding.rarityColor.setBackgroundColor(rarityColor)
+    }
+
+    private fun getRarityColor(ctx: android.content.Context, rarity: String?): Int {
+        val resId = when (ItemRarity.fromValue(rarity)) {
+            ItemRarity.NON_MAGIC, ItemRarity.COMMON -> R.color.rarity_common
+            ItemRarity.UNCOMMON -> R.color.rarity_uncommon
+            ItemRarity.RARE -> R.color.rarity_rare
+            ItemRarity.VERY_RARE, ItemRarity.VERY_RARE_ALT -> R.color.rarity_very_rare
+            ItemRarity.LEGENDARY -> R.color.rarity_legendary
+            ItemRarity.ARTIFACT -> R.color.rarity_artifact
+            else -> R.color.rarity_default
+        }
+        return ContextCompat.getColor(ctx, resId)
     }
 }

@@ -355,7 +355,10 @@ class SheetInventoryFragment : Fragment() {
     }
 
     private fun buildBackpackItemCard(ctx: android.content.Context, item: ResolvedItem, count: Int, char: CharacterData): View {
-        val binding = CardBackpackItemBinding.inflate(LayoutInflater.from(ctx), null, false)
+        val binding = CardBackpackItemBinding.inflate(LayoutInflater.from(ctx), backpackItemContainer, false)
+        binding.root.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            setMargins(16.dp(ctx), 4.dp(ctx), 16.dp(ctx), 4.dp(ctx))
+        }
 
         val displayName = if (count > 1) "x$count ${item.displayName}" else item.displayName
         binding.itemName.text = displayName
@@ -370,7 +373,7 @@ class SheetInventoryFragment : Fragment() {
 
         binding.root.setOnClickListener {
             BackpackItemDetailDialogFragment.newInstance(item.id, item.variantId)
-                .show(childFragmentManager, "BackpackItemDetail")
+                .show(parentFragmentManager, "BackpackItemDetail")
         }
 
         return binding.root
