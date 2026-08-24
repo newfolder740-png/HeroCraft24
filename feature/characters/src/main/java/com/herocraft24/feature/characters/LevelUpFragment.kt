@@ -60,11 +60,12 @@ class LevelUpFragment : Fragment() {
     private var char: CharacterData? = null
 
     // Step 2 (spells) state
-    private var removeCantripId: String? = null
-    private var removeSpellId: String? = null
+    private var removeCantripEntry: String? = null
+    private var removeSpellEntry: String? = null
     private val newSelectedCantrips = mutableListOf<String>()
     private val newSelectedSpells = mutableListOf<String>()
     private var currentSorcererSpells: List<SpellSummary> = emptyList()
+    private var currentSorcererEntryIds: Map<String, String> = emptyMap()
     private var availableNewSpells: List<SpellSummary> = emptyList()
     private var maxNewSpellLevel: Int = 1
     private var baseNewCantrips: Int = 0
@@ -381,6 +382,34 @@ class LevelUpFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "ClassSpellPicker")
             },
+            onPickFeatOptions = { featureId, title, candidates, selected, count ->
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_FEAT,
+                    title = title,
+                    optionIds = candidates,
+                    requiredCount = count,
+                    selected = selected
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresAdapter?.updateFeatChoice(featureId, sel.firstOrNull())
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "FeatPicker")
+            },
+            onPickMetamagicOptions = { featureId, title, candidates, selected, count ->
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_METAMAGIC,
+                    title = title,
+                    optionIds = candidates,
+                    requiredCount = count,
+                    selected = selected
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresAdapter?.updateMetamagicChoice(featureId, sel)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "MetamagicPicker")
+            },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
@@ -526,27 +555,33 @@ class LevelUpFragment : Fragment() {
         innerContent.addView(currentHeader)
         innerContent.addView(currentRecycler)
 
+        val alwaysPreparedFullIds = ch.spells?.alwaysPreparedSpells?.get(ability)
+            ?.map { it.spellFullId() }?.toSet() ?: emptySet()
         val currentAdapter = SpellPickerAdapter(
             onItemClick = { spell ->
                 SpellDetailSheetDialog.newInstance(spell.fullId, ch.id, ability).show(childFragmentManager, "SpellDetail")
             },
             onAddClick = { spell ->
-                val isCantrip = spell.level == 0
-                if ((isCantrip && removeCantripId == spell.fullId) || (!isCantrip && removeSpellId == spell.fullId)) {
-                    if (isCantrip) removeCantripId = null else removeSpellId = null
-                    trimNewSelections()
-                } else {
-                    if (isCantrip) removeCantripId = spell.fullId else removeSpellId = spell.fullId
+                val entryId = currentSorcererEntryIds[spell.fullId]
+                if (entryId != null) {
+                    val isCantrip = spell.level == 0
+                    if ((isCantrip && removeCantripEntry == entryId) || (!isCantrip && removeSpellEntry == entryId)) {
+                        if (isCantrip) removeCantripEntry = null else removeSpellEntry = null
+                        trimNewSelections()
+                    } else {
+                        if (isCantrip) removeCantripEntry = entryId else removeSpellEntry = entryId
+                    }
+                    currentRecycler.adapter?.notifyDataSetChanged()
+                    refreshNewSpellsSection()
+                    updateButtons()
                 }
-                currentRecycler.adapter?.notifyDataSetChanged()
-                refreshNewSpellsSection()
-                updateButtons()
             },
             isSelected = { spell ->
-                (spell.level == 0 && removeCantripId == spell.fullId) ||
-                (spell.level > 0 && removeSpellId == spell.fullId)
+                val entryId = currentSorcererEntryIds[spell.fullId]
+                entryId != null && ((spell.level == 0 && removeCantripEntry == entryId) ||
+                    (spell.level > 0 && removeSpellEntry == entryId))
             },
-            isLocked = { spell -> spell.fullId in (ch.spells?.alwaysPreparedSpells?.get(ability)?.toSet() ?: emptySet()) },
+            isLocked = { spell -> spell.fullId in alwaysPreparedFullIds },
             selectedIcon = "✕",
             unselectedIcon = "–",
             lockedIcon = "🔒"
@@ -671,10 +706,10 @@ class LevelUpFragment : Fragment() {
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
-        val sources = ch.spells?.innateSpellSources ?: emptyMap()
-        val sorcererIds = innate.filter { sources[it] == selectedClass }
+        val sorcererEntries = innate.filter { it.spellSource() == selectedClass }
+        currentSorcererEntryIds = sorcererEntries.associateBy({ it.spellFullId() }, { it })
         currentSorcererSpells = allSpells
-            .filter { it.fullId in sorcererIds }
+            .filter { it.fullId in currentSorcererEntryIds }
             .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
 
         availableNewSpells = allSpells
@@ -686,12 +721,12 @@ class LevelUpFragment : Fragment() {
     }
 
     private fun canSelectNewCantrip(): Boolean {
-        val max = baseNewCantrips + if (removeCantripId != null) 1 else 0
+        val max = baseNewCantrips + if (removeCantripEntry != null) 1 else 0
         return newSelectedCantrips.size < max
     }
 
     private fun canSelectNewSpell(): Boolean {
-        val max = baseNewSpells + if (removeSpellId != null) 1 else 0
+        val max = baseNewSpells + if (removeSpellEntry != null) 1 else 0
         return newSelectedSpells.size < max
     }
 
@@ -701,8 +736,8 @@ class LevelUpFragment : Fragment() {
     }
 
     private fun areSpellSelectionsComplete(): Boolean {
-        val requiredCantrips = baseNewCantrips + if (removeCantripId != null) 1 else 0
-        val requiredSpells = baseNewSpells + if (removeSpellId != null) 1 else 0
+        val requiredCantrips = baseNewCantrips + if (removeCantripEntry != null) 1 else 0
+        val requiredSpells = baseNewSpells + if (removeSpellEntry != null) 1 else 0
         return newSelectedCantrips.size == requiredCantrips && newSelectedSpells.size == requiredSpells
     }
 
@@ -893,8 +928,8 @@ class LevelUpFragment : Fragment() {
     }
 
     private fun updateNewCounter() {
-        val maxCantrips = baseNewCantrips + if (removeCantripId != null) 1 else 0
-        val maxSpells = baseNewSpells + if (removeSpellId != null) 1 else 0
+        val maxCantrips = baseNewCantrips + if (removeCantripEntry != null) 1 else 0
+        val maxSpells = baseNewSpells + if (removeSpellEntry != null) 1 else 0
         newCounterView?.text = "Заговоры: ${newSelectedCantrips.size}/$maxCantrips, Заклинания: ${newSelectedSpells.size}/$maxSpells"
     }
 
@@ -1052,7 +1087,7 @@ class LevelUpFragment : Fragment() {
 
         // Apply sorcerer level-up spell replacement/learning
         val withSorcererSpells = if (selectedClass.substringAfterLast(":").startsWith("sorcerer")) {
-            vm.applySorcererLevelUpSpells(withInnateSpells, selectedClass, removeCantripId, removeSpellId, newSelectedCantrips, newSelectedSpells)
+            vm.applySorcererLevelUpSpells(withInnateSpells, selectedClass, removeCantripEntry, removeSpellEntry, newSelectedCantrips, newSelectedSpells)
         } else {
             withInnateSpells
         }

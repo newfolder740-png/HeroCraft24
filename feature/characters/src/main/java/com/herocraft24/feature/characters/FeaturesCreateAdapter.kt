@@ -21,6 +21,8 @@ class FeaturesCreateAdapter(
     private val onFeatSelected: (String, String?) -> Unit = { _, _ -> },
     private val onSubclassSelected: (String, String?) -> Unit = { _, _ -> },
     private val onPickClassSpells: (String, List<String>, com.herocraft24.core.model.FeatureChoice) -> Unit = { _, _, _ -> },
+    private val onPickFeatOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
+    private val onPickMetamagicOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
     private val initialFeatureChoices: Map<String, String> = emptyMap(),
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
     private val initialAsiChoices: Map<String, AsiChoice> = emptyMap(),
@@ -34,6 +36,8 @@ class FeaturesCreateAdapter(
     private var baseItems: List<Feature> = emptyList()
     // featCards: parentFeatureId → synthetic Feature from Feat
     private val featCards = mutableMapOf<String, Feature>()
+    // Features whose feat choice spawns a feat card (asi_or_feat)
+    private val asiOrFeatFeatures = mutableSetOf<String>()
     // Subclass features added dynamically when subclass is selected
     private var subclassFeatures: List<Feature> = emptyList()
     // Combined display list (base items + feat cards + subclass features)
@@ -260,7 +264,6 @@ class FeaturesCreateAdapter(
     private fun buildMetamagicChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         val ctx = container.context
         val contentRepo = ContentRepository.get(ctx)
-        val allMetamagicIds = contentRepo.getMetamagicIds().sortedBy { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
         val count = choice.count
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
 
@@ -274,39 +277,53 @@ class FeaturesCreateAdapter(
             featureMultiChoices[feature.id] = MutableList(count) { null }
         }
 
-        fun metamagicName(fullId: String?): String = fullId?.let { contentRepo.resolveName(it) ?: it.substringAfterLast(":") } ?: ""
-
-        val dropdowns = mutableListOf<com.google.android.material.textfield.MaterialAutoCompleteTextView>()
-        for (i in 0 until count) {
-            val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
-                hint = "Выберите метамагию"; setOnClickListener { showDropDown() }
-                featureMultiChoices[feature.id]?.getOrNull(i)?.let { setText(metamagicName(it), false) }
-                setOnItemClickListener { _, _, pos, _ ->
-                    val currentChoices = featureMultiChoices[feature.id] ?: return@setOnItemClickListener
-                    val otherSelected = currentChoices.mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
-                    val available = allMetamagicIds.filter { it !in otherSelected }
-                    val selected = available.getOrNull(pos) ?: return@setOnItemClickListener
-                    currentChoices[i] = selected; featureMultiChoices[feature.id] = currentChoices
-                    onFeatureMultiChoiceChanged(feature.id, currentChoices.filterNotNull())
-                    dropdowns.forEachIndexed { idx, dd ->
-                        if (idx != i) {
-                            val otherExclude = currentChoices.mapIndexedNotNull { j, s -> if (j != idx) s else null }.toSet()
-                            dd.setAdapter(android.widget.ArrayAdapter(dd.context, android.R.layout.simple_dropdown_item_1line,
-                                allMetamagicIds.filter { it !in otherExclude }.map { metamagicName(it) }))
-                        }
-                    }
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selected = featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList()
+            if (selected.isEmpty()) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Метамагия не выбрана"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                for (id in selected) {
+                    val name = contentRepo.resolveName(id) ?: id.substringAfterLast(":")
+                    selectedContainer.addView(TextView(ctx).apply {
+                        text = "• $name"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                    })
                 }
             }
-            dropdowns.add(dropdown); choiceContainer.addView(dropdown)
         }
-        dropdowns.forEachIndexed { i, dropdown ->
-            val exclude = (featureMultiChoices[feature.id] ?: return@forEachIndexed).mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
-            dropdown.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line,
-                allMetamagicIds.filter { it !in exclude }.map { metamagicName(it) }))
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать метамагию"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val candidates = if (choice.options.isNotEmpty()) choice.options else contentRepo.getMetamagicIds()
+                onPickMetamagicOptions(
+                    feature.id,
+                    feature.name.get(),
+                    candidates,
+                    featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList(),
+                    count
+                )
+            }
         }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
         container.addView(choiceContainer)
+    }
+
+    fun updateMetamagicChoice(featureId: String, selected: List<String>) {
+        featureMultiChoices[featureId] = selected.toMutableList()
+        onFeatureMultiChoiceChanged(featureId, selected)
+        notifyDataSetChanged()
     }
 
     // ── Class Spells ──
@@ -399,7 +416,11 @@ class FeaturesCreateAdapter(
     private fun buildFeatCategoryChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         val ctx = container.context
         val contentRepo = ContentRepository.get(ctx)
-        val optionNames = choice.options.mapNotNull { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+        val areFeatOptions = choice.options.any { contentRepo.getFeat(it) != null }
+        if (!areFeatOptions) {
+            buildGenericOptionsChoice(container, feature, choice)
+            return
+        }
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
 
         choiceContainer.addView(TextView(ctx).apply {
@@ -407,7 +428,60 @@ class FeaturesCreateAdapter(
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
         })
 
-        choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selectedId = featureChoices[feature.id]
+            if (selectedId == null) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Черта не выбрана"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                val name = contentRepo.resolveName(selectedId) ?: selectedId.substringAfterLast(":")
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "• $name"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                })
+            }
+        }
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать черту"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val candidates = if (choice.options.isNotEmpty()) choice.options
+                else contentRepo.getFeatIds().filter { contentRepo.getFeat(it)?.category == choice.category }
+                onPickFeatOptions(
+                    feature.id,
+                    feature.name.get(),
+                    candidates,
+                    listOfNotNull(featureChoices[feature.id]),
+                    choice.count
+                )
+            }
+        }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
+        container.addView(choiceContainer)
+    }
+
+    private fun buildGenericOptionsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val optionNames = choice.options.mapNotNull { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+        val choiceContainer2 = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer2.addView(TextView(ctx).apply {
+            text = if (choice.count > 1) "Выберите ${choice.count} варианта:" else "Выберите вариант:"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        choiceContainer2.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
             hint = "Выберите вариант"; setOnClickListener { showDropDown() }
@@ -418,10 +492,17 @@ class FeaturesCreateAdapter(
                 featureChoices[feature.id] = selectedId; onFeatureChoiceChanged(feature.id, selectedId)
             }
         })
-        container.addView(choiceContainer)
+        container.addView(choiceContainer2)
     }
 
-    // ── ASI or Feat (dropdown only, feat card appears separately) ──
+    fun updateFeatChoice(featureId: String, selectedId: String?) {
+        featureChoices[featureId] = selectedId
+        onFeatureChoiceChanged(featureId, selectedId)
+        if (featureId in asiOrFeatFeatures) onFeatSelected(featureId, selectedId)
+        notifyDataSetChanged()
+    }
+
+    // ── ASI or Feat (feat picker, feat card appears separately) ──
 
     private fun buildAsiOrFeatChoice(container: LinearLayout, feature: Feature) {
         val ctx = container.context
@@ -433,6 +514,7 @@ class FeaturesCreateAdapter(
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
         })
 
+        asiOrFeatFeatures.add(feature.id)
         val allFeatIds = contentRepo.getFeatIds()
         val availableFeatIds = mutableListOf<String>()
         for (featId in allFeatIds) {
@@ -442,23 +524,47 @@ class FeaturesCreateAdapter(
             if (localFeatId in selectedFeats && !feat.repeatable) continue
             availableFeatIds.add(featId)
         }
-        val featDisplayNames = availableFeatIds.mapNotNull { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
 
-        choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
-            hint = "Выберите черту"; setOnClickListener { showDropDown() }
-            setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, featDisplayNames))
-            featureChoices[feature.id]?.let { val idx = availableFeatIds.indexOf(it); if (idx >= 0) setText(featDisplayNames[idx], false) }
-            setOnItemClickListener { _, _, pos, _ ->
-                val selectedId = availableFeatIds.getOrNull(pos)
-                featureChoices[feature.id] = selectedId
-                onFeatureChoiceChanged(feature.id, selectedId)
-                onFeatSelected(feature.id, selectedId)
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selectedId = featureChoices[feature.id]
+            if (selectedId == null) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Черта не выбрана"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                val name = contentRepo.resolveName(selectedId) ?: selectedId.substringAfterLast(":")
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "• $name"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                })
             }
-        })
+        }
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать черту"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                onPickFeatOptions(
+                    feature.id,
+                    feature.name.get(),
+                    availableFeatIds,
+                    listOfNotNull(featureChoices[feature.id]),
+                    1
+                )
+            }
+        }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
         container.addView(choiceContainer)
     }
+
 
     // ── ASI Choice (rendered inside feat cards) ──
 

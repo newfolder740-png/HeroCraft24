@@ -1,6 +1,7 @@
 package com.herocraft24.feature.characters
 
 import android.content.Context
+import com.herocraft24.core.data.ContentRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +28,37 @@ class CharacterRepository(private val context: Context) {
         }
         _characters.value = files.mapNotNull { f ->
             try { json.decodeFromString<CharacterData>(f.readText()) } catch (_: Exception) { null }
-        }.sortedByDescending { it.updatedAt }
+        }.map { migrateSpellEntries(it) }.sortedByDescending { it.updatedAt }
+    }
+
+    // Старые сохранения держали заклинания как чистые fullId, а источник — отдельно
+    // в innateSpellSources; переводим записи в формат "fullId|source".
+    private fun migrateSpellEntries(char: CharacterData): CharacterData {
+        val sp = char.spells ?: return char
+        val hasLegacy = sp.innateSpells.values.any { list -> list.any { "|" !in it } } ||
+            sp.preparedByAbility.values.any { list -> list.any { "|" !in it } } ||
+            sp.alwaysPreparedSpells.values.any { list -> list.any { "|" !in it } }
+        if (!hasLegacy) return char
+
+        fun migrate(list: List<String>, sourceFor: (String) -> String): List<String> =
+            list.map { if ("|" in it) it else spellEntry(it, sourceFor(it)) }
+
+        return char.copy(spells = sp.copy(
+            preparedByAbility = sp.preparedByAbility.mapValues { (_, list) -> migrate(list) { SPELL_SOURCE_MANUAL } },
+            innateSpells = sp.innateSpells.mapValues { (_, list) -> migrate(list) { fullId -> legacyInnateSource(char, fullId) } },
+            innateSpellSources = emptyMap(),
+            alwaysPreparedSpells = sp.alwaysPreparedSpells.mapValues { (_, list) -> migrate(list) { fullId -> legacyInnateSource(char, fullId) } }
+        ))
+    }
+
+    private fun legacyInnateSource(char: CharacterData, fullId: String): String {
+        char.spells?.innateSpellSources?.get(fullId)?.let { return it }
+        val species = ContentRepository.get(context).getSpecies(char.speciesId) ?: return char.classId
+        val subspecies = char.subspeciesId?.let { id -> species.subspecies?.find { it.id == id } }
+        val traits = species.traits.flatMap { trait ->
+            if (trait.is_placeholder && subspecies != null) subspecies.traits else listOf(trait)
+        }
+        return if (traits.any { it.spell == fullId }) char.speciesId else char.classId
     }
 
     suspend fun save(char: CharacterData) {

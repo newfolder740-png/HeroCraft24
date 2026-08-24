@@ -991,6 +991,34 @@ class CharacterCreateFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "ClassSpellPicker")
             },
+            onPickFeatOptions = { featureId, title, candidates, selected, count ->
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_FEAT,
+                    title = title,
+                    optionIds = candidates,
+                    requiredCount = count,
+                    selected = selected
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresCreateAdapter?.updateFeatChoice(featureId, sel.firstOrNull())
+                        updateNextButtonState()
+                    }
+                }.show(childFragmentManager, "FeatPicker")
+            },
+            onPickMetamagicOptions = { featureId, title, candidates, selected, count ->
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_METAMAGIC,
+                    title = title,
+                    optionIds = candidates,
+                    requiredCount = count,
+                    selected = selected
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresCreateAdapter?.updateMetamagicChoice(featureId, sel)
+                        updateNextButtonState()
+                    }
+                }.show(childFragmentManager, "MetamagicPicker")
+            },
             initialFeatureChoices = wizard.featureChoices,
             initialFeatureMultiChoices = wizard.featureMultiChoices,
             initialAsiChoices = wizard.asiChoices,

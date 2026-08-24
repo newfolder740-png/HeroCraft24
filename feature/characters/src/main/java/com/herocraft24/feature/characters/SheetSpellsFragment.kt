@@ -275,15 +275,15 @@ class SheetSpellsFragment : Fragment() {
         val ctx = requireContext()
         container.removeAllViews()
 
-        var preparedSpells = vm.getPreparedSpellSummaries(char, ability)
-        preparedSpells = applySearch(preparedSpells)
-        preparedSpells = applyFilters(preparedSpells)
-        preparedSpells = applySort(preparedSpells)
+        var preparedEntries = vm.getPreparedSpellSummaries(char, ability)
+        preparedEntries = applySearch(preparedEntries)
+        preparedEntries = applyFilters(preparedEntries)
+        preparedEntries = applySort(preparedEntries)
 
-        val innateSpellIds = vm.getInnateSpellIds(char, ability)
-        val alwaysPreparedIds = vm.getAlwaysPreparedSpellIds(char, ability)
+        val innateEntryIds = vm.getInnateSpellIds(char, ability)
+        val alwaysPreparedEntryIds = vm.getAlwaysPreparedSpellIds(char, ability)
 
-        if (preparedSpells.isEmpty()) {
+        if (preparedEntries.isEmpty()) {
             container.addView(TextView(ctx).apply {
                 text = "Нет подготовленных заклинаний"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
@@ -291,10 +291,10 @@ class SheetSpellsFragment : Fragment() {
                 setPadding(0, 8.dp(ctx), 0, 8.dp(ctx))
             })
         } else {
-            for (spell in preparedSpells) {
-                val alwaysPrepared = spell.fullId in alwaysPreparedIds
-                val deletable = spell.fullId !in innateSpellIds && !alwaysPrepared
-                container.addView(buildPreparedSpellCard(ctx, char, spell, ability, deletable, alwaysPrepared))
+            for (entry in preparedEntries) {
+                val alwaysPrepared = entry.entryId in alwaysPreparedEntryIds
+                val deletable = entry.entryId !in innateEntryIds && !alwaysPrepared
+                container.addView(buildPreparedSpellCard(ctx, char, entry, ability, deletable, alwaysPrepared))
             }
         }
 
@@ -321,11 +321,11 @@ class SheetSpellsFragment : Fragment() {
         clearBtn?.isVisible = activeFilters.isActive
     }
 
-    private fun applySearch(spells: List<SpellSummary>): List<SpellSummary> {
-        if (searchQuery.isBlank()) return spells
+    private fun applySearch(entries: List<CharactersViewModel.PreparedSpellEntry>): List<CharactersViewModel.PreparedSpellEntry> {
+        if (searchQuery.isBlank()) return entries
         val tokens = searchQuery.lowercase().split("\\s+".toRegex()).filter { it.length >= 2 }
-        if (tokens.isEmpty()) return spells
-        return spells.filter { spell ->
+        if (tokens.isEmpty()) return entries
+        return entries.filter { (_, spell) ->
             tokens.all { token ->
                 spell.name.lowercase().contains(token) ||
                 spell.tags.any { it.lowercase().contains(token) } ||
@@ -334,8 +334,8 @@ class SheetSpellsFragment : Fragment() {
         }
     }
 
-    private fun applyFilters(spells: List<SpellSummary>): List<SpellSummary> {
-        return spells.filter { spell ->
+    private fun applyFilters(entries: List<CharactersViewModel.PreparedSpellEntry>): List<CharactersViewModel.PreparedSpellEntry> {
+        return entries.filter { (_, spell) ->
             if (activeFilters.levels.isNotEmpty() && spell.level !in activeFilters.levels) return@filter false
             if (activeFilters.schools.isNotEmpty() && SpellSchool.fromValue(spell.school) !in activeFilters.schools) return@filter false
             if (activeFilters.ritual != null && spell.ritual != activeFilters.ritual) return@filter false
@@ -346,13 +346,13 @@ class SheetSpellsFragment : Fragment() {
         }
     }
 
-    private fun applySort(spells: List<SpellSummary>): List<SpellSummary> {
+    private fun applySort(entries: List<CharactersViewModel.PreparedSpellEntry>): List<CharactersViewModel.PreparedSpellEntry> {
         return when (sortMode) {
-            SortMode.LEVEL_ASC -> spells.sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
-            SortMode.LEVEL_DESC -> spells.sortedWith(compareByDescending<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
-            SortMode.NAME_ASC -> spells.sortedBy { it.name.lowercase() }
-            SortMode.NAME_DESC -> spells.sortedByDescending { it.name.lowercase() }
-            SortMode.SCHOOL_ASC -> spells.sortedWith(compareBy<SpellSummary> { UiLocalizer.school(it.school) }.thenBy { it.name.lowercase() })
+            SortMode.LEVEL_ASC -> entries.sortedWith(compareBy<CharactersViewModel.PreparedSpellEntry> { it.spell.level }.thenBy { it.spell.name.lowercase() })
+            SortMode.LEVEL_DESC -> entries.sortedWith(compareByDescending<CharactersViewModel.PreparedSpellEntry> { it.spell.level }.thenBy { it.spell.name.lowercase() })
+            SortMode.NAME_ASC -> entries.sortedBy { it.spell.name.lowercase() }
+            SortMode.NAME_DESC -> entries.sortedByDescending { it.spell.name.lowercase() }
+            SortMode.SCHOOL_ASC -> entries.sortedWith(compareBy<CharactersViewModel.PreparedSpellEntry> { UiLocalizer.school(it.spell.school) }.thenBy { it.spell.name.lowercase() })
         }
     }
 
@@ -585,11 +585,12 @@ class SheetSpellsFragment : Fragment() {
     private fun buildPreparedSpellCard(
         ctx: android.content.Context,
         char: CharacterData,
-        spell: SpellSummary,
+        entry: CharactersViewModel.PreparedSpellEntry,
         ability: String,
         deletable: Boolean = true,
         alwaysPrepared: Boolean = false
     ): View {
+        val spell = entry.spell
         val card = MaterialCardView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 setMargins(16.dp(ctx), 4.dp(ctx), 16.dp(ctx), 4.dp(ctx))
@@ -628,13 +629,8 @@ class SheetSpellsFragment : Fragment() {
 
         val levelStr = if (spell.level == 0) "Заговор" else "${spell.level} уровень"
         val schoolRu = UiLocalizer.school(spell.school)
-        // Get class from innateSpellSources (the actual source of the spell for this character)
-        val sourceClassId = vm.getSpellSource(char, spell.fullId)
-        val classStr = if (sourceClassId != null) {
-            " • " + (vm.getClassInfo(sourceClassId)?.name?.get() ?: UiLocalizer.className(sourceClassId))
-        } else {
-            " "
-        }
+        val sourceName = vm.resolveSpellSourceName(entry.entryId.spellSource())
+        val classStr = if (sourceName != null) " • $sourceName" else " "
         textContainer.addView(TextView(ctx).apply {
             text = "$levelStr • $schoolRu$classStr"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
@@ -678,7 +674,7 @@ class SheetSpellsFragment : Fragment() {
                 layoutParams = LinearLayout.LayoutParams(32.dp(ctx), 32.dp(ctx)).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }
-                setOnClickListener { vm.removePreparedSpell(char.id, spell.fullId, ability) }
+                setOnClickListener { vm.removePreparedSpell(char.id, entry.entryId, ability) }
             }
             cardContent.addView(deleteBtn)
         }

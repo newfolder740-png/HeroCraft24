@@ -73,7 +73,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
 
             val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
-            val (classInnate, classSources, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
+            val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
             val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
             val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
             val sp = char.spells ?: CharacterSpells()
@@ -81,7 +81,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 hitPoints = HitPoints(max = hp, current = hp),
                 equipment = equipment,
                 speciesSpellAbility = speciesSpellAbility,
-                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources, alwaysPreparedSpells = alwaysPrepared)
+                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared)
             ))
             _wizardStep.value = 0
         }
@@ -109,7 +109,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
 
         val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
-        val (classInnate, classSources, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
+        val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
         val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
         val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
         val sp = char.spells ?: CharacterSpells()
@@ -117,7 +117,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             hitPoints = HitPoints(max = hp, current = hp),
             equipment = equipment,
             speciesSpellAbility = speciesSpellAbility,
-            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = classSources, alwaysPreparedSpells = alwaysPrepared)
+            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared)
         ))
         _wizard.value = CharacterData()
         _wizardStep.value = 0
@@ -333,26 +333,27 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         saveCharacter(char.copy(featureResources = updated))
     }
 
-    fun addPreparedSpell(charId: String, spellId: String, ability: String) {
+    fun addPreparedSpell(charId: String, spellId: String, ability: String, source: String = SPELL_SOURCE_MANUAL) {
         val char = getCharacter(charId) ?: return
         val sp = char.spells ?: CharacterSpells()
         val current = sp.preparedByAbility[ability] ?: emptyList()
-        if (spellId in current) return
+        val entry = spellEntry(spellId, source)
+        if (entry in current) return
         val updated = sp.copy(
             preparedByAbility = sp.preparedByAbility.toMutableMap().apply {
-                this[ability] = current + spellId
+                this[ability] = current + entry
             }
         )
         saveCharacter(char.copy(spells = updated))
     }
 
-    fun removePreparedSpell(charId: String, spellId: String, ability: String) {
+    fun removePreparedSpell(charId: String, spellEntryId: String, ability: String) {
         val char = getCharacter(charId) ?: return
         val sp = char.spells ?: return
         val current = sp.preparedByAbility[ability] ?: return
         val updated = sp.copy(
             preparedByAbility = sp.preparedByAbility.toMutableMap().apply {
-                this[ability] = current - spellId
+                this[ability] = current - spellEntryId
             }
         )
         saveCharacter(char.copy(spells = updated))
@@ -386,19 +387,23 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return result
     }
 
-    fun getPreparedSpellSummaries(char: CharacterData, ability: String): List<SpellSummary> {
+    data class PreparedSpellEntry(val entryId: String, val spell: SpellSummary)
+
+    fun getPreparedSpellSummaries(char: CharacterData, ability: String): List<PreparedSpellEntry> {
         val sp = char.spells ?: return emptyList()
         val preparedIds = sp.preparedByAbility[ability] ?: emptyList()
         val innateIds = sp.innateSpells[ability] ?: emptyList()
-        val spellIds = (innateIds + preparedIds).distinct()
-        if (spellIds.isEmpty()) return emptyList()
-        val allSummaries = getAllSpellSummaries()
-        val byId = allSummaries.associateBy { it.fullId }
-        return spellIds.mapNotNull { byId[it] }
+        val entries = (innateIds + preparedIds).distinct()
+        if (entries.isEmpty()) return emptyList()
+        val byId = getAllSpellSummaries().associateBy { it.fullId }
+        return entries.mapNotNull { entryId ->
+            byId[entryId.spellFullId()]?.let { PreparedSpellEntry(entryId, it) }
+        }
     }
 
-    fun getSpellSource(char: CharacterData, spellFullId: String): String? {
-        return char.spells?.innateSpellSources?.get(spellFullId)
+    fun resolveSpellSourceName(source: String): String? {
+        if (source.isEmpty() || source == SPELL_SOURCE_MANUAL) return null
+        return repository.resolveName(source)
     }
 
     fun getInnateSpellIds(char: CharacterData, ability: String): Set<String> {
@@ -619,11 +624,12 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             val spell = trait.spell ?: continue
             val traitLevel = trait.level ?: continue
             if (traitLevel > upToLevel) continue
+            val entry = spellEntry(spell, char.speciesId)
             val list = innateSpells.getOrPut(ability) { mutableListOf() }
-            if (spell !in list) list.add(spell)
+            if (entry !in list) list.add(entry)
             if (trait.always_prepared) {
                 val apList = alwaysPrepared.getOrPut(ability) { mutableListOf() }
-                if (spell !in apList) apList.add(spell)
+                if (entry !in apList) apList.add(entry)
             }
         }
 
@@ -658,8 +664,9 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             val spell = trait.spell ?: continue
             val traitLevel = trait.level ?: continue
             if (traitLevel != newLevel) continue
-            if (spell !in spellList) spellList.add(spell)
-            if (trait.always_prepared && spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
+            val entry = spellEntry(spell, char.speciesId)
+            if (entry !in spellList) spellList.add(entry)
+            if (trait.always_prepared && entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
         }
 
         innateMap[ability] = spellList
@@ -683,16 +690,26 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return result.mapValues { it.value.toList() }
     }
 
-    fun buildClassFeatureInnateSpells(char: CharacterData): Triple<Map<String, List<String>>, Map<String, String>, Map<String, List<String>>> {
+    fun buildClassFeatureInnateSpells(char: CharacterData): Pair<Map<String, List<String>>, Map<String, List<String>>> {
         val innateSpells = mutableMapOf<String, MutableList<String>>()
-        val spellSources = mutableMapOf<String, String>()
         val alwaysPrepared = mutableMapOf<String, MutableList<String>>()
         char.spells?.innateSpells?.forEach { (ability, spells) ->
             innateSpells[ability] = spells.toMutableList()
         }
-        char.spells?.innateSpellSources?.let { spellSources.putAll(it) }
         char.spells?.alwaysPreparedSpells?.forEach { (ability, spells) ->
             alwaysPrepared[ability] = spells.toMutableList()
+        }
+
+        fun addInnate(ability: String, spell: String, classId: String) {
+            val entry = spellEntry(spell, classId)
+            val list = innateSpells.getOrPut(ability) { mutableListOf() }
+            if (entry !in list) list.add(entry)
+        }
+
+        fun addAlwaysPrepared(ability: String, spell: String, classId: String) {
+            val entry = spellEntry(spell, classId)
+            val apList = alwaysPrepared.getOrPut(ability) { mutableListOf() }
+            if (entry !in apList) apList.add(entry)
         }
 
         val allClassIds = (char.classLevels.keys + char.classId).distinct()
@@ -705,37 +722,20 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 val feature = repository.getFeature(featureId) ?: continue
                 val featureLevel = feature.level ?: continue
                 if (featureLevel > levelInClass) continue
-                feature.spell?.let { spell ->
-                    val list = innateSpells.getOrPut(spellAbility) { mutableListOf() }
-                    if (spell !in list) list.add(spell)
-                    spellSources[spell] = classId
-                }
+                feature.spell?.let { spell -> addInnate(spellAbility, spell, classId) }
                 // Always-prepared spells from feature (e.g. Warlock Contact Patron)
                 for ((requiredLevel, spells) in feature.always_prepared) {
                     if (levelInClass < requiredLevel.toIntOrNull() ?: continue) continue
-                    val innateList = innateSpells.getOrPut(spellAbility) { mutableListOf() }
                     for (spell in spells) {
-                        if (spell !in innateList) {
-                            innateList.add(spell)
-                            spellSources[spell] = classId
-                        }
-                    }
-                    val apList = alwaysPrepared.getOrPut(spellAbility) { mutableListOf() }
-                    for (spell in spells) {
-                        if (spell !in apList) apList.add(spell)
+                        addInnate(spellAbility, spell, classId)
+                        addAlwaysPrepared(spellAbility, spell, classId)
                     }
                 }
                 // Class spell choices (e.g. Sorcerer Spellcasting)
                 if (feature.choice?.type == "class_spells") {
                     val selected = char.featureMultiChoices[feature.id] ?: emptyList()
-                    if (selected.isNotEmpty()) {
-                        val list = innateSpells.getOrPut(spellAbility) { mutableListOf() }
-                        for (spell in selected) {
-                            if (spell !in list) {
-                                list.add(spell)
-                                spellSources[spell] = classId
-                            }
-                        }
+                    for (spell in selected) {
+                        addInnate(spellAbility, spell, classId)
                     }
                 }
             }
@@ -751,22 +751,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 // Always-prepared subclass spells keyed by level thresholds
                 for ((requiredLevel, spells) in feature.always_prepared) {
                     if (levelInClass < requiredLevel.toIntOrNull() ?: continue) continue
-                    val innateList = innateSpells.getOrPut(spellAbility) { mutableListOf() }
                     for (spell in spells) {
-                        if (spell !in innateList) {
-                            innateList.add(spell)
-                            spellSources[spell] = classId
-                        }
-                    }
-                    val apList = alwaysPrepared.getOrPut(spellAbility) { mutableListOf() }
-                    for (spell in spells) {
-                        if (spell !in apList) apList.add(spell)
+                        addInnate(spellAbility, spell, classId)
+                        addAlwaysPrepared(spellAbility, spell, classId)
                     }
                 }
             }
         }
 
-        return Triple(innateSpells.mapValues { it.value.toList() }, spellSources.toMap(), alwaysPrepared.mapValues { it.value.toList() })
+        return Pair(innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
     }
 
     fun addClassFeatureSpellsAtLevel(char: CharacterData, classId: String, newClassLevel: Int): CharacterData {
@@ -774,40 +767,34 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val spellAbility = cls.spellcasting?.ability ?: return char
         val sp = char.spells ?: CharacterSpells()
         val innateMap = sp.innateSpells.toMutableMap()
-        val sourceMap = sp.innateSpellSources.toMutableMap()
         val alwaysPreparedMap = sp.alwaysPreparedSpells.toMutableMap()
         val spellList = innateMap.getOrPut(spellAbility) { mutableListOf() }.toMutableList()
         val alwaysPreparedList = alwaysPreparedMap.getOrPut(spellAbility) { mutableListOf() }.toMutableList()
+
+        fun addSpell(spell: String) {
+            val entry = spellEntry(spell, classId)
+            if (entry !in spellList) spellList.add(entry)
+        }
 
         for (featureId in cls.features) {
             val feature = repository.getFeature(featureId) ?: continue
             val featureLevel = feature.level ?: continue
             if (featureLevel > newClassLevel) continue
             feature.spell?.let { spell ->
-                if (featureLevel == newClassLevel && spell !in spellList) {
-                    spellList.add(spell)
-                    sourceMap[spell] = classId
-                }
+                if (featureLevel == newClassLevel) addSpell(spell)
             }
             for ((requiredLevel, spells) in feature.always_prepared) {
                 if (newClassLevel < requiredLevel.toIntOrNull() ?: continue) continue
                 for (spell in spells) {
-                    if (spell !in spellList) {
-                        spellList.add(spell)
-                        sourceMap[spell] = classId
-                    }
-                    if (spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
+                    addSpell(spell)
+                    val entry = spellEntry(spell, classId)
+                    if (entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
                 }
             }
             // Class spell choices (e.g. Sorcerer Spellcasting)
             if (feature.choice?.type == "class_spells") {
                 val selected = char.featureMultiChoices[feature.id] ?: emptyList()
-                for (spell in selected) {
-                    if (spell !in spellList) {
-                        spellList.add(spell)
-                        sourceMap[spell] = classId
-                    }
-                }
+                for (spell in selected) addSpell(spell)
             }
         }
 
@@ -821,19 +808,14 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     val featureLevel = feature.level ?: continue
                     if (featureLevel > newClassLevel) continue
                     feature.spell?.let { spell ->
-                        if (featureLevel == newClassLevel && spell !in spellList) {
-                            spellList.add(spell)
-                            sourceMap[spell] = classId
-                        }
+                        if (featureLevel == newClassLevel) addSpell(spell)
                     }
                     for ((requiredLevel, spells) in feature.always_prepared) {
                         if (newClassLevel < requiredLevel.toIntOrNull() ?: continue) continue
                         for (spell in spells) {
-                            if (spell !in spellList) {
-                                spellList.add(spell)
-                                sourceMap[spell] = classId
-                            }
-                            if (spell !in alwaysPreparedList) alwaysPreparedList.add(spell)
+                            addSpell(spell)
+                            val entry = spellEntry(spell, classId)
+                            if (entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
                         }
                     }
                 }
@@ -844,7 +826,6 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         alwaysPreparedMap[spellAbility] = alwaysPreparedList
         return char.copy(spells = sp.copy(
             innateSpells = innateMap,
-            innateSpellSources = sourceMap,
             alwaysPreparedSpells = alwaysPreparedMap
         ))
     }
@@ -868,8 +849,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun applySorcererLevelUpSpells(
         char: CharacterData,
         classId: String,
-        removeCantrip: String?,
-        removeSpell: String?,
+        removeCantripEntry: String?,
+        removeSpellEntry: String?,
         newCantrips: List<String>,
         newSpells: List<String>
     ): CharacterData {
@@ -877,28 +858,27 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val ability = cls.spellcasting?.ability ?: return char
         val sp = char.spells ?: CharacterSpells()
         val innateMap = sp.innateSpells.toMutableMap()
-        val sourceMap = sp.innateSpellSources.toMutableMap()
         val abilityList = innateMap.getOrPut(ability) { mutableListOf() }.toMutableList()
 
-        fun removeIfPresent(spellId: String?) {
-            spellId ?: return
-            abilityList.removeAll { it == spellId }
-            if (sourceMap[spellId] == classId) sourceMap.remove(spellId)
+        fun removeIfPresent(entryId: String?) {
+            entryId ?: return
+            abilityList.removeAll { it == entryId }
         }
 
         fun addIfAbsent(spellId: String) {
-            if (spellId !in abilityList) abilityList.add(spellId)
-            sourceMap[spellId] = classId
+            val entry = spellEntry(spellId, classId)
+            if (entry !in abilityList) abilityList.add(entry)
         }
 
-        val alwaysPreparedIds = sp.alwaysPreparedSpells[ability]?.toSet() ?: emptySet()
-        if (removeCantrip != null && removeCantrip !in alwaysPreparedIds) removeIfPresent(removeCantrip)
-        if (removeSpell != null && removeSpell !in alwaysPreparedIds) removeIfPresent(removeSpell)
+        val alwaysPreparedFullIds = sp.alwaysPreparedSpells[ability]
+            ?.map { it.spellFullId() }?.toSet() ?: emptySet()
+        if (removeCantripEntry != null && removeCantripEntry.spellFullId() !in alwaysPreparedFullIds) removeIfPresent(removeCantripEntry)
+        if (removeSpellEntry != null && removeSpellEntry.spellFullId() !in alwaysPreparedFullIds) removeIfPresent(removeSpellEntry)
         newCantrips.forEach(::addIfAbsent)
         newSpells.forEach(::addIfAbsent)
 
         innateMap[ability] = abilityList
-        return char.copy(spells = sp.copy(innateSpells = innateMap, innateSpellSources = sourceMap))
+        return char.copy(spells = sp.copy(innateSpells = innateMap))
     }
 
     companion object {

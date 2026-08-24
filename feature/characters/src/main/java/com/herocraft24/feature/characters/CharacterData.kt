@@ -105,9 +105,19 @@ data class CharacterSpells(
     val known: List<String> = emptyList(),
     val preparedByAbility: Map<String, List<String>> = emptyMap(),
     val innateSpells: Map<String, List<String>> = emptyMap(),
+    // Legacy: источник теперь зашит в сами записи в формате "fullId|source";
+    // поле читается только при миграции старых сохранений.
     val innateSpellSources: Map<String, String> = emptyMap(),
     val alwaysPreparedSpells: Map<String, List<String>> = emptyMap()
 )
+
+const val SPELL_SOURCE_MANUAL = "manual"
+
+fun spellEntry(fullId: String, source: String): String = "$fullId|$source"
+
+fun String.spellFullId(): String = substringBefore("|")
+
+fun String.spellSource(): String = substringAfter("|", "")
 
 @Serializable
 data class SpellSlotState(
