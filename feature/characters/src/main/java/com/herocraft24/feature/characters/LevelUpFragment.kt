@@ -78,6 +78,19 @@ class LevelUpFragment : Fragment() {
     private var newAdapter: SpellPickerAdapter? = null
     private var newCounterView: TextView? = null
 
+    // Step 2 sections state
+    private var spellsSectionVisible = false
+    private var metamagicSectionVisible = false
+    private val expandedSections = mutableSetOf("class_spells", "metamagic")
+
+    // Step 2 metamagic replacement state
+    private var removeMetamagicId: String? = null
+    private var newMetamagicId: String? = null
+    private var currentMetamagicOptions: List<PickerOption> = emptyList()
+    private var metamagicAdapter: OptionPickerAdapter? = null
+    private var metamagicStatusView: TextView? = null
+    private var metamagicNewView: TextView? = null
+
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
         LEVEL_DESC("Уровень ↓"),
@@ -147,7 +160,7 @@ class LevelUpFragment : Fragment() {
             binding.btnNext.text = "Level-Up"
             binding.btnNext.isEnabled = when (step) {
                 1 -> featuresAdapter?.areAllChoicesMade() ?: true
-                2 -> areSpellSelectionsComplete()
+                2 -> isSpellsStepComplete()
                 else -> true
             }
         } else {
@@ -155,7 +168,7 @@ class LevelUpFragment : Fragment() {
             binding.btnNext.isEnabled = when (step) {
                 0 -> selectedClass != null
                 1 -> featuresAdapter?.areAllChoicesMade() ?: true
-                2 -> areSpellSelectionsComplete()
+                2 -> isSpellsStepComplete()
                 else -> true
             }
         }
@@ -431,35 +444,67 @@ class LevelUpFragment : Fragment() {
         val ch = char ?: return
         val selectedClass = selectedClassId ?: return
         val cls = vm.getClassInfo(selectedClass) ?: return
+
+        spellsSectionVisible = false
+        metamagicSectionVisible = false
+
+        val scroll = NestedScrollView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            isFillViewport = true
+        }
+        val content = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+        scroll.addView(content)
+        binding.stepContainer.addView(scroll)
+
+        // Секция получения/замены заклинаний класса, за который берётся уровень
         val spellFeature = cls.features
             .mapNotNull { vm.repository.getFeature(it) }
             .find { feature ->
                 val choice = feature.choice
                 choice != null && choice.type == "class_spells" && choice.level_up != null
             }
+        if (spellFeature != null) {
+            val (card, body) = ExpandableCard.createExpandableCard(
+                context = ctx,
+                title = "Получение и замена заклинаний",
+                subtitle = cls.name.get(),
+                openId = "class_spells",
+                openIdsSet = expandedSections
+            ) { _ -> }
+            content.addView(card)
+            renderClassSpellsSection(body, ch, selectedClass, spellFeature)
+            spellsSectionVisible = true
+        }
 
-        if (spellFeature == null) {
-            val title = TextView(ctx).apply {
+        // Секция замены метамагии: только если варианты получены до этого левелапа
+        if (committedMetamagicIds(ch, selectedClass).isNotEmpty()) {
+            renderMetamagicReplacementSection(content, ch, selectedClass)
+            metamagicSectionVisible = true
+        }
+
+        // В будущем здесь появится секция замены заклинаний от черт
+        // (например, «Посвящённый в магию») — она не зависит от класса.
+
+        if (!spellsSectionVisible && !metamagicSectionVisible) {
+            content.addView(TextView(ctx).apply {
                 text = "Заклинания"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
                 gravity = Gravity.CENTER
-            }
-            binding.stepContainer.addView(title)
-            val placeholder = TextView(ctx).apply {
+            })
+            content.addView(TextView(ctx).apply {
                 text = "Выбор заклинаний будет доступен в будущей версии"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                 setTextColor(resolveColor(com.google.android.material.R.attr.colorOnSurfaceVariant))
                 gravity = Gravity.CENTER
                 setPadding(0, 32.dp(ctx), 0, 0)
-            }
-            binding.stepContainer.addView(placeholder)
-            return
+            })
         }
-
-        renderSorcererSpellsStep(ch, selectedClass, spellFeature)
     }
 
-    private fun renderSorcererSpellsStep(ch: CharacterData, selectedClass: String, spellFeature: Feature) {
+    private fun renderClassSpellsSection(container: LinearLayout, ch: CharacterData, selectedClass: String, spellFeature: Feature) {
         val ctx = requireContext()
         val cls = vm.getClassInfo(selectedClass) ?: return
         val ability = cls.spellcasting?.ability ?: return
@@ -477,47 +522,8 @@ class LevelUpFragment : Fragment() {
 
         loadSorcererSpellData(ch, selectedClass, ability)
 
-        val scroll = NestedScrollView(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-            isFillViewport = true
-        }
-        val content = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
-        scroll.addView(content)
-        binding.stepContainer.addView(scroll)
+        val innerContent = container
 
-        val mainArrow = TextView(ctx).apply {
-            text = "▼"
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-            setPadding(0, 0, 8.dp(ctx), 0)
-        }
-        val mainTitle = TextView(ctx).apply {
-            text = cls.name.get()
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        }
-        val mainHeader = LinearLayout(ctx).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, 16.dp(ctx), 0, 8.dp(ctx))
-        }
-        mainHeader.addView(mainArrow)
-        mainHeader.addView(mainTitle)
-        content.addView(mainHeader)
-
-        val innerContent = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
-        content.addView(innerContent)
-
-        mainHeader.setOnClickListener {
-            val wasVisible = innerContent.visibility == View.VISIBLE
-            innerContent.visibility = if (wasVisible) View.GONE else View.VISIBLE
-            mainArrow.text = if (innerContent.visibility == View.VISIBLE) "▼" else "▶"
-        }
 
         // ── New spells section (declare first so current adapter can reference it) ──
         val newRecycler = RecyclerView(ctx).apply {
@@ -703,6 +709,133 @@ class LevelUpFragment : Fragment() {
         updateNewCounter()
     }
 
+    // ── Metamagic replacement section ──
+
+    private fun metamagicFeatureIds(selectedClass: String): Set<String> {
+        val cls = vm.getClassInfo(selectedClass) ?: return emptySet()
+        return cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .filter { it.choice?.type == "metamagic" }
+            .map { it.id }
+            .toSet()
+    }
+
+    // Варианты, полученные до текущего левелапа; только при их наличии доступна замена
+    private fun committedMetamagicIds(ch: CharacterData, selectedClass: String): List<String> =
+        metamagicFeatureIds(selectedClass)
+            .flatMap { ch.featureMultiChoices[it] ?: emptyList() }
+            .filter { it.isNotBlank() }
+            .distinct()
+
+    // Все известные варианты, включая выбранные на этом левелапе (шаг 1)
+    private fun knownMetamagicIds(ch: CharacterData, selectedClass: String): List<String> {
+        val pending = metamagicFeatureIds(selectedClass).flatMap { featureMultiChoices[it] ?: emptyList() }
+        return (committedMetamagicIds(ch, selectedClass) + pending).filter { it.isNotBlank() }.distinct()
+    }
+
+    private fun renderMetamagicReplacementSection(content: LinearLayout, ch: CharacterData, selectedClass: String) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val accentColor = resolveColor(com.google.android.material.R.attr.colorPrimary)
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Замена метамагии",
+            subtitle = "Можно заменить один вариант метамагии (необязательно)",
+            openId = "metamagic",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        metamagicStatusView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 8.dp(ctx))
+        }
+        metamagicStatusView?.let { body.addView(it) }
+
+        body.addView(TextView(ctx).apply {
+            text = "Текущая метамагия — отметьте заменяемую:"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        val known = knownMetamagicIds(ch, selectedClass)
+        currentMetamagicOptions = known.mapNotNull { fullId ->
+            val metamagic = repo.getMetamagic(fullId) ?: return@mapNotNull null
+            PickerOption(
+                fullId = fullId,
+                name = metamagic.name.get(),
+                subtitle = "Метамагия • ${metamagic.cost}",
+                color = accentColor
+            )
+        }
+        val metamagicRecycler = RecyclerView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutManager = LinearLayoutManager(ctx)
+            isNestedScrollingEnabled = false
+            setHasFixedSize(true)
+        }
+        metamagicAdapter = OptionPickerAdapter(
+            onItemClick = { option ->
+                MetamagicDetailSheetDialog.newInstance(option.fullId).show(childFragmentManager, "MetamagicDetail")
+            },
+            onAddClick = { option ->
+                removeMetamagicId = if (removeMetamagicId == option.fullId) null else option.fullId
+                metamagicAdapter?.submitList(currentMetamagicOptions)
+                refreshMetamagicStatus()
+                updateButtons()
+            },
+            isSelected = { option -> option.fullId == removeMetamagicId },
+            selectedIcon = "✕",
+            unselectedIcon = "–"
+        )
+        metamagicRecycler.adapter = metamagicAdapter
+        metamagicAdapter?.submitList(currentMetamagicOptions)
+        body.addView(metamagicRecycler)
+
+        metamagicNewView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+        }
+        metamagicNewView?.let { body.addView(it) }
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать новую метамагию"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val candidates = repo.getMetamagicIds().filter { it !in knownMetamagicIds(ch, selectedClass) }
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_METAMAGIC,
+                    title = "Замена метамагии",
+                    optionIds = candidates,
+                    requiredCount = 1,
+                    selected = listOfNotNull(newMetamagicId)
+                ).apply {
+                    setOnResultListener { sel ->
+                        newMetamagicId = sel.firstOrNull()
+                        refreshMetamagicStatus()
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "MetamagicPicker")
+            }
+        })
+
+        refreshMetamagicStatus()
+    }
+
+    private fun refreshMetamagicStatus() {
+        val repo = vm.repository
+        val oldName = removeMetamagicId?.let { repo.resolveName(it) }
+        val newName = newMetamagicId?.let { repo.resolveName(it) }
+        metamagicStatusView?.text = when {
+            oldName != null && newName != null -> "Замена: $oldName → $newName"
+            oldName != null -> "Заменяется: $oldName — выберите новую метамагию"
+            newName != null -> "Новая: $newName — отметьте, что заменить"
+            else -> "Замена не выбрана"
+        }
+        metamagicNewView?.text = if (newName != null) "Новая метамагия: $newName" else "Новая метамагия: не выбрана"
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -739,6 +872,13 @@ class LevelUpFragment : Fragment() {
         val requiredCantrips = baseNewCantrips + if (removeCantripEntry != null) 1 else 0
         val requiredSpells = baseNewSpells + if (removeSpellEntry != null) 1 else 0
         return newSelectedCantrips.size == requiredCantrips && newSelectedSpells.size == requiredSpells
+    }
+
+    private fun isSpellsStepComplete(): Boolean {
+        if (spellsSectionVisible && !areSpellSelectionsComplete()) return false
+        // Замена метамагии необязательна, но только парой: старая + новая
+        if (metamagicSectionVisible && (removeMetamagicId == null) != (newMetamagicId == null)) return false
+        return true
     }
 
     private fun refreshNewSpellsList(adapter: SpellPickerAdapter?) {
@@ -997,6 +1137,24 @@ class LevelUpFragment : Fragment() {
 
         val mergedFeatureMultiChoices = ch.featureMultiChoices.toMutableMap()
         mergedFeatureMultiChoices.putAll(featureMultiChoices)
+
+        // Apply optional metamagic replacement chosen at the spells step
+        val removeMetamagic = removeMetamagicId
+        val newMetamagic = newMetamagicId
+        if (removeMetamagic != null && newMetamagic != null) {
+            val metamagicFeatureIds = cls?.features
+                ?.mapNotNull { vm.repository.getFeature(it) }
+                ?.filter { it.choice?.type == "metamagic" }
+                ?.map { it.id }
+                ?.toSet() ?: emptySet()
+            for (featureId in metamagicFeatureIds) {
+                val choices = mergedFeatureMultiChoices[featureId] ?: continue
+                if (removeMetamagic in choices) {
+                    mergedFeatureMultiChoices[featureId] = choices.map { if (it == removeMetamagic) newMetamagic else it }
+                    break
+                }
+            }
+        }
 
         // Add new features to the character's features list
         val mergedFeatures = (ch.features + newFeatures).distinct().toMutableList()
