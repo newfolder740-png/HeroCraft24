@@ -32,6 +32,8 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private var spellsRequired: Int = 0
     private var charId: String = ""
     private var ability: String = "intelligence"
+    private var levelFilter: Int = -1
+    private var excludeIds: Set<String> = emptySet()
     private var allSpells: List<SpellSummary> = emptyList()
     private var searchQuery: String = ""
     private var sortMode: SortMode = SortMode.LEVEL_ASC
@@ -70,6 +72,8 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
         private const val ARG_SELECTED = "selected"
         private const val ARG_CHAR_ID = "charId"
         private const val ARG_ABILITY = "ability"
+        private const val ARG_LEVEL_FILTER = "levelFilter"
+        private const val ARG_EXCLUDE_IDS = "excludeIds"
 
         fun newInstance(
             classFilter: String,
@@ -77,7 +81,9 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             spells: Int,
             selected: List<String> = emptyList(),
             charId: String = "",
-            ability: String = "intelligence"
+            ability: String = "intelligence",
+            levelFilter: Int = -1,
+            excludeIds: List<String> = emptyList()
         ): ClassSpellPickerDialogFragment {
             return ClassSpellPickerDialogFragment().apply {
                 arguments = Bundle().apply {
@@ -87,6 +93,8 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
                     putStringArrayList(ARG_SELECTED, ArrayList(selected))
                     putString(ARG_CHAR_ID, charId)
                     putString(ARG_ABILITY, ability)
+                    putInt(ARG_LEVEL_FILTER, levelFilter)
+                    putStringArrayList(ARG_EXCLUDE_IDS, ArrayList(excludeIds))
                 }
             }
         }
@@ -104,6 +112,8 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             spellsRequired = it.getInt(ARG_SPELLS, 0)
             charId = it.getString(ARG_CHAR_ID) ?: ""
             ability = it.getString(ARG_ABILITY) ?: "intelligence"
+            levelFilter = it.getInt(ARG_LEVEL_FILTER, -1)
+            excludeIds = (it.getStringArrayList(ARG_EXCLUDE_IDS) ?: emptyList()).toSet()
             selectedIds.addAll(it.getStringArrayList(ARG_SELECTED) ?: emptyList())
         }
     }
@@ -149,6 +159,7 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
 
     private fun canSelect(spell: SpellSummary): Boolean {
         if (spell.fullId in selectedIds) return true
+        if (levelFilter >= 0) return selectedIds.size < (cantripsRequired + spellsRequired)
         val isCantrip = spell.level == 0
         val currentCantrips = selectedIds.count { id -> allSpells.find { it.fullId == id }?.level == 0 }
         val currentSpells = selectedIds.count { id -> allSpells.find { it.fullId == id }?.level?.let { it > 0 } == true }
@@ -169,6 +180,11 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     }
 
     private fun updateTitle() {
+        if (levelFilter >= 0) {
+            val limit = cantripsRequired + spellsRequired
+            binding.titleView.text = "Выбрано: ${selectedIds.size}/$limit"
+            return
+        }
         val currentCantrips = selectedIds.count { id -> allSpells.find { it.fullId == id }?.level == 0 }
         val currentSpells = selectedIds.count { id -> allSpells.find { it.fullId == id }?.level?.let { it > 0 } == true }
         binding.titleView.text = "Заговоры: $currentCantrips/$cantripsRequired, Заклинания: $currentSpells/$spellsRequired"
@@ -177,7 +193,10 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private fun loadSpells() {
         lifecycleScope.launch {
             val raw = vm.getAllSpellSummaries()
-            var filtered = raw.filter { it.level in 0..1 }
+            var filtered = if (levelFilter >= 0) raw.filter { it.level == levelFilter } else raw.filter { it.level in 0..1 }
+            if (excludeIds.isNotEmpty()) {
+                filtered = filtered.filter { it.fullId !in excludeIds }
+            }
             val filter = classFilter
             if (filter.isNotBlank()) {
                 filtered = filtered.filter { spell ->

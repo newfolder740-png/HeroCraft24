@@ -91,7 +91,9 @@ data class FeatureChoice(
     val cantrips: Int = 0,
     val spells: Int = 0,
     val class_filter: String? = null,
-    val level_up: FeatureLevelUp? = null
+    val level_up: FeatureLevelUp? = null,
+    val spell_lists: List<String> = emptyList(), // class fullIds to choose a spell list from (e.g. Magic Initiate)
+    val abilities: List<String> = emptyList()    // spellcasting abilities to choose from
 )
 
 @Serializable

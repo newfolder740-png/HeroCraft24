@@ -74,7 +74,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
             val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
             val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
-            val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
+            val featInnate = buildFeatInnateSpells(charWithAsi)
+            val mergedInnate = mergeInnateSpells(speciesInnate, classInnate, featInnate)
             val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
             val sp = char.spells ?: CharacterSpells()
             repo.save(charWithAsi.copy(
@@ -110,7 +111,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
         val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
         val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
-        val mergedInnate = mergeInnateSpells(speciesInnate, classInnate)
+        val featInnate = buildFeatInnateSpells(charWithAsi)
+        val mergedInnate = mergeInnateSpells(speciesInnate, classInnate, featInnate)
         val alwaysPrepared = mergeInnateSpells(classAlwaysPrepared, speciesAlwaysPrepared)
         val sp = char.spells ?: CharacterSpells()
         repo.save(charWithAsi.copy(
@@ -760,6 +762,40 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         return Pair(innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
+    }
+
+    /** Заклинания от черт (например, «Посвящённый в магию»): характеристика → записи "fullId|featFullId". */
+    fun buildFeatInnateSpells(char: CharacterData): Map<String, List<String>> {
+        val result = mutableMapOf<String, MutableList<String>>()
+        for ((key, spells) in char.featureMultiChoices) {
+            if (!key.startsWith("featcard_")) continue
+            val parentFeatureId = key.removePrefix("featcard_")
+            val featFullId = char.featureChoices[parentFeatureId] ?: continue
+            val feat = repository.getFeat(featFullId) ?: continue
+            if (feat.choice?.type != "magic_initiate") continue
+            val ability = char.featureChoices["${key}_ability"] ?: continue
+            val list = result.getOrPut(ability) { mutableListOf() }
+            for (spell in spells) {
+                val entry = spellEntry(spell, featFullId)
+                if (entry !in list) list.add(entry)
+            }
+        }
+        return result.mapValues { it.value.toList() }
+    }
+
+    /** Пересобирает заклинания черт в листе: убирает старые записи от черт и добавляет актуальные. */
+    fun rebuildFeatInnateSpells(char: CharacterData): CharacterData {
+        val sp = char.spells ?: CharacterSpells()
+        val allFeatIds = repository.getFeatIds().toSet()
+        val innateMap = sp.innateSpells.mapValues { (_, entries) ->
+            entries.filter { it.spellSource() !in allFeatIds }.toMutableList()
+        }.toMutableMap()
+        val featInnate = buildFeatInnateSpells(char)
+        for ((ability, entries) in featInnate) {
+            val list = innateMap.getOrPut(ability) { mutableListOf() }
+            for (entry in entries) if (entry !in list) list.add(entry)
+        }
+        return char.copy(spells = sp.copy(innateSpells = innateMap.mapValues { it.value.toList() }))
     }
 
     fun addClassFeatureSpellsAtLevel(char: CharacterData, classId: String, newClassLevel: Int): CharacterData {

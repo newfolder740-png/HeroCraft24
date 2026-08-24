@@ -106,7 +106,10 @@ class SheetSpellsFragment : Fragment() {
         val effectiveAbility = if (isCaster) {
             vm.getEffectiveSpellcastingAbility(char)
         } else {
-            char.speciesSpellAbility ?: "charisma"
+            char.spellcastingAbilityOverride
+                ?: char.speciesSpellAbility
+                ?: char.spells?.innateSpells?.entries?.firstOrNull { it.value.isNotEmpty() }?.key
+                ?: "charisma"
         }
         val abMod = vm.modifier(char.abilityScores[effectiveAbility] ?: 10)
         val spellAttack = char.proficiencyBonus + abMod

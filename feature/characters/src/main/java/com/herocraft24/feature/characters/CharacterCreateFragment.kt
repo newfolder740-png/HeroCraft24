@@ -581,8 +581,10 @@ class CharacterCreateFragment : Fragment() {
             if (bgFeatId != null) featIds.add(bgFeatId)
         }
 
-        // Feats from feature choices (feat_category selections)
-        for ((_, choiceId) in wizard.featureChoices) {
+        // Feats from feature choices (feat_category selections);
+        // ключ "background" пропускаем — черта происхождения уже добавлена выше
+        for ((key, choiceId) in wizard.featureChoices) {
+            if (key == "background") continue
             val feat = vm.repository.getFeat(choiceId)
             if (feat != null) featIds.add(choiceId)
         }
@@ -732,7 +734,13 @@ class CharacterCreateFragment : Fragment() {
         lateinit var adapter: BackgroundCreateAdapter
         adapter = BackgroundCreateAdapter(
             onBackgroundSelected = { id ->
-                vm.updateWizard { it.copy(backgroundId = id) }
+                val bg = allBackgrounds.find { it.id == id }
+                vm.updateWizard { w ->
+                    val updatedChoices = w.featureChoices.toMutableMap()
+                    val bgFeatId = bg?.feat
+                    if (bgFeatId != null) updatedChoices["background"] = bgFeatId else updatedChoices.remove("background")
+                    w.copy(backgroundId = id, featureChoices = updatedChoices)
+                }
                 adapter.setSelected(id)
                 updateNextButtonState()
             },
@@ -1019,6 +1027,22 @@ class CharacterCreateFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "MetamagicPicker")
             },
+            onPickFeatSpells = { featureId, current, choice, selectedClass, selectedAbility ->
+                val ch = vm.wizard.value
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = selectedClass,
+                    cantrips = choice.cantrips,
+                    spells = choice.spells,
+                    selected = current,
+                    charId = ch.id,
+                    ability = selectedAbility
+                ).apply {
+                    setOnResultListener { selected ->
+                        featuresCreateAdapter?.updateClassSpells(featureId, selected)
+                        updateNextButtonState()
+                    }
+                }.show(childFragmentManager, "FeatSpellPicker")
+            },
             initialFeatureChoices = wizard.featureChoices,
             initialFeatureMultiChoices = wizard.featureMultiChoices,
             initialAsiChoices = wizard.asiChoices,
@@ -1032,6 +1056,16 @@ class CharacterCreateFragment : Fragment() {
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
         recyclerView.adapter = featuresCreateAdapter
         featuresCreateAdapter?.submitList(features)
+
+        // Черта происхождения с выбором (например, «Посвящённый в магию») — карточка с выбором
+        val bgFeatId = wizard.featureChoices["background"]
+        if (bgFeatId != null) {
+            val bgFeat = vm.repository.getFeat(bgFeatId)
+            if (bgFeat?.choice != null) {
+                featuresCreateAdapter?.addFeatCard("background", featToFeature(bgFeat, "background"))
+            }
+        }
+
         updateNextButtonState()
     }
 
@@ -1068,8 +1102,10 @@ class CharacterCreateFragment : Fragment() {
             }
         }
 
-        // Feats from feature choices (feat_category selections)
-        for ((_, choiceId) in wizard.featureChoices) {
+        // Feats from feature choices (feat_category selections);
+        // ключ "background" пропускаем — черта происхождения уже добавлена выше
+        for ((key, choiceId) in wizard.featureChoices) {
+            if (key == "background") continue
             vm.repository.getFeat(choiceId)?.let { feats.add(it) }
         }
 

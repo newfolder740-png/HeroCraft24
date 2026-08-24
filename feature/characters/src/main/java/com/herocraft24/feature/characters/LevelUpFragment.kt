@@ -91,6 +91,12 @@ class LevelUpFragment : Fragment() {
     private var metamagicStatusView: TextView? = null
     private var metamagicNewView: TextView? = null
 
+    // Step 2 feat spell replacement state: featcard key -> spell to remove / new spell
+    private val featSpellRemove = mutableMapOf<String, String>()
+    private val featSpellNew = mutableMapOf<String, String>()
+    private val featSpellAdapters = mutableMapOf<String, SpellPickerAdapter>()
+    private val featSpellStatusViews = mutableMapOf<String, TextView>()
+
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
         LEVEL_DESC("Уровень ↓"),
@@ -150,9 +156,7 @@ class LevelUpFragment : Fragment() {
 
     private fun updateButtons() {
         val selectedClass = selectedClassId
-        val cls = selectedClass?.let { vm.getClassInfo(it) }
-        val isSpellcaster = cls?.spellcasting != null
-        val isLastStep = if (isSpellcaster) step == 2 else step == 1
+        val isLastStep = if (hasSpellsStep()) step == 2 else step == 1
 
         binding.btnBack.visibility = if (step > 0) View.VISIBLE else View.GONE
 
@@ -175,14 +179,12 @@ class LevelUpFragment : Fragment() {
     }
 
     private fun nextStep() {
-        val selectedClass = selectedClassId ?: return
-        val cls = vm.getClassInfo(selectedClass)
-        val isSpellcaster = cls?.spellcasting != null
+        selectedClassId ?: return
 
         if (step == 0) {
             step = 1
         } else if (step == 1) {
-            if (isSpellcaster) {
+            if (hasSpellsStep()) {
                 step = 2
             } else {
                 performLevelUp()
@@ -193,6 +195,15 @@ class LevelUpFragment : Fragment() {
             return
         }
         renderStep()
+    }
+
+    // Шаг заклинаний нужен кастерам, а также персонажам с чертой, дающей заклинания
+    // (например, «Посвящённый в магию») — для её замены, даже если класс не заклинает.
+    private fun hasSpellsStep(): Boolean {
+        val cls = selectedClassId?.let { vm.getClassInfo(it) }
+        if (cls?.spellcasting != null) return true
+        val ch = char ?: return false
+        return committedMagicInitiateFeatcards(ch).isNotEmpty()
     }
 
     private fun prevStep() {
@@ -423,6 +434,21 @@ class LevelUpFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "MetamagicPicker")
             },
+            onPickFeatSpells = { featureId, current, choice, selectedClass, selectedAbility ->
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = selectedClass,
+                    cantrips = choice.cantrips,
+                    spells = choice.spells,
+                    selected = current,
+                    charId = char?.id ?: "",
+                    ability = selectedAbility
+                ).apply {
+                    setOnResultListener { selected ->
+                        featuresAdapter?.updateClassSpells(featureId, selected)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "FeatSpellPicker")
+            },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
@@ -485,10 +511,12 @@ class LevelUpFragment : Fragment() {
             metamagicSectionVisible = true
         }
 
-        // В будущем здесь появится секция замены заклинаний от черт
-        // (например, «Посвящённый в магию») — она не зависит от класса.
+        // Секции замены заклинаний от черт (например, «Посвящённый в магию») — не зависят от класса
+        for ((featcardKey, featFullId) in committedMagicInitiateFeatcards(ch)) {
+            renderFeatSpellReplacementSection(content, ch, featcardKey, featFullId)
+        }
 
-        if (!spellsSectionVisible && !metamagicSectionVisible) {
+        if (!spellsSectionVisible && !metamagicSectionVisible && committedMagicInitiateFeatcards(ch).isEmpty()) {
             content.addView(TextView(ctx).apply {
                 text = "Заклинания"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
@@ -836,6 +864,132 @@ class LevelUpFragment : Fragment() {
         metamagicNewView?.text = if (newName != null) "Новая метамагия: $newName" else "Новая метамагия: не выбрана"
     }
 
+    // ── Feat (Magic Initiate) spell replacement section ──
+
+    private fun committedMagicInitiateFeatcards(ch: CharacterData): List<Pair<String, String>> {
+        val result = mutableListOf<Pair<String, String>>()
+        for ((key, spells) in ch.featureMultiChoices) {
+            if (!key.startsWith("featcard_")) continue
+            if (spells.filterNotNull().isEmpty()) continue
+            val parent = key.removePrefix("featcard_")
+            val featId = ch.featureChoices[parent] ?: continue
+            val feat = vm.repository.getFeat(featId) ?: continue
+            if (feat.choice?.type == "magic_initiate") result.add(key to featId)
+        }
+        return result
+    }
+
+    private fun renderFeatSpellReplacementSection(content: LinearLayout, ch: CharacterData, featcardKey: String, featFullId: String) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val feat = repo.getFeat(featFullId) ?: return
+        val chosenClass = ch.featureChoices["${featcardKey}_list"] ?: return
+        val chosenAbility = ch.featureChoices["${featcardKey}_ability"] ?: "intelligence"
+        val currentSpells = (ch.featureMultiChoices[featcardKey] ?: emptyList()).filterNotNull()
+        if (currentSpells.isEmpty()) return
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Замена заклинания черты",
+            subtitle = feat.name.get(),
+            openId = "feat_$featcardKey",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        val statusView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 8.dp(ctx))
+        }
+        featSpellStatusViews[featcardKey] = statusView
+        body.addView(statusView)
+
+        body.addView(TextView(ctx).apply {
+            text = "Отметьте заклинание для замены (необязательно):"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        val allSummaries = vm.getAllSpellSummaries()
+        val spellSummaries = currentSpells.mapNotNull { id -> allSummaries.find { it.fullId == id } }
+            .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+
+        val recycler = RecyclerView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutManager = LinearLayoutManager(ctx)
+            isNestedScrollingEnabled = false
+            setHasFixedSize(true)
+        }
+        val adapter = SpellPickerAdapter(
+            onItemClick = { spell ->
+                SpellDetailSheetDialog.newInstance(spell.fullId, ch.id, chosenAbility).show(childFragmentManager, "SpellDetail")
+            },
+            onAddClick = { spell ->
+                if (featSpellRemove[featcardKey] == spell.fullId) {
+                    featSpellRemove.remove(featcardKey)
+                } else {
+                    featSpellRemove[featcardKey] = spell.fullId
+                    featSpellNew.remove(featcardKey)
+                }
+                featSpellAdapters[featcardKey]?.submitList(spellSummaries)
+                refreshFeatSpellStatus(featcardKey)
+                updateButtons()
+            },
+            isSelected = { spell -> featSpellRemove[featcardKey] == spell.fullId },
+            selectedIcon = "✕",
+            unselectedIcon = "–"
+        )
+        recycler.adapter = adapter
+        adapter.submitList(spellSummaries)
+        featSpellAdapters[featcardKey] = adapter
+        body.addView(recycler)
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать замену"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val removeSpell = featSpellRemove[featcardKey] ?: return@setOnClickListener
+                val removeLevel = allSummaries.find { it.fullId == removeSpell }?.level ?: 0
+                val exclude = currentSpells.filter { it != removeSpell }
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = chosenClass,
+                    cantrips = if (removeLevel == 0) 1 else 0,
+                    spells = if (removeLevel >= 1) 1 else 0,
+                    selected = emptyList(),
+                    charId = ch.id,
+                    ability = chosenAbility,
+                    levelFilter = removeLevel,
+                    excludeIds = exclude
+                ).apply {
+                    setOnResultListener { sel ->
+                        val newSpell = sel.firstOrNull()
+                        if (newSpell != null) {
+                            featSpellNew[featcardKey] = newSpell
+                        } else {
+                            featSpellNew.remove(featcardKey)
+                        }
+                        refreshFeatSpellStatus(featcardKey)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "FeatSpellReplacementPicker")
+            }
+        })
+
+        refreshFeatSpellStatus(featcardKey)
+    }
+
+    private fun refreshFeatSpellStatus(featcardKey: String) {
+        val repo = vm.repository
+        val oldName = featSpellRemove[featcardKey]?.let { repo.resolveName(it) }
+        val newName = featSpellNew[featcardKey]?.let { repo.resolveName(it) }
+        featSpellStatusViews[featcardKey]?.text = when {
+            oldName != null && newName != null -> "Замена: $oldName → $newName"
+            oldName != null -> "Заменяется: $oldName — выберите замену"
+            newName != null -> "Новое: $newName — отметьте, что заменить"
+            else -> "Замена не выбрана"
+        }
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -878,6 +1032,10 @@ class LevelUpFragment : Fragment() {
         if (spellsSectionVisible && !areSpellSelectionsComplete()) return false
         // Замена метамагии необязательна, но только парой: старая + новая
         if (metamagicSectionVisible && (removeMetamagicId == null) != (newMetamagicId == null)) return false
+        // Замена заклинаний черты тоже необязательна, но только парой
+        for (key in featSpellRemove.keys + featSpellNew.keys) {
+            if (featSpellRemove.containsKey(key) != featSpellNew.containsKey(key)) return false
+        }
         return true
     }
 
@@ -1156,6 +1314,17 @@ class LevelUpFragment : Fragment() {
             }
         }
 
+        // Apply optional feat (Magic Initiate) spell replacement chosen at the spells step
+        for ((featcardKey, oldSpell) in featSpellRemove) {
+            val newSpell = featSpellNew[featcardKey] ?: continue
+            val list = mergedFeatureMultiChoices[featcardKey]?.toMutableList() ?: continue
+            val idx = list.indexOf(oldSpell)
+            if (idx >= 0) {
+                list[idx] = newSpell
+                mergedFeatureMultiChoices[featcardKey] = list
+            }
+        }
+
         // Add new features to the character's features list
         val mergedFeatures = (ch.features + newFeatures).distinct().toMutableList()
 
@@ -1250,6 +1419,9 @@ class LevelUpFragment : Fragment() {
             withInnateSpells
         }
 
+        // Rebuild feat-granted spells (e.g. Magic Initiate): adds new and applies replacements
+        val withFeatSpells = vm.rebuildFeatInnateSpells(withSorcererSpells)
+
         // If a spellcasting_ability choice was made during this level-up, store it
         val finalChar = if (updated.speciesSpellAbility == null) {
             val speciesId = updated.speciesId.substringAfterLast(":")
@@ -1265,8 +1437,8 @@ class LevelUpFragment : Fragment() {
                     }
                 }
             }
-            if (foundAbility != null) withSorcererSpells.copy(speciesSpellAbility = foundAbility) else withSorcererSpells
-        } else withSorcererSpells
+            if (foundAbility != null) withFeatSpells.copy(speciesSpellAbility = foundAbility) else withFeatSpells
+        } else withFeatSpells
 
         vm.saveCharacter(finalChar)
 
