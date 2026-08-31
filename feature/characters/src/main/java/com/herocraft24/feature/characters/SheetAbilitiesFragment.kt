@@ -159,7 +159,7 @@ class SheetAbilitiesFragment : Fragment() {
         }
         if (feats.isNotEmpty()) {
             items.add(AbilityItem.SectionHeader("Черты"))
-            feats.forEach { items.add(AbilityItem.FeatItem(it)) }
+            feats.forEach { items.add(AbilityItem.FeatItem(it, resolveFeatChoiceText(char, it))) }
         }
 
         return items
@@ -209,6 +209,41 @@ class SheetAbilitiesFragment : Fragment() {
         }
     }
 
+    private fun resolveFeatChoiceText(char: CharacterData, feat: Feat): String? {
+        val choice = feat.choice ?: return null
+        // Ищем ключ фич-карточки черты: родитель, для которого в featureChoices записан id этой черты
+        var featcardKey: String? = null
+        for (key in char.featureMultiChoices.keys) {
+            if (!key.startsWith("featcard_")) continue
+            val parent = key.removePrefix("featcard_")
+            val storedFeatId = char.featureChoices[parent] ?: continue
+            if (storedFeatId == feat.id || storedFeatId.substringAfterLast(":") == feat.id) {
+                featcardKey = key
+                break
+            }
+        }
+        featcardKey ?: return null
+        return when (choice.type) {
+            "magic_initiate" -> {
+                val parts = mutableListOf<String>()
+                char.featureChoices["${featcardKey}_list"]?.let {
+                    parts.add("Список: " + (vm.repository.resolveName(it) ?: it.substringAfterLast(":")))
+                }
+                char.featureChoices["${featcardKey}_ability"]?.let {
+                    parts.add("Характеристика: " + (asiAbilityName(it) ?: it))
+                }
+                val spells = char.featureMultiChoices[featcardKey] ?: emptyList()
+                if (spells.isNotEmpty()) {
+                    parts.add("Заклинания: " + spells.joinToString(", ") {
+                        vm.repository.resolveName(it) ?: it.substringAfterLast(":")
+                    })
+                }
+                if (parts.isEmpty()) null else parts.joinToString("; ")
+            }
+            else -> null
+        }
+    }
+
     private fun asiAbilityName(key: String): String? {
         if (key.isEmpty()) return null
         return mapOf(
@@ -237,7 +272,7 @@ class SheetAbilitiesFragment : Fragment() {
         data class ResourceCard(val featureId: String, val title: String, val shape: String, val total: Int, val used: Int) : AbilityItem()
         data class FeatureItem(val feature: Feature, val choiceText: String? = null) : AbilityItem()
         data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
-        data class FeatItem(val feat: Feat) : AbilityItem()
+        data class FeatItem(val feat: Feat, val choiceText: String? = null) : AbilityItem()
         data class MetamagicItem(val metamagic: Metamagic) : AbilityItem()
     }
 
@@ -458,6 +493,14 @@ class SheetAbilitiesFragment : Fragment() {
                     setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                     setPadding(0, 0, 0, 8.dp(ctx))
                 })
+                if (item.choiceText != null) {
+                    holder.binding.expandedContent.addView(TextView(ctx).apply {
+                        text = "Выбрано: ${item.choiceText}"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setTypeface(typeface, Typeface.BOLD)
+                        setTextColor(0xFF6750A4.toInt())
+                    })
+                }
             }
         }
 

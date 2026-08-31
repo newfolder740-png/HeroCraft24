@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingVertical="12dp"
-        android:text="Умения класса и вида"
+        android:text="Умения и черты"
         android:textAppearance="?attr/textAppearanceTitleMedium" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -69,7 +69,7 @@ class CharacterCreateFragment : Fragment() {
     }
 
     private fun nextStep() {
-        if (step >= 5) {
+        if (step >= 4) {
             // Final step - create character
             saveCurrentStepInput()
             lifecycleScope.launch {
@@ -87,7 +87,7 @@ class CharacterCreateFragment : Fragment() {
     private fun saveCurrentStepInput() {
         when (step) {
             0 -> saveAbilitiesInput()
-            5 -> saveFeatsInput()
+            4 -> saveFeatsInput()
         }
     }
 
@@ -141,7 +141,7 @@ class CharacterCreateFragment : Fragment() {
 
     private fun renderStep() {
         binding.btnPrev.visibility = if (step == 0) View.GONE else View.VISIBLE
-        binding.btnNext.text = if (step >= 5) "Создать" else "Далее"
+        binding.btnNext.text = if (step >= 4) "Создать" else "Далее"
         binding.btnNext.setOnClickListener { nextStep() }
         updateNextButtonState()
         val container = binding.stepContainer
@@ -157,7 +157,6 @@ class CharacterCreateFragment : Fragment() {
             2 -> renderBackgroundStep(container)
             3 -> renderClassStep(container)
             4 -> renderFeaturesStep(container)
-            5 -> renderFeatsStep(container)
         }
     }
 
@@ -942,21 +941,27 @@ class CharacterCreateFragment : Fragment() {
         val wizard = vm.wizard.value
         featuresCreateAdapter = FeaturesCreateAdapter(
             onFeatureChoiceChanged = { featureId, choiceId ->
-                val updated = wizard.featureChoices.toMutableMap()
-                if (choiceId != null) updated[featureId] = choiceId else updated.remove(featureId)
-                vm.updateWizard { it.copy(featureChoices = updated) }
+                vm.updateWizard { w ->
+                    val updated = w.featureChoices.toMutableMap()
+                    if (choiceId != null) updated[featureId] = choiceId else updated.remove(featureId)
+                    w.copy(featureChoices = updated)
+                }
                 updateNextButtonState()
             },
             onFeatureMultiChoiceChanged = { featureId, choices ->
-                val updated = wizard.featureMultiChoices.toMutableMap()
-                updated[featureId] = choices
-                vm.updateWizard { it.copy(featureMultiChoices = updated) }
+                vm.updateWizard { w ->
+                    val updated = w.featureMultiChoices.toMutableMap()
+                    updated[featureId] = choices
+                    w.copy(featureMultiChoices = updated)
+                }
                 updateNextButtonState()
             },
             onAsiChoiceChanged = { featureId, asiChoice ->
-                val updated = wizard.asiChoices.toMutableMap()
-                if (asiChoice != null) updated[featureId] = asiChoice else updated.remove(featureId)
-                vm.updateWizard { it.copy(asiChoices = updated) }
+                vm.updateWizard { w ->
+                    val updated = w.asiChoices.toMutableMap()
+                    if (asiChoice != null) updated[featureId] = asiChoice else updated.remove(featureId)
+                    w.copy(asiChoices = updated)
+                }
                 updateNextButtonState()
             },
             onFeatSelected = { parentFeatureId, featId ->
@@ -1008,7 +1013,16 @@ class CharacterCreateFragment : Fragment() {
                     selected = selected
                 ).apply {
                     setOnResultListener { sel ->
-                        featuresCreateAdapter?.updateFeatChoice(featureId, sel.firstOrNull())
+                        val selectedId = sel.firstOrNull()
+                        featuresCreateAdapter?.updateFeatChoice(featureId, selectedId)
+                        if (selectedId != null) {
+                            val feat = vm.repository.getFeat(selectedId)
+                            if (feat != null) {
+                                featuresCreateAdapter?.addFeatCard(featureId, featToFeature(feat, featureId))
+                            }
+                        } else {
+                            featuresCreateAdapter?.removeFeatCard(featureId)
+                        }
                         updateNextButtonState()
                     }
                 }.show(childFragmentManager, "FeatPicker")
@@ -1057,12 +1071,22 @@ class CharacterCreateFragment : Fragment() {
         recyclerView.adapter = featuresCreateAdapter
         featuresCreateAdapter?.submitList(features)
 
-        // Черта происхождения с выбором (например, «Посвящённый в магию») — карточка с выбором
+        // Черта происхождения — карточка в списке (с выбором, если он есть, например «Посвящённый в магию»)
         val bgFeatId = wizard.featureChoices["background"]
         if (bgFeatId != null) {
             val bgFeat = vm.repository.getFeat(bgFeatId)
-            if (bgFeat?.choice != null) {
+            if (bgFeat != null) {
                 featuresCreateAdapter?.addFeatCard("background", featToFeature(bgFeat, "background"))
+            }
+        }
+
+        // Черты от умений (feat_category, например «Боевой стиль») — карточки под своими умениями
+        for (feature in features) {
+            val c = feature.choice
+            if (c != null && c.type == "feat_category") {
+                val selectedFeatId = wizard.featureChoices[feature.id] ?: continue
+                val feat = vm.repository.getFeat(selectedFeatId) ?: continue
+                featuresCreateAdapter?.addFeatCard(feature.id, featToFeature(feat, feature.id))
             }
         }
 
@@ -1082,37 +1106,6 @@ class CharacterCreateFragment : Fragment() {
             }
         }
         return result
-    }
-
-    private fun renderFeatsStep(container: FrameLayout) {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_create_feats, container, false)
-        container.addView(view)
-
-        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view)
-        val feats = mutableListOf<com.herocraft24.core.model.Feat>()
-        val wizard = vm.wizard.value
-
-        // Feat from background
-        val bgId = wizard.backgroundId
-        if (bgId.isNotEmpty()) {
-            val bg = vm.getAllBackgrounds().find { it.id == bgId }
-            val bgFeatId = bg?.feat
-            if (bgFeatId != null) {
-                vm.repository.getFeat(bgFeatId)?.let { feats.add(it) }
-            }
-        }
-
-        // Feats from feature choices (feat_category selections);
-        // ключ "background" пропускаем — черта происхождения уже добавлена выше
-        for ((key, choiceId) in wizard.featureChoices) {
-            if (key == "background") continue
-            vm.repository.getFeat(choiceId)?.let { feats.add(it) }
-        }
-
-        val adapter = FeatsCreateAdapter()
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
-        adapter.submitList(feats)
     }
 
     override fun onDestroyView() {

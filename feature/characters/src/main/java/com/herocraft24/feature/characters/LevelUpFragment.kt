@@ -97,6 +97,10 @@ class LevelUpFragment : Fragment() {
     private val featSpellAdapters = mutableMapOf<String, SpellPickerAdapter>()
     private val featSpellStatusViews = mutableMapOf<String, TextView>()
 
+    // Step 2 feat category (e.g. Fighting Style) replacement state: feature id -> new feat id
+    private val featCategoryNewFeat = mutableMapOf<String, String>()
+    private val featCategoryStatusViews = mutableMapOf<String, TextView>()
+
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
         LEVEL_DESC("Уровень ↓"),
@@ -197,13 +201,19 @@ class LevelUpFragment : Fragment() {
         renderStep()
     }
 
-    // Шаг заклинаний нужен кастерам, а также персонажам с чертой, дающей заклинания
-    // (например, «Посвящённый в магию») — для её замены, даже если класс не заклинает.
+    // Шаг заклинаний нужен, если есть хотя бы один список на получение/замену
+    // заклинаний, черт, маневров или воззваний.
     private fun hasSpellsStep(): Boolean {
-        val cls = selectedClassId?.let { vm.getClassInfo(it) }
-        if (cls?.spellcasting != null) return true
         val ch = char ?: return false
-        return committedMagicInitiateFeatcards(ch).isNotEmpty()
+        val selectedClass = selectedClassId ?: return false
+        val cls = vm.getClassInfo(selectedClass)
+        val hasClassSpells = cls?.features
+            ?.mapNotNull { vm.repository.getFeature(it) }
+            ?.any { f -> val c = f.choice; c != null && c.type == "class_spells" && c.level_up != null } == true
+        val hasMetamagic = committedMetamagicIds(ch, selectedClass).isNotEmpty()
+        val hasFeatSpells = committedMagicInitiateFeatcards(ch).isNotEmpty()
+        val hasFeatCategory = replaceableFeatCategoryFeatures(ch, selectedClass).isNotEmpty()
+        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory
     }
 
     private fun prevStep() {
@@ -516,7 +526,15 @@ class LevelUpFragment : Fragment() {
             renderFeatSpellReplacementSection(content, ch, featcardKey, featFullId)
         }
 
-        if (!spellsSectionVisible && !metamagicSectionVisible && committedMagicInitiateFeatcards(ch).isEmpty()) {
+        // Секции замены черт категории (например, Боевой стиль воина)
+        val featCategoryFeatures = replaceableFeatCategoryFeatures(ch, selectedClass)
+        for (feature in featCategoryFeatures) {
+            renderFeatCategoryReplacementSection(content, ch, feature)
+        }
+
+        val hasAnySection = spellsSectionVisible || metamagicSectionVisible ||
+            committedMagicInitiateFeatcards(ch).isNotEmpty() || featCategoryFeatures.isNotEmpty()
+        if (!hasAnySection) {
             content.addView(TextView(ctx).apply {
                 text = "Заклинания"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
@@ -990,6 +1008,75 @@ class LevelUpFragment : Fragment() {
         }
     }
 
+    // ── Feat category (Fighting Style) replacement section ──
+
+    private fun replaceableFeatCategoryFeatures(ch: CharacterData, selectedClass: String): List<Feature> {
+        val cls = vm.getClassInfo(selectedClass) ?: return emptyList()
+        return cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .filter { f -> val c = f.choice; c != null && c.type == "feat_category" && c.options.isNotEmpty() }
+            .filter { ch.featureChoices[it.id] != null }
+    }
+
+    private fun renderFeatCategoryReplacementSection(content: LinearLayout, ch: CharacterData, feature: Feature) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val choice = feature.choice ?: return
+        val currentFeatId = ch.featureChoices[feature.id] ?: return
+        val currentFeatName = repo.resolveName(currentFeatId) ?: currentFeatId.substringAfterLast(":")
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Замена черты: ${feature.name.get()}",
+            subtitle = "Текущая: $currentFeatName",
+            openId = "featcat_${feature.id}",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        val statusView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 8.dp(ctx))
+        }
+        featCategoryStatusViews[feature.id] = statusView
+        body.addView(statusView)
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать замену"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val candidates = choice.options.filter { it != currentFeatId }
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_FEAT,
+                    title = "Замена черты",
+                    optionIds = candidates,
+                    requiredCount = 1,
+                    selected = listOfNotNull(featCategoryNewFeat[feature.id])
+                ).apply {
+                    setOnResultListener { sel ->
+                        val newFeat = sel.firstOrNull()
+                        if (newFeat != null) featCategoryNewFeat[feature.id] = newFeat
+                        else featCategoryNewFeat.remove(feature.id)
+                        refreshFeatCategoryStatus(feature.id, currentFeatId)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "FeatCategoryPicker")
+            }
+        })
+
+        refreshFeatCategoryStatus(feature.id, currentFeatId)
+    }
+
+    private fun refreshFeatCategoryStatus(featureId: String, currentFeatId: String) {
+        val repo = vm.repository
+        val currentName = repo.resolveName(currentFeatId) ?: currentFeatId.substringAfterLast(":")
+        val newName = featCategoryNewFeat[featureId]?.let { repo.resolveName(it) ?: it.substringAfterLast(":") }
+        featCategoryStatusViews[featureId]?.text = when {
+            newName != null && newName != currentName -> "Замена: $currentName → $newName"
+            else -> "Замена не выбрана"
+        }
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -1323,6 +1410,11 @@ class LevelUpFragment : Fragment() {
                 list[idx] = newSpell
                 mergedFeatureMultiChoices[featcardKey] = list
             }
+        }
+
+        // Apply optional feat category (Fighting Style) replacement chosen at the spells step
+        for ((featureId, newFeatId) in featCategoryNewFeat) {
+            mergedFeatureChoices[featureId] = newFeatId
         }
 
         // Add new features to the character's features list
