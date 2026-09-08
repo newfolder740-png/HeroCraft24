@@ -882,6 +882,25 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         )
     }
 
+    fun getClassLevelInvocationGain(classId: String, previousLevel: Int, newLevel: Int): Int {
+        val cls = getClassInfo(classId) ?: return 0
+        val rows = cls.class_table?.rows ?: return 0
+        val previousRow = rows.find { it.level == previousLevel }
+        val newRow = rows.find { it.level == newLevel }
+        if (previousRow == null || newRow == null) return 0
+        fun parseInvocations(row: ClassTableRow): Int = row.values["invocations"]?.toIntOrNull() ?: 0
+        return parseInvocations(newRow) - parseInvocations(previousRow)
+    }
+
+    fun getAvailableInvocations(classId: String, warlockLevel: Int): List<String> {
+        val cls = getClassInfo(classId) ?: return emptyList()
+        return cls.invocations.filter { invocationId ->
+            val invocation = repository.getInvocation(invocationId) ?: return@filter false
+            val required = invocation.requirements?.warlock_level
+            required == null || required <= warlockLevel
+        }
+    }
+
     fun applySorcererLevelUpSpells(
         char: CharacterData,
         classId: String,

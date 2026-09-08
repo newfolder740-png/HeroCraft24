@@ -66,6 +66,7 @@ class SheetAbilitiesFragment : Fragment() {
         // Class features
         val cls = vm.getClassInfo(char.classId)
         val selectedMetamagicIds = mutableSetOf<String>()
+        val selectedInvocationIds = mutableSetOf<String>()
         if (cls != null) {
             val allClassIds = char.classLevels.keys + char.classId
             val allFeatures = mutableListOf<com.herocraft24.core.model.Feature>()
@@ -95,6 +96,9 @@ class SheetAbilitiesFragment : Fragment() {
                 if (f.choice?.type == "metamagic") {
                     char.featureMultiChoices[f.id]?.let { selectedMetamagicIds.addAll(it) }
                 }
+                if (f.choice?.type == "invocations") {
+                    char.featureMultiChoices[f.id]?.let { selectedInvocationIds.addAll(it) }
+                }
             }
 
             // Subclass features
@@ -122,6 +126,9 @@ class SheetAbilitiesFragment : Fragment() {
                         if (f.choice?.type == "metamagic") {
                             char.featureMultiChoices[f.id]?.let { selectedMetamagicIds.addAll(it) }
                         }
+                        if (f.choice?.type == "invocations") {
+                            char.featureMultiChoices[f.id]?.let { selectedInvocationIds.addAll(it) }
+                        }
                     }
                 }
             }
@@ -131,6 +138,13 @@ class SheetAbilitiesFragment : Fragment() {
             if (metamagics.isNotEmpty()) {
                 items.add(AbilityItem.SectionHeader("Метамагия"))
                 metamagics.forEach { items.add(AbilityItem.MetamagicItem(it)) }
+            }
+
+            // Invocations section
+            val invocations = selectedInvocationIds.mapNotNull { vm.repository.getInvocation(it) }
+            if (invocations.isNotEmpty()) {
+                items.add(AbilityItem.SectionHeader("Таинственные воззвания"))
+                invocations.forEach { items.add(AbilityItem.InvocationItem(it)) }
             }
         }
 
@@ -274,6 +288,7 @@ class SheetAbilitiesFragment : Fragment() {
         data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
         data class FeatItem(val feat: Feat, val choiceText: String? = null) : AbilityItem()
         data class MetamagicItem(val metamagic: Metamagic) : AbilityItem()
+        data class InvocationItem(val invocation: com.herocraft24.core.model.Invocation) : AbilityItem()
     }
 
     class SheetAbilitiesAdapter(
@@ -290,6 +305,7 @@ class SheetAbilitiesFragment : Fragment() {
         private val TYPE_FEAT = 3
         private val TYPE_RESOURCE = 4
         private val TYPE_METAMAGIC = 5
+        private val TYPE_INVOCATION = 6
 
         override fun getItemViewType(position: Int) = when (items[position]) {
             is AbilityItem.SectionHeader -> TYPE_HEADER
@@ -298,6 +314,7 @@ class SheetAbilitiesFragment : Fragment() {
             is AbilityItem.FeatItem -> TYPE_FEAT
             is AbilityItem.ResourceCard -> TYPE_RESOURCE
             is AbilityItem.MetamagicItem -> TYPE_METAMAGIC
+            is AbilityItem.InvocationItem -> TYPE_INVOCATION
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -316,6 +333,7 @@ class SheetAbilitiesFragment : Fragment() {
                     strokeWidth = 0
                 })
                 TYPE_METAMAGIC -> MetamagicViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
+                TYPE_INVOCATION -> InvocationViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
                 else -> FeatureViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
             }
         }
@@ -333,6 +351,11 @@ class SheetAbilitiesFragment : Fragment() {
                     val item = items[position] as AbilityItem.MetamagicItem
                     val isExpanded = position == expandedPosition
                     bindMetamagic(holder, item, position, isExpanded)
+                }
+                is InvocationViewHolder -> {
+                    val item = items[position] as AbilityItem.InvocationItem
+                    val isExpanded = position == expandedPosition
+                    bindInvocation(holder, item, position, isExpanded)
                 }
                 is FeatureViewHolder -> {
                     val item = items[position]
@@ -445,6 +468,36 @@ class SheetAbilitiesFragment : Fragment() {
             }
         }
 
+        private fun bindInvocation(holder: InvocationViewHolder, item: AbilityItem.InvocationItem, position: Int, isExpanded: Boolean) {
+            val inv = item.invocation
+            holder.binding.featureTitle.text = inv.name.get()
+            holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
+            holder.binding.headerRow.setOnClickListener {
+                val prev = expandedPosition
+                expandedPosition = if (isExpanded) -1 else position
+                if (prev >= 0) notifyItemChanged(prev)
+                if (expandedPosition >= 0) notifyItemChanged(expandedPosition)
+            }
+            if (isExpanded) {
+                holder.binding.expandedContent.removeAllViews()
+                val ctx = holder.binding.expandedContent.context
+                inv.requirements?.warlock_level?.let { req ->
+                    holder.binding.expandedContent.addView(TextView(ctx).apply {
+                        text = "Требование: Колдун $req-го уровня"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setTypeface(typeface, Typeface.BOLD)
+                        setTextColor(0xFF6750A4.toInt())
+                        setPadding(0, 0, 0, 8.dp(ctx))
+                    })
+                }
+                holder.binding.expandedContent.addView(TextView(ctx).apply {
+                    text = inv.description.get()
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 0, 0, 8.dp(ctx))
+                })
+            }
+        }
+
         private fun bindFeature(holder: FeatureViewHolder, item: AbilityItem.FeatureItem, position: Int, isExpanded: Boolean) {
             val f = item.feature
             val levelSuffix = f.level?.let { "Уровень $it: " } ?: ""
@@ -537,6 +590,7 @@ class SheetAbilitiesFragment : Fragment() {
         class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         class ResourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         class MetamagicViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
+        class InvocationViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
         class FeatureViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

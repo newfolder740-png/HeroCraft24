@@ -81,7 +81,7 @@ class LevelUpFragment : Fragment() {
     // Step 2 sections state
     private var spellsSectionVisible = false
     private var metamagicSectionVisible = false
-    private val expandedSections = mutableSetOf("class_spells", "metamagic")
+    private val expandedSections = mutableSetOf("class_spells", "metamagic", "invocations")
 
     // Step 2 metamagic replacement state
     private var removeMetamagicId: String? = null
@@ -100,6 +100,14 @@ class LevelUpFragment : Fragment() {
     // Step 2 feat category (e.g. Fighting Style) replacement state: feature id -> new feat id
     private val featCategoryNewFeat = mutableMapOf<String, String>()
     private val featCategoryStatusViews = mutableMapOf<String, TextView>()
+
+    // Step 2 warlock invocations state
+    private var invocationFeatureId: String? = null
+    private var removeInvocationId: String? = null
+    private val newSelectedInvocations = mutableListOf<String>()
+    private var currentInvocationIds: List<String> = emptyList()
+    private var baseNewInvocations: Int = 0
+    private var invocationCounterView: TextView? = null
 
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
@@ -213,7 +221,10 @@ class LevelUpFragment : Fragment() {
         val hasMetamagic = committedMetamagicIds(ch, selectedClass).isNotEmpty()
         val hasFeatSpells = committedMagicInitiateFeatcards(ch).isNotEmpty()
         val hasFeatCategory = replaceableFeatCategoryFeatures(ch, selectedClass).isNotEmpty()
-        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory
+        val hasInvocations = cls?.features
+            ?.mapNotNull { vm.repository.getFeature(it) }
+            ?.any { f -> val c = f.choice; c != null && c.type == "invocations" && c.level_up != null } == true
+        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory || hasInvocations
     }
 
     private fun prevStep() {
@@ -532,8 +543,17 @@ class LevelUpFragment : Fragment() {
             renderFeatCategoryReplacementSection(content, ch, feature)
         }
 
+        // Секция воззваний колдуна: получение по таблице и замена
+        val invocationFeature = cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .firstOrNull { f -> val c = f.choice; c != null && c.type == "invocations" && c.level_up != null }
+        if (invocationFeature != null) {
+            renderInvocationsSection(content, ch, selectedClass, invocationFeature)
+        }
+
         val hasAnySection = spellsSectionVisible || metamagicSectionVisible ||
-            committedMagicInitiateFeatcards(ch).isNotEmpty() || featCategoryFeatures.isNotEmpty()
+            committedMagicInitiateFeatcards(ch).isNotEmpty() || featCategoryFeatures.isNotEmpty() ||
+            invocationFeature != null
         if (!hasAnySection) {
             content.addView(TextView(ctx).apply {
                 text = "Заклинания"
@@ -1077,6 +1097,109 @@ class LevelUpFragment : Fragment() {
         }
     }
 
+    // ── Warlock invocations section ──
+
+    private fun renderInvocationsSection(container: LinearLayout, ch: CharacterData, selectedClass: String, invocationFeature: Feature) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val accentColor = resolveColor(com.google.android.material.R.attr.colorPrimary)
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        val newClassLevel = currentClassLevel + 1
+
+        invocationFeatureId = invocationFeature.id
+        baseNewInvocations = vm.getClassLevelInvocationGain(selectedClass, currentClassLevel, newClassLevel)
+        currentInvocationIds = ch.featureMultiChoices[invocationFeature.id]?.filterNotNull() ?: emptyList()
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Таинственные воззвания",
+            subtitle = "Новых: $baseNewInvocations",
+            openId = "invocations",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        container.addView(card)
+
+        // ── Current invocations (mark one to replace) ──
+        if (currentInvocationIds.isNotEmpty()) {
+            body.addView(TextView(ctx).apply {
+                text = "Текущие воззвания — отметьте одно для замены:"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 0, 0, 4.dp(ctx))
+            })
+            val currentOptions = currentInvocationIds.mapNotNull { id ->
+                val inv = repo.getInvocation(id) ?: return@mapNotNull null
+                val req = inv.requirements?.warlock_level
+                PickerOption(
+                    fullId = id,
+                    name = inv.name.get(),
+                    subtitle = if (req != null) "Воззвание • Колдун $req-го уровня" else "Воззвание",
+                    color = accentColor
+                )
+            }
+            val recycler = RecyclerView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                layoutManager = LinearLayoutManager(ctx)
+                isNestedScrollingEnabled = false
+                setHasFixedSize(true)
+            }
+            val adapter = OptionPickerAdapter(
+                onItemClick = { option ->
+                    InvocationDetailSheetDialog.newInstance(option.fullId).show(childFragmentManager, "InvocationDetail")
+                },
+                onAddClick = { option ->
+                    removeInvocationId = if (removeInvocationId == option.fullId) null else option.fullId
+                    recycler.adapter?.notifyDataSetChanged()
+                    updateInvocationCounter()
+                    updateButtons()
+                },
+                isSelected = { option -> option.fullId == removeInvocationId },
+                selectedIcon = "✕",
+                unselectedIcon = "–"
+            )
+            recycler.adapter = adapter
+            adapter.submitList(currentOptions)
+            body.addView(recycler)
+        }
+
+        // ── New invocations ──
+        invocationCounterView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+        }
+        invocationCounterView?.let { body.addView(it) }
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать воззвания"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
+                val candidates = vm.getAvailableInvocations(selectedClass, newClassLevel)
+                    .filter { it !in currentInvocationIds }
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_INVOCATION,
+                    title = "Таинственные воззвания",
+                    optionIds = candidates,
+                    requiredCount = required,
+                    selected = newSelectedInvocations.toList()
+                ).apply {
+                    setOnResultListener { sel ->
+                        newSelectedInvocations.clear()
+                        newSelectedInvocations.addAll(sel)
+                        updateInvocationCounter()
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "InvocationPicker")
+            }
+        })
+
+        updateInvocationCounter()
+    }
+
+    private fun updateInvocationCounter() {
+        val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
+        invocationCounterView?.text = "Выбрано новых воззваний: ${newSelectedInvocations.size}/$required"
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -1122,6 +1245,11 @@ class LevelUpFragment : Fragment() {
         // Замена заклинаний черты тоже необязательна, но только парой
         for (key in featSpellRemove.keys + featSpellNew.keys) {
             if (featSpellRemove.containsKey(key) != featSpellNew.containsKey(key)) return false
+        }
+        // Воззвания: новых должно быть столько, сколько положено (+1 при замене)
+        if (invocationFeatureId != null) {
+            val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
+            if (newSelectedInvocations.size != required) return false
         }
         return true
     }
@@ -1415,6 +1543,17 @@ class LevelUpFragment : Fragment() {
         // Apply optional feat category (Fighting Style) replacement chosen at the spells step
         for ((featureId, newFeatId) in featCategoryNewFeat) {
             mergedFeatureChoices[featureId] = newFeatId
+        }
+
+        // Apply warlock invocation gain/replacement chosen at the spells step
+        val invFeatureId = invocationFeatureId
+        if (invFeatureId != null && (removeInvocationId != null || newSelectedInvocations.isNotEmpty())) {
+            val list = (mergedFeatureMultiChoices[invFeatureId] ?: emptyList()).toMutableList()
+            if (removeInvocationId != null) list.remove(removeInvocationId)
+            for (invocation in newSelectedInvocations) {
+                if (invocation !in list) list.add(invocation)
+            }
+            mergedFeatureMultiChoices[invFeatureId] = list
         }
 
         // Add new features to the character's features list

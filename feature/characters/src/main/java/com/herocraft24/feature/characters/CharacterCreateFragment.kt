@@ -1041,6 +1041,22 @@ class CharacterCreateFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "MetamagicPicker")
             },
+            onPickInvocations = { featureId, current, choice ->
+                val ch = vm.wizard.value
+                val candidates = vm.getAvailableInvocations(ch.classId, 1)
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_INVOCATION,
+                    title = "Таинственные воззвания",
+                    optionIds = candidates,
+                    requiredCount = choice.count,
+                    selected = current
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresCreateAdapter?.updateInvocations(featureId, sel)
+                        updateNextButtonState()
+                    }
+                }.show(childFragmentManager, "InvocationPicker")
+            },
             onPickFeatSpells = { featureId, current, choice, selectedClass, selectedAbility ->
                 val ch = vm.wizard.value
                 ClassSpellPickerDialogFragment.newInstance(

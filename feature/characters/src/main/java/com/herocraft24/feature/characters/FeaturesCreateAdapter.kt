@@ -23,6 +23,7 @@ class FeaturesCreateAdapter(
     private val onPickClassSpells: (String, List<String>, com.herocraft24.core.model.FeatureChoice) -> Unit = { _, _, _ -> },
     private val onPickFeatOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
     private val onPickMetamagicOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
+    private val onPickInvocations: (featureId: String, current: List<String>, choice: com.herocraft24.core.model.FeatureChoice) -> Unit = { _, _, _ -> },
     private val onPickFeatSpells: (featureId: String, current: List<String>, choice: com.herocraft24.core.model.FeatureChoice, selectedClass: String, selectedAbility: String) -> Unit = { _, _, _, _, _ -> },
     private val initialFeatureChoices: Map<String, String> = emptyMap(),
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
@@ -121,6 +122,10 @@ class FeaturesCreateAdapter(
                     val choices = featureMultiChoices[feature.id] ?: return false
                     if (choices.size < choice.count || choices.any { it == null }) return false
                 }
+                "invocations" -> {
+                    val choices = featureMultiChoices[feature.id] ?: return false
+                    if (choices.size < choice.count || choices.any { it == null }) return false
+                }
                 "magic_initiate" -> {
                     if (featureChoices["${feature.id}_list"] == null) return false
                     if (featureChoices["${feature.id}_ability"] == null) return false
@@ -213,6 +218,7 @@ class FeaturesCreateAdapter(
             "skill_expertise" -> buildSkillExpertiseChoice(container, feature, choice)
             "spellcasting_ability" -> buildSpellcastingAbilityChoice(container, feature, choice)
             "metamagic" -> buildMetamagicChoice(container, feature, choice)
+            "invocations" -> buildInvocationsChoice(container, feature, choice)
             "class_spells" -> buildClassSpellsChoice(container, feature, choice)
             "magic_initiate" -> buildMagicInitiateChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
@@ -338,6 +344,70 @@ class FeaturesCreateAdapter(
     }
 
     fun updateMetamagicChoice(featureId: String, selected: List<String>) {
+        featureMultiChoices[featureId] = selected.toMutableList()
+        onFeatureMultiChoiceChanged(featureId, selected)
+        notifyDataSetChanged()
+    }
+
+    // ── Invocations (Warlock) ──
+
+    private fun buildInvocationsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val count = choice.count
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите воззвания ($count):"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        if (!featureMultiChoices.containsKey(feature.id)) {
+            featureMultiChoices[feature.id] = MutableList(count) { null }
+        }
+
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selected = featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList()
+            if (selected.isEmpty()) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Воззвания не выбраны"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                for (id in selected) {
+                    val name = contentRepo.resolveName(id) ?: id.substringAfterLast(":")
+                    selectedContainer.addView(TextView(ctx).apply {
+                        text = "• $name"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                    })
+                }
+            }
+        }
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать воззвания"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                onPickInvocations(
+                    feature.id,
+                    featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList(),
+                    choice
+                )
+            }
+        }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
+        container.addView(choiceContainer)
+    }
+
+    fun updateInvocations(featureId: String, selected: List<String>) {
         featureMultiChoices[featureId] = selected.toMutableList()
         onFeatureMultiChoiceChanged(featureId, selected)
         notifyDataSetChanged()

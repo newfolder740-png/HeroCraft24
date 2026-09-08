@@ -34,6 +34,7 @@ class OptionPickerDialogFragment : DialogFragment() {
     companion object {
         const val KIND_FEAT = "feat"
         const val KIND_METAMAGIC = "metamagic"
+        const val KIND_INVOCATION = "invocation"
 
         private const val ARG_KIND = "kind"
         private const val ARG_TITLE = "title"
@@ -130,6 +131,17 @@ class OptionPickerDialogFragment : DialogFragment() {
                     color = accentColor
                 )
             }
+            KIND_INVOCATION -> optionIds.mapNotNull { fullId ->
+                val invocation = contentRepo.getInvocation(fullId) ?: return@mapNotNull null
+                val req = invocation.requirements?.warlock_level
+                val subtitle = if (req != null) "Воззвание • Колдун $req-го уровня" else "Воззвание"
+                PickerOption(
+                    fullId = fullId,
+                    name = invocation.name.get(),
+                    subtitle = subtitle,
+                    color = accentColor
+                )
+            }
             else -> emptyList()
         }.sortedBy { it.name.lowercase() }
         updateTitle()
@@ -171,6 +183,7 @@ class OptionPickerDialogFragment : DialogFragment() {
         when (kind) {
             KIND_FEAT -> FeatDetailSheetDialog.newInstance(fullId).show(childFragmentManager, "FeatDetail")
             KIND_METAMAGIC -> MetamagicDetailSheetDialog.newInstance(fullId).show(childFragmentManager, "MetamagicDetail")
+            KIND_INVOCATION -> InvocationDetailSheetDialog.newInstance(fullId).show(childFragmentManager, "InvocationDetail")
         }
     }
 
