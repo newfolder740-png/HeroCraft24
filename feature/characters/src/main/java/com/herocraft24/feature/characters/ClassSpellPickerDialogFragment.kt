@@ -33,6 +33,7 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private var charId: String = ""
     private var ability: String = "intelligence"
     private var levelFilter: Int = -1
+    private var maxLevelFilter: Int = -1
     private var excludeIds: Set<String> = emptySet()
     private var allSpells: List<SpellSummary> = emptyList()
     private var searchQuery: String = ""
@@ -73,6 +74,7 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
         private const val ARG_CHAR_ID = "charId"
         private const val ARG_ABILITY = "ability"
         private const val ARG_LEVEL_FILTER = "levelFilter"
+        private const val ARG_MAX_LEVEL = "maxLevel"
         private const val ARG_EXCLUDE_IDS = "excludeIds"
 
         fun newInstance(
@@ -83,7 +85,8 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             charId: String = "",
             ability: String = "intelligence",
             levelFilter: Int = -1,
-            excludeIds: List<String> = emptyList()
+            excludeIds: List<String> = emptyList(),
+            maxLevel: Int = -1
         ): ClassSpellPickerDialogFragment {
             return ClassSpellPickerDialogFragment().apply {
                 arguments = Bundle().apply {
@@ -95,6 +98,7 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
                     putString(ARG_ABILITY, ability)
                     putInt(ARG_LEVEL_FILTER, levelFilter)
                     putStringArrayList(ARG_EXCLUDE_IDS, ArrayList(excludeIds))
+                    putInt(ARG_MAX_LEVEL, maxLevel)
                 }
             }
         }
@@ -113,6 +117,7 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             charId = it.getString(ARG_CHAR_ID) ?: ""
             ability = it.getString(ARG_ABILITY) ?: "intelligence"
             levelFilter = it.getInt(ARG_LEVEL_FILTER, -1)
+            maxLevelFilter = it.getInt(ARG_MAX_LEVEL, -1)
             excludeIds = (it.getStringArrayList(ARG_EXCLUDE_IDS) ?: emptyList()).toSet()
             selectedIds.addAll(it.getStringArrayList(ARG_SELECTED) ?: emptyList())
         }
@@ -193,7 +198,11 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private fun loadSpells() {
         lifecycleScope.launch {
             val raw = vm.getAllSpellSummaries()
-            var filtered = if (levelFilter >= 0) raw.filter { it.level == levelFilter } else raw.filter { it.level in 0..1 }
+            var filtered = when {
+                levelFilter >= 0 -> raw.filter { it.level == levelFilter }
+                maxLevelFilter >= 0 -> raw.filter { it.level in 1..maxLevelFilter }
+                else -> raw.filter { it.level in 0..1 }
+            }
             if (excludeIds.isNotEmpty()) {
                 filtered = filtered.filter { it.fullId !in excludeIds }
             }

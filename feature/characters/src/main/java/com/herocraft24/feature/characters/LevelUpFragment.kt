@@ -81,7 +81,7 @@ class LevelUpFragment : Fragment() {
     // Step 2 sections state
     private var spellsSectionVisible = false
     private var metamagicSectionVisible = false
-    private val expandedSections = mutableSetOf("class_spells", "metamagic", "invocations")
+    private val expandedSections = mutableSetOf("class_spells", "metamagic", "invocations", "wizard_spells")
 
     // Step 2 metamagic replacement state
     private var removeMetamagicId: String? = null
@@ -108,6 +108,14 @@ class LevelUpFragment : Fragment() {
     private var currentInvocationIds: List<String> = emptyList()
     private var baseNewInvocations: Int = 0
     private var invocationCounterView: TextView? = null
+
+    // Step 2 wizard spells state (cantrips go prepared, leveled spells go to the spellbook)
+    private var wizardSectionVisible = false
+    private var wizardCantripGain = 0
+    private val newWizardCantrips = mutableListOf<String>()
+    private val newWizardBookSpells = mutableListOf<String>()
+    private var wizardCantripCounterView: TextView? = null
+    private var wizardBookCounterView: TextView? = null
 
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
@@ -224,7 +232,10 @@ class LevelUpFragment : Fragment() {
         val hasInvocations = cls?.features
             ?.mapNotNull { vm.repository.getFeature(it) }
             ?.any { f -> val c = f.choice; c != null && c.type == "invocations" && c.level_up != null } == true
-        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory || hasInvocations
+        val hasWizardSpells = cls?.features
+            ?.mapNotNull { vm.repository.getFeature(it) }
+            ?.any { f -> val c = f.choice; c != null && c.type == "wizard_spells" && c.level_up != null } == true
+        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory || hasInvocations || hasWizardSpells
     }
 
     private fun prevStep() {
@@ -494,6 +505,7 @@ class LevelUpFragment : Fragment() {
 
         spellsSectionVisible = false
         metamagicSectionVisible = false
+        wizardSectionVisible = false
 
         val scroll = NestedScrollView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -551,9 +563,18 @@ class LevelUpFragment : Fragment() {
             renderInvocationsSection(content, ch, selectedClass, invocationFeature)
         }
 
+        // Секция волшебника: новые заговоры и 2 заклинания в книгу (без замен)
+        val wizardFeature = cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .firstOrNull { f -> val c = f.choice; c != null && c.type == "wizard_spells" && c.level_up != null }
+        if (wizardFeature != null) {
+            renderWizardSpellsSection(content, ch, selectedClass)
+            wizardSectionVisible = true
+        }
+
         val hasAnySection = spellsSectionVisible || metamagicSectionVisible ||
             committedMagicInitiateFeatcards(ch).isNotEmpty() || featCategoryFeatures.isNotEmpty() ||
-            invocationFeature != null
+            invocationFeature != null || wizardSectionVisible
         if (!hasAnySection) {
             content.addView(TextView(ctx).apply {
                 text = "Заклинания"
@@ -1200,6 +1221,101 @@ class LevelUpFragment : Fragment() {
         invocationCounterView?.text = "Выбрано новых воззваний: ${newSelectedInvocations.size}/$required"
     }
 
+    // ── Wizard spells section (cantrips + spellbook gain, no replacement) ──
+
+    private fun renderWizardSpellsSection(content: LinearLayout, ch: CharacterData, selectedClass: String) {
+        val ctx = requireContext()
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        val newClassLevel = currentClassLevel + 1
+        wizardCantripGain = vm.getClassLevelSpellGain(selectedClass, currentClassLevel, newClassLevel).cantrips
+        val bookGain = 2
+        val maxSlotLevel = vm.getMaxSpellSlotLevel(selectedClass, newClassLevel)
+        val ability = vm.getClassInfo(selectedClass)?.spellcasting?.ability ?: "intelligence"
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Заклинания волшебника",
+            subtitle = "Заговоры идут в подготовленные, заклинания — в книгу",
+            openId = "wizard_spells",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        if (wizardCantripGain > 0) {
+            wizardCantripCounterView = TextView(ctx).apply {
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 0, 0, 4.dp(ctx))
+            }
+            wizardCantripCounterView?.let { body.addView(it) }
+            body.addView(MaterialButton(ctx).apply {
+                text = "Выбрать заговоры"
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                setOnClickListener {
+                    val knownCantrips = (ch.spells?.innateSpells?.get(ability) ?: emptyList())
+                        .map { it.spellFullId() }
+                    ClassSpellPickerDialogFragment.newInstance(
+                        classFilter = selectedClass,
+                        cantrips = wizardCantripGain,
+                        spells = 0,
+                        selected = newWizardCantrips.toList(),
+                        charId = ch.id,
+                        ability = ability,
+                        levelFilter = 0,
+                        excludeIds = knownCantrips
+                    ).apply {
+                        setOnResultListener { sel ->
+                            newWizardCantrips.clear()
+                            newWizardCantrips.addAll(sel)
+                            updateWizardCounters()
+                            updateButtons()
+                        }
+                    }.show(childFragmentManager, "WizardCantripPicker")
+                }
+            })
+        } else {
+            wizardCantripCounterView = null
+        }
+
+        wizardBookCounterView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+        }
+        wizardBookCounterView?.let { body.addView(it) }
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать заклинания в книгу"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val bookIds = (ch.spells?.spellbook ?: emptyList()).map { it.spellFullId() }
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = selectedClass,
+                    cantrips = 0,
+                    spells = bookGain,
+                    selected = newWizardBookSpells.toList(),
+                    charId = ch.id,
+                    ability = ability,
+                    excludeIds = bookIds,
+                    maxLevel = maxSlotLevel
+                ).apply {
+                    setOnResultListener { sel ->
+                        newWizardBookSpells.clear()
+                        newWizardBookSpells.addAll(sel)
+                        updateWizardCounters()
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "WizardBookPicker")
+            }
+        })
+
+        updateWizardCounters()
+    }
+
+    private fun updateWizardCounters() {
+        if (wizardCantripGain > 0) {
+            wizardCantripCounterView?.text = "Новые заговоры: ${newWizardCantrips.size}/$wizardCantripGain"
+        }
+        wizardBookCounterView?.text = "Новые заклинания в книгу: ${newWizardBookSpells.size}/2"
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -1250,6 +1366,11 @@ class LevelUpFragment : Fragment() {
         if (invocationFeatureId != null) {
             val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
             if (newSelectedInvocations.size != required) return false
+        }
+        // Волшебник: заговоры по таблице и ровно 2 заклинания в книгу
+        if (wizardSectionVisible) {
+            if (newWizardCantrips.size != wizardCantripGain) return false
+            if (newWizardBookSpells.size != 2) return false
         }
         return true
     }
@@ -1650,8 +1771,15 @@ class LevelUpFragment : Fragment() {
             withInnateSpells
         }
 
+        // Apply wizard level-up spells: cantrips to prepared, leveled spells to the spellbook
+        val withWizardSpells = if (wizardSectionVisible) {
+            vm.applyWizardLevelUpSpells(withSorcererSpells, selectedClass, newWizardCantrips, newWizardBookSpells)
+        } else {
+            withSorcererSpells
+        }
+
         // Rebuild feat-granted spells (e.g. Magic Initiate): adds new and applies replacements
-        val withFeatSpells = vm.rebuildFeatInnateSpells(withSorcererSpells)
+        val withFeatSpells = vm.rebuildFeatInnateSpells(withWizardSpells)
 
         // If a spellcasting_ability choice was made during this level-up, store it
         val finalChar = if (updated.speciesSpellAbility == null) {

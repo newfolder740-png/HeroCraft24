@@ -108,7 +108,9 @@ data class CharacterSpells(
     // Legacy: источник теперь зашит в сами записи в формате "fullId|source";
     // поле читается только при миграции старых сохранений.
     val innateSpellSources: Map<String, String> = emptyMap(),
-    val alwaysPreparedSpells: Map<String, List<String>> = emptyMap()
+    val alwaysPreparedSpells: Map<String, List<String>> = emptyMap(),
+    // Книга заклинаний волшебника: записи "fullId|source"; подготовка хранится в preparedByAbility
+    val spellbook: List<String> = emptyList()
 )
 
 const val SPELL_SOURCE_MANUAL = "manual"

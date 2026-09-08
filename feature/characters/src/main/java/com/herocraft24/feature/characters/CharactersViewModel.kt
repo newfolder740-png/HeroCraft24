@@ -82,7 +82,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 hitPoints = HitPoints(max = hp, current = hp),
                 equipment = equipment,
                 speciesSpellAbility = speciesSpellAbility,
-                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared)
+                spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared, spellbook = buildWizardSpellbook(charWithAsi))
             ))
             _wizardStep.value = 0
         }
@@ -119,7 +119,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             hitPoints = HitPoints(max = hp, current = hp),
             equipment = equipment,
             speciesSpellAbility = speciesSpellAbility,
-            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared)
+            spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared, spellbook = buildWizardSpellbook(charWithAsi))
         ))
         _wizard.value = CharacterData()
         _wizardStep.value = 0
@@ -733,10 +733,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         addAlwaysPrepared(spellAbility, spell, classId)
                     }
                 }
-                // Class spell choices (e.g. Sorcerer Spellcasting)
-                if (feature.choice?.type == "class_spells") {
+                // Class spell choices (e.g. Sorcerer Spellcasting, Wizard Spellcasting)
+                val choiceType = feature.choice?.type
+                if (choiceType == "class_spells" || choiceType == "wizard_spells") {
                     val selected = char.featureMultiChoices[feature.id] ?: emptyList()
                     for (spell in selected) {
+                        // У волшебника в подготовленные идут только заговоры; остальное — в книгу
+                        if (choiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
                         addInnate(spellAbility, spell, classId)
                     }
                 }
@@ -798,6 +801,117 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return char.copy(spells = sp.copy(innateSpells = innateMap.mapValues { it.value.toList() }))
     }
 
+    // ── Spellbook (Wizard) ──
+
+    /** Класс, дающий книгу заклинаний (умение с выбором "wizard_spells"). */
+    fun getSpellbookClassId(char: CharacterData): String? {
+        val allClassIds = (char.classLevels.keys + char.classId).distinct()
+        for (classId in allClassIds) {
+            val cls = getClassInfo(classId) ?: continue
+            for (featureId in cls.features) {
+                val feature = repository.getFeature(featureId) ?: continue
+                if (feature.choice?.type == "wizard_spells") return classId
+            }
+        }
+        return null
+    }
+
+    fun hasSpellbook(char: CharacterData): Boolean = getSpellbookClassId(char) != null
+
+    /** Собирает книгу заклинаний из выборов умения "wizard_spells" (заклинания 1+ уровня). */
+    fun buildWizardSpellbook(char: CharacterData): List<String> {
+        val book = mutableListOf<String>()
+        val allClassIds = (char.classLevels.keys + char.classId).distinct()
+        for (classId in allClassIds) {
+            val cls = getClassInfo(classId) ?: continue
+            for (featureId in cls.features) {
+                val feature = repository.getFeature(featureId) ?: continue
+                if (feature.choice?.type != "wizard_spells") continue
+                val selected = char.featureMultiChoices[feature.id] ?: continue
+                for (spell in selected) {
+                    if ((repository.getSpell(spell)?.level ?: 0) < 1) continue
+                    val entry = spellEntry(spell, classId)
+                    if (entry !in book) book.add(entry)
+                }
+            }
+        }
+        return book
+    }
+
+    /** Лимит подготовленных заклинаний из книги — столбец "prepared" таблицы класса. */
+    fun getSpellbookPreparedLimit(char: CharacterData): Int {
+        val classId = getSpellbookClassId(char) ?: return 0
+        val cls = getClassInfo(classId) ?: return 0
+        val level = char.classLevels[classId] ?: if (classId == char.classId) char.level else 0
+        val row = cls.class_table?.rows?.find { it.level == level } ?: return 0
+        return row.values["prepared"]?.toIntOrNull() ?: 0
+    }
+
+    /** Максимальный уровень заклинаний, доступный по ячейкам (столбцы slot1..slot9 таблицы). */
+    fun getMaxSpellSlotLevel(classId: String, level: Int): Int {
+        val cls = getClassInfo(classId) ?: return 0
+        val row = cls.class_table?.rows?.find { it.level == level } ?: return 0
+        var max = 0
+        for (n in 1..9) {
+            val v = row.values["slot$n"] ?: continue
+            if (v != "-" && (v.toIntOrNull() ?: 0) > 0) max = n
+        }
+        return max
+    }
+
+    fun addSpellToSpellbook(charId: String, spellFullId: String) {
+        val char = getCharacter(charId) ?: return
+        val classId = getSpellbookClassId(char) ?: return
+        val sp = char.spells ?: CharacterSpells()
+        val entry = spellEntry(spellFullId, classId)
+        if (entry in sp.spellbook) return
+        saveCharacter(char.copy(spells = sp.copy(spellbook = sp.spellbook + entry)))
+    }
+
+    /** Подготовить/снять подготовку заклинания из книги (в пределах лимита по таблице класса). */
+    fun toggleBookSpellPrepared(charId: String, entry: String) {
+        val char = getCharacter(charId) ?: return
+        val sp = char.spells ?: return
+        val classId = getSpellbookClassId(char) ?: return
+        val ability = getClassInfo(classId)?.spellcasting?.ability ?: return
+        val prepared = sp.preparedByAbility[ability] ?: emptyList()
+        val updated = if (entry in prepared) {
+            prepared - entry
+        } else {
+            val limit = getSpellbookPreparedLimit(char)
+            val bookPreparedCount = prepared.count { it.spellSource() == classId }
+            if (bookPreparedCount >= limit) return
+            prepared + entry
+        }
+        val newMap = sp.preparedByAbility.toMutableMap().apply { this[ability] = updated }
+        saveCharacter(char.copy(spells = sp.copy(preparedByAbility = newMap)))
+    }
+
+    /** Левелап волшебника: заговоры — в подготовленные, заклинания — в книгу (без замен). */
+    fun applyWizardLevelUpSpells(
+        char: CharacterData,
+        classId: String,
+        newCantrips: List<String>,
+        newBookSpells: List<String>
+    ): CharacterData {
+        val cls = getClassInfo(classId) ?: return char
+        val ability = cls.spellcasting?.ability ?: return char
+        val sp = char.spells ?: CharacterSpells()
+        val innateMap = sp.innateSpells.toMutableMap()
+        val abilityList = innateMap.getOrPut(ability) { mutableListOf() }.toMutableList()
+        for (cantrip in newCantrips) {
+            val entry = spellEntry(cantrip, classId)
+            if (entry !in abilityList) abilityList.add(entry)
+        }
+        innateMap[ability] = abilityList
+        val book = sp.spellbook.toMutableList()
+        for (spell in newBookSpells) {
+            val entry = spellEntry(spell, classId)
+            if (entry !in book) book.add(entry)
+        }
+        return char.copy(spells = sp.copy(innateSpells = innateMap, spellbook = book))
+    }
+
     fun addClassFeatureSpellsAtLevel(char: CharacterData, classId: String, newClassLevel: Int): CharacterData {
         val cls = getClassInfo(classId) ?: return char
         val spellAbility = cls.spellcasting?.ability ?: return char
@@ -827,10 +941,14 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     if (entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
                 }
             }
-            // Class spell choices (e.g. Sorcerer Spellcasting)
-            if (feature.choice?.type == "class_spells") {
+            // Class spell choices (e.g. Sorcerer Spellcasting, Wizard Spellcasting)
+            val choiceType = feature.choice?.type
+            if (choiceType == "class_spells" || choiceType == "wizard_spells") {
                 val selected = char.featureMultiChoices[feature.id] ?: emptyList()
-                for (spell in selected) addSpell(spell)
+                for (spell in selected) {
+                    if (choiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
+                    addSpell(spell)
+                }
             }
         }
 

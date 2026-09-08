@@ -159,6 +159,22 @@ class SheetSpellsFragment : Fragment() {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
+        if (vm.hasSpellbook(char)) {
+            preparedHeader.addView(AppCompatButton(ctx).apply {
+                text = "📖"
+                setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
+                minimumWidth = 0
+                minHeight = 0
+                minWidth = 0
+                minimumHeight = 0
+                background = null
+                textSize = 18f
+                setOnClickListener {
+                    SpellbookDialogFragment.newInstance(char.id)
+                        .show(childFragmentManager, "Spellbook")
+                }
+            })
+        }
         if (isCaster) {
             preparedHeader.addView(AppCompatButton(ctx).apply {
                 text = "+"

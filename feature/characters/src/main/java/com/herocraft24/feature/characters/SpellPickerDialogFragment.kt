@@ -25,6 +25,10 @@ class SpellPickerDialogFragment : DialogFragment() {
 
     private var charId: String? = null
     private var ability: String? = null
+    private var mode: String = MODE_PREPARE
+    private var classFilter: String = ""
+    private var maxLevel: Int = -1
+    private var bookFullIds: Set<String> = emptySet()
 
     private var allSpells: List<SpellSummary> = emptyList()
     private var searchQuery: String = ""
@@ -55,14 +59,29 @@ class SpellPickerDialogFragment : DialogFragment() {
     }
 
     companion object {
+        const val MODE_PREPARE = "prepare"
+        const val MODE_SPELLBOOK = "spellbook"
+
         private const val ARG_CHAR_ID = "characterId"
         private const val ARG_ABILITY = "ability"
+        private const val ARG_MODE = "mode"
+        private const val ARG_CLASS_FILTER = "classFilter"
+        private const val ARG_MAX_LEVEL = "maxLevel"
 
-        fun newInstance(characterId: String, ability: String): SpellPickerDialogFragment {
+        fun newInstance(
+            characterId: String,
+            ability: String,
+            mode: String = MODE_PREPARE,
+            classFilter: String = "",
+            maxLevel: Int = -1
+        ): SpellPickerDialogFragment {
             return SpellPickerDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_CHAR_ID, characterId)
                     putString(ARG_ABILITY, ability)
+                    putString(ARG_MODE, mode)
+                    putString(ARG_CLASS_FILTER, classFilter)
+                    putInt(ARG_MAX_LEVEL, maxLevel)
                 }
             }
         }
@@ -72,6 +91,9 @@ class SpellPickerDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         charId = arguments?.getString(ARG_CHAR_ID)
         ability = arguments?.getString(ARG_ABILITY)
+        mode = arguments?.getString(ARG_MODE) ?: MODE_PREPARE
+        classFilter = arguments?.getString(ARG_CLASS_FILTER) ?: ""
+        maxLevel = arguments?.getInt(ARG_MAX_LEVEL, -1) ?: -1
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -90,9 +112,19 @@ class SpellPickerDialogFragment : DialogFragment() {
                     .show(childFragmentManager, "SpellDetail")
             },
             onAddClick = { spell ->
-                vm.addPreparedSpell(char.id, spell.fullId, ab)
-            }
+                if (mode == MODE_SPELLBOOK) {
+                    if (spell.fullId !in bookFullIds) vm.addSpellToSpellbook(char.id, spell.fullId)
+                } else {
+                    vm.addPreparedSpell(char.id, spell.fullId, ab)
+                }
+            },
+            isSelected = { spell -> mode == MODE_SPELLBOOK && spell.fullId in bookFullIds },
+            selectedIcon = "✓",
+            unselectedIcon = "+"
         )
+        if (mode == MODE_SPELLBOOK) {
+            binding.titleView.text = "Добавить в книгу заклинаний"
+        }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
@@ -116,7 +148,19 @@ class SpellPickerDialogFragment : DialogFragment() {
 
     private fun loadSpells() {
         lifecycleScope.launch {
-            allSpells = vm.getAllSpellSummaries()
+            val char = charId?.let { vm.getCharacter(it) }
+            bookFullIds = char?.spells?.spellbook?.map { it.spellFullId() }?.toSet() ?: emptySet()
+            var spells = vm.getAllSpellSummaries()
+            if (mode == MODE_SPELLBOOK) {
+                val maxLvl = if (maxLevel > 0) maxLevel else 9
+                spells = spells.filter { it.level in 1..maxLvl }
+                if (classFilter.isNotEmpty()) {
+                    spells = spells.filter { spell ->
+                        spell.classes.any { it == classFilter || it.substringAfterLast(":") == classFilter.substringAfterLast(":") }
+                    }
+                }
+            }
+            allSpells = spells
             refreshList()
         }
     }

@@ -133,7 +133,7 @@ class FeaturesCreateAdapter(
                     val selectedCount = choices.count { it != null }
                     if (selectedCount < choice.cantrips + choice.spells) return false
                 }
-                "class_spells" -> {
+                "class_spells", "wizard_spells" -> {
                     val choices = featureMultiChoices[feature.id] ?: return false
                     val selectedCount = choices.count { it != null }
                     if (selectedCount < choice.cantrips + choice.spells) return false
@@ -219,7 +219,7 @@ class FeaturesCreateAdapter(
             "spellcasting_ability" -> buildSpellcastingAbilityChoice(container, feature, choice)
             "metamagic" -> buildMetamagicChoice(container, feature, choice)
             "invocations" -> buildInvocationsChoice(container, feature, choice)
-            "class_spells" -> buildClassSpellsChoice(container, feature, choice)
+            "class_spells", "wizard_spells" -> buildClassSpellsChoice(container, feature, choice)
             "magic_initiate" -> buildMagicInitiateChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
             "asi" -> {
