@@ -224,10 +224,13 @@ class SheetMainFragment : Fragment() {
         val left3 = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
         val row3a = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
         row3a.addView(labelValue("Размер", size).apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
-        row3a.addView(labelValue("Скорость", "${char.speed} фт.").apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
+        row3a.addView(labelValue("Скорость", "${char.speed + vm.featEffectTotal(char, "speed_bonus") + vm.computeFeatureSpeedBonus(char)} фт.").apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
         left3.addView(row3a)
         val row3b = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
-        row3b.addView(labelValue("Инициатива", formatBonus(dexMod)).apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
+        val initiativeBonus = dexMod +
+            (if (vm.hasFeatEffect(char, "initiative_proficiency")) profBonus else 0) +
+            vm.computeFeatureInitiativeBonus(char, effectiveScores)
+        row3b.addView(labelValue("Инициатива", formatBonus(initiativeBonus)).apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
         row3b.addView(labelValue("Пасс. воспр.", "${10 + wisMod + percBonus}").apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
         left3.addView(row3b)
         val card5 = makeCard(left3)
@@ -304,7 +307,7 @@ class SheetMainFragment : Fragment() {
 
         // Row 4: BM, AC, Shield, Inspiration
         val profCard = labelValue("БМ", formatBonus(profBonus), centered = true, largeValue = true)
-        val totalAc = computeCharacterAC(char, dexMod)
+        val totalAc = computeCharacterAC(char, dexMod, effectiveScores)
         val acCard = labelValue("КЗ", "$totalAc", centered = true, largeValue = true)
         val shieldCard = labelValue("Щит", char.equippedShield?.let { computeShieldBonus(it) } ?: "—", centered = true, largeValue = true)
         val inspirationCard = LinearLayout(ctx).apply {
@@ -564,9 +567,10 @@ class SheetMainFragment : Fragment() {
      * Without armor: 10 + dex modifier + magic bonuses.
      * With armor: armor base + magic bonus + dex modifier (capped by max_dexterity_bonus) + other magic bonuses.
      */
-    private fun computeCharacterAC(char: CharacterData, dexMod: Int): Int {
+    private fun computeCharacterAC(char: CharacterData, dexMod: Int, scores: Map<String, Int>): Int {
         // Base AC without armor: 10 + dex modifier
         var ac = 10 + dexMod
+        var wearingArmor = false
 
         // Check for equipped magical armor with variants
         val equippedArmor = char.equippedArmor
@@ -595,6 +599,7 @@ class SheetMainFragment : Fragment() {
                     // If dex_bonus is false, just use base as-is
 
                     ac = base
+                    wearingArmor = true
                 }
             }
         }
@@ -613,6 +618,23 @@ class SheetMainFragment : Fragment() {
                     ac += magicBonus
                 }
             }
+        }
+
+        // Формулы КЗ без доспеха от умений (монах, варвар, драконий чародей, великолепие гения) —
+        // если их несколько, результирует та, что даёт больше КЗ
+        if (!wearingArmor) {
+            val hasShield = char.equippedShield != null
+            for (formula in vm.getUnarmoredAcFormulas(char)) {
+                if (formula.requires_no_armor && wearingArmor) continue
+                if (formula.requires_no_shield && hasShield) continue
+                val value = formula.base + formula.abilities.sumOf { vm.modifier(scores[it] ?: 10) }
+                if (value > ac) ac = value
+            }
+        }
+
+        // Defense feat: +1 AC while wearing armor
+        if (wearingArmor) {
+            ac += vm.featEffectTotal(char, "ac_bonus_armored")
         }
 
         return ac

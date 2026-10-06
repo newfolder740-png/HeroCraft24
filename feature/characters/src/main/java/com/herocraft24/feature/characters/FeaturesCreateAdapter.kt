@@ -141,6 +141,13 @@ class FeaturesCreateAdapter(
                 "spellcasting_ability" -> {
                     if (featureChoices[feature.id] == null) return false
                 }
+                "feat_asi" -> {
+                    // Фиксированная характеристика (одна в списке) выбора не требует
+                    if (choice.abilities.size != 1 && featureChoices["${feature.id}_asi"] == null) return false
+                }
+                "feat_spells" -> {
+                    if (choice.abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
+                }
                 "asi_or_feat" -> {
                     if (featureChoices[feature.id] == null) return false
                     if (feature.id in featuresNeedingAsi) {
@@ -221,6 +228,8 @@ class FeaturesCreateAdapter(
             "invocations" -> buildInvocationsChoice(container, feature, choice)
             "class_spells", "wizard_spells" -> buildClassSpellsChoice(container, feature, choice)
             "magic_initiate" -> buildMagicInitiateChoice(container, feature, choice)
+            "feat_asi" -> buildFeatAsiChoice(container, feature, choice)
+            "feat_spells" -> buildFeatSpellsChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
             "asi" -> {
                 // For feat cards, use the parent feature ID as the asiChoices key
@@ -606,6 +615,95 @@ class FeaturesCreateAdapter(
                 featureChoices[feature.id] = selectedAbility; onFeatureChoiceChanged(feature.id, selectedAbility)
             }
         })
+        container.addView(choiceContainer)
+    }
+
+    // ── Feat ASI (+1 к ограниченной характеристике) ──
+
+    private fun buildFeatAsiChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val asiKey = "${feature.id}_asi"
+        val allowed = if (choice.abilities.isEmpty()) allAbilityKeys else choice.abilities
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Повышение характеристики (+1):"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        if (allowed.size == 1) {
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "+1 к «${abilityNames[allowed[0]] ?: allowed[0]}»"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+            })
+        } else {
+            val names = allowed.map { abilityNames[it] ?: it }
+            choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                hint = "Выберите характеристику"; setOnClickListener { showDropDown() }
+                setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, names))
+                featureChoices[asiKey]?.let { val idx = allowed.indexOf(it); if (idx >= 0) setText(names[idx], false) }
+                setOnItemClickListener { _, _, pos, _ ->
+                    val selected = allowed.getOrNull(pos)
+                    featureChoices[asiKey] = selected
+                    onFeatureChoiceChanged(asiKey, selected)
+                }
+            })
+        }
+        container.addView(choiceContainer)
+    }
+
+    // ── Feat Spells (фиксированные всегда подготовленные заклинания + характеристика) ──
+
+    private fun buildFeatSpellsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val abilityKey = "${feature.id}_ability"
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        val allowed = choice.abilities
+        if (allowed.size == 1) {
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "Заклинательная характеристика: ${abilityNames[allowed[0]] ?: allowed[0]}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                setPadding(0, 0, 0, 4.dp(ctx))
+            })
+        } else if (allowed.size > 1) {
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "Заклинательная характеристика:"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
+            })
+            val names = allowed.map { abilityNames[it] ?: it }
+            choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                hint = "Выберите характеристику"; setOnClickListener { showDropDown() }
+                setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, names))
+                featureChoices[abilityKey]?.let { val idx = allowed.indexOf(it); if (idx >= 0) setText(names[idx], false) }
+                setOnItemClickListener { _, _, pos, _ ->
+                    val selected = allowed.getOrNull(pos)
+                    featureChoices[abilityKey] = selected
+                    onFeatureChoiceChanged(abilityKey, selected)
+                }
+            })
+        }
+
+        fun spellNames(ids: List<String>) = ids.joinToString(", ") { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+        if (choice.fixed_spells.isNotEmpty()) {
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "Всегда подготовлены: ${spellNames(choice.fixed_spells)}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                setPadding(0, 4.dp(ctx), 0, 0)
+            })
+        }
+        for ((lvl, spells) in choice.char_level_spells) {
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "С $lvl-го уровня также: ${spellNames(spells)}"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                setPadding(0, 4.dp(ctx), 0, 0)
+            })
+        }
         container.addView(choiceContainer)
     }
 

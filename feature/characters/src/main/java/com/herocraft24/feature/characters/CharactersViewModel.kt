@@ -53,7 +53,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun finishWizard() {
         viewModelScope.launch {
             val char = _wizard.value
-            val hp = calculateStartingHP(char)
+            val hp = calculateStartingHP(char) + computeLevelUpFeatHpBonus(emptyList(), char.selectedFeats, 1)
             val equipment = calculateStartingEquipment(char)
             val classLevels = if (char.classLevels.isEmpty() && char.classId.isNotEmpty()) {
                 mapOf(char.classId to 1)
@@ -70,7 +70,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     if (asi.ability1.isNotEmpty()) asiScores[asi.ability1] = (asiScores[asi.ability1] ?: 10) + 2
                 }
             }
-            val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
+            val charWithAsiBase = charWithLevels.copy(abilityScores = asiScores)
+            val charWithAsi = charWithAsiBase.copy(
+                abilityScores = applyFeatAsiToScores(
+                    charWithAsiBase.abilityScores,
+                    computeFeatAsiBonuses(charWithAsiBase, featParentKeys(charWithAsiBase.featureChoices))
+                )
+            )
 
             val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
             val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
@@ -82,6 +88,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 hitPoints = HitPoints(max = hp, current = hp),
                 equipment = equipment,
                 speciesSpellAbility = speciesSpellAbility,
+                speed = repository.getSpecies(charWithAsi.speciesId)?.speed ?: charWithAsi.speed,
+                feats = charWithAsi.selectedFeats.distinct(),
                 spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared, spellbook = buildWizardSpellbook(charWithAsi))
             ))
             _wizardStep.value = 0
@@ -90,7 +98,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     suspend fun finishWizardSuspend() {
         val char = _wizard.value
-        val hp = calculateStartingHP(char)
+        val hp = calculateStartingHP(char) + computeLevelUpFeatHpBonus(emptyList(), char.selectedFeats, 1)
         val equipment = calculateStartingEquipment(char)
         val classLevels = if (char.classLevels.isEmpty() && char.classId.isNotEmpty()) {
             mapOf(char.classId to 1)
@@ -107,7 +115,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 if (asi.ability1.isNotEmpty()) asiScores[asi.ability1] = (asiScores[asi.ability1] ?: 10) + 2
             }
         }
-        val charWithAsi = charWithLevels.copy(abilityScores = asiScores)
+        val charWithAsiBase = charWithLevels.copy(abilityScores = asiScores)
+        val charWithAsi = charWithAsiBase.copy(
+            abilityScores = applyFeatAsiToScores(
+                charWithAsiBase.abilityScores,
+                computeFeatAsiBonuses(charWithAsiBase, featParentKeys(charWithAsiBase.featureChoices))
+            )
+        )
 
         val (speciesSpellAbility, speciesInnate, speciesAlwaysPrepared) = buildSpeciesInnateSpells(charWithAsi, 1)
         val (classInnate, classAlwaysPrepared) = buildClassFeatureInnateSpells(charWithAsi)
@@ -119,6 +133,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             hitPoints = HitPoints(max = hp, current = hp),
             equipment = equipment,
             speciesSpellAbility = speciesSpellAbility,
+            speed = repository.getSpecies(charWithAsi.speciesId)?.speed ?: charWithAsi.speed,
+            feats = charWithAsi.selectedFeats.distinct(),
             spells = sp.copy(innateSpells = mergedInnate, innateSpellSources = emptyMap(), alwaysPreparedSpells = alwaysPrepared, spellbook = buildWizardSpellbook(charWithAsi))
         ))
         _wizard.value = CharacterData()
@@ -177,6 +193,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun computeSpellSlots(char: CharacterData): SpellSlotsCounter.CasterInfo? {
+        // Магия договора (колдун): ячейки берутся напрямую из таблицы класса (spell_slots / slot_level)
+        val cls = getClassInfo(char.classId)
+        val classLevel = char.classLevels[char.classId] ?: char.level
+        val row = cls?.class_table?.rows?.find { it.level == classLevel }
+        val pactSlots = row?.values?.get("spell_slots")?.toIntOrNull() ?: 0
+        val pactLevel = row?.values?.get("slot_level")?.toIntOrNull() ?: 0
+        if (pactSlots > 0 && pactLevel > 0) {
+            return SpellSlotsCounter.CasterInfo(classLevel, mapOf(pactLevel to pactSlots))
+        }
         return SpellSlotsCounter.compute(char.classId, char.level, char.subclassId)
     }
 
@@ -767,20 +792,107 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return Pair(innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
     }
 
-    /** Заклинания от черт (например, «Посвящённый в магию»): характеристика → записи "fullId|featFullId". */
+    /** Бонусы к характеристикам от черт с choice "feat_asi" для указанных родительских ключей. */
+    fun computeFeatAsiBonuses(char: CharacterData, parentKeys: Set<String>): Map<String, Int> {
+        val bonuses = mutableMapOf<String, Int>()
+        for (parentKey in parentKeys) {
+            val featId = char.featureChoices[parentKey] ?: continue
+            val feat = repository.getFeat(featId) ?: continue
+            val choice = feat.choice ?: continue
+            if (choice.type != "feat_asi") continue
+            val ability = char.featureChoices["featcard_${parentKey}_asi"] ?: choice.abilities.singleOrNull() ?: continue
+            bonuses[ability] = (bonuses[ability] ?: 0) + 1
+        }
+        return bonuses
+    }
+
+    /** Родительские ключи featureChoices, соответствующие взятым чертам (не служебные суффиксы). */
+    fun featParentKeys(choices: Map<String, String?>): Set<String> =
+        choices.keys.filter {
+            !it.startsWith("featcard_") && !it.endsWith("_asi") &&
+                !it.endsWith("_list") && !it.endsWith("_ability")
+        }.toSet()
+
+    fun applyFeatAsiToScores(scores: Map<String, Int>, bonuses: Map<String, Int>): Map<String, Int> {
+        if (bonuses.isEmpty()) return scores
+        return scores.toMutableMap().apply {
+            for ((ability, amount) in bonuses) this[ability] = (this[ability] ?: 10) + amount
+        }
+    }
+
+    /** Сумма значений эффекта указанного типа от всех черт персонажа. */
+    fun featEffectTotal(char: CharacterData, type: String): Int {
+        var total = 0
+        for (featId in char.feats) {
+            val feat = repository.getFeat(featId) ?: continue
+            for (effect in feat.effects) if (effect.type == type) total += effect.value
+        }
+        return total
+    }
+
+    fun hasFeatEffect(char: CharacterData, type: String): Boolean {
+        for (featId in char.feats) {
+            val feat = repository.getFeat(featId) ?: continue
+            if (feat.effects.any { it.type == type }) return true
+        }
+        return false
+    }
+
+    fun charHasFeat(char: CharacterData, featLocalId: String): Boolean =
+        char.feats.any { it.substringAfterLast(":") == featLocalId }
+
+    /**
+     * Бонус ХП от черт при получении уровня: hp_per_level у уже имеющихся черт даёт +value за уровень,
+     * у newly obtained — value*newLevel (ретроактивно) + max_hp_flat.
+     */
+    fun computeLevelUpFeatHpBonus(oldFeats: List<String>, featsAfter: List<String>, newTotalLevel: Int): Int {
+        var bonus = 0
+        for (featId in oldFeats) {
+            val feat = repository.getFeat(featId) ?: continue
+            for (e in feat.effects) if (e.type == "hp_per_level") bonus += e.value
+        }
+        val newly = featsAfter.filter { it !in oldFeats }
+        for (featId in newly) {
+            val feat = repository.getFeat(featId) ?: continue
+            for (e in feat.effects) {
+                if (e.type == "hp_per_level") bonus += e.value * newTotalLevel
+                if (e.type == "max_hp_flat") bonus += e.value
+            }
+        }
+        return bonus
+    }
+
+    /** Заклинания от черт («Посвящённый в магию», Mark of * и т.п.): характеристика → записи "fullId|featFullId". */
     fun buildFeatInnateSpells(char: CharacterData): Map<String, List<String>> {
         val result = mutableMapOf<String, MutableList<String>>()
-        for ((key, spells) in char.featureMultiChoices) {
-            if (!key.startsWith("featcard_")) continue
-            val parentFeatureId = key.removePrefix("featcard_")
-            val featFullId = char.featureChoices[parentFeatureId] ?: continue
+        for (parent in featParentKeys(char.featureChoices)) {
+            val featFullId = char.featureChoices[parent] ?: continue
             val feat = repository.getFeat(featFullId) ?: continue
-            if (feat.choice?.type != "magic_initiate") continue
-            val ability = char.featureChoices["${key}_ability"] ?: continue
-            val list = result.getOrPut(ability) { mutableListOf() }
-            for (spell in spells) {
-                val entry = spellEntry(spell, featFullId)
-                if (entry !in list) list.add(entry)
+            val choice = feat.choice ?: continue
+            val cardKey = "featcard_$parent"
+            when (choice.type) {
+                "magic_initiate" -> {
+                    val ability = char.featureChoices["${cardKey}_ability"] ?: continue
+                    val spells = char.featureMultiChoices[cardKey] ?: continue
+                    val list = result.getOrPut(ability) { mutableListOf() }
+                    for (spell in spells) {
+                        val entry = spellEntry(spell, featFullId)
+                        if (entry !in list) list.add(entry)
+                    }
+                }
+                "feat_spells" -> {
+                    val ability = char.featureChoices["${cardKey}_ability"] ?: choice.abilities.singleOrNull() ?: continue
+                    val spells = mutableListOf<String>()
+                    spells.addAll(choice.fixed_spells)
+                    for ((lvlStr, lvlSpells) in choice.char_level_spells) {
+                        if (char.level >= (lvlStr.toIntOrNull() ?: Int.MAX_VALUE)) spells.addAll(lvlSpells)
+                    }
+                    val list = result.getOrPut(ability) { mutableListOf() }
+                    for (spell in spells) {
+                        val entry = spellEntry(spell, featFullId)
+                        if (entry !in list) list.add(entry)
+                    }
+                }
             }
         }
         return result.mapValues { it.value.toList() }
@@ -857,6 +969,65 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             if (v != "-" && (v.toIntOrNull() ?: 0) > 0) max = n
         }
         return max
+    }
+
+    // ── Формулы листа от умений (КЗ без доспеха, скорость, инициатива) ──
+
+    /** Умения всех классов и подкласса, доступные на текущих уровнях (класс, уровень в классе, умение). */
+    fun grantedFeatures(char: CharacterData): List<Triple<com.herocraft24.core.model.GameClass, Int, com.herocraft24.core.model.Feature>> {
+        val result = mutableListOf<Triple<com.herocraft24.core.model.GameClass, Int, com.herocraft24.core.model.Feature>>()
+        val classIds = (char.classLevels.keys + char.classId).distinct()
+        for (classId in classIds) {
+            val cls = getClassInfo(classId) ?: continue
+            val classLevel = char.classLevels[classId] ?: if (classId == char.classId) char.level else 0
+            val featureIds = cls.features.toMutableList()
+            val subclass = char.subclassId?.let { repository.getSubclass(it) }
+            if (subclass != null && subclass.class_id == classId) featureIds.addAll(subclass.features)
+            for (fid in featureIds) {
+                val f = repository.getFeature(fid) ?: continue
+                if ((f.level ?: 1) > classLevel) continue
+                result.add(Triple(cls, classLevel, f))
+            }
+        }
+        return result
+    }
+
+    fun getUnarmoredAcFormulas(char: CharacterData): List<com.herocraft24.core.model.AcFormula> =
+        grantedFeatures(char).mapNotNull { (_, _, f) -> f.ac_formula }
+
+    fun computeFeatureSpeedBonus(char: CharacterData): Int {
+        val hasArmor = char.equippedArmor != null
+        val hasShield = char.equippedShield != null
+        val heavyArmor = char.equippedArmor?.let { composite ->
+            getItem(composite.substringBefore("|"))?.subcategory?.contains("heavy_armor") == true
+        } ?: false
+        var total = 0
+        for ((cls, classLevel, f) in grantedFeatures(char)) {
+            val sb = f.speed_bonus ?: continue
+            val ok = when (sb.requires) {
+                "no_armor" -> !hasArmor
+                "no_armor_no_shield" -> !hasArmor && !hasShield
+                "no_heavy_armor" -> !heavyArmor
+                else -> true
+            }
+            if (!ok) continue
+            var value = sb.value
+            if (sb.table_key != null) {
+                val row = cls.class_table?.rows?.find { it.level == classLevel }
+                val raw = row?.values?.get(sb.table_key) ?: ""
+                value += raw.filter { it.isDigit() }.toIntOrNull() ?: 0
+            }
+            total += value
+        }
+        return total
+    }
+
+    fun computeFeatureInitiativeBonus(char: CharacterData, scores: Map<String, Int>): Int {
+        var bonus = 0
+        for ((_, _, f) in grantedFeatures(char)) {
+            f.initiative_ability?.let { bonus += modifier(scores[it] ?: 10) }
+        }
+        return bonus
     }
 
     fun addSpellToSpellbook(charId: String, spellFullId: String) {

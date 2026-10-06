@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dragonmark",
+  "category": "dragonmark","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:purify_food_and_drink","phb2024:unseen_servant"],"char_level_spells":{"3":["phb2024:calm_emotions"]}},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, не можете иметь другую черту Драконьей метки"

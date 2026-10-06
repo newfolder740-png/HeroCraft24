@@ -225,19 +225,37 @@ class SheetAbilitiesFragment : Fragment() {
 
     private fun resolveFeatChoiceText(char: CharacterData, feat: Feat): String? {
         val choice = feat.choice ?: return null
-        // Ищем ключ фич-карточки черты: родитель, для которого в featureChoices записан id этой черты
+        // Ищем родительский ключ, для которого в featureChoices записан id этой черты
         var featcardKey: String? = null
-        for (key in char.featureMultiChoices.keys) {
-            if (!key.startsWith("featcard_")) continue
-            val parent = key.removePrefix("featcard_")
-            val storedFeatId = char.featureChoices[parent] ?: continue
-            if (storedFeatId == feat.id || storedFeatId.substringAfterLast(":") == feat.id) {
-                featcardKey = key
+        for ((parent, storedFeatId) in char.featureChoices) {
+            if (parent.startsWith("featcard_") || parent.endsWith("_asi") ||
+                parent.endsWith("_list") || parent.endsWith("_ability")) continue
+            if (storedFeatId != null && (storedFeatId == feat.id || storedFeatId.substringAfterLast(":") == feat.id)) {
+                featcardKey = "featcard_$parent"
                 break
             }
         }
         featcardKey ?: return null
         return when (choice.type) {
+            "feat_asi" -> {
+                val ability = char.featureChoices["${featcardKey}_asi"] ?: choice.abilities.singleOrNull()
+                ability?.let { "+1 к «" + (asiAbilityName(it) ?: it) + "»" }
+            }
+            "feat_spells" -> {
+                val parts = mutableListOf<String>()
+                val ability = char.featureChoices["${featcardKey}_ability"] ?: choice.abilities.singleOrNull()
+                ability?.let { parts.add("Характеристика: " + (asiAbilityName(it) ?: it)) }
+                val spells = choice.fixed_spells.toMutableList()
+                for ((lvl, lvlSpells) in choice.char_level_spells) {
+                    if (char.level >= (lvl.toIntOrNull() ?: Int.MAX_VALUE)) spells.addAll(lvlSpells)
+                }
+                if (spells.isNotEmpty()) {
+                    parts.add("Заклинания: " + spells.joinToString(", ") {
+                        vm.repository.resolveName(it) ?: it.substringAfterLast(":")
+                    })
+                }
+                if (parts.isEmpty()) null else parts.joinToString("; ")
+            }
             "magic_initiate" -> {
                 val parts = mutableListOf<String>()
                 char.featureChoices["${featcardKey}_list"]?.let {

@@ -5,6 +5,6 @@
   "name": {"en": "", "ru": "Защита без доспехов"},
   "description": {"en": "", "ru": "Пока вы не носите доспехов, ваш базовый Класс Защиты равен 10 + ваши модификаторы Ловкости и Телосложения. Это умение работает даже если вы надеваете Щит."},
   "level": 1,
-  "is_placeholder": false,
+  "ac_formula":{"base":10,"abilities":["dexterity","constitution"]},"is_placeholder": false,
   "is_subclass_choice": false
 }

@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dark_gift",
+  "category": "dark_gift","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:message","phb2024:augury"]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Равенлофте"

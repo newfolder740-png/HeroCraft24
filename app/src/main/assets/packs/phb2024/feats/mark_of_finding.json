@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dragonmark",
+  "category": "dragonmark","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:hunter_s_mark"],"char_level_spells":{"3":["phb2024:locate_object"]}},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, не можете иметь другую черту Драконьей метки"

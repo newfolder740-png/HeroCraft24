@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "universal",
+  "category": "universal","choice":{"type":"feat_asi","abilities":[]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, 4 уровень, черта Метка гостеприимства"

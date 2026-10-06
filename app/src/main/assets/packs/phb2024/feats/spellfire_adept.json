@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "universal",
+  "category": "universal","choice":{"type":"feat_asi","abilities":["intelligence","wisdom","charisma"]},
   "prerequisite": {
     "en": "",
     "ru": "4 уровень, черта Искра чаропламени или умение Магия договора или умение Сотворение заклинаний"

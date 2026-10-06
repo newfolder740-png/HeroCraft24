@@ -1730,13 +1730,24 @@ class LevelUpFragment : Fragment() {
             }
         }
 
+        // Apply feat ASI (+1) for feats gained at this level-up
+        val newFeatParents = vm.featParentKeys(featureChoices)
+        if (newFeatParents.isNotEmpty()) {
+            val tempChar = ch.copy(featureChoices = mergedFeatureChoices)
+            val featBonuses = vm.computeFeatAsiBonuses(tempChar, newFeatParents)
+            for ((ability, amount) in featBonuses) {
+                updatedAbilityScores[ability] = (updatedAbilityScores[ability] ?: 10) + amount
+            }
+        }
+
         // Compute new HP: add hit die + CON mod (effective, with background bonus)
         val hitDie = cls?.hit_die ?: 6
         val hpRoll = (1..hitDie).random()
         val effectiveScores = vm.getEffectiveAbilityScores(ch)
         val conMod = vm.modifier(effectiveScores["constitution"] ?: 10)
-        val newMaxHp = ch.hitPoints.max + hpRoll + conMod
-        val newCurrentHp = ch.hitPoints.current + hpRoll + conMod
+        val featHpBonus = vm.computeLevelUpFeatHpBonus(ch.feats, newFeats, newTotalLevel)
+        val newMaxHp = ch.hitPoints.max + hpRoll + conMod + featHpBonus
+        val newCurrentHp = ch.hitPoints.current + hpRoll + conMod + featHpBonus
 
         val updated = ch.copy(
             level = newTotalLevel,

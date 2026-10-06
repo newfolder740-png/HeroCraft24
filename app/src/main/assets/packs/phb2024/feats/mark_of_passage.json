@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dragonmark",
+  "category": "dragonmark","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:misty_step"]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, не можете иметь другую черту Драконьей метки"

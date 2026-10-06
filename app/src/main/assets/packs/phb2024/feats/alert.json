@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","effects":[{"type":"initiative_proficiency"}],
   "prerequisite": {
     "en": "",
     "ru": ""

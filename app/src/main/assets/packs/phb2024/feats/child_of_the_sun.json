@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:faerie_fire"]},
   "prerequisite": {
     "en": "",
     "ru": ""

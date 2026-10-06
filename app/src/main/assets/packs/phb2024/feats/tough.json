@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","effects":[{"type":"hp_per_level","value":2}],
   "prerequisite": {
     "en": "",
     "ru": ""

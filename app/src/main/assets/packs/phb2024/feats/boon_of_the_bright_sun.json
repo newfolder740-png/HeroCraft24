@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "epic_boon",
+  "category": "epic_boon","choice":{"type":"feat_asi","abilities":["constitution","wisdom","charisma"]},
   "prerequisite": {
     "en": "",
     "ru": "19 уровень"

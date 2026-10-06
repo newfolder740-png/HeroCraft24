@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "universal",
+  "category": "universal","choice":{"type":"feat_asi","abilities":["strength","dexterity"]},
   "prerequisite": {
     "en": "",
     "ru": "4 уровень, черта Новобранец Пурпурного дракона или владение Воинским оружием"

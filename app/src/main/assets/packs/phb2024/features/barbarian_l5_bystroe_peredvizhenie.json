@@ -5,6 +5,6 @@
   "name": {"en": "", "ru": "Быстрое передвижение"},
   "description": {"en": "", "ru": "Пока вы не носите Тяжёлых доспехов, ваша Скорость увеличивается на 10 футов."},
   "level": 5,
-  "is_placeholder": false,
+  "speed_bonus":{"value":10,"requires":"no_heavy_armor"},"is_placeholder": false,
   "is_subclass_choice": false
 }

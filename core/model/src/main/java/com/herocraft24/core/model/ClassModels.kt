@@ -79,7 +79,25 @@ data class Feature(
     val choice: FeatureChoice? = null,
     val spell: String? = null,
     val resource: FeatureResource? = null,
-    val always_prepared: Map<String, List<String>> = emptyMap()
+    val always_prepared: Map<String, List<String>> = emptyMap(),
+    val ac_formula: AcFormula? = null,
+    val speed_bonus: SpeedBonus? = null,
+    val initiative_ability: String? = null
+)
+
+@Serializable
+data class AcFormula(
+    val base: Int = 10,
+    val abilities: List<String> = emptyList(),
+    val requires_no_armor: Boolean = true,
+    val requires_no_shield: Boolean = false
+)
+
+@Serializable
+data class SpeedBonus(
+    val value: Int = 0,
+    val table_key: String? = null, // например "unarmored_movement" — брать значение из таблицы класса
+    val requires: String? = null   // "no_armor" | "no_armor_no_shield" | "no_heavy_armor"
 )
 
 @Serializable
@@ -93,7 +111,14 @@ data class FeatureChoice(
     val class_filter: String? = null,
     val level_up: FeatureLevelUp? = null,
     val spell_lists: List<String> = emptyList(), // class fullIds to choose a spell list from (e.g. Magic Initiate)
-    val abilities: List<String> = emptyList()    // spellcasting abilities to choose from
+    val abilities: List<String> = emptyList(),   // spellcasting abilities to choose from
+    // Для черт: фиксированные всегда подготовленные заклинания и доборы по уровню ПЕРСОНАЖА
+    val fixed_spells: List<String> = emptyList(),
+    val char_level_spells: Map<String, List<String>> = emptyMap(),
+    // Для выбора владений/типов урона: "skill" | "tool" | "instrument" | "save" | "damage_type" | "any"
+    val options_kind: String? = null,
+    // Что даёт выбор из options: "proficiency" | "expertise_or_proficiency" | "expertise" | "display"
+    val grant: String? = null
 )
 
 @Serializable

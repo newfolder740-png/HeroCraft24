@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dark_gift",
+  "category": "dark_gift","choice":{"type":"feat_spells","abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:beast_sense","phb2024:speak_with_animals"]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Равенлофте"
