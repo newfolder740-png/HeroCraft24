@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "universal",
+  "category": "universal","choice":{"type":"feat_multi","asi":1,"abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:beast_sense"]},
   "prerequisite": {
     "en": "",
     "ru": "4 уровень, черта Птенец Изумрудного анклава"

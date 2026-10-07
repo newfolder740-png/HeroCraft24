@@ -35,6 +35,9 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private var levelFilter: Int = -1
     private var maxLevelFilter: Int = -1
     private var excludeIds: Set<String> = emptySet()
+    private var schoolFilter: Set<String> = emptySet()
+    private var ritualOnly: Boolean = false
+    private var optionIds: List<String> = emptyList()
     private var allSpells: List<SpellSummary> = emptyList()
     private var searchQuery: String = ""
     private var sortMode: SortMode = SortMode.LEVEL_ASC
@@ -76,6 +79,9 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
         private const val ARG_LEVEL_FILTER = "levelFilter"
         private const val ARG_MAX_LEVEL = "maxLevel"
         private const val ARG_EXCLUDE_IDS = "excludeIds"
+        private const val ARG_SCHOOLS = "schools"
+        private const val ARG_RITUAL_ONLY = "ritualOnly"
+        private const val ARG_OPTION_IDS = "optionIds"
 
         fun newInstance(
             classFilter: String,
@@ -86,7 +92,10 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             ability: String = "intelligence",
             levelFilter: Int = -1,
             excludeIds: List<String> = emptyList(),
-            maxLevel: Int = -1
+            maxLevel: Int = -1,
+            schools: List<String> = emptyList(),
+            ritualOnly: Boolean = false,
+            optionIds: List<String> = emptyList()
         ): ClassSpellPickerDialogFragment {
             return ClassSpellPickerDialogFragment().apply {
                 arguments = Bundle().apply {
@@ -99,6 +108,9 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
                     putInt(ARG_LEVEL_FILTER, levelFilter)
                     putStringArrayList(ARG_EXCLUDE_IDS, ArrayList(excludeIds))
                     putInt(ARG_MAX_LEVEL, maxLevel)
+                    putStringArrayList(ARG_SCHOOLS, ArrayList(schools))
+                    putBoolean(ARG_RITUAL_ONLY, ritualOnly)
+                    putStringArrayList(ARG_OPTION_IDS, ArrayList(optionIds))
                 }
             }
         }
@@ -119,6 +131,9 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
             levelFilter = it.getInt(ARG_LEVEL_FILTER, -1)
             maxLevelFilter = it.getInt(ARG_MAX_LEVEL, -1)
             excludeIds = (it.getStringArrayList(ARG_EXCLUDE_IDS) ?: emptyList()).toSet()
+            schoolFilter = (it.getStringArrayList(ARG_SCHOOLS) ?: emptyList()).toSet()
+            ritualOnly = it.getBoolean(ARG_RITUAL_ONLY, false)
+            optionIds = it.getStringArrayList(ARG_OPTION_IDS) ?: emptyList()
             selectedIds.addAll(it.getStringArrayList(ARG_SELECTED) ?: emptyList())
         }
     }
@@ -198,13 +213,21 @@ class ClassSpellPickerDialogFragment : DialogFragment() {
     private fun loadSpells() {
         lifecycleScope.launch {
             val raw = vm.getAllSpellSummaries()
-            var filtered = when {
+            var filtered = if (optionIds.isNotEmpty()) {
+                raw.filter { it.fullId in optionIds }
+            } else when {
                 levelFilter >= 0 -> raw.filter { it.level == levelFilter }
                 maxLevelFilter >= 0 -> raw.filter { it.level in 1..maxLevelFilter }
                 else -> raw.filter { it.level in 0..1 }
             }
             if (excludeIds.isNotEmpty()) {
                 filtered = filtered.filter { it.fullId !in excludeIds }
+            }
+            if (schoolFilter.isNotEmpty()) {
+                filtered = filtered.filter { it.school.lowercase() in schoolFilter }
+            }
+            if (ritualOnly) {
+                filtered = filtered.filter { it.ritual }
             }
             val filter = classFilter
             if (filter.isNotBlank()) {

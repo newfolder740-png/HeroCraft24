@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","choice":{"type":"feat_multi","proficiency_parts":[{"kind":"instrument","count":3,"grant":"proficiency","options":["phb2024:bagpipes","phb2024:doss_lute","phb2024:drum","phb2024:flute","phb2024:horn","phb2024:lute","phb2024:lyre","phb2024:pan_flute","phb2024:shawm","phb2024:viol"]}]},
   "prerequisite": {
     "en": "",
     "ru": ""

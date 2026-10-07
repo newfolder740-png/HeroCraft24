@@ -213,9 +213,15 @@ class SheetInventoryFragment : Fragment() {
 
         // ── Equipment Proficiencies ──
         sectionTitle(content, "Владения экипировкой")
-        val profArmor = cls?.starting_proficiencies?.armor?.filterNotNull() ?: emptyList()
-        val profWeapons = cls?.starting_proficiencies?.weapons?.filterNotNull() ?: emptyList()
-        val profTools = cls?.starting_proficiencies?.tools?.filterNotNull() ?: emptyList()
+        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val armorGroups = setOf("light_armor", "medium_armor", "heavy_armor", "shields")
+        val weaponGroups = setOf("simple", "martial")
+        val profArmor = (cls?.starting_proficiencies?.armor?.filterNotNull() ?: emptyList()) +
+            featGrants.equipment.filter { it in armorGroups }
+        val profWeapons = (cls?.starting_proficiencies?.weapons?.filterNotNull() ?: emptyList()) +
+            featGrants.equipment.filter { it in weaponGroups }
+        val profTools = (cls?.starting_proficiencies?.tools?.filterNotNull() ?: emptyList()) +
+            featGrants.equipment.filter { it !in armorGroups && it !in weaponGroups }
 
         val profRecycler = RecyclerView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -710,6 +716,18 @@ class SheetInventoryFragment : Fragment() {
         }
     }
 
+    private fun profDisplayName(id: String): String = when (id) {
+        "light_armor" -> "Лёгкие доспехи"
+        "medium_armor" -> "Средние доспехи"
+        "heavy_armor" -> "Тяжёлые доспехи"
+        "shields" -> "Щиты"
+        "simple" -> "Простое оружие"
+        "martial" -> "Воинское оружие"
+        else -> vm.repository.resolveName(id)
+            ?: vm.repository.resolveName("phb2024:" + id.substringAfterLast(":"))
+            ?: id.substringAfterLast(":")
+    }
+
     inner class ProficiencyAdapter(private val proficiencies: List<Pair<String, List<String>>>) : RecyclerView.Adapter<ProficiencyAdapter.VH>() {
 
         inner class VH(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
@@ -738,7 +756,7 @@ class SheetInventoryFragment : Fragment() {
                 } else {
                     items.forEach { item ->
                         content.addView(TextView(content.context).apply {
-                            text = "• $item"
+                            text = "• ${profDisplayName(item)}"
                             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
                             setPadding(0, 2.dp(content.context), 0, 2.dp(content.context))
                         })

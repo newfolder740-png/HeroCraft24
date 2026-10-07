@@ -20,12 +20,12 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","choice":{"type":"feat_multi","proficiency_parts":[{"kind":"skill_tool","count":3,"grant":"proficiency","options":["athletics","acrobatics","sleight_of_hand","stealth","arcana","history","investigation","nature","religion","animal_handling","insight","medicine","perception","survival","deception","intimidation","performance","persuasion","phb2024:carpenter_s_tools","phb2024:cartographer_s_tools","phb2024:cobbler_s_tools","phb2024:glassblower_s_tools","phb2024:jeweler_s_tools","phb2024:leatherworker_s_tools","phb2024:mason_s_tools","phb2024:navigator_s_tools","phb2024:potter_s_tools","phb2024:smith_s_tools","phb2024:tinker_s_tools","phb2024:weaver_s_tools","phb2024:woodcarver_s_tools","phb2024:alchemist_s_supplies","phb2024:brewer_s_supplies","phb2024:calligrapher_s_supplies","phb2024:cook_s_utencils","phb2024:herbalism_kit","phb2024:painter_s_supplies","phb2024:poisoner_s_kit","phb2024:thieves_tools","phb2024:bagpipes","phb2024:doss_lute","phb2024:drum","phb2024:flute","phb2024:horn","phb2024:lute","phb2024:lyre","phb2024:pan_flute","phb2024:shawm","phb2024:viol"]}]},
   "prerequisite": {
     "en": "",
     "ru": ""
   },
-  "repeatable": false,
+  "repeatable": true,
   "benefits": [
     
   ]

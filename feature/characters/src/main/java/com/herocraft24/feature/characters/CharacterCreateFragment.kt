@@ -1073,10 +1073,38 @@ class CharacterCreateFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "FeatSpellPicker")
             },
+            onPickFeatSpellPart = { featureId, partIndex, spec, current, required ->
+                val ch = vm.wizard.value
+                val ability = ch.featureChoices["${featureId}_ability"]
+                    ?: ch.featureChoices["${featureId}_asi"]
+                    ?: "intelligence"
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = spec.class_filter ?: "",
+                    cantrips = spec.cantrips,
+                    spells = if (spec.proficiency_count) required else spec.spells,
+                    selected = current,
+                    charId = ch.id,
+                    ability = ability,
+                    levelFilter = when {
+                        spec.options.isNotEmpty() -> -1
+                        spec.cantrips > 0 && spec.spells > 0 -> -1
+                        else -> spec.spell_level
+                    },
+                    schools = spec.schools,
+                    ritualOnly = spec.ritual_only,
+                    optionIds = spec.options
+                ).apply {
+                    setOnResultListener { selected ->
+                        featuresCreateAdapter?.updateFeatSpellPart(featureId, partIndex, selected)
+                        updateNextButtonState()
+                    }
+                }.show(childFragmentManager, "FeatSpellPartPicker")
+            },
             initialFeatureChoices = wizard.featureChoices,
             initialFeatureMultiChoices = wizard.featureMultiChoices,
             initialAsiChoices = wizard.asiChoices,
             proficientSkills = (wizard.classSkillChoices + (vm.getAllBackgrounds().find { it.id == wizard.backgroundId.substringAfterLast(":") }?.skill_proficiencies ?: emptyList())).toSet(),
+            classSavingThrows = vm.getClassInfo(wizard.classId)?.saving_throws?.toSet() ?: emptySet(),
             characterLevel = 1,
             selectedFeats = wizard.selectedFeats.toSet(),
             classId = wizard.classId,

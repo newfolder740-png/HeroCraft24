@@ -1,7 +1,7 @@
 {
   "id": "fighter_psi_voin_l3_psionicheskaya_sila",
   "level": 3,
-  "is_placeholder": false,
+  "resource":{"shape":"hexagon","count_formula":"steps:3=4,5=6,9=8,13=10,17=12","refresh":"long_rest"},"is_placeholder": false,
   "type": "feature",
   "name": {
     "en": "",

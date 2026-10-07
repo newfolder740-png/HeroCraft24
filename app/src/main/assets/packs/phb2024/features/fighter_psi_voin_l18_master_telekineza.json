@@ -1,7 +1,7 @@
 {
   "id": "fighter_psi_voin_l18_master_telekineza",
   "level": 18,
-  "is_placeholder": false,
+  "always_prepared":{"18":["phb2024:telekinesis"]},"spell_ability":"intelligence","is_placeholder": false,
   "type": "feature",
   "name": {
     "en": "",

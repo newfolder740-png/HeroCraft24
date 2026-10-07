@@ -5,6 +5,6 @@
   "name": {"en": "", "ru": "Говорящий с природой"},
   "description": {"en": "", "ru": "Вы можете сотворять заклинание Общение с природой, но только как Ритуал. Вашей заклинательной характеристикой для него является Мудрость."},
   "level": 10,
-  "is_placeholder": false,
+  "always_prepared":{"10":["phb2024:commune_with_nature"]},"spell_ability":"wisdom","is_placeholder": false,
   "is_subclass_choice": false
 }

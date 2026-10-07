@@ -10,6 +10,7 @@ import com.herocraft24.core.data.ContentRepository
 import com.herocraft24.core.model.Feature
 import com.herocraft24.core.model.FeatureChoice
 import com.herocraft24.core.model.Feat
+import com.herocraft24.core.model.ProficiencyPart
 import com.herocraft24.core.ui.local.UiLocalizer
 import com.herocraft24.core.ui.util.dp
 import com.herocraft24.feature.characters.databinding.CardFeatureCreateBinding
@@ -24,12 +25,20 @@ class FeaturesCreateAdapter(
     private val onPickFeatOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
     private val onPickMetamagicOptions: (featureId: String, title: String, candidates: List<String>, selected: List<String>, count: Int) -> Unit = { _, _, _, _, _ -> },
     private val onPickInvocations: (featureId: String, current: List<String>, choice: com.herocraft24.core.model.FeatureChoice) -> Unit = { _, _, _ -> },
+    private val onPickManeuvers: (featureId: String, title: String, current: List<String>, required: Int) -> Unit = { _, _, _, _ -> },
     private val onPickFeatSpells: (featureId: String, current: List<String>, choice: com.herocraft24.core.model.FeatureChoice, selectedClass: String, selectedAbility: String) -> Unit = { _, _, _, _, _ -> },
+    private val onPickFeatSpellPart: (featureId: String, partIndex: Int, spec: com.herocraft24.core.model.SpellPickSpec, current: List<String>, required: Int) -> Unit = { _, _, _, _, _ -> },
     private val initialFeatureChoices: Map<String, String> = emptyMap(),
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
     private val initialAsiChoices: Map<String, AsiChoice> = emptyMap(),
     private val proficientSkills: Set<String> = emptySet(),
+    // Навыки, в которых у персонажа уже есть Экспертность (из любого источника)
+    private val expertiseSkills: Set<String> = emptySet(),
+    // Характеристики, спасбросками которыми персонаж уже владеет (от класса)
+    private val classSavingThrows: Set<String> = emptySet(),
     private val characterLevel: Int = 1,
+    // Уровень класса, за который берётся уровень (для count_steps приёмов); 0 = использовать characterLevel
+    private val classLevelForChoices: Int = 0,
     private val selectedFeats: Set<String> = emptySet(),
     private val classId: String = "",
     private val allowEpicBoons: Boolean = false
@@ -40,6 +49,10 @@ class FeaturesCreateAdapter(
     private val featCards = mutableMapOf<String, Feature>()
     // Features whose feat choice spawns a feat card (asi_or_feat)
     private val asiOrFeatFeatures = mutableSetOf<String>()
+    // Features, чей выбор является чертой (asi_or_feat и feat_category) — нужны,
+    // чтобы черты, взятые на этом же экране, исключались из следующих пикеров
+    private val featBearingFeatures = mutableSetOf<String>()
+    private val extraSelectedFeats = mutableSetOf<String>()
     // Subclass features added dynamically when subclass is selected
     private var subclassFeatures: List<Feature> = emptyList()
     // Combined display list (base items + feat cards + subclass features)
@@ -126,6 +139,11 @@ class FeaturesCreateAdapter(
                     val choices = featureMultiChoices[feature.id] ?: return false
                     if (choices.size < choice.count || choices.any { it == null }) return false
                 }
+                "maneuvers" -> {
+                    val choices = featureMultiChoices[feature.id] ?: return false
+                    val required = requiredManeuverCount(choice)
+                    if (choices.count { it != null } < required) return false
+                }
                 "magic_initiate" -> {
                     if (featureChoices["${feature.id}_list"] == null) return false
                     if (featureChoices["${feature.id}_ability"] == null) return false
@@ -133,7 +151,7 @@ class FeaturesCreateAdapter(
                     val selectedCount = choices.count { it != null }
                     if (selectedCount < choice.cantrips + choice.spells) return false
                 }
-                "class_spells", "wizard_spells" -> {
+                "class_spells", "wizard_spells", "prepared_spells", "known_spell" -> {
                     val choices = featureMultiChoices[feature.id] ?: return false
                     val selectedCount = choices.count { it != null }
                     if (selectedCount < choice.cantrips + choice.spells) return false
@@ -147,6 +165,25 @@ class FeaturesCreateAdapter(
                 }
                 "feat_spells" -> {
                     if (choice.abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
+                }
+                "feat_multi" -> {
+                    if (choice.asi > 0 && choice.abilities.size != 1 && featureChoices["${feature.id}_asi"] == null) return false
+                    choice.proficiency_parts.forEachIndexed { index, part ->
+                        val selections = featureMultiChoices["${feature.id}_prof$index"] ?: return false
+                        if (selections.count { it != null } < part.count) return false
+                    }
+                    if (choice.spell_abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
+                    choice.pick_spells.forEachIndexed { index, spec ->
+                        val required = requiredSpellPickCount(spec)
+                        val selections = featureMultiChoices["${feature.id}_spell$index"] ?: return false
+                        if (selections.count { it != null } < required) return false
+                    }
+                }
+                "grants" -> {
+                    choice.proficiency_parts.forEachIndexed { index, part ->
+                        val selections = featureMultiChoices["${feature.id}_prof$index"] ?: return false
+                        if (selections.count { it != null } < part.count) return false
+                    }
                 }
                 "asi_or_feat" -> {
                     if (featureChoices[feature.id] == null) return false
@@ -226,10 +263,13 @@ class FeaturesCreateAdapter(
             "spellcasting_ability" -> buildSpellcastingAbilityChoice(container, feature, choice)
             "metamagic" -> buildMetamagicChoice(container, feature, choice)
             "invocations" -> buildInvocationsChoice(container, feature, choice)
-            "class_spells", "wizard_spells" -> buildClassSpellsChoice(container, feature, choice)
+            "maneuvers" -> buildManeuversChoice(container, feature, choice)
+            "class_spells", "wizard_spells", "prepared_spells", "known_spell" -> buildClassSpellsChoice(container, feature, choice)
             "magic_initiate" -> buildMagicInitiateChoice(container, feature, choice)
             "feat_asi" -> buildFeatAsiChoice(container, feature, choice)
             "feat_spells" -> buildFeatSpellsChoice(container, feature, choice)
+            "feat_multi" -> buildFeatMultiChoice(container, feature, choice)
+            "grants" -> buildGrantsChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
             "asi" -> {
                 // For feat cards, use the parent feature ID as the asiChoices key
@@ -246,10 +286,15 @@ class FeaturesCreateAdapter(
     private fun buildSkillExpertiseChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         val ctx = container.context
         val count = choice.count
+        // choice.options сужает список («Академические знания», «Благословенные знания»);
+        // навыки, в которых Экспертность уже есть, не предлагаются
+        val allowedSkills = proficientSkills
+            .filter { choice.options.isEmpty() || it in choice.options }
+            .filter { it !in expertiseSkills }
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
 
         choiceContainer.addView(TextView(ctx).apply {
-            text = "Выберите $count навыка:"
+            text = if (count > 1) "Выберите $count навыка:" else "Выберите навык:"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setPadding(0, 0, 0, 4.dp(ctx))
         })
@@ -268,7 +313,7 @@ class FeaturesCreateAdapter(
                 setOnItemClickListener { _, _, pos, _ ->
                     val currentChoices = featureMultiChoices[feature.id] ?: return@setOnItemClickListener
                     val otherSelected = currentChoices.mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
-                    val available = proficientSkills.filter { it !in otherSelected }.sortedBy { UiLocalizer.skill(it) }
+                    val available = allowedSkills.filter { it !in otherSelected }.sortedBy { UiLocalizer.skill(it) }
                     val selected = available.getOrNull(pos) ?: return@setOnItemClickListener
                     currentChoices[i] = selected; featureMultiChoices[feature.id] = currentChoices
                     onFeatureMultiChoiceChanged(feature.id, currentChoices.filterNotNull())
@@ -276,7 +321,7 @@ class FeaturesCreateAdapter(
                         if (idx != i) {
                             val otherExclude = currentChoices.mapIndexedNotNull { j, s -> if (j != idx) s else null }.toSet()
                             dd.setAdapter(android.widget.ArrayAdapter(dd.context, android.R.layout.simple_dropdown_item_1line,
-                                proficientSkills.filter { it !in otherExclude }.sortedBy { UiLocalizer.skill(it) }.map { UiLocalizer.skill(it) }))
+                                allowedSkills.filter { it !in otherExclude }.sortedBy { UiLocalizer.skill(it) }.map { UiLocalizer.skill(it) }))
                         }
                     }
                 }
@@ -286,7 +331,7 @@ class FeaturesCreateAdapter(
         dropdowns.forEachIndexed { i, dropdown ->
             val exclude = (featureMultiChoices[feature.id] ?: return@forEachIndexed).mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
             dropdown.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line,
-                proficientSkills.filter { it !in exclude }.sortedBy { UiLocalizer.skill(it) }.map { UiLocalizer.skill(it) }))
+                allowedSkills.filter { it !in exclude }.sortedBy { UiLocalizer.skill(it) }.map { UiLocalizer.skill(it) }))
         }
         container.addView(choiceContainer)
     }
@@ -422,6 +467,87 @@ class FeaturesCreateAdapter(
         notifyDataSetChanged()
     }
 
+    // ── Maneuvers (Battle Master) ──
+
+    /** Сколько приёмов должно быть известно: по порогам count_steps ("3=3,7=5,10=7,15=9") или count. */
+    private fun requiredManeuverCount(choice: FeatureChoice): Int {
+        val steps = choice.count_steps
+        if (steps.isNullOrBlank()) return choice.count
+        val level = if (classLevelForChoices > 0) classLevelForChoices else characterLevel
+        var result = 0
+        for (part in steps.split(",")) {
+            val kv = part.split("=")
+            if (kv.size != 2) continue
+            val threshold = kv[0].trim().toIntOrNull() ?: continue
+            val value = kv[1].trim().toIntOrNull() ?: continue
+            if (level >= threshold && value > result) result = value
+        }
+        return if (result > 0) result else choice.count
+    }
+
+    private fun buildManeuversChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val required = requiredManeuverCount(choice)
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите приёмы ($required):"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+
+        if (!featureMultiChoices.containsKey(feature.id)) {
+            featureMultiChoices[feature.id] = MutableList(required) { null }
+        }
+
+        val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        fun refreshSelected() {
+            selectedContainer.removeAllViews()
+            val selected = featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList()
+            if (selected.isEmpty()) {
+                selectedContainer.addView(TextView(ctx).apply {
+                    text = "Приёмы не выбраны"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                    setTextColor(0xFF666666.toInt())
+                })
+            } else {
+                for (id in selected) {
+                    val name = contentRepo.resolveName(id) ?: id.substringAfterLast(":")
+                    selectedContainer.addView(TextView(ctx).apply {
+                        text = "• $name"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                    })
+                }
+            }
+        }
+        refreshSelected()
+
+        val pickButton = com.google.android.material.button.MaterialButton(ctx).apply {
+            text = "Выбрать приёмы"
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                onPickManeuvers(
+                    feature.id,
+                    feature.name.get(),
+                    featureMultiChoices[feature.id]?.filterNotNull() ?: emptyList(),
+                    required
+                )
+            }
+        }
+
+        choiceContainer.addView(selectedContainer)
+        choiceContainer.addView(pickButton)
+        container.addView(choiceContainer)
+    }
+
+    fun updateManeuvers(featureId: String, selected: List<String>) {
+        featureMultiChoices[featureId] = selected.toMutableList()
+        onFeatureMultiChoiceChanged(featureId, selected)
+        notifyDataSetChanged()
+    }
+
     // ── Class Spells ──
 
     private fun buildClassSpellsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
@@ -430,7 +556,11 @@ class FeaturesCreateAdapter(
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
 
         choiceContainer.addView(TextView(ctx).apply {
-            text = "Выберите ${choice.cantrips} заговора и ${choice.spells} заклинания 1-го уровня"
+            text = if (choice.type == "known_spell") {
+                "Выберите заклинание ${choice.spell_level}-го уровня"
+            } else {
+                "Выберите ${choice.cantrips} заговора и ${choice.spells} заклинания 1-го уровня"
+            }
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
             setPadding(0, 0, 0, 4.dp(ctx))
         })
@@ -501,15 +631,20 @@ class FeaturesCreateAdapter(
             text = "Список заклинаний:"
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
         })
-        val classNames = choice.spell_lists.map { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+        // Черту можно взять повторно, но каждый раз — новый список заклинаний
+        val takenLists = featureChoices
+            .filterKeys { it != listKey && it.endsWith("_list") }
+            .values.filterNotNull().toSet()
+        val availableLists = choice.spell_lists.filter { it !in takenLists }
+        val classNames = availableLists.map { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
         choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
             hint = "Выберите список"; setOnClickListener { showDropDown() }
             setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, classNames))
-            featureChoices[listKey]?.let { val idx = choice.spell_lists.indexOf(it); if (idx >= 0) setText(classNames[idx], false) }
+            featureChoices[listKey]?.let { val idx = availableLists.indexOf(it); if (idx >= 0) setText(classNames[idx], false) }
             setOnItemClickListener { _, _, pos, _ ->
-                val selected = choice.spell_lists.getOrNull(pos) ?: return@setOnItemClickListener
+                val selected = availableLists.getOrNull(pos) ?: return@setOnItemClickListener
                 val prev = featureChoices[listKey]
                 featureChoices[listKey] = selected
                 onFeatureChoiceChanged(listKey, selected)
@@ -707,6 +842,348 @@ class FeaturesCreateAdapter(
         container.addView(choiceContainer)
     }
 
+    // ── Feat Multi (ASI + выборы владений/экспертности/типов урона) ──
+
+    private val ALL_SKILL_IDS = listOf(
+        "athletics", "acrobatics", "sleight_of_hand", "stealth", "arcana", "history", "investigation",
+        "nature", "religion", "animal_handling", "insight", "medicine", "perception", "survival",
+        "deception", "intimidation", "performance", "persuasion"
+    )
+
+    private fun partOptions(part: ProficiencyPart, repo: ContentRepository? = null, partKey: String? = null): List<String> {
+        val base = when {
+            part.options.isNotEmpty() -> part.options
+            part.kind == "skill" || part.kind == "skill_tool" -> ALL_SKILL_IDS
+            part.kind == "save" -> allAbilityKeys
+            else -> emptyList()
+        }
+        var result = base
+        val isSkillPart = part.kind == "skill" || part.kind == "skill_tool"
+        if (part.grant == "expertise" && isSkillPart && repo != null) {
+            // Собственный текущий выбор части остаётся доступным, иначе он пропадёт из списка
+            val own = partKey?.let { featureMultiChoices[it]?.filterNotNull()?.toSet() } ?: emptySet()
+            val taken = effectiveExpertiseSkills(repo)
+            result = result.filter { it !in taken || it in own }
+            if (part.require_proficiency) {
+                val known = effectiveProficientSkills(repo)
+                result = result.filter { it in known }
+            }
+        }
+        // Тип урона нельзя выбрать дважды между разными экземплярами одной черты
+        if (part.kind == "damage_type" && partKey != null) {
+            val taken = choicesTakenElsewhere(partKey, base)
+            result = result.filter { it !in taken }
+        }
+        return result
+    }
+
+    /** Навыки, которыми персонаж владеет, включая выданные чертами, выбранными на этом экране. */
+    private fun effectiveProficientSkills(repo: ContentRepository): Set<String> {
+        val result = proficientSkills.toMutableSet()
+        forEachChosenFeat(repo) { parentKey, feat ->
+            feat.proficiencies.forEach { if (it in ALL_SKILL_IDS) result.add(it) }
+            val parts = feat.choice?.takeIf { it.type == "feat_multi" }?.proficiency_parts ?: return@forEachChosenFeat
+            parts.forEachIndexed { partIndex, part ->
+                if (part.grant != "proficiency") return@forEachIndexed
+                for (v in featureMultiChoices["featcard_${parentKey}_prof$partIndex"].orEmpty()) {
+                    if (v != null && v in ALL_SKILL_IDS) result.add(v)
+                }
+            }
+        }
+        return result
+    }
+
+    /** Навыки с Экспертностью: от персонажа и от черт, выбранных на этом экране. */
+    private fun effectiveExpertiseSkills(repo: ContentRepository): Set<String> {
+        val result = expertiseSkills.toMutableSet()
+        forEachChosenFeat(repo) { parentKey, feat ->
+            feat.expertise.forEach { if (it in ALL_SKILL_IDS) result.add(it) }
+            val parts = feat.choice?.takeIf { it.type == "feat_multi" }?.proficiency_parts ?: return@forEachChosenFeat
+            parts.forEachIndexed { partIndex, part ->
+                if (part.grant != "expertise") return@forEachIndexed
+                for (v in featureMultiChoices["featcard_${parentKey}_prof$partIndex"].orEmpty()) {
+                    if (v != null && v in ALL_SKILL_IDS) result.add(v)
+                }
+            }
+        }
+        return result
+    }
+
+    /** Перебирает черты, выбранные в карточках этого экрана (parentKey → Feat). */
+    private inline fun forEachChosenFeat(repo: ContentRepository, block: (String, Feat) -> Unit) {
+        for ((key, id) in featureChoices) {
+            if (id == null || key.startsWith("featcard_")) continue
+            val feat = repo.getFeat(id) ?: continue
+            block(key, feat)
+        }
+    }
+
+    /**
+     * Значения из [allowed], уже выбранные в ДРУГОЙ карточке черты.
+     * Выборы той же карточки не учитываются: например, «Эксперт в навыке» разрешает
+     взять Экспертность в навыке, только что выбранном этой же чертой.
+     */
+    private fun choicesTakenElsewhere(partKey: String, allowed: List<String>): Set<String> {
+        val allowedSet = allowed.toSet()
+        val cardKey = partKey.substringBeforeLast("_prof")
+        val taken = mutableSetOf<String>()
+        for ((key, values) in featureMultiChoices) {
+            if (key.substringBeforeLast("_prof") == cardKey) continue
+            for (v in values) if (v != null && v in allowedSet) taken.add(v)
+        }
+        return taken
+    }
+
+    /** Сбрасывает выборы частей, ставшие недопустимыми после изменения другой части. */
+    private fun dropInvalidPartSelections(repo: ContentRepository, cardId: String, parts: List<ProficiencyPart>) {
+        parts.forEachIndexed { index, part ->
+            val partKey = "${cardId}_prof$index"
+            val values = featureMultiChoices[partKey] ?: return@forEachIndexed
+            val allowed = partOptions(part, repo, partKey).toSet()
+            var changed = false
+            for (i in values.indices) {
+                val v = values[i]
+                if (v != null && v !in allowed) {
+                    values[i] = null
+                    changed = true
+                }
+            }
+            if (changed) onFeatureMultiChoiceChanged(partKey, values.filterNotNull())
+        }
+    }
+
+    private fun optionDisplayName(repo: ContentRepository, kind: String, id: String): String = when (kind) {
+        "skill" -> UiLocalizer.skill(id)
+        "skill_tool" -> if (id in ALL_SKILL_IDS) UiLocalizer.skill(id) else (repo.resolveName(id) ?: id.substringAfterLast(":"))
+        "save" -> abilityNames[id] ?: id
+        "damage_type" -> UiLocalizer.damageType(id)
+        else -> repo.resolveName(id) ?: id.substringAfterLast(":")
+    }
+
+    private fun partLabel(part: ProficiencyPart): String {
+        val what = when (part.kind) {
+            "skill" -> "навыков"
+            "skill_tool" -> "навыков или инструментов"
+            "tool" -> "ремесленных инструментов"
+            "instrument" -> "музыкальных инструментов"
+            "save" -> "спасбросок"
+            "damage_type" -> "тип урона"
+            else -> "вариантов"
+        }
+        val action = when (part.grant) {
+            "expertise" -> "Экспертность"
+            "proficiency_and_expertise" -> "Владение и Экспертность"
+            "expertise_or_proficiency" -> "Владение или Экспертность"
+            "display" -> "Выберите"
+            else -> "Владение"
+        }
+        val countStr = if (part.count > 1) " (${part.count})" else ""
+        return if (part.grant == "display") "$action $what$countStr:" else "$action — $what$countStr:"
+    }
+
+    /**
+     * Рендер частей владений/экспертности/отображаемых выборов.
+     * Используется и чертами (feat_multi), и умениями (grants).
+     * Выборы хранятся в featureMultiChoices["<keyPrefix>_prof<index>"].
+     */
+    private fun renderProficiencyParts(
+        choiceContainer: LinearLayout,
+        repo: ContentRepository,
+        keyPrefix: String,
+        parts: List<ProficiencyPart>
+    ) {
+        val ctx = choiceContainer.context
+        // Выбор в одной части может менять допустимые значения в другой
+        // («Эксперт в навыке»: экспертность — в только что выбранном навыке)
+        val needsRebindOnChange = parts.any {
+            it.require_proficiency || it.grant == "expertise" || it.kind == "damage_type"
+        }
+        parts.forEachIndexed { index, part ->
+            val partKey = "${keyPrefix}_prof$index"
+            val optionIds = partOptions(part, repo, partKey)
+            choiceContainer.addView(TextView(ctx).apply {
+                text = partLabel(part)
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+            })
+            if (!featureMultiChoices.containsKey(partKey)) {
+                featureMultiChoices[partKey] = MutableList(part.count) { null }
+            }
+            fun namesFor(excluded: Set<String?>): List<String> =
+                optionIds.filter { it !in excluded }.map { optionDisplayName(repo, part.kind, it) }
+
+            val dropdowns = mutableListOf<com.google.android.material.textfield.MaterialAutoCompleteTextView>()
+            for (i in 0 until part.count) {
+                val dropdown = com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                    hint = "Выберите"; setOnClickListener { showDropDown() }
+                    featureMultiChoices[partKey]?.getOrNull(i)?.let {
+                        setText(optionDisplayName(repo, part.kind, it), false)
+                    }
+                    setOnItemClickListener { _, _, pos, _ ->
+                        val current = featureMultiChoices[partKey] ?: return@setOnItemClickListener
+                        val otherSelected = current.mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
+                        val selected = optionIds.filter { it !in otherSelected }.getOrNull(pos) ?: return@setOnItemClickListener
+                        current[i] = selected
+                        featureMultiChoices[partKey] = current
+                        onFeatureMultiChoiceChanged(partKey, current.filterNotNull())
+                        dropdowns.forEachIndexed { idx, dd ->
+                            if (idx != i) {
+                                val excl = current.mapIndexedNotNull { j, s -> if (j != idx) s else null }.toSet()
+                                dd.setAdapter(android.widget.ArrayAdapter(dd.context, android.R.layout.simple_dropdown_item_1line, namesFor(excl)))
+                            }
+                        }
+                        if (needsRebindOnChange) {
+                            dropInvalidPartSelections(repo, keyPrefix, parts)
+                            notifyDataSetChanged()
+                        }
+                    }
+                }
+                dropdowns.add(dropdown)
+                choiceContainer.addView(dropdown)
+            }
+            dropdowns.forEachIndexed { i, dd ->
+                val excl = (featureMultiChoices[partKey] ?: return@forEachIndexed)
+                    .mapIndexedNotNull { idx, s -> if (idx != i) s else null }.toSet()
+                dd.setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, namesFor(excl)))
+            }
+        }
+    }
+
+    /** Выбор владений/экспертности, который даёт умение класса или подкласса. */
+    private fun buildGrantsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+        renderProficiencyParts(choiceContainer, ContentRepository.get(ctx), feature.id, choice.proficiency_parts)
+        container.addView(choiceContainer)
+    }
+
+    private fun buildFeatMultiChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val contentRepo = ContentRepository.get(ctx)
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+
+        // ASI part
+        if (choice.asi > 0) {
+            val asiKey = "${feature.id}_asi"
+            val allowed = (if (choice.abilities.isEmpty()) allAbilityKeys else choice.abilities)
+                // «Стойкий»: характеристику, спасброском которой уже владеешь, выбрать нельзя
+                .let { list ->
+                    if (choice.asi_grants_save && classSavingThrows.isNotEmpty())
+                        list.filter { it !in classSavingThrows }.ifEmpty { list }
+                    else list
+                }
+            choiceContainer.addView(TextView(ctx).apply {
+                text = if (choice.asi_grants_save) "Повышение характеристики (+${choice.asi}) — также даёт владение её спасброском:"
+                else "Повышение характеристики (+${choice.asi}):"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall); setPadding(0, 0, 0, 4.dp(ctx))
+            })
+            if (allowed.size == 1) {
+                choiceContainer.addView(TextView(ctx).apply {
+                    text = "+${choice.asi} к «${abilityNames[allowed[0]] ?: allowed[0]}»"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                })
+            } else {
+                val names = allowed.map { abilityNames[it] ?: it }
+                choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                    hint = "Выберите характеристику"; setOnClickListener { showDropDown() }
+                    setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, names))
+                    featureChoices[asiKey]?.let { val idx = allowed.indexOf(it); if (idx >= 0) setText(names[idx], false) }
+                    setOnItemClickListener { _, _, pos, _ ->
+                        val selected = allowed.getOrNull(pos)
+                        featureChoices[asiKey] = selected
+                        onFeatureChoiceChanged(asiKey, selected)
+                    }
+                })
+            }
+        }
+
+        renderProficiencyParts(choiceContainer, contentRepo, feature.id, choice.proficiency_parts)
+
+        // Отдельный выбор заклинательной характеристики (например, Boon of Revelry)
+        if (choice.spell_abilities.isNotEmpty()) {
+            val abilityKey = "${feature.id}_ability"
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "Заклинательная характеристика:"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+            })
+            val abilityNamesList = choice.spell_abilities.map { abilityNames[it] ?: it }
+            choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+                hint = "Выберите характеристику"; setOnClickListener { showDropDown() }
+                setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, abilityNamesList))
+                featureChoices[abilityKey]?.let { val idx = choice.spell_abilities.indexOf(it); if (idx >= 0) setText(abilityNamesList[idx], false) }
+                setOnItemClickListener { _, _, pos, _ ->
+                    val selected = choice.spell_abilities.getOrNull(pos)
+                    featureChoices[abilityKey] = selected
+                    onFeatureChoiceChanged(abilityKey, selected)
+                }
+            })
+        }
+
+        // Фиксированные всегда подготовленные заклинания
+        if (choice.fixed_spells.isNotEmpty()) {
+            val names = choice.fixed_spells.joinToString(", ") { contentRepo.resolveName(it) ?: it.substringAfterLast(":") }
+            choiceContainer.addView(TextView(ctx).apply {
+                text = "Всегда подготовлены: $names"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                setPadding(0, 8.dp(ctx), 0, 0)
+            })
+        }
+
+        // Выбор заклинаний (части pick_spells)
+        choice.pick_spells.forEachIndexed { index, spec ->
+            val partKey = "${feature.id}_spell$index"
+            val selected = featureMultiChoices[partKey]?.filterNotNull() ?: emptyList()
+            val required = requiredSpellPickCount(spec)
+            choiceContainer.addView(TextView(ctx).apply {
+                text = spellPickLabel(spec) + " (${selected.size}/$required):"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+            })
+            for (spellId in selected) {
+                val name = contentRepo.resolveName(spellId) ?: spellId.substringAfterLast(":")
+                choiceContainer.addView(TextView(ctx).apply {
+                    text = "• $name"
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 2.dp(ctx), 0, 2.dp(ctx))
+                })
+            }
+            choiceContainer.addView(com.google.android.material.button.MaterialButton(ctx).apply {
+                text = "Выбрать заклинания"
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                setOnClickListener {
+                    onPickFeatSpellPart(feature.id, index, spec, featureMultiChoices[partKey]?.filterNotNull() ?: emptyList(), required)
+                }
+            })
+        }
+
+        container.addView(choiceContainer)
+    }
+
+    private fun requiredSpellPickCount(spec: com.herocraft24.core.model.SpellPickSpec): Int =
+        if (spec.proficiency_count) 2 + (characterLevel - 1) / 4 else spec.cantrips + spec.spells
+
+    private fun spellPickLabel(spec: com.herocraft24.core.model.SpellPickSpec): String = when {
+        spec.ritual_only -> "Ритуальные заклинания 1-го уровня"
+        spec.options.isNotEmpty() -> "Заклинание из списка"
+        spec.cantrips > 0 && spec.spells > 0 -> "Заговор и заклинание 1-го уровня"
+        spec.schools.isNotEmpty() -> "Заклинание 1-го уровня (${spec.schools.joinToString("/") { UiLocalizer.school(it) }})"
+        spec.spell_level == 0 -> "Заговор"
+        else -> "Заклинание ${spec.spell_level}-го уровня"
+    }
+
+    fun updateFeatSpellPart(featureId: String, partIndex: Int, selected: List<String>) {
+        featureMultiChoices["${featureId}_spell$partIndex"] = selected.toMutableList()
+        onFeatureMultiChoiceChanged("${featureId}_spell$partIndex", selected)
+        notifyDataSetChanged()
+    }
+
     // ── Feat Category ──
 
     private fun buildFeatCategoryChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
@@ -717,6 +1194,7 @@ class FeaturesCreateAdapter(
             buildGenericOptionsChoice(container, feature, choice)
             return
         }
+        featBearingFeatures.add(feature.id)
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
 
         choiceContainer.addView(TextView(ctx).apply {
@@ -749,8 +1227,10 @@ class FeaturesCreateAdapter(
             text = "Выбрать черту"
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setOnClickListener {
-                val candidates = if (choice.options.isNotEmpty()) choice.options
-                else contentRepo.getFeatIds().filter { contentRepo.getFeat(it)?.category == choice.category }
+                val taken = takenFeatLocalIds(feature.id)
+                val candidates = (if (choice.options.isNotEmpty()) choice.options
+                else contentRepo.getFeatIds().filter { contentRepo.getFeat(it)?.category == choice.category })
+                    .filter { isFeatPickable(it, contentRepo.getFeat(it), taken) }
                 onPickFeatOptions(
                     feature.id,
                     feature.name.get(),
@@ -792,10 +1272,35 @@ class FeaturesCreateAdapter(
     }
 
     fun updateFeatChoice(featureId: String, selectedId: String?) {
+        val previous = featureChoices[featureId]
         featureChoices[featureId] = selectedId
         onFeatureChoiceChanged(featureId, selectedId)
         if (featureId in asiOrFeatFeatures) onFeatSelected(featureId, selectedId)
+        if (featureId in featBearingFeatures) {
+            previous?.let { extraSelectedFeats.remove(it) }
+            selectedId?.let { extraSelectedFeats.add(it) }
+        }
         notifyDataSetChanged()
+    }
+
+    /**
+     * Локальные id (без префикса пака) черт, которые уже заняты: взятые персонажем
+     * плюс выбранные на текущем экране. [excludeFeatureId] — умение, для которого
+     * строится список: его собственный текущий выбор занятым не считается.
+     */
+    private fun takenFeatLocalIds(excludeFeatureId: String? = null): Set<String> {
+        val own = if (excludeFeatureId != null) featureChoices[excludeFeatureId] else null
+        return (selectedFeats + extraSelectedFeats)
+            .filter { it != own }
+            .map { it.substringAfterLast(":") }
+            .toSet()
+    }
+
+    /** Черта доступна для выбора, если она повторяемая или ещё не занята. */
+    private fun isFeatPickable(featId: String, feat: Feat?, taken: Set<String>): Boolean {
+        if (feat == null) return false
+        if (feat.repeatable) return true
+        return featId.substringAfterLast(":") !in taken
     }
 
     // ── ASI or Feat (feat picker, feat card appears separately) ──
@@ -811,14 +1316,17 @@ class FeaturesCreateAdapter(
         })
 
         asiOrFeatFeatures.add(feature.id)
+        featBearingFeatures.add(feature.id)
         val allFeatIds = contentRepo.getFeatIds()
-        val availableFeatIds = mutableListOf<String>()
-        for (featId in allFeatIds) {
-            val feat = contentRepo.getFeat(featId) ?: continue
-            if (feat.category == "epic_boon" && !allowEpicBoons) continue
-            val localFeatId = featId.substringAfterLast(":")
-            if (localFeatId in selectedFeats && !feat.repeatable) continue
-            availableFeatIds.add(featId)
+        // Пересчитывается при каждом открытии пикера: черты, выбранные на этом же
+        // экране ранее, должны переставать быть доступными
+        fun availableFeatIds(): List<String> {
+            val taken = takenFeatLocalIds(feature.id)
+            return allFeatIds.filter { featId ->
+                val feat = contentRepo.getFeat(featId) ?: return@filter false
+                if (feat.category == "epic_boon" && !allowEpicBoons) return@filter false
+                isFeatPickable(featId, feat, taken)
+            }
         }
 
         val selectedContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
@@ -849,7 +1357,7 @@ class FeaturesCreateAdapter(
                 onPickFeatOptions(
                     feature.id,
                     feature.name.get(),
-                    availableFeatIds,
+                    availableFeatIds(),
                     listOfNotNull(featureChoices[feature.id]),
                     1
                 )

@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","choice":{"type":"feat_multi","proficiency_parts":[{"kind":"tool","count":3,"grant":"proficiency","options":["phb2024:carpenter_s_tools","phb2024:leatherworker_s_tools","phb2024:mason_s_tools","phb2024:potter_s_tools","phb2024:smith_s_tools","phb2024:tinker_s_tools","phb2024:weaver_s_tools","phb2024:woodcarver_s_tools"]}]},
   "prerequisite": {
     "en": "",
     "ru": ""

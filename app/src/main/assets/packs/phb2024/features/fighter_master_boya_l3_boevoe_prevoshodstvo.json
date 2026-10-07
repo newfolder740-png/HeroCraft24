@@ -1,7 +1,8 @@
 {
   "id": "fighter_master_boya_l3_boevoe_prevoshodstvo",
   "level": 3,
-  "is_placeholder": false,
+  "resource":{"shape":"hexagon","count_formula":"steps:3=4,7=5,15=6","refresh":"short_rest"},"is_placeholder": false,
+  "choice":{"type":"maneuvers","count":3,"count_steps":"3=3,7=5,10=7,15=9"},
   "type": "feature",
   "name": {
     "en": "",

@@ -80,9 +80,17 @@ data class Feature(
     val spell: String? = null,
     val resource: FeatureResource? = null,
     val always_prepared: Map<String, List<String>> = emptyMap(),
+    // Заклинательная характеристика для заклинаний этого умения, если она не из spellcasting класса
+    val spell_ability: String? = null,
     val ac_formula: AcFormula? = null,
     val speed_bonus: SpeedBonus? = null,
-    val initiative_ability: String? = null
+    val initiative_ability: String? = null,
+    // Фиксированные владения, которые даёт умение: навыки, инструменты, оружие, доспехи
+    val proficiencies: List<String> = emptyList(),
+    // Фиксированная Экспертность в навыках
+    val expertise: List<String> = emptyList(),
+    // Фиксированное владение спасбросками (характеристики)
+    val saves: List<String> = emptyList()
 )
 
 @Serializable
@@ -118,7 +126,43 @@ data class FeatureChoice(
     // Для выбора владений/типов урона: "skill" | "tool" | "instrument" | "save" | "damage_type" | "any"
     val options_kind: String? = null,
     // Что даёт выбор из options: "proficiency" | "expertise_or_proficiency" | "expertise" | "display"
-    val grant: String? = null
+    val grant: String? = null,
+    // Составной выбор черты (feat_multi): ASI и несколько частей владений
+    val asi: Int = 0,
+    val asi_grants_save: Boolean = false,
+    val proficiency_parts: List<ProficiencyPart> = emptyList(),
+    // Заклинательная характеристика для fixed_spells/pick_spells черты:
+    // фиксированная (напр. Телосложение) или отдельный выбор (spell_abilities);
+    // если не заданы — берётся характеристика, выбранная в ASI-части
+    val fixed_spell_ability: String? = null,
+    val spell_abilities: List<String> = emptyList(),
+    val pick_spells: List<SpellPickSpec> = emptyList(),
+    // Для known_spell (Таинственный арканум): уровень выбираемого заклинания
+    val spell_level: Int = 0,
+    // Для maneuvers: общее число известных приёмов по порогам уровня ("3=3,7=5,10=7,15=9")
+    val count_steps: String? = null
+)
+
+@Serializable
+data class ProficiencyPart(
+    val kind: String, // skill | tool | instrument | skill_tool | save | damage_type
+    val count: Int = 1,
+    val grant: String = "proficiency", // proficiency | expertise | expertise_or_proficiency | display
+    val options: List<String> = emptyList(), // ограничивающий список id; пусто = все данного kind
+    // Для grant="expertise": предлагать только навыки, которыми персонаж уже владеет
+    val require_proficiency: Boolean = false
+)
+
+@Serializable
+data class SpellPickSpec(
+    val cantrips: Int = 0,
+    val spells: Int = 0,
+    val spell_level: Int = 1,            // уровень выбираемых заклинаний (когда spells > 0 и cantrips == 0)
+    val class_filter: String? = null,    // список заклинаний класса
+    val schools: List<String> = emptyList(), // ограничение по школам
+    val ritual_only: Boolean = false,
+    val options: List<String> = emptyList(), // явный список заклинаний (Boon of Siberys)
+    val proficiency_count: Boolean = false   // количество = Бонусу владения (Ritual Caster)
 )
 
 @Serializable

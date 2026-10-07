@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "epic_boon",
+  "category": "epic_boon","expertise":["intimidation"],"proficiencies":["intimidation"],"choice":{"type":"feat_multi","asi":1,"abilities":["charisma"]},
   "prerequisite": {
     "en": "",
     "ru": "19 уровень"

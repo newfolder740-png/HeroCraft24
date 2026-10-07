@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dark_gift",
+  "category": "dark_gift","expertise":["perception"],
   "prerequisite": {
     "en": "",
     "ru": "кампания в Равенлофте"

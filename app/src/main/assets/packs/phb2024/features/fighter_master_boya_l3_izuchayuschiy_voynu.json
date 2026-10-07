@@ -11,6 +11,6 @@
     "en": "",
     "ru": "Вы получаете владение одним типом Ремесленных инструментов на ваш выбор и владение одним навыком на ваш выбор из навыков, доступных Воинам на 1-м уровне.\nУровень 7"
   },
-  "is_subclass_choice": false,
+  "choice": {"type":"grants","proficiency_parts":[{"kind":"tool","count":1,"grant":"proficiency","options":["phb2024:carpenter_s_tools","phb2024:leatherworker_s_tools","phb2024:mason_s_tools","phb2024:potter_s_tools","phb2024:smith_s_tools","phb2024:tinker_s_tools","phb2024:weaver_s_tools","phb2024:woodcarver_s_tools"]},{"kind":"skill","count":1,"grant":"proficiency","options":["acrobatics","athletics","perception","survival","intimidation","history","animal_handling","insight","persuasion"]}]}, "is_subclass_choice": false,
   "format_version": 1
 }

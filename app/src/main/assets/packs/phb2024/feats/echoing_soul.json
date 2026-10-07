@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dark_gift",
+  "category": "dark_gift","choice":{"type":"feat_multi","proficiency_parts":[{"kind":"skill","count":2,"grant":"proficiency"}]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Равенлофте"

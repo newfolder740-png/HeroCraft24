@@ -114,8 +114,14 @@ class SheetMainFragment : Fragment() {
         val size = species?.size ?: "Ср"
 
         val effectiveScores = computeEffectiveScores(char, bg)
-        val proficientSkills = computeProficientSkills(char, cls, bg)
-        val proficientSaves = cls?.saving_throws?.toSet() ?: emptySet()
+        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val baseProficientSkills = computeProficientSkills(char, cls, bg)
+        // «Владение или Экспертность» (Observant/Keen Mind): экспертность, если навыком уже владеешь
+        val conditionalExpertise = featGrants.conditional.filter { it in baseProficientSkills }.toSet()
+        val conditionalProficiency = featGrants.conditional.filter { it !in baseProficientSkills }.toSet()
+        val proficientSkills = baseProficientSkills + featGrants.skills + conditionalProficiency
+        val expertiseSkills = char.expertiseSkills + featGrants.expertise + conditionalExpertise
+        val proficientSaves = (cls?.saving_throws?.toSet() ?: emptySet()) + featGrants.saves
 
         val profBonus = char.proficiencyBonus
         val dexMod = vm.modifier(effectiveScores["dexterity"] ?: 10)
@@ -402,7 +408,7 @@ class SheetMainFragment : Fragment() {
                 val skillsForAb = ALL_SKILLS.filter { it.second == ab }
                 for ((skillId, _) in skillsForAb) {
                     val isProf = skillId in proficientSkills
-                    val isExpertise = skillId in char.expertiseSkills
+                    val isExpertise = skillId in expertiseSkills
                     val skillMod = mod + when {
                         isExpertise -> profBonus * 2
                         isProf -> profBonus
@@ -592,7 +598,15 @@ class SheetMainFragment : Fragment() {
 
                     // Apply Dex modifier (respects max_dexterity_bonus cap from JSON, falls back to max_dex)
                     if (acInfo.dex_bonus) {
-                        val maxDex = acInfo.max_dexterity_bonus ?: acInfo.max_dex ?: Integer.MAX_VALUE
+                        var maxDex = acInfo.max_dexterity_bonus ?: acInfo.max_dex ?: Integer.MAX_VALUE
+                        // «Мастер средних доспехов»: в среднем доспехе при Ловкости 16+ потолок выше
+                        val mediumCap = vm.featEffectTotal(char, "ac_medium_dex_cap")
+                        if (mediumCap > 0 &&
+                            "medium_armor" in item.subcategory &&
+                            (scores["dexterity"] ?: 10) >= 16
+                        ) {
+                            maxDex = maxOf(maxDex, mediumCap)
+                        }
                         val applicableDex = minOf(dexMod, maxDex)
                         base += applicableDex
                     }

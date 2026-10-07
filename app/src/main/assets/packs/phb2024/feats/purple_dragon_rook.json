@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "origin",
+  "category": "origin","choice":{"type":"feat_multi","proficiency_parts":[{"kind":"skill","count":1,"grant":"proficiency","options":["performance","insight","persuasion"]}]},
   "prerequisite": {
     "en": "",
     "ru": ""

@@ -520,7 +520,9 @@ class SheetSpellsFragment : Fragment() {
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
         })
 
-        val dropdownItems = spellcastingAbilities.map { abNames[it] ?: it }
+        // Характеристики из черт (напр. Телосложение от Аберрантной метки) — только если черта взята
+        val abilities = (spellcastingAbilities + vm.extraSpellAbilitiesFromFeats(char)).distinct()
+        val dropdownItems = abilities.map { abNames[it] ?: it }
         val dropdown = MaterialAutoCompleteTextView(ctx).apply {
             setText(abNames[currentAbility] ?: currentAbility, false)
             inputType = android.text.InputType.TYPE_NULL
@@ -531,7 +533,7 @@ class SheetSpellsFragment : Fragment() {
             setOnClickListener { showDropDown() }
             setAdapter(ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, dropdownItems))
             setOnItemClickListener { _, _, position, _ ->
-                val selectedAbility = spellcastingAbilities[position]
+                val selectedAbility = abilities[position]
                 vm.setSpellcastingAbilityOverride(char.id, selectedAbility)
             }
             layoutParams = LinearLayout.LayoutParams(

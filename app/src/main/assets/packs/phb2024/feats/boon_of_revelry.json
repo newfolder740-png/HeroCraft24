@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "epic_boon",
+  "category": "epic_boon","choice":{"type":"feat_multi","asi":1,"abilities":["intelligence","wisdom","charisma"],"spell_abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:otto_s_irresistible_dance"]},
   "prerequisite": {
     "en": "",
     "ru": "19 уровень"

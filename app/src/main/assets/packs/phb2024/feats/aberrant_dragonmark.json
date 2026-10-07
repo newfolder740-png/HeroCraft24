@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "dragonmark",
+  "category": "dragonmark","choice":{"type":"feat_multi","asi":1,"abilities":["constitution"],"fixed_spell_ability":"constitution","pick_spells":[{"cantrips":1,"spells":1,"class_filter":"phb2024:sorcerer"}]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, не можете иметь другую черту Драконьей метки"

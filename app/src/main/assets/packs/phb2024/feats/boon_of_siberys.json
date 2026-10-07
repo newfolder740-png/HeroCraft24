@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "epic_boon",
+  "category": "epic_boon","choice":{"type":"feat_multi","asi":1,"abilities":[],"spell_abilities":["intelligence","wisdom","charisma"],"pick_spells":[{"spells":1,"options":["phb2024:control_weather","phb2024:demiplane","phb2024:symbol","phb2024:true_seeing","phb2024:maze","phb2024:heroes_feast","phb2024:plane_shift","phb2024:animal_shapes","phb2024:project_image","phb2024:regenerate","phb2024:mind_blank","phb2024:teleport"]}]},
   "prerequisite": {
     "en": "",
     "ru": "кампания в Эберроне, 19 уровень"

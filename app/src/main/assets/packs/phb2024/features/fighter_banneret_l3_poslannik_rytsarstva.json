@@ -1,7 +1,7 @@
 {
   "id": "fighter_banneret_l3_poslannik_rytsarstva",
   "level": 3,
-  "is_placeholder": false,
+  "always_prepared":{"3":["phb2024:comprehend_languages"]},"spell_ability":"charisma","is_placeholder": false,
   "type": "feature",
   "name": {
     "en": "",

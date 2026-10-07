@@ -68,6 +68,9 @@ class LevelUpFragment : Fragment() {
     private var currentSorcererEntryIds: Map<String, String> = emptyMap()
     private var availableNewSpells: List<SpellSummary> = emptyList()
     private var maxNewSpellLevel: Int = 1
+    private var allowReplaceCantrip = true
+    private var allowReplaceSpell = true
+    private var spellSectionFeatureId: String? = null
     private var baseNewCantrips: Int = 0
     private var baseNewSpells: Int = 0
 
@@ -81,7 +84,7 @@ class LevelUpFragment : Fragment() {
     // Step 2 sections state
     private var spellsSectionVisible = false
     private var metamagicSectionVisible = false
-    private val expandedSections = mutableSetOf("class_spells", "metamagic", "invocations", "wizard_spells")
+    private val expandedSections = mutableSetOf("class_spells", "metamagic", "invocations", "wizard_spells", "ritual_caster", "maneuvers")
 
     // Step 2 metamagic replacement state
     private var removeMetamagicId: String? = null
@@ -116,6 +119,27 @@ class LevelUpFragment : Fragment() {
     private val newWizardBookSpells = mutableListOf<String>()
     private var wizardCantripCounterView: TextView? = null
     private var wizardBookCounterView: TextView? = null
+
+    // Step 2 ritual caster state (добор ритуала при росте БМ)
+    private var ritualFeatcardKey: String? = null
+    private var newRitualSpellId: String? = null
+    private var ritualStatusView: TextView? = null
+
+    // id умений шага 1 с choice.type == "skill_expertise": только их выборы становятся Экспертностью
+    private var expertiseFeatureIds: Set<String> = emptySet()
+
+    // Step 2 maneuvers state (Мастер боя: добор приёмов по порогам уровня + замена одного)
+    private var maneuverFeatureId: String? = null
+    private var baseNewManeuvers: Int = 0
+    private var removeManeuverId: String? = null
+    private val newSelectedManeuvers = mutableListOf<String>()
+    private var currentManeuverIds: List<String> = emptyList()
+    private var maneuverCounterView: TextView? = null
+
+    // Step 2 mystic arcanum replacement state: featureId -> старое заклинание / новое
+    private val arcanumCurrentSpell = mutableMapOf<String, String>()
+    private val arcanumNewSpell = mutableMapOf<String, String>()
+    private val arcanumStatusViews = mutableMapOf<String, TextView>()
 
     private enum class SortMode(val label: String) {
         LEVEL_ASC("Уровень ↑"),
@@ -225,7 +249,7 @@ class LevelUpFragment : Fragment() {
         val cls = vm.getClassInfo(selectedClass)
         val hasClassSpells = cls?.features
             ?.mapNotNull { vm.repository.getFeature(it) }
-            ?.any { f -> val c = f.choice; c != null && c.type == "class_spells" && c.level_up != null } == true
+            ?.any { f -> val c = f.choice; c != null && (c.type == "class_spells" || c.type == "prepared_spells") && c.level_up != null } == true
         val hasMetamagic = committedMetamagicIds(ch, selectedClass).isNotEmpty()
         val hasFeatSpells = committedMagicInitiateFeatcards(ch).isNotEmpty()
         val hasFeatCategory = replaceableFeatCategoryFeatures(ch, selectedClass).isNotEmpty()
@@ -235,7 +259,22 @@ class LevelUpFragment : Fragment() {
         val hasWizardSpells = cls?.features
             ?.mapNotNull { vm.repository.getFeature(it) }
             ?.any { f -> val c = f.choice; c != null && c.type == "wizard_spells" && c.level_up != null } == true
-        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory || hasInvocations || hasWizardSpells
+        val hasRitualCaster = committedRitualCasterFeatcard(ch) != null &&
+            (2 + ch.level / 4) > (2 + (ch.level - 1) / 4)
+        val hasManeuvers = committedManeuverGain(ch, selectedClass) > 0
+        val hasArcanum = committedArcanumFeatures(ch, selectedClass).isNotEmpty()
+        return hasClassSpells || hasMetamagic || hasFeatSpells || hasFeatCategory ||
+            hasInvocations || hasWizardSpells || hasRitualCaster || hasManeuvers || hasArcanum
+    }
+
+    /** Сколько приёмов Мастера боя добавляется на этом уровне (0, если не Мастер боя или нет добора). */
+    private fun committedManeuverGain(ch: CharacterData, selectedClass: String): Int {
+        val feature = committedManeuverFeature(ch, selectedClass) ?: return 0
+        val choice = feature.choice ?: return 0
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        val current = ch.featureMultiChoices[feature.id]?.filterNotNull()?.size ?: 0
+        val totalAtNew = vm.evalCountSteps(choice.count_steps, currentClassLevel + 1, choice.count)
+        return (totalAtNew - current).coerceAtLeast(0)
     }
 
     private fun prevStep() {
@@ -372,6 +411,11 @@ class LevelUpFragment : Fragment() {
         }
 
         val proficientSkills = computeProficientSkills(ch)
+        val expertiseSkills = computeExpertiseSkills(ch)
+        expertiseFeatureIds = features
+            .filter { it.choice?.type == "skill_expertise" }
+            .map { it.id }
+            .toSet()
 
         featuresAdapter = FeaturesCreateAdapter(
             onFeatureChoiceChanged = { featureId, choiceId ->
@@ -418,6 +462,8 @@ class LevelUpFragment : Fragment() {
                             .mapNotNull { vm.repository.getFeature(it) }
                             .filter { !it.is_placeholder }
                         featuresAdapter?.addSubclassFeatures(subFeatures)
+                        expertiseFeatureIds = expertiseFeatureIds +
+                            subFeatures.filter { it.choice?.type == "skill_expertise" }.map { it.id }
                     }
                 }
                 updateButtons()
@@ -431,7 +477,8 @@ class LevelUpFragment : Fragment() {
                     spells = choice.spells,
                     selected = current,
                     charId = charId ?: char?.id ?: "",
-                    ability = ability
+                    ability = ability,
+                    levelFilter = if (choice.type == "known_spell") choice.spell_level else -1
                 ).apply {
                     setOnResultListener { selected ->
                         featuresAdapter?.updateClassSpells(featureId, selected)
@@ -466,6 +513,21 @@ class LevelUpFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "MetamagicPicker")
             },
+            onPickManeuvers = { featureId, title, current, required ->
+                val clsId = selectedClassId ?: char?.classId ?: ""
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_MANEUVER,
+                    title = title,
+                    optionIds = vm.getClassManeuvers(clsId),
+                    requiredCount = required,
+                    selected = current
+                ).apply {
+                    setOnResultListener { sel ->
+                        featuresAdapter?.updateManeuvers(featureId, sel)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "ManeuverPicker")
+            },
             onPickFeatSpells = { featureId, current, choice, selectedClass, selectedAbility ->
                 ClassSpellPickerDialogFragment.newInstance(
                     classFilter = selectedClass,
@@ -481,11 +543,42 @@ class LevelUpFragment : Fragment() {
                     }
                 }.show(childFragmentManager, "FeatSpellPicker")
             },
+            onPickFeatSpellPart = { featureId, partIndex, spec, current, required ->
+                val ability = featureChoices["${featureId}_ability"]
+                    ?: featureChoices["${featureId}_asi"]
+                    ?: char?.featureChoices?.get("${featureId}_ability")
+                    ?: char?.featureChoices?.get("${featureId}_asi")
+                    ?: "intelligence"
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = spec.class_filter ?: "",
+                    cantrips = spec.cantrips,
+                    spells = if (spec.proficiency_count) required else spec.spells,
+                    selected = current,
+                    charId = char?.id ?: "",
+                    ability = ability,
+                    levelFilter = when {
+                        spec.options.isNotEmpty() -> -1
+                        spec.cantrips > 0 && spec.spells > 0 -> -1
+                        else -> spec.spell_level
+                    },
+                    schools = spec.schools,
+                    ritualOnly = spec.ritual_only,
+                    optionIds = spec.options
+                ).apply {
+                    setOnResultListener { selected ->
+                        featuresAdapter?.updateFeatSpellPart(featureId, partIndex, selected)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "FeatSpellPartPicker")
+            },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
             proficientSkills = proficientSkills,
+            expertiseSkills = expertiseSkills,
+            classSavingThrows = computeClassSavingThrows(ch, selectedClass),
             characterLevel = ch.level + 1,
+            classLevelForChoices = nextClassLevel,
             selectedFeats = ch.feats.toSet(),
             classId = selectedClass,
             allowEpicBoons = nextTotalLevel >= 19
@@ -506,6 +599,11 @@ class LevelUpFragment : Fragment() {
         spellsSectionVisible = false
         metamagicSectionVisible = false
         wizardSectionVisible = false
+        ritualFeatcardKey = null
+        maneuverFeatureId = null
+        baseNewManeuvers = 0
+        arcanumCurrentSpell.clear()
+        arcanumStatusViews.clear()
 
         val scroll = NestedScrollView(ctx).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -523,7 +621,7 @@ class LevelUpFragment : Fragment() {
             .mapNotNull { vm.repository.getFeature(it) }
             .find { feature ->
                 val choice = feature.choice
-                choice != null && choice.type == "class_spells" && choice.level_up != null
+                choice != null && (choice.type == "class_spells" || choice.type == "prepared_spells") && choice.level_up != null
             }
         if (spellFeature != null) {
             val (card, body) = ExpandableCard.createExpandableCard(
@@ -534,6 +632,7 @@ class LevelUpFragment : Fragment() {
                 openIdsSet = expandedSections
             ) { _ -> }
             content.addView(card)
+            spellSectionFeatureId = spellFeature.id
             renderClassSpellsSection(body, ch, selectedClass, spellFeature)
             spellsSectionVisible = true
         }
@@ -572,9 +671,30 @@ class LevelUpFragment : Fragment() {
             wizardSectionVisible = true
         }
 
+        // Ritual Caster: при росте Бонуса владения можно добавить ещё одно ритуальное заклинание
+        val ritualCard = committedRitualCasterFeatcard(ch)
+        val pbNow = 2 + (ch.level - 1) / 4
+        val pbNew = 2 + (ch.level) / 4
+        if (ritualCard != null && pbNew > pbNow) {
+            ritualFeatcardKey = ritualCard
+            renderRitualCasterSection(content, ch, ritualCard)
+        }
+
+        // Мастер боя: дополнительные приёмы на порогах уровня + замена одного известного
+        val maneuverFeature = committedManeuverFeature(ch, selectedClass)
+        if (maneuverFeature != null) {
+            renderManeuversSection(content, ch, selectedClass, maneuverFeature)
+        }
+
+        // Таинственный арканум колдуна: замена заклинания арканума при получении уровня
+        for (arcanumFeature in committedArcanumFeatures(ch, selectedClass)) {
+            renderArcanumReplacementSection(content, ch, selectedClass, arcanumFeature)
+        }
+
         val hasAnySection = spellsSectionVisible || metamagicSectionVisible ||
             committedMagicInitiateFeatcards(ch).isNotEmpty() || featCategoryFeatures.isNotEmpty() ||
-            invocationFeature != null || wizardSectionVisible
+            invocationFeature != null || wizardSectionVisible || ritualFeatcardKey != null ||
+            maneuverFeatureId != null || arcanumStatusViews.isNotEmpty()
         if (!hasAnySection) {
             content.addView(TextView(ctx).apply {
                 text = "Заклинания"
@@ -601,10 +721,15 @@ class LevelUpFragment : Fragment() {
         baseNewCantrips = gain.cantrips
         baseNewSpells = gain.spells
 
+        val levelUp = spellFeature.choice?.level_up
+        allowReplaceCantrip = (levelUp?.replace_cantrips ?: 1) > 0
+        allowReplaceSpell = (levelUp?.replace_spells ?: 1) > 0
+
         val newRow = cls.class_table?.rows?.find { it.level == newClassLevel }
-        maxNewSpellLevel = newRow?.values?.entries
-            ?.filter { it.key.startsWith("slot") && it.value.toIntOrNull() ?: 0 > 0 }
-            ?.maxOfOrNull { it.key.removePrefix("slot").toIntOrNull() ?: 0 }
+        maxNewSpellLevel = newRow?.values?.get("slot_level")?.toIntOrNull()
+            ?: newRow?.values?.entries
+                ?.filter { it.key.startsWith("slot") && (it.value.toIntOrNull() ?: 0) > 0 }
+                ?.maxOfOrNull { it.key.removePrefix("slot").toIntOrNull() ?: 0 }
             ?: 1
 
         loadSorcererSpellData(ch, selectedClass, ability)
@@ -656,7 +781,9 @@ class LevelUpFragment : Fragment() {
             },
             onAddClick = { spell ->
                 val entryId = currentSorcererEntryIds[spell.fullId]
-                if (entryId != null) {
+                val cantrip = spell.level == 0
+                val replacementAllowed = if (cantrip) allowReplaceCantrip else allowReplaceSpell
+                if (entryId != null && replacementAllowed) {
                     val isCantrip = spell.level == 0
                     if ((isCantrip && removeCantripEntry == entryId) || (!isCantrip && removeSpellEntry == entryId)) {
                         if (isCantrip) removeCantripEntry = null else removeSpellEntry = null
@@ -1221,6 +1348,196 @@ class LevelUpFragment : Fragment() {
         invocationCounterView?.text = "Выбрано новых воззваний: ${newSelectedInvocations.size}/$required"
     }
 
+    // ── Battle Master maneuvers section ──
+
+    private fun committedManeuverFeature(ch: CharacterData, selectedClass: String): Feature? {
+        val subclassId = ch.subclassId ?: return null
+        val subclass = vm.repository.getSubclass(subclassId) ?: return null
+        if (subclass.class_id != selectedClass) return null
+        return subclass.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .firstOrNull { f -> val c = f.choice; c != null && c.type == "maneuvers" }
+            ?.takeIf { f -> (ch.featureMultiChoices[f.id]?.filterNotNull() ?: emptyList()).isNotEmpty() }
+    }
+
+    private fun renderManeuversSection(content: LinearLayout, ch: CharacterData, selectedClass: String, maneuverFeature: Feature) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val accentColor = resolveColor(com.google.android.material.R.attr.colorPrimary)
+        val choice = maneuverFeature.choice ?: return
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        val newClassLevel = currentClassLevel + 1
+
+        currentManeuverIds = ch.featureMultiChoices[maneuverFeature.id]?.filterNotNull() ?: emptyList()
+        val totalAtNew = vm.evalCountSteps(choice.count_steps, newClassLevel, choice.count)
+        baseNewManeuvers = totalAtNew - currentManeuverIds.size
+        if (baseNewManeuvers <= 0) return
+        maneuverFeatureId = maneuverFeature.id
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Боевые приёмы",
+            subtitle = "Новых: $baseNewManeuvers",
+            openId = "maneuvers",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        // ── Известные приёмы (можно отметить один для замены) ──
+        if (currentManeuverIds.isNotEmpty()) {
+            body.addView(TextView(ctx).apply {
+                text = "Известные приёмы — отметьте один для замены (необязательно):"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 0, 0, 4.dp(ctx))
+            })
+            val currentOptions = currentManeuverIds.mapNotNull { id ->
+                val maneuver = repo.getManeuvers(id) ?: return@mapNotNull null
+                val cost = maneuver.cost
+                PickerOption(
+                    fullId = id,
+                    name = maneuver.name.get(),
+                    subtitle = if (!cost.isNullOrBlank()) "Приём • $cost" else "Приём",
+                    color = accentColor
+                )
+            }
+            val recycler = RecyclerView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                layoutManager = LinearLayoutManager(ctx)
+                isNestedScrollingEnabled = false
+                setHasFixedSize(true)
+            }
+            val adapter = OptionPickerAdapter(
+                onItemClick = { option ->
+                    ManeuverDetailSheetDialog.newInstance(option.fullId).show(childFragmentManager, "ManeuverDetail")
+                },
+                onAddClick = { option ->
+                    removeManeuverId = if (removeManeuverId == option.fullId) null else option.fullId
+                    recycler.adapter?.notifyDataSetChanged()
+                    updateManeuverCounter()
+                    updateButtons()
+                },
+                isSelected = { option -> option.fullId == removeManeuverId },
+                selectedIcon = "✕",
+                unselectedIcon = "–"
+            )
+            recycler.adapter = adapter
+            adapter.submitList(currentOptions)
+            body.addView(recycler)
+        }
+
+        // ── Новые приёмы ──
+        maneuverCounterView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+        }
+        maneuverCounterView?.let { body.addView(it) }
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Выбрать приёмы"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                val required = baseNewManeuvers + if (removeManeuverId != null) 1 else 0
+                val candidates = vm.getClassManeuvers(selectedClass)
+                    .filter { it !in currentManeuverIds }
+                OptionPickerDialogFragment.newInstance(
+                    kind = OptionPickerDialogFragment.KIND_MANEUVER,
+                    title = "Боевые приёмы",
+                    optionIds = candidates,
+                    requiredCount = required,
+                    selected = newSelectedManeuvers.toList()
+                ).apply {
+                    setOnResultListener { sel ->
+                        newSelectedManeuvers.clear()
+                        newSelectedManeuvers.addAll(sel)
+                        updateManeuverCounter()
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "ManeuverPicker")
+            }
+        })
+
+        updateManeuverCounter()
+    }
+
+    private fun updateManeuverCounter() {
+        val required = baseNewManeuvers + if (removeManeuverId != null) 1 else 0
+        maneuverCounterView?.text = "Выбрано новых приёмов: ${newSelectedManeuvers.size}/$required"
+    }
+
+    // ── Mystic Arcanum replacement sections ──
+
+    private fun committedArcanumFeatures(ch: CharacterData, selectedClass: String): List<Feature> {
+        val cls = vm.getClassInfo(selectedClass) ?: return emptyList()
+        val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
+        return cls.features
+            .mapNotNull { vm.repository.getFeature(it) }
+            .filter { f -> val c = f.choice; c != null && c.type == "known_spell" }
+            .filter { (it.level ?: Int.MAX_VALUE) <= currentClassLevel }
+            .filter { f -> (ch.featureMultiChoices[f.id]?.filterNotNull() ?: emptyList()).isNotEmpty() }
+    }
+
+    private fun renderArcanumReplacementSection(content: LinearLayout, ch: CharacterData, selectedClass: String, feature: Feature) {
+        val ctx = requireContext()
+        val repo = vm.repository
+        val choice = feature.choice ?: return
+        val currentSpell = ch.featureMultiChoices[feature.id]?.filterNotNull()?.firstOrNull() ?: return
+        arcanumCurrentSpell[feature.id] = currentSpell
+        val currentName = repo.resolveName(currentSpell) ?: currentSpell.substringAfterLast(":")
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = feature.name.get(),
+            subtitle = "Текущее: $currentName",
+            openId = "arcanum_${feature.id}",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        val statusView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 8.dp(ctx))
+        }
+        arcanumStatusViews[feature.id] = statusView
+        body.addView(statusView)
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Заменить заклинание арканума"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = choice.class_filter ?: selectedClass,
+                    cantrips = 0,
+                    spells = 1,
+                    selected = listOfNotNull(arcanumNewSpell[feature.id]),
+                    charId = ch.id,
+                    ability = vm.getClassInfo(selectedClass)?.spellcasting?.ability ?: "charisma",
+                    levelFilter = choice.spell_level,
+                    excludeIds = listOf(currentSpell)
+                ).apply {
+                    setOnResultListener { sel ->
+                        val newSpell = sel.firstOrNull()
+                        if (newSpell != null && newSpell != currentSpell) arcanumNewSpell[feature.id] = newSpell
+                        else arcanumNewSpell.remove(feature.id)
+                        refreshArcanumStatus(feature.id)
+                        updateButtons()
+                    }
+                }.show(childFragmentManager, "ArcanumPicker")
+            }
+        })
+
+        refreshArcanumStatus(feature.id)
+    }
+
+    private fun refreshArcanumStatus(featureId: String) {
+        val repo = vm.repository
+        val currentName = arcanumCurrentSpell[featureId]?.let { repo.resolveName(it) ?: it.substringAfterLast(":") }
+        val newName = arcanumNewSpell[featureId]?.let { repo.resolveName(it) ?: it.substringAfterLast(":") }
+        arcanumStatusViews[featureId]?.text = when {
+            newName != null -> "Замена: $currentName → $newName"
+            else -> "Замена не выбрана (необязательно)"
+        }
+    }
+
     // ── Wizard spells section (cantrips + spellbook gain, no replacement) ──
 
     private fun renderWizardSpellsSection(content: LinearLayout, ch: CharacterData, selectedClass: String) {
@@ -1316,6 +1633,69 @@ class LevelUpFragment : Fragment() {
         wizardBookCounterView?.text = "Новые заклинания в книгу: ${newWizardBookSpells.size}/2"
     }
 
+    // ── Ritual Caster section (добор ритуального заклинания при росте БМ) ──
+
+    private fun committedRitualCasterFeatcard(ch: CharacterData): String? {
+        for (parent in vm.featParentKeys(ch.featureChoices)) {
+            val featId = ch.featureChoices[parent] ?: continue
+            val feat = vm.repository.getFeat(featId) ?: continue
+            val choice = feat.choice ?: continue
+            if (choice.type != "feat_multi") continue
+            if (!choice.pick_spells.any { it.proficiency_count }) continue
+            return "featcard_$parent"
+        }
+        return null
+    }
+
+    private fun renderRitualCasterSection(content: LinearLayout, ch: CharacterData, featcardKey: String) {
+        val ctx = requireContext()
+        val currentRituals = ch.featureMultiChoices["${featcardKey}_spell0"] ?: emptyList()
+
+        val (card, body) = ExpandableCard.createExpandableCard(
+            context = ctx,
+            title = "Ритуальный заклинатель",
+            subtitle = "Бонус владения вырос — можно добавить одно ритуальное заклинание",
+            openId = "ritual_caster",
+            openIdsSet = expandedSections
+        ) { _ -> }
+        content.addView(card)
+
+        ritualStatusView = TextView(ctx).apply {
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 8.dp(ctx))
+        }
+        ritualStatusView?.let { body.addView(it) }
+
+        body.addView(MaterialButton(ctx).apply {
+            text = "Добавить ритуальное заклинание"
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                ClassSpellPickerDialogFragment.newInstance(
+                    classFilter = "",
+                    cantrips = 0,
+                    spells = 1,
+                    selected = listOfNotNull(newRitualSpellId),
+                    charId = ch.id,
+                    ability = ch.featureChoices["${featcardKey}_asi"] ?: "intelligence",
+                    levelFilter = 1,
+                    excludeIds = currentRituals,
+                    ritualOnly = true
+                ).apply {
+                    setOnResultListener { sel ->
+                        newRitualSpellId = sel.firstOrNull()
+                        refreshRitualStatus()
+                    }
+                }.show(childFragmentManager, "RitualPicker")
+            }
+        })
+        refreshRitualStatus()
+    }
+
+    private fun refreshRitualStatus() {
+        val name = newRitualSpellId?.let { vm.repository.resolveName(it) }
+        ritualStatusView?.text = if (name != null) "Будет добавлено: $name" else "Новое ритуальное заклинание не выбрано (необязательно)"
+    }
+
     private fun loadSorcererSpellData(ch: CharacterData, selectedClass: String, ability: String) {
         val allSpells = vm.getAllSpellSummaries()
         val innate = ch.spells?.innateSpells?.get(ability) ?: emptyList()
@@ -1372,6 +1752,12 @@ class LevelUpFragment : Fragment() {
             if (newWizardCantrips.size != wizardCantripGain) return false
             if (newWizardBookSpells.size != 2) return false
         }
+        // Приёмы Мастера боя: новых должно быть столько, сколько положено (+1 при замене)
+        if (maneuverFeatureId != null) {
+            val required = baseNewManeuvers + if (removeManeuverId != null) 1 else 0
+            if (newSelectedManeuvers.size != required) return false
+        }
+        // Замена арканума необязательна — проверять нечего
         return true
     }
 
@@ -1619,9 +2005,11 @@ class LevelUpFragment : Fragment() {
             }
         }
 
-        // Collect expertise skills from featureMultiChoices
+        // Экспертность — только из выборов умений с choice.type == "skill_expertise".
+        // Остальные ключи featureMultiChoices хранят заклинания, приёмы, воззвания и владения.
         val newExpertiseSkills = ch.expertiseSkills.toMutableSet()
-        for ((_, choices) in featureMultiChoices) {
+        for ((key, choices) in featureMultiChoices) {
+            if (key !in expertiseFeatureIds) continue
             newExpertiseSkills.addAll(choices)
         }
 
@@ -1675,6 +2063,47 @@ class LevelUpFragment : Fragment() {
                 if (invocation !in list) list.add(invocation)
             }
             mergedFeatureMultiChoices[invFeatureId] = list
+        }
+
+        // Sync class spell choices (sorcerer/prepared casters): removals and gains must
+        // land in featureMultiChoices too, otherwise removed spells resurrect on the next level-up
+        val classSpellFeatureId = spellSectionFeatureId
+        if (classSpellFeatureId != null &&
+            (removeCantripEntry != null || removeSpellEntry != null ||
+                newSelectedCantrips.isNotEmpty() || newSelectedSpells.isNotEmpty())) {
+            val spellChoices = (mergedFeatureMultiChoices[classSpellFeatureId] ?: emptyList()).toMutableList()
+            removeCantripEntry?.let { spellChoices.remove(it.spellFullId()) }
+            removeSpellEntry?.let { spellChoices.remove(it.spellFullId()) }
+            for (spell in newSelectedCantrips + newSelectedSpells) {
+                if (spell !in spellChoices) spellChoices.add(spell)
+            }
+            mergedFeatureMultiChoices[classSpellFeatureId] = spellChoices
+        }
+
+        // Apply Ritual Caster addition (new ritual spell when proficiency bonus grows)
+        val ritualKey = ritualFeatcardKey
+        val ritualSpell = newRitualSpellId
+        if (ritualKey != null && ritualSpell != null) {
+            val listKey = "${ritualKey}_spell0"
+            val list = (mergedFeatureMultiChoices[listKey] ?: emptyList()).toMutableList()
+            if (ritualSpell !in list) list.add(ritualSpell)
+            mergedFeatureMultiChoices[listKey] = list
+        }
+
+        // Apply Battle Master maneuver gain/replacement chosen at the spells step
+        val mnvFeatureId = maneuverFeatureId
+        if (mnvFeatureId != null && (removeManeuverId != null || newSelectedManeuvers.isNotEmpty())) {
+            val list = (mergedFeatureMultiChoices[mnvFeatureId] ?: emptyList()).toMutableList()
+            if (removeManeuverId != null) list.remove(removeManeuverId)
+            for (maneuver in newSelectedManeuvers) {
+                if (maneuver !in list) list.add(maneuver)
+            }
+            mergedFeatureMultiChoices[mnvFeatureId] = list
+        }
+
+        // Apply Mystic Arcanum replacements chosen at the spells step
+        for ((featureId, newSpell) in arcanumNewSpell) {
+            mergedFeatureMultiChoices[featureId] = listOf(newSpell)
         }
 
         // Add new features to the character's features list
@@ -1775,11 +2204,18 @@ class LevelUpFragment : Fragment() {
         val newClassLevel = currentClassLevel + 1
         val withInnateSpells = vm.addClassFeatureSpellsAtLevel(withSpeciesInnate, selectedClass, newClassLevel)
 
-        // Apply sorcerer level-up spell replacement/learning
-        val withSorcererSpells = if (selectedClass.substringAfterLast(":").startsWith("sorcerer")) {
-            vm.applySorcererLevelUpSpells(withInnateSpells, selectedClass, removeCantripEntry, removeSpellEntry, newSelectedCantrips, newSelectedSpells)
+        // Swap replaced Mystic Arcanum spells in the innate list (старое убираем, новое уже добавлено выше)
+        var withArcanumSpells = withInnateSpells
+        for ((featureId, newSpell) in arcanumNewSpell) {
+            val oldSpell = arcanumCurrentSpell[featureId] ?: continue
+            withArcanumSpells = vm.replaceArcanumSpell(withArcanumSpells, selectedClass, oldSpell, newSpell)
+        }
+
+        // Apply class-spell level-up replacement/learning (sorcerer known-caster and prepared casters)
+        val withSorcererSpells = if (spellsSectionVisible) {
+            vm.applySorcererLevelUpSpells(withArcanumSpells, selectedClass, removeCantripEntry, removeSpellEntry, newSelectedCantrips, newSelectedSpells)
         } else {
-            withInnateSpells
+            withArcanumSpells
         }
 
         // Apply wizard level-up spells: cantrips to prepared, leveled spells to the spellbook
@@ -1841,7 +2277,28 @@ class LevelUpFragment : Fragment() {
         proficient.addAll(char.classSkillChoices)
         val bg = vm.getAllBackgrounds().find { it.id == char.backgroundId.substringAfterLast(":") }
         bg?.skill_proficiencies?.let { proficient.addAll(it) }
+        proficient.addAll(vm.getFeatProficiencyGrants(char).skills)
+        proficient.addAll(vm.getFeatureGrants(char).skills)
         return proficient
+    }
+
+    /** Навыки, в которых у персонажа уже есть Экспертность (класс, происхождение, черты). */
+    private fun computeExpertiseSkills(char: CharacterData): Set<String> {
+        val grants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val result = char.expertiseSkills.toMutableSet()
+        result.addAll(grants.expertise)
+        val proficient = computeProficientSkills(char)
+        grants.conditional.filterTo(result) { it in proficient }
+        return result
+    }
+
+    /** Характеристики, спасбросками которыми персонаж владеет (все его классы плюс выбираемый). */
+    private fun computeClassSavingThrows(char: CharacterData, selectedClass: String): Set<String> {
+        val result = mutableSetOf<String>()
+        for (classId in (char.classLevels.keys + char.classId + selectedClass).distinct()) {
+            vm.getClassInfo(classId)?.saving_throws?.let { result.addAll(it) }
+        }
+        return result
     }
 
     // ── Class Selection Adapter (matches ClassCreateAdapter look & feel) ──

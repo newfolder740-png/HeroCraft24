@@ -67,6 +67,7 @@ class SheetAbilitiesFragment : Fragment() {
         val cls = vm.getClassInfo(char.classId)
         val selectedMetamagicIds = mutableSetOf<String>()
         val selectedInvocationIds = mutableSetOf<String>()
+        val selectedManeuverIds = mutableSetOf<String>()
         if (cls != null) {
             val allClassIds = char.classLevels.keys + char.classId
             val allFeatures = mutableListOf<com.herocraft24.core.model.Feature>()
@@ -99,6 +100,9 @@ class SheetAbilitiesFragment : Fragment() {
                 if (f.choice?.type == "invocations") {
                     char.featureMultiChoices[f.id]?.let { selectedInvocationIds.addAll(it) }
                 }
+                if (f.choice?.type == "maneuvers") {
+                    char.featureMultiChoices[f.id]?.let { selectedManeuverIds.addAll(it) }
+                }
             }
 
             // Subclass features
@@ -129,6 +133,9 @@ class SheetAbilitiesFragment : Fragment() {
                         if (f.choice?.type == "invocations") {
                             char.featureMultiChoices[f.id]?.let { selectedInvocationIds.addAll(it) }
                         }
+                        if (f.choice?.type == "maneuvers") {
+                            char.featureMultiChoices[f.id]?.let { selectedManeuverIds.addAll(it) }
+                        }
                     }
                 }
             }
@@ -145,6 +152,14 @@ class SheetAbilitiesFragment : Fragment() {
             if (invocations.isNotEmpty()) {
                 items.add(AbilityItem.SectionHeader("Таинственные воззвания"))
                 invocations.forEach { items.add(AbilityItem.InvocationItem(it)) }
+            }
+
+            // Maneuvers section (Battle Master)
+            val maneuvers = selectedManeuverIds.mapNotNull { vm.repository.getManeuvers(it) }
+            if (maneuvers.isNotEmpty()) {
+                items.add(AbilityItem.SectionHeader("Боевые приёмы"))
+                maneuvers.sortedBy { it.name.get().lowercase() }
+                    .forEach { items.add(AbilityItem.ManeuverItem(it)) }
             }
         }
 
@@ -201,6 +216,29 @@ class SheetAbilitiesFragment : Fragment() {
             if (skills.isEmpty()) return null
             return skills.joinToString(", ") { UiLocalizer.skill(it) }
         }
+        if (choice.type == "known_spell") {
+            val spells = char.featureMultiChoices[f.id]?.filterNotNull() ?: return null
+            if (spells.isEmpty()) return null
+            return "Заклинание: " + spells.joinToString(", ") {
+                vm.repository.resolveName(it) ?: it.substringAfterLast(":")
+            }
+        }
+        if (choice.type == "grants") {
+            val names = mutableListOf<String>()
+            choice.proficiency_parts.forEachIndexed { index, part ->
+                val selected = char.featureMultiChoices["${f.id}_prof$index"] ?: return@forEachIndexed
+                for (id in selected) {
+                    names += when (part.kind) {
+                        "damage_type" -> UiLocalizer.damageType(id)
+                        "save" -> UiLocalizer.ability(id)
+                        "skill" -> UiLocalizer.skill(id)
+                        else -> vm.repository.resolveName(id) ?: UiLocalizer.skill(id)
+                    }
+                }
+            }
+            if (names.isEmpty()) return null
+            return names.joinToString(", ")
+        }
         if (choice.type == "asi_or_feat") {
             val selectedFeatId = char.featureChoices[f.id] ?: return null
             val featName = vm.repository.resolveName(selectedFeatId) ?: selectedFeatId.substringAfterLast(":")
@@ -256,6 +294,41 @@ class SheetAbilitiesFragment : Fragment() {
                 }
                 if (parts.isEmpty()) null else parts.joinToString("; ")
             }
+            "feat_multi" -> {
+                val parts = mutableListOf<String>()
+                if (choice.asi > 0) {
+                    val ability = char.featureChoices["${featcardKey}_asi"] ?: choice.abilities.singleOrNull()
+                    val amount = choice.asi
+                    ability?.let { parts.add("+$amount к «" + (asiAbilityName(it) ?: it) + "»") }
+                }
+                choice.proficiency_parts.forEachIndexed { index, part ->
+                    val selected = char.featureMultiChoices["${featcardKey}_prof$index"] ?: return@forEachIndexed
+                    if (selected.isEmpty()) return@forEachIndexed
+                    val names = selected.joinToString(", ") { proficiencyChoiceName(part.kind, it) }
+                    val label = when (part.grant) {
+                        "expertise" -> "Экспертность"
+                        "expertise_or_proficiency" -> "Владение/Экспертность"
+                        "display" -> "Тип урона"
+                        else -> "Владение"
+                    }
+                    parts.add("$label: $names")
+                }
+                val spellNames = mutableListOf<String>()
+                choice.fixed_spells.forEach { spellNames.add(vm.repository.resolveName(it) ?: it.substringAfterLast(":")) }
+                choice.pick_spells.forEachIndexed { index, _ ->
+                    char.featureMultiChoices["${featcardKey}_spell$index"]?.forEach {
+                        spellNames.add(vm.repository.resolveName(it) ?: it.substringAfterLast(":"))
+                    }
+                }
+                if (spellNames.isNotEmpty()) {
+                    val spellAbility = choice.fixed_spell_ability
+                        ?: char.featureChoices["${featcardKey}_ability"]
+                        ?: char.featureChoices["${featcardKey}_asi"]
+                    val abPart = spellAbility?.let { "; характеристика: " + (asiAbilityName(it) ?: it) } ?: ""
+                    parts.add("Заклинания: " + spellNames.joinToString(", ") + abPart)
+                }
+                if (parts.isEmpty()) null else parts.joinToString("; ")
+            }
             "magic_initiate" -> {
                 val parts = mutableListOf<String>()
                 char.featureChoices["${featcardKey}_list"]?.let {
@@ -274,6 +347,13 @@ class SheetAbilitiesFragment : Fragment() {
             }
             else -> null
         }
+    }
+
+    private fun proficiencyChoiceName(kind: String, id: String): String = when {
+        kind == "save" -> asiAbilityName(id) ?: id
+        kind == "damage_type" -> com.herocraft24.core.ui.local.UiLocalizer.damageType(id)
+        id.contains(":") -> vm.repository.resolveName(id) ?: id.substringAfterLast(":")
+        else -> com.herocraft24.core.ui.local.UiLocalizer.skill(id)
     }
 
     private fun asiAbilityName(key: String): String? {
@@ -307,6 +387,7 @@ class SheetAbilitiesFragment : Fragment() {
         data class FeatItem(val feat: Feat, val choiceText: String? = null) : AbilityItem()
         data class MetamagicItem(val metamagic: Metamagic) : AbilityItem()
         data class InvocationItem(val invocation: com.herocraft24.core.model.Invocation) : AbilityItem()
+        data class ManeuverItem(val maneuver: com.herocraft24.core.model.Maneuvers) : AbilityItem()
     }
 
     class SheetAbilitiesAdapter(
@@ -324,6 +405,7 @@ class SheetAbilitiesFragment : Fragment() {
         private val TYPE_RESOURCE = 4
         private val TYPE_METAMAGIC = 5
         private val TYPE_INVOCATION = 6
+        private val TYPE_MANEUVER = 7
 
         override fun getItemViewType(position: Int) = when (items[position]) {
             is AbilityItem.SectionHeader -> TYPE_HEADER
@@ -333,6 +415,7 @@ class SheetAbilitiesFragment : Fragment() {
             is AbilityItem.ResourceCard -> TYPE_RESOURCE
             is AbilityItem.MetamagicItem -> TYPE_METAMAGIC
             is AbilityItem.InvocationItem -> TYPE_INVOCATION
+            is AbilityItem.ManeuverItem -> TYPE_MANEUVER
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -352,6 +435,7 @@ class SheetAbilitiesFragment : Fragment() {
                 })
                 TYPE_METAMAGIC -> MetamagicViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
                 TYPE_INVOCATION -> InvocationViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
+                TYPE_MANEUVER -> ManeuverViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
                 else -> FeatureViewHolder(CardFeatureCreateBinding.inflate(inflater, parent, false))
             }
         }
@@ -374,6 +458,11 @@ class SheetAbilitiesFragment : Fragment() {
                     val item = items[position] as AbilityItem.InvocationItem
                     val isExpanded = position == expandedPosition
                     bindInvocation(holder, item, position, isExpanded)
+                }
+                is ManeuverViewHolder -> {
+                    val item = items[position] as AbilityItem.ManeuverItem
+                    val isExpanded = position == expandedPosition
+                    bindManeuver(holder, item, position, isExpanded)
                 }
                 is FeatureViewHolder -> {
                     val item = items[position]
@@ -516,6 +605,36 @@ class SheetAbilitiesFragment : Fragment() {
             }
         }
 
+        private fun bindManeuver(holder: ManeuverViewHolder, item: AbilityItem.ManeuverItem, position: Int, isExpanded: Boolean) {
+            val maneuver = item.maneuver
+            holder.binding.featureTitle.text = maneuver.name.get()
+            holder.binding.expandedContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
+            holder.binding.headerRow.setOnClickListener {
+                val prev = expandedPosition
+                expandedPosition = if (isExpanded) -1 else position
+                if (prev >= 0) notifyItemChanged(prev)
+                if (expandedPosition >= 0) notifyItemChanged(expandedPosition)
+            }
+            if (isExpanded) {
+                holder.binding.expandedContent.removeAllViews()
+                val ctx = holder.binding.expandedContent.context
+                maneuver.cost?.takeIf { it.isNotBlank() }?.let { cost ->
+                    holder.binding.expandedContent.addView(TextView(ctx).apply {
+                        text = "Стоимость: $cost"
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                        setTypeface(typeface, Typeface.BOLD)
+                        setTextColor(0xFF6750A4.toInt())
+                        setPadding(0, 0, 0, 8.dp(ctx))
+                    })
+                }
+                holder.binding.expandedContent.addView(TextView(ctx).apply {
+                    text = maneuver.description.get()
+                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                    setPadding(0, 0, 0, 8.dp(ctx))
+                })
+            }
+        }
+
         private fun bindFeature(holder: FeatureViewHolder, item: AbilityItem.FeatureItem, position: Int, isExpanded: Boolean) {
             val f = item.feature
             val levelSuffix = f.level?.let { "Уровень $it: " } ?: ""
@@ -609,6 +728,7 @@ class SheetAbilitiesFragment : Fragment() {
         class ResourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         class MetamagicViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
         class InvocationViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
+        class ManeuverViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
         class FeatureViewHolder(val binding: CardFeatureCreateBinding) : RecyclerView.ViewHolder(binding.root)
     }
 }

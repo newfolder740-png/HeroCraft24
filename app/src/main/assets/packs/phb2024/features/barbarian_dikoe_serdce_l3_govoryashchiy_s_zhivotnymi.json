@@ -5,6 +5,6 @@
   "name": {"en": "", "ru": "Говорящий с животными"},
   "description": {"en": "", "ru": "Вы можете сотворять заклинания Животные чувства и Разговор с животными, но только как Ритуал. Вашей заклинательной характеристикой для них является Мудрость."},
   "level": 3,
-  "is_placeholder": false,
+  "always_prepared":{"3":["phb2024:beast_sense","phb2024:speak_with_animals"]},"spell_ability":"wisdom","is_placeholder": false,
   "is_subclass_choice": false
 }
