@@ -1,5 +1,6 @@
 {
     "id":  "visions_of_distant_realms",
+  "spell": "phb2024:arcane_eye", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

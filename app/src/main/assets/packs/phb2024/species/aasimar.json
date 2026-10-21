@@ -31,6 +31,7 @@
         "en": "Celestial Resistance",
         "ru": "Небесное сопротивление"
       },
+      "resistances": ["necrotic", "radiant"],
       "description": {
         "en": "You have Resistance to Necrotic damage and Radiant damage.",
         "ru": "У вас есть Сопротивление Некротическому урону и урону Излучением."
@@ -51,6 +52,7 @@
         "en": "Healing Hands",
         "ru": "Исцеляющие руки"
       },
+      "resource": {"shape": "hexagon", "count_formula": "1", "refresh": "long_rest"},
       "description": {
         "en": "As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest.",
         "ru": "Действием Магия вы касаетесь существа и бросаете к4 в количестве, равном вашему Бонусу владения. Существо восстанавливает количество Хитов, равное сумме бросков. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
@@ -75,6 +77,8 @@
         "en": "Celestial Revelation",
         "ru": "Небесное откровение"
       },
+      "level": 3,
+      "resource": {"shape": "hexagon", "count_formula": "1", "refresh": "long_rest"},
       "description": {
         "en": "When you reach character level 3, you can transform as a Bonus Action using one of the options below (you choose the option each time you transform). The transformation lasts for 1 minute or until you end it (no action required). Once you use this trait, you can't use it again until you finish a Long Rest.\n\nWhile the transformation lasts, once on each of your turns when you deal damage to a target with an attack or a spell, you can deal extra damage to the target equal to your Proficiency Bonus. The extra damage is Necrotic for Necrotic Shroud and Radiant for Celestial Wings and Radiant Soul.\n\nYou choose the transformation from the following options:\n\nCelestial Wings. Two spectral wings sprout from your back temporarily. While the transformation lasts, you have a Fly Speed equal to your Speed.\n\nRadiant Soul. Searing light temporarily radiates from your eyes and mouth. While the transformation lasts, you shed Bright Light in a 10-foot radius and Dim Light for an additional 10 feet, and at the end of each of your turns, each creature within 10 feet of you takes Radiant damage equal to your Proficiency Bonus.\n\nNecrotic Shroud. Your eyes briefly become pools of darkness, and flightless wings sprout from your back temporarily. Creatures other than your allies within 10 feet of you must succeed on a Charisma saving throw (DC 8 plus your Charisma modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn.",
         "ru": "По достижению 3-го уровня персонажа вы можете Бонусным действием преобразиться, согласно одному из приведенных ниже вариантов (вы выбираете при каждом преобразовании). Преобразование длится 1 минуту или до тех пор, пока вы её не завершите (действий не требуется). Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых.\n\nПока преобразование длится, когда вы наносите цели урон атакой или заклинанием, можете нанести ей дополнительный урон, равный вашему Бонусу владения. Для Савана смерти это Некротический урон, а для Небесных крыльев и Сияющей души — урон Излучением. Вы можете нанести этот дополнительный урон только раз в каждый ваш ход.\n\nВы выбираете преобразование из следующих вариантов:\n\nНебесные крылья. Два призрачных крыла временно вырастают из вашей спины. Пока преобразование длится, у вас есть Скорость полёта, равная вашей Скорости.\n\nСияющая душа. Обжигающий свет временно исходит из ваших глаз и рта. Пока преобразование длится, вы излучаете Яркий свет в радиусе 10 футов и Тусклый свет ещё на 10 футов, и в конце каждого из ваших ходов каждое существо в пределах 10 футов от вас получает урон Излучением, равный вашему Бонусу владения.\n\nСаван смерти. Ваши глаза на мгновение превращаются в озера тьмы, а из вашей спины временно вырастают нелетающие крылья. Все существа в пределах 10 футов от вас, кроме ваших союзников, должны преуспеть в спасброске Харизмы (Сл 8 + ваши модификатор Харизмы и Бонус владения), иначе получат состояние Испуганный до конца вашего следующего хода."

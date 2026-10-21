@@ -1,5 +1,6 @@
 {
     "id":  "whispers_of_the_grave",
+  "spell": "phb2024:speak_with_dead", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

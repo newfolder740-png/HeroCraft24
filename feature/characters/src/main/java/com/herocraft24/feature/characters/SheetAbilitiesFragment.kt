@@ -52,12 +52,27 @@ class SheetAbilitiesFragment : Fragment() {
         // Feature resource cards (above class features)
         val featureResources = vm.getEffectiveFeatureResources(char)
         for ((featureId, state) in featureResources) {
-            val feature = vm.repository.getFeature(featureId) ?: continue
-            val res = feature.resource ?: continue
+            val feature = vm.repository.getFeature(featureId)
+            if (feature != null) {
+                val res = feature.resource ?: continue
+                items.add(AbilityItem.ResourceCard(
+                    featureId = featureId,
+                    title = feature.name.get(),
+                    shape = res.shape,
+                    refresh = vm.effectiveResourceRefresh(char, featureId, res.refresh),
+                    total = state.total,
+                    used = state.used
+                ))
+                continue
+            }
+            // Ресурс черты вида
+            val trait = vm.speciesTraitById(char, featureId) ?: continue
+            val res = trait.resource ?: continue
             items.add(AbilityItem.ResourceCard(
                 featureId = featureId,
-                title = feature.name.get(),
+                title = trait.name.get(),
                 shape = res.shape,
+                refresh = res.refresh,
                 total = state.total,
                 used = state.used
             ))
@@ -179,6 +194,17 @@ class SheetAbilitiesFragment : Fragment() {
             }
         }
 
+        // Сопротивления урону (вид, умения классов и подклассов)
+        val resistances = vm.getCharacterResistances(char)
+        if (resistances.isNotEmpty()) {
+            items.add(AbilityItem.SectionHeader("Сопротивления урону"))
+            items.add(AbilityItem.TraitItem(
+                "Сопротивление",
+                resistances.sorted().joinToString(", ") { UiLocalizer.damageType(it) },
+                null
+            ))
+        }
+
         // Feats
         val feats = mutableListOf<Feat>()
         val bg = vm.getAllBackgrounds().find { it.id == char.backgroundId.substringAfterLast(":") }
@@ -206,6 +232,29 @@ class SheetAbilitiesFragment : Fragment() {
             )
             return "Заклинательная характеристика: ${abilityNames[chosen] ?: chosen}"
         }
+        if (choice.type == "feat_category") {
+            val traitKey = vm.speciesTraitFeatureId(speciesId, t.name.get())
+            val featId = char.featureChoices[traitKey] ?: return null
+            val feat = vm.repository.getFeat(featId) ?: return null
+            return "Черта: " + feat.name.get()
+        }
+        if (choice.type == "grants") {
+            val traitKey = vm.speciesTraitFeatureId(speciesId, t.name.get())
+            val names = mutableListOf<String>()
+            choice.proficiency_parts.forEachIndexed { index, part ->
+                val selected = char.featureMultiChoices["${traitKey}_prof$index"] ?: return@forEachIndexed
+                for (id in selected) {
+                    names += choice.option_names[id] ?: when (part.kind) {
+                        "damage_type" -> UiLocalizer.damageType(id)
+                        "save" -> UiLocalizer.ability(id)
+                        "skill" -> UiLocalizer.skill(id)
+                        else -> vm.repository.resolveName(id) ?: UiLocalizer.skill(id)
+                    }
+                }
+            }
+            if (names.isEmpty()) return null
+            return names.joinToString(", ")
+        }
         return null
     }
 
@@ -228,7 +277,7 @@ class SheetAbilitiesFragment : Fragment() {
             choice.proficiency_parts.forEachIndexed { index, part ->
                 val selected = char.featureMultiChoices["${f.id}_prof$index"] ?: return@forEachIndexed
                 for (id in selected) {
-                    names += when (part.kind) {
+                    names += choice.option_names[id] ?: when (part.kind) {
                         "damage_type" -> UiLocalizer.damageType(id)
                         "save" -> UiLocalizer.ability(id)
                         "skill" -> UiLocalizer.skill(id)
@@ -381,7 +430,7 @@ class SheetAbilitiesFragment : Fragment() {
 
     sealed class AbilityItem {
         data class SectionHeader(val title: String) : AbilityItem()
-        data class ResourceCard(val featureId: String, val title: String, val shape: String, val total: Int, val used: Int) : AbilityItem()
+        data class ResourceCard(val featureId: String, val title: String, val shape: String, val refresh: String, val total: Int, val used: Int) : AbilityItem()
         data class FeatureItem(val feature: Feature, val choiceText: String? = null) : AbilityItem()
         data class TraitItem(val name: String, val description: String, val choiceText: String? = null) : AbilityItem()
         data class FeatItem(val feat: Feat, val choiceText: String? = null) : AbilityItem()
@@ -477,6 +526,13 @@ class SheetAbilitiesFragment : Fragment() {
             }
         }
 
+        private fun resolveColor(ctx: android.content.Context, attr: Int): Int {
+            val ta = ctx.theme.obtainStyledAttributes(intArrayOf(attr))
+            val color = ta.getColor(0, 0)
+            ta.recycle()
+            return color
+        }
+
         private fun bindResource(holder: ResourceViewHolder, item: AbilityItem.ResourceCard) {
             val card = holder.itemView as com.google.android.material.card.MaterialCardView
             card.removeAllViews()
@@ -489,6 +545,16 @@ class SheetAbilitiesFragment : Fragment() {
             inner.addView(TextView(ctx).apply {
                 text = item.title
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelMedium)
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            })
+            inner.addView(TextView(ctx).apply {
+                text = if (item.refresh == "short_rest") "Восстанавливается после короткого отдыха"
+                else "Восстанавливается после долгого отдыха"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setTextColor(resolveColor(ctx, com.google.android.material.R.attr.colorOnSurfaceVariant))
                 layoutParams = android.widget.LinearLayout.LayoutParams(
                     android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
                     android.widget.LinearLayout.LayoutParams.WRAP_CONTENT

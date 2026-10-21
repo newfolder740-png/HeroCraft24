@@ -1,5 +1,6 @@
 {
     "id":  "mask_of_many_faces",
+  "spell": "phb2024:disguise_self", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

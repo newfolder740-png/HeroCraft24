@@ -52,6 +52,7 @@
         "en": "Howl",
         "ru": "Вой"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
       "description": {
         "en": "As a Bonus Action, you let out an otherworldly howl. Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw (DC 8 plus your Proficiency Bonus and Constitution modifier) or have Disadvantage on attack rolls and saving throws until the start of your next turn.\n\nYou can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
         "ru": "Бонусным действием вы издаёте потусторонний вой. Каждое существо на ваш выбор из находящихся в пределах 15 футов от вас должно преуспеть в спасброске Мудрости (Сл 8 + ваши Бонус владения и модификатор Телосложения), иначе будет совершать с Помехой броски атаки и спасброски до начала вашего следующего хода.\n\nВы можете использовать эту особенность количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
@@ -62,6 +63,7 @@
         "en": "Bestial Instincts",
         "ru": "Инстинкты оборотня"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 1, "grant": "proficiency", "options": ["perception", "survival", "stealth"]}]},
       "description": {
         "en": "You gain proficiency in Perception, Survival, or Stealth.",
         "ru": "Вы получаете владение навыком Восприятия, Выживания или Скрытности."

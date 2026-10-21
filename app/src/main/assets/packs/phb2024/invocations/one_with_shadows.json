@@ -1,5 +1,6 @@
 {
     "id":  "one_with_shadows",
+  "spell": "phb2024:invisibility", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

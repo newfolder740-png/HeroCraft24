@@ -120,6 +120,11 @@ class LevelUpFragment : Fragment() {
     private var wizardCantripCounterView: TextView? = null
     private var wizardBookCounterView: TextView? = null
 
+    // «Учёный-<школа>»: добор одного заклинания школы в книгу на порогах появления новых ячеек
+    private var wizardSchoolFeatureId: String? = null
+    private val newWizardSchoolSpells = mutableListOf<String>()
+    private var wizardSchoolCounterView: TextView? = null
+
     // Step 2 ritual caster state (добор ритуала при росте БМ)
     private var ritualFeatcardKey: String? = null
     private var newRitualSpellId: String? = null
@@ -478,7 +483,9 @@ class LevelUpFragment : Fragment() {
                     selected = current,
                     charId = charId ?: char?.id ?: "",
                     ability = ability,
-                    levelFilter = if (choice.type == "known_spell") choice.spell_level else -1
+                    levelFilter = if (choice.type == "known_spell") choice.spell_level else -1,
+                    maxLevel = choice.max_spell_level,
+                    schools = choice.schools
                 ).apply {
                     setOnResultListener { selected ->
                         featuresAdapter?.updateClassSpells(featureId, selected)
@@ -616,24 +623,34 @@ class LevelUpFragment : Fragment() {
         scroll.addView(content)
         binding.stepContainer.addView(scroll)
 
-        // Секция получения/замены заклинаний класса, за который берётся уровень
-        val spellFeature = cls.features
-            .mapNotNull { vm.repository.getFeature(it) }
-            .find { feature ->
-                val choice = feature.choice
-                choice != null && (choice.type == "class_spells" || choice.type == "prepared_spells") && choice.level_up != null
-            }
+        // Секция получения/замены заклинаний: умение класса ИЛИ подкласса
+        // (Мистический рыцарь и Мистический ловкач получают заклинательство от подкласса)
+        fun isSpellGainFeature(feature: Feature): Boolean {
+            val choice = feature.choice ?: return false
+            return (choice.type == "class_spells" || choice.type == "prepared_spells") && choice.level_up != null
+        }
+        val spellSubclass = ch.subclassId?.let { vm.repository.getSubclass(it) }?.takeIf { it.class_id == selectedClass }
+        val classSpellFeature = cls.features.mapNotNull { vm.repository.getFeature(it) }.find { isSpellGainFeature(it) }
+        val subclassSpellFeature = spellSubclass?.features?.mapNotNull { vm.repository.getFeature(it) }?.find { isSpellGainFeature(it) }
+        val spellFeature = classSpellFeature ?: subclassSpellFeature
         if (spellFeature != null) {
+            val fromSubclass = classSpellFeature == null
             val (card, body) = ExpandableCard.createExpandableCard(
                 context = ctx,
                 title = "Получение и замена заклинаний",
-                subtitle = cls.name.get(),
+                subtitle = if (fromSubclass) spellSubclass?.name?.get() ?: cls.name.get() else cls.name.get(),
                 openId = "class_spells",
                 openIdsSet = expandedSections
             ) { _ -> }
             content.addView(card)
             spellSectionFeatureId = spellFeature.id
-            renderClassSpellsSection(body, ch, selectedClass, spellFeature)
+            renderClassSpellsSection(
+                container = body,
+                ch = ch,
+                selectedClass = selectedClass,
+                spellFeature = spellFeature,
+                spellTable = if (fromSubclass) spellSubclass?.class_table else cls.class_table
+            )
             spellsSectionVisible = true
         }
 
@@ -711,13 +728,21 @@ class LevelUpFragment : Fragment() {
         }
     }
 
-    private fun renderClassSpellsSection(container: LinearLayout, ch: CharacterData, selectedClass: String, spellFeature: Feature) {
+    private fun renderClassSpellsSection(
+        container: LinearLayout,
+        ch: CharacterData,
+        selectedClass: String,
+        spellFeature: Feature,
+        spellTable: com.herocraft24.core.model.ClassTable? = null
+    ) {
         val ctx = requireContext()
         val cls = vm.getClassInfo(selectedClass) ?: return
-        val ability = cls.spellcasting?.ability ?: return
+        // У подклассов-заклинателей характеристика объявлена в умении, а не в классе
+        val ability = spellFeature.spell_ability ?: cls.spellcasting?.ability ?: return
         val currentClassLevel = ch.classLevels[selectedClass] ?: if (selectedClass == ch.classId) ch.level else 0
         val newClassLevel = currentClassLevel + 1
-        val gain = vm.getClassLevelSpellGain(selectedClass, currentClassLevel, newClassLevel)
+        val table = spellTable ?: cls.class_table
+        val gain = vm.getSpellGain(table, currentClassLevel, newClassLevel)
         baseNewCantrips = gain.cantrips
         baseNewSpells = gain.spells
 
@@ -725,12 +750,7 @@ class LevelUpFragment : Fragment() {
         allowReplaceCantrip = (levelUp?.replace_cantrips ?: 1) > 0
         allowReplaceSpell = (levelUp?.replace_spells ?: 1) > 0
 
-        val newRow = cls.class_table?.rows?.find { it.level == newClassLevel }
-        maxNewSpellLevel = newRow?.values?.get("slot_level")?.toIntOrNull()
-            ?: newRow?.values?.entries
-                ?.filter { it.key.startsWith("slot") && (it.value.toIntOrNull() ?: 0) > 0 }
-                ?.maxOfOrNull { it.key.removePrefix("slot").toIntOrNull() ?: 0 }
-            ?: 1
+        maxNewSpellLevel = vm.maxSpellLevelForGain(table, newClassLevel)
 
         loadSorcererSpellData(ch, selectedClass, ability)
 
@@ -1268,6 +1288,7 @@ class LevelUpFragment : Fragment() {
         container.addView(card)
 
         // ── Current invocations (mark one to replace) ──
+        val lockedInvocations = vm.lockedInvocations(selectedClass, currentInvocationIds)
         if (currentInvocationIds.isNotEmpty()) {
             body.addView(TextView(ctx).apply {
                 text = "Текущие воззвания — отметьте одно для замены:"
@@ -1277,10 +1298,15 @@ class LevelUpFragment : Fragment() {
             val currentOptions = currentInvocationIds.mapNotNull { id ->
                 val inv = repo.getInvocation(id) ?: return@mapNotNull null
                 val req = inv.requirements?.warlock_level
+                val locked = id in lockedInvocations
                 PickerOption(
                     fullId = id,
                     name = inv.name.get(),
-                    subtitle = if (req != null) "Воззвание • Колдун $req-го уровня" else "Воззвание",
+                    subtitle = listOfNotNull(
+                        "Воззвание",
+                        if (locked) "требуется другому воззванию" else null,
+                        req?.let { "Колдун $it-го уровня" }
+                    ).joinToString(" • "),
                     color = accentColor
                 )
             }
@@ -1295,10 +1321,13 @@ class LevelUpFragment : Fragment() {
                     InvocationDetailSheetDialog.newInstance(option.fullId).show(childFragmentManager, "InvocationDetail")
                 },
                 onAddClick = { option ->
-                    removeInvocationId = if (removeInvocationId == option.fullId) null else option.fullId
-                    recycler.adapter?.notifyDataSetChanged()
-                    updateInvocationCounter()
-                    updateButtons()
+                    // Воззвание, которое требуется другому имеющемуся, заменить нельзя
+                    if (option.fullId !in lockedInvocations) {
+                        removeInvocationId = if (removeInvocationId == option.fullId) null else option.fullId
+                        recycler.adapter?.notifyDataSetChanged()
+                        updateInvocationCounter()
+                        updateButtons()
+                    }
                 },
                 isSelected = { option -> option.fullId == removeInvocationId },
                 selectedIcon = "✕",
@@ -1321,7 +1350,9 @@ class LevelUpFragment : Fragment() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setOnClickListener {
                 val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
-                val candidates = vm.getAvailableInvocations(selectedClass, newClassLevel)
+                // Зависимые воззвания («Властелин цепи», «Жажда клинка») доступны, только если есть базовое
+                val owned = (currentInvocationIds.filter { it != removeInvocationId } + newSelectedInvocations).distinct()
+                val candidates = vm.getAvailableInvocations(selectedClass, newClassLevel, owned)
                     .filter { it !in currentInvocationIds }
                 OptionPickerDialogFragment.newInstance(
                     kind = OptionPickerDialogFragment.KIND_INVOCATION,
@@ -1623,7 +1654,58 @@ class LevelUpFragment : Fragment() {
             }
         })
 
+        // «Учёный-<школа>»: на порогах появления новых ячеек — ещё одно заклинание школы в книгу
+        val schoolFeature = wizardSchoolGainFeature(ch, selectedClass, newClassLevel)
+        if (schoolFeature != null) {
+            val schoolChoice = schoolFeature.choice ?: return
+            wizardSchoolFeatureId = schoolFeature.id
+            wizardSchoolCounterView = TextView(ctx).apply {
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+            }
+            wizardSchoolCounterView?.let { body.addView(it) }
+            body.addView(MaterialButton(ctx).apply {
+                text = "Выбрать заклинание школы в книгу"
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                setOnClickListener {
+                    val bookIds = (ch.spells?.spellbook ?: emptyList()).map { it.spellFullId() }
+                    ClassSpellPickerDialogFragment.newInstance(
+                        classFilter = schoolChoice.class_filter?.takeIf { it.isNotEmpty() } ?: selectedClass,
+                        cantrips = 0,
+                        spells = 1,
+                        selected = newWizardSchoolSpells.toList(),
+                        charId = ch.id,
+                        ability = ability,
+                        excludeIds = bookIds,
+                        maxLevel = maxSlotLevel,
+                        schools = schoolChoice.schools
+                    ).apply {
+                        setOnResultListener { sel ->
+                            newWizardSchoolSpells.clear()
+                            newWizardSchoolSpells.addAll(sel)
+                            updateWizardCounters()
+                            updateButtons()
+                        }
+                    }.show(childFragmentManager, "WizardSchoolPicker")
+                }
+            })
+        } else {
+            wizardSchoolFeatureId = null
+            wizardSchoolCounterView = null
+        }
+
         updateWizardCounters()
+    }
+
+    /** Умение «Учёный-<школа>», дающее +1 заклинание школы в книгу на уровне [newClassLevel]. */
+    private fun wizardSchoolGainFeature(ch: CharacterData, selectedClass: String, newClassLevel: Int): Feature? {
+        val subclassId = ch.subclassId ?: return null
+        val subclass = vm.repository.getSubclass(subclassId) ?: return null
+        if (subclass.class_id != selectedClass) return null
+        return subclass.features.mapNotNull { vm.repository.getFeature(it) }.firstOrNull { f ->
+            val c = f.choice ?: return@firstOrNull false
+            c.type == "wizard_spells" && c.schools.isNotEmpty() && newClassLevel in c.book_gain_levels
+        }
     }
 
     private fun updateWizardCounters() {
@@ -1631,6 +1713,9 @@ class LevelUpFragment : Fragment() {
             wizardCantripCounterView?.text = "Новые заговоры: ${newWizardCantrips.size}/$wizardCantripGain"
         }
         wizardBookCounterView?.text = "Новые заклинания в книгу: ${newWizardBookSpells.size}/2"
+        if (wizardSchoolFeatureId != null) {
+            wizardSchoolCounterView?.text = "Заклинание школы в книгу: ${newWizardSchoolSpells.size}/1"
+        }
     }
 
     // ── Ritual Caster section (добор ритуального заклинания при росте БМ) ──
@@ -1751,6 +1836,8 @@ class LevelUpFragment : Fragment() {
         if (wizardSectionVisible) {
             if (newWizardCantrips.size != wizardCantripGain) return false
             if (newWizardBookSpells.size != 2) return false
+            // «Учёный-<школа>»: на порогах ячеек нужно выбрать ещё одно заклинание школы
+            if (wizardSchoolFeatureId != null && newWizardSchoolSpells.size != 1) return false
         }
         // Приёмы Мастера боя: новых должно быть столько, сколько положено (+1 при замене)
         if (maneuverFeatureId != null) {
@@ -2175,8 +2262,15 @@ class LevelUpFragment : Fragment() {
         val effectiveScores = vm.getEffectiveAbilityScores(ch)
         val conMod = vm.modifier(effectiveScores["constitution"] ?: 10)
         val featHpBonus = vm.computeLevelUpFeatHpBonus(ch.feats, newFeats, newTotalLevel)
-        val newMaxHp = ch.hitPoints.max + hpRoll + conMod + featHpBonus
-        val newCurrentHp = ch.hitPoints.current + hpRoll + conMod + featHpBonus
+        // «Дварфийская крепость» и подобное: +N Хитов за каждый уровень
+        val speciesHpBonus = vm.speciesHpPerLevel(ch)
+        // «Драконья устойчивость» чародея и подобное: hp_per_level от умений
+        val featureHpBonus = vm.computeLevelUpFeatureHpBonus(
+            ch,
+            ch.copy(level = newTotalLevel, classLevels = updatedClassLevels, subclassId = updatedSubclassId)
+        )
+        val newMaxHp = ch.hitPoints.max + hpRoll + conMod + featHpBonus + speciesHpBonus + featureHpBonus
+        val newCurrentHp = ch.hitPoints.current + hpRoll + conMod + featHpBonus + speciesHpBonus + featureHpBonus
 
         val updated = ch.copy(
             level = newTotalLevel,
@@ -2225,8 +2319,15 @@ class LevelUpFragment : Fragment() {
             withSorcererSpells
         }
 
+        // «Учёный-<школа>»: заклинание школы дописывается к выбору того же умения
+        val withSchoolSpells = if (wizardSchoolFeatureId != null && newWizardSchoolSpells.isNotEmpty()) {
+            vm.appendWizardSchoolSpells(withWizardSpells, wizardSchoolFeatureId!!, newWizardSchoolSpells)
+        } else {
+            withWizardSpells
+        }
+
         // Rebuild feat-granted spells (e.g. Magic Initiate): adds new and applies replacements
-        val withFeatSpells = vm.rebuildFeatInnateSpells(withWizardSpells)
+        val withFeatSpells = vm.rebuildFeatInnateSpells(withSchoolSpells)
 
         // If a spellcasting_ability choice was made during this level-up, store it
         val finalChar = if (updated.speciesSpellAbility == null) {
@@ -2279,12 +2380,13 @@ class LevelUpFragment : Fragment() {
         bg?.skill_proficiencies?.let { proficient.addAll(it) }
         proficient.addAll(vm.getFeatProficiencyGrants(char).skills)
         proficient.addAll(vm.getFeatureGrants(char).skills)
+        proficient.addAll(vm.getSpeciesGrants(char).skills)
         return proficient
     }
 
     /** Навыки, в которых у персонажа уже есть Экспертность (класс, происхождение, черты). */
     private fun computeExpertiseSkills(char: CharacterData): Set<String> {
-        val grants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val grants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char) + vm.getSpeciesGrants(char)
         val result = char.expertiseSkills.toMutableSet()
         result.addAll(grants.expertise)
         val proficient = computeProficientSkills(char)
@@ -2298,6 +2400,8 @@ class LevelUpFragment : Fragment() {
         for (classId in (char.classLevels.keys + char.classId + selectedClass).distinct()) {
             vm.getClassInfo(classId)?.saving_throws?.let { result.addAll(it) }
         }
+        result.addAll(vm.getSpeciesGrants(char).saves)
+        result.addAll(vm.getFeatProficiencyGrants(char).saves)
         return result
     }
 

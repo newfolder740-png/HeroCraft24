@@ -54,7 +54,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun finishWizard() {
         viewModelScope.launch {
             val char = _wizard.value
-            val hp = calculateStartingHP(char) + computeLevelUpFeatHpBonus(emptyList(), char.selectedFeats, 1)
+            val hp = calculateStartingHP(char) + computeLevelUpFeatHpBonus(emptyList(), char.selectedFeats, 1) + speciesHpPerLevel(char)
             val equipment = calculateStartingEquipment(char)
             val classLevels = if (char.classLevels.isEmpty() && char.classId.isNotEmpty()) {
                 mapOf(char.classId to 1)
@@ -163,6 +163,10 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 char.bgAbilityPlus1?.let { scores[it] = (scores[it] ?: 10) + 1 }
             }
         }
+        // Плоские бонусы от умений (напр. «Тело и разум» монаха 20)
+        for ((ability, bonus) in featureAbilityBonuses(char)) {
+            scores[ability] = (scores[ability] ?: 10) + bonus
+        }
         return scores
     }
     fun skillBonus(skill: SkillState, char: CharacterData): Int {
@@ -202,6 +206,21 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val pactLevel = row?.values?.get("slot_level")?.toIntOrNull() ?: 0
         if (pactSlots > 0 && pactLevel > 0) {
             return SpellSlotsCounter.CasterInfo(classLevel, mapOf(pactLevel to pactSlots))
+        }
+        // Ячейки из таблицы подкласса-заклинателя (Мистический рыцарь, Мистический ловкач):
+        // их прогрессия не совпадает с формулой «уровень/3» из SpellSlotsCounter
+        val subTable = char.subclassId?.let { repository.getSubclass(it) }
+            ?.takeIf { it.class_id == char.classId }?.class_table
+        val subRow = subTable?.rows?.find { it.level == classLevel }
+        if (subRow != null) {
+            val slots = mutableMapOf<Int, Int>()
+            for ((key, value) in subRow.values) {
+                if (!key.startsWith("slot")) continue
+                val slotLevel = key.removePrefix("slot").toIntOrNull() ?: continue
+                val count = value.toIntOrNull() ?: continue
+                if (slotLevel > 0 && count > 0) slots[slotLevel] = count
+            }
+            if (slots.isNotEmpty()) return SpellSlotsCounter.CasterInfo(classLevel, slots)
         }
         return SpellSlotsCounter.compute(char.classId, char.level, char.subclassId)
     }
@@ -349,6 +368,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         val saved = char.featureResources[fullFeatureId]
                         result[fullFeatureId] = FeatureResourceState(total = total, used = saved?.used ?: 0)
                     }
+            }
+        }
+        // Черты вида со счётчиками использований
+        effectiveSpeciesTraits(char)?.let { (speciesId, traits) ->
+            for (trait in traits) {
+                val res = trait.resource ?: continue
+                val key = speciesTraitFeatureId(speciesId, trait.name.get())
+                val total = resolveResourceTotal(res.count_formula, char, char.classId)
+                result[key] = FeatureResourceState(total = total, used = char.featureResources[key]?.used ?: 0)
             }
         }
         return result
@@ -675,15 +703,17 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
         val ability = speciesSpellAbility ?: return Triple(speciesSpellAbility, innateSpells.mapValues { it.value.toList() }, alwaysPrepared.mapValues { it.value.toList() })
         for (trait in effectiveTraits) {
-            val spell = trait.spell ?: continue
-            val traitLevel = trait.level ?: continue
+            // Черта без уровня доступна с 1-го уровня персонажа
+            val traitLevel = trait.level ?: 1
             if (traitLevel > upToLevel) continue
-            val entry = spellEntry(spell, char.speciesId)
-            val list = innateSpells.getOrPut(ability) { mutableListOf() }
-            if (entry !in list) list.add(entry)
-            if (trait.always_prepared) {
-                val apList = alwaysPrepared.getOrPut(ability) { mutableListOf() }
-                if (entry !in apList) apList.add(entry)
+            for (spell in traitSpellIds(trait)) {
+                val entry = spellEntry(spell, char.speciesId)
+                val list = innateSpells.getOrPut(ability) { mutableListOf() }
+                if (entry !in list) list.add(entry)
+                if (trait.always_prepared) {
+                    val apList = alwaysPrepared.getOrPut(ability) { mutableListOf() }
+                    if (entry !in apList) apList.add(entry)
+                }
             }
         }
 
@@ -715,12 +745,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val alwaysPreparedList = alwaysPreparedMap.getOrPut(ability) { mutableListOf() }.toMutableList()
 
         for (trait in effectiveTraits) {
-            val spell = trait.spell ?: continue
-            val traitLevel = trait.level ?: continue
+            val traitLevel = trait.level ?: 1
             if (traitLevel != newLevel) continue
-            val entry = spellEntry(spell, char.speciesId)
-            if (entry !in spellList) spellList.add(entry)
-            if (trait.always_prepared && entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
+            for (spell in traitSpellIds(trait)) {
+                val entry = spellEntry(spell, char.speciesId)
+                if (entry !in spellList) spellList.add(entry)
+                if (trait.always_prepared && entry !in alwaysPreparedList) alwaysPreparedList.add(entry)
+            }
         }
 
         innateMap[ability] = spellList
@@ -800,6 +831,14 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 }
             }
 
+            // Заклинания от выбранных воззваний (колдун)
+            if (classSpellAbility != null) {
+                for ((spell, always) in invocationSpells(char, classId)) {
+                    addInnate(classSpellAbility, spell, classId)
+                    if (always) addAlwaysPrepared(classSpellAbility, spell, classId)
+                }
+            }
+
             // Subclass features
             val subclassId = char.subclassId ?: continue
             val subclass = repository.getSubclass(subclassId) ?: continue
@@ -815,6 +854,16 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     for (spell in spells) {
                         addInnate(spellAbility, spell, classId)
                         addAlwaysPrepared(spellAbility, spell, classId)
+                    }
+                }
+                // Выборы заклинаний подкласса-заклинателя (Мистический рыцарь, Мистический ловкач)
+                val subChoiceType = feature.choice?.type
+                if (subChoiceType == "class_spells" || subChoiceType == "wizard_spells" ||
+                    subChoiceType == "prepared_spells" || subChoiceType == "known_spell"
+                ) {
+                    for (spell in char.featureMultiChoices[feature.id] ?: emptyList()) {
+                        if (subChoiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
+                        addInnate(spellAbility, spell, classId)
                     }
                 }
             }
@@ -848,7 +897,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val conditional: Set<String> = emptySet(), // экспертиза, если уже есть владение, иначе владение
         val saves: Set<String> = emptySet(),
         val equipment: Set<String> = emptySet(),   // доспехи/оружие/инструменты (id предметов или групп)
-        val display: Set<String> = emptySet()      // только отображение (тип урона и т.п.)
+        val display: Set<String> = emptySet(),      // только отображение (тип урона и т.п.)
+        val resistances: Set<String> = emptySet()   // выбранные сопротивления типам урона
     ) {
         operator fun plus(other: FeatProficiencyGrants) = FeatProficiencyGrants(
             skills = skills + other.skills,
@@ -856,7 +906,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             conditional = conditional + other.conditional,
             saves = saves + other.saves,
             equipment = equipment + other.equipment,
-            display = display + other.display
+            display = display + other.display,
+            resistances = resistances + other.resistances
         )
     }
 
@@ -873,6 +924,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val saves = mutableSetOf<String>()
         val equipment = mutableSetOf<String>()
         val display = mutableSetOf<String>()
+        val resistances = mutableSetOf<String>()
 
         fun classify(id: String) { if (id in allSkillIds) skills.add(id) else equipment.add(id) }
 
@@ -900,12 +952,13 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         "proficiency_and_expertise" -> { classify(id); expertise.add(id) }
                         "expertise_or_proficiency" -> conditional.add(id)
                         "display" -> display.add(id)
+                        "resistance" -> resistances.add(id)
                         else -> if (part.kind == "save") saves.add(id) else classify(id)
                     }
                 }
             }
         }
-        return FeatProficiencyGrants(skills, expertise, conditional, saves, equipment, display)
+        return FeatProficiencyGrants(skills, expertise, conditional, saves, equipment, display, resistances)
     }
 
     /**
@@ -919,6 +972,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val saves = mutableSetOf<String>()
         val equipment = mutableSetOf<String>()
         val display = mutableSetOf<String>()
+        val resistances = mutableSetOf<String>()
 
         fun classify(id: String) { if (id in allSkillIds) skills.add(id) else equipment.add(id) }
 
@@ -936,6 +990,7 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         "proficiency_and_expertise" -> { classify(id); expertise.add(id) }
                         "expertise_or_proficiency" -> conditional.add(id)
                         "display" -> display.add(id)
+                        "resistance" -> resistances.add(id)
                         else -> if (part.kind == "save") saves.add(id) else classify(id)
                     }
                 }
@@ -958,7 +1013,184 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                 applyFeature(feature)
             }
         }
-        return FeatProficiencyGrants(skills, expertise, conditional, saves, equipment, display)
+        return FeatProficiencyGrants(skills, expertise, conditional, saves, equipment, display, resistances)
+    }
+
+    /** id синтетического умения черты вида — тот же, что строят экраны создания и повышения уровня. */
+    fun speciesTraitFeatureId(speciesId: String, traitName: String) = "trait_${speciesId}_${traitName}"
+
+    /** Все заклинания и заговоры черты вида: одиночное поле plus список. */
+    private fun traitSpellIds(trait: com.herocraft24.core.model.SpeciesTrait): List<String> =
+        buildList {
+            trait.spell?.let { add(it) }
+            addAll(trait.spells)
+        }
+
+    /** Черта вида по id её синтетического умения. */
+    fun speciesTraitById(char: CharacterData, featureId: String): com.herocraft24.core.model.SpeciesTrait? {
+        val (speciesId, traits) = effectiveSpeciesTraits(char) ?: return null
+        return traits.find { speciesTraitFeatureId(speciesId, it.name.get()) == featureId }
+    }
+
+    /** Черты вида с учётом выбранного рода, доступные на уровне [upToLevel]. Пара: id вида, черты. */
+    fun effectiveSpeciesTraits(
+        char: CharacterData,
+        upToLevel: Int = char.level
+    ): Pair<String, List<com.herocraft24.core.model.SpeciesTrait>>? {
+        val speciesId = char.speciesId.substringAfterLast(":")
+        val species = getSpeciesIds().mapNotNull { getSpeciesInfo(it) }.find { it.id == speciesId } ?: return null
+        val selectedSub = char.subspeciesId?.let { id -> species.subspecies?.find { it.id == id } }
+        val traits = mutableListOf<com.herocraft24.core.model.SpeciesTrait>()
+        for (trait in species.traits) {
+            if (trait.is_placeholder && selectedSub != null) traits.addAll(selectedSub.traits) else traits.add(trait)
+        }
+        return species.id to traits.filter { (it.level ?: 0) <= upToLevel }
+    }
+
+    /** Владения/Экспертность/спасброски, которые дают черты вида. */
+    fun getSpeciesGrants(char: CharacterData): FeatProficiencyGrants {
+        val (speciesId, traits) = effectiveSpeciesTraits(char) ?: return FeatProficiencyGrants()
+        val skills = mutableSetOf<String>()
+        val expertise = mutableSetOf<String>()
+        val conditional = mutableSetOf<String>()
+        val saves = mutableSetOf<String>()
+        val equipment = mutableSetOf<String>()
+        val display = mutableSetOf<String>()
+        val resistances = mutableSetOf<String>()
+        fun classify(id: String) { if (id in allSkillIds) skills.add(id) else equipment.add(id) }
+
+        for (trait in traits) {
+            trait.proficiencies.forEach { classify(it) }
+            expertise.addAll(trait.expertise)
+            saves.addAll(trait.saves)
+            val choice = trait.choice ?: continue
+            if (choice.type != "grants") continue
+            val key = speciesTraitFeatureId(speciesId, trait.name.get())
+            choice.proficiency_parts.forEachIndexed { index, part ->
+                val selected = char.featureMultiChoices["${key}_prof$index"] ?: return@forEachIndexed
+                for (id in selected) {
+                    when (part.grant) {
+                        "expertise" -> expertise.add(id)
+                        "proficiency_and_expertise" -> { classify(id); expertise.add(id) }
+                        "expertise_or_proficiency" -> conditional.add(id)
+                        "display" -> display.add(id)
+                        "resistance" -> resistances.add(id)
+                        else -> if (part.kind == "save") saves.add(id) else classify(id)
+                    }
+                }
+            }
+        }
+        return FeatProficiencyGrants(skills, expertise, conditional, saves, equipment, display, resistances)
+    }
+
+    /** Сопротивления типам урона: фиксированные (вид, умения) и выбранные игроком. */
+    fun getCharacterResistances(char: CharacterData): Set<String> {
+        val result = mutableSetOf<String>()
+        effectiveSpeciesTraits(char)?.second?.forEach { result.addAll(it.resistances) }
+        for ((_, _, feature) in grantedFeatures(char)) result.addAll(feature.resistances)
+        result.addAll(getSpeciesGrants(char).resistances)
+        result.addAll(getFeatureGrants(char).resistances)
+        result.addAll(getFeatProficiencyGrants(char).resistances)
+        return result
+    }
+
+    /** Бонус к максимуму Хитов за один уровень от черт вида (напр. «Дварфийская крепость»). */
+    fun speciesHpPerLevel(char: CharacterData): Int = speciesEffectTotal(char, "hp_per_level")
+
+    /** Правило бонуса к проверке с уже вычисленным значением. */
+    data class EvaluatedBonus(
+        val value: Int,
+        val skills: Set<String>,
+        val saves: Set<String>,
+        val onlyIfNotProficient: Boolean
+    )
+
+    /**
+     * Бонусы к проверкам навыков и спасброскам от умений
+     * («Мастер на все руки», «Потустороннее очарование», «Алчущая мощь»).
+     */
+    fun evaluateBonusRules(char: CharacterData): List<EvaluatedBonus> {
+        val scores = getEffectiveAbilityScores(char)
+        val pb = char.proficiencyBonus
+        val result = mutableListOf<EvaluatedBonus>()
+        for ((_, _, feature) in grantedFeatures(char)) {
+            for (rule in feature.bonuses) {
+                val value = when {
+                    rule.formula == "half_proficiency_floor" -> pb / 2
+                    rule.formula.endsWith("_modifier_min_1") ->
+                        maxOf(modifier(scores[rule.formula.removeSuffix("_modifier_min_1")] ?: 10), 1)
+                    rule.formula.endsWith("_modifier") ->
+                        modifier(scores[rule.formula.removeSuffix("_modifier")] ?: 10)
+                    else -> rule.formula.toIntOrNull() ?: 0
+                }
+                if (value == 0) continue
+                result.add(EvaluatedBonus(value, rule.skills.toSet(), rule.saves.toSet(), rule.only_if_not_proficient))
+            }
+        }
+        return result
+    }
+
+    /** Плоские бонусы к характеристикам от умений (напр. «Тело и разум» монаха 20). */
+    fun featureAbilityBonuses(char: CharacterData): Map<String, Int> {
+        val result = mutableMapOf<String, Int>()
+        for ((_, _, feature) in grantedFeatures(char)) {
+            for (e in feature.effects) {
+                if (!e.type.startsWith("ability_")) continue
+                val ability = e.type.removePrefix("ability_")
+                result[ability] = (result[ability] ?: 0) + e.value
+            }
+        }
+        return result
+    }
+
+    /** Сумма значений числового эффекта от умений классов и подклассов. */
+    fun featureEffectTotal(char: CharacterData, type: String): Int {
+        var total = 0
+        for ((_, _, feature) in grantedFeatures(char)) {
+            for (e in feature.effects) if (e.type == type) total += e.value
+        }
+        return total
+    }
+
+    /** Число ячеек настройки: по умолчанию 3, «Использование магических предметов» вора даёт 4. */
+    fun attunementSlots(char: CharacterData): Int {
+        var slots = 3
+        for ((_, _, feature) in grantedFeatures(char)) {
+            for (e in feature.effects) if (e.type == "attunement_slots") slots = maxOf(slots, e.value)
+        }
+        return slots
+    }
+
+    /**
+     * Бонус максимума Хитов при повышении уровня от умений: hp_per_level у уже имевшихся умений
+     * даёт +value за уровень, у впервые полученных на этом уровне — value*новый уровень (ретроактивно).
+     */
+    fun computeLevelUpFeatureHpBonus(charBefore: CharacterData, charAfter: CharacterData): Int {
+        val before = grantedFeatures(charBefore).map { it.third.id }.toSet()
+        var total = 0
+        for ((_, _, feature) in grantedFeatures(charAfter)) {
+            val perLevel = feature.effects.filter { it.type == "hp_per_level" }.sumOf { it.value }
+            if (perLevel == 0) continue
+            total += if (feature.id in before) perLevel else perLevel * charAfter.level
+        }
+        return total
+    }
+
+    /** Сумма значений эффекта указанного типа от черт вида. */
+    fun speciesEffectTotal(char: CharacterData, type: String): Int {
+        val traits = effectiveSpeciesTraits(char)?.second ?: return 0
+        var total = 0
+        for (trait in traits) for (e in trait.effects) if (e.type == type) total += e.value
+        return total
+    }
+
+    /** Тип отдыха ресурса с учётом умений, которые его меняют. */
+    fun effectiveResourceRefresh(char: CharacterData, featureId: String, default: String): String {
+        for ((_, _, feature) in grantedFeatures(char)) {
+            val override = feature.resource_refresh ?: continue
+            if (override.feature_id == featureId) return override.refresh
+        }
+        return default
     }
 
     /** Дополнительные заклинательные характеристики от черт (напр. Телосложение от Аберрантной метки). */
@@ -1124,9 +1356,15 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val allClassIds = (char.classLevels.keys + char.classId).distinct()
         for (classId in allClassIds) {
             val cls = getClassInfo(classId) ?: continue
-            for (featureId in cls.features) {
+            val levelInClass = char.classLevels[classId] ?: if (classId == char.classId) char.level else 0
+            val featureIds = cls.features.toMutableList()
+            // «Учёный-<школа>» даёт заклинания в книгу от подкласса
+            val subclass = char.subclassId?.let { repository.getSubclass(it) }
+            if (subclass != null && subclass.class_id == classId) featureIds.addAll(subclass.features)
+            for (featureId in featureIds) {
                 val feature = repository.getFeature(featureId) ?: continue
                 if (feature.choice?.type != "wizard_spells") continue
+                if ((feature.level ?: 1) > levelInClass) continue
                 val selected = char.featureMultiChoices[feature.id] ?: continue
                 for (spell in selected) {
                     if ((repository.getSpell(spell)?.level ?: 0) < 1) continue
@@ -1136,6 +1374,18 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
         return book
+    }
+
+    /**
+     * «Учёный-<школа>»: дописывает заклинание школы к выбору того же умения
+     * (на 3-м уровне там уже лежат два стартовых заклинания) и пересобирает книгу.
+     */
+    fun appendWizardSchoolSpells(char: CharacterData, featureId: String, spells: List<String>): CharacterData {
+        val existing = char.featureMultiChoices[featureId] ?: emptyList()
+        val merged = (existing + spells.filter { it !in existing }).distinct()
+        val updated = char.copy(featureMultiChoices = char.featureMultiChoices + (featureId to merged))
+        val sp = updated.spells ?: return updated
+        return updated.copy(spells = sp.copy(spellbook = buildWizardSpellbook(updated)))
     }
 
     /** Лимит подготовленных заклинаний из книги — столбец "prepared" таблицы класса. */
@@ -1318,6 +1568,14 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
+        // Заклинания от выбранных воззваний (колдун)
+        if (classSpellAbility != null) {
+            for ((spell, always) in invocationSpells(char, classId)) {
+                addSpell(classSpellAbility, spell)
+                if (always) addAlways(classSpellAbility, spell)
+            }
+        }
+
         // Also process subclass features gained at this level
         val subclassId = char.subclassId
         if (subclassId != null) {
@@ -1338,6 +1596,16 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                             addAlways(spellAbility, spell)
                         }
                     }
+                    // Выборы заклинаний подкласса-заклинателя (Мистический рыцарь, Мистический ловкач)
+                    val subChoiceType = feature.choice?.type
+                    if (subChoiceType == "class_spells" || subChoiceType == "wizard_spells" ||
+                        subChoiceType == "prepared_spells" || subChoiceType == "known_spell"
+                    ) {
+                        for (spell in char.featureMultiChoices[feature.id] ?: emptyList()) {
+                            if (subChoiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
+                            addSpell(spellAbility, spell)
+                        }
+                    }
                 }
             }
         }
@@ -1350,9 +1618,9 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     data class LevelUpSpellGain(val cantrips: Int, val spells: Int)
 
-    fun getClassLevelSpellGain(classId: String, previousLevel: Int, newLevel: Int): LevelUpSpellGain {
-        val cls = getClassInfo(classId) ?: return LevelUpSpellGain(0, 0)
-        val rows = cls.class_table?.rows ?: return LevelUpSpellGain(0, 0)
+    /** Прирост заговоров/заклинаний по любой таблице прогрессии (класса или подкласса). */
+    fun getSpellGain(table: com.herocraft24.core.model.ClassTable?, previousLevel: Int, newLevel: Int): LevelUpSpellGain {
+        val rows = table?.rows ?: return LevelUpSpellGain(0, 0)
         val previousRow = rows.find { it.level == previousLevel }
         val newRow = rows.find { it.level == newLevel }
         if (previousRow == null || newRow == null) return LevelUpSpellGain(0, 0)
@@ -1362,6 +1630,21 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             cantrips = parseCantrips(newRow) - parseCantrips(previousRow),
             spells = parsePrepared(newRow) - parsePrepared(previousRow)
         )
+    }
+
+    /** Максимальный уровень заклинания, которое можно выбрать: по ячейкам в строке [newLevel]. */
+    fun maxSpellLevelForGain(table: com.herocraft24.core.model.ClassTable?, newLevel: Int): Int {
+        val row = table?.rows?.find { it.level == newLevel } ?: return 1
+        return row.values["slot_level"]?.toIntOrNull()
+            ?: row.values.entries
+                .filter { it.key.startsWith("slot") && (it.value.toIntOrNull() ?: 0) > 0 }
+                .maxOfOrNull { it.key.removePrefix("slot").toIntOrNull() ?: 0 }
+            ?: 1
+    }
+
+    fun getClassLevelSpellGain(classId: String, previousLevel: Int, newLevel: Int): LevelUpSpellGain {
+        val cls = getClassInfo(classId) ?: return LevelUpSpellGain(0, 0)
+        return getSpellGain(cls.class_table, previousLevel, newLevel)
     }
 
     fun getClassLevelInvocationGain(classId: String, previousLevel: Int, newLevel: Int): Int {
@@ -1374,13 +1657,57 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return parseInvocations(newRow) - parseInvocations(previousRow)
     }
 
-    fun getAvailableInvocations(classId: String, warlockLevel: Int): List<String> {
+    /**
+     * Воззвания, доступные для выбора: фильтр по уровню колдуна и по требуемому другому воззванию.
+     * [owned] — уже имеющиеся воззвания; воззвание с requirements.invocation_id недоступно без него.
+     */
+    fun getAvailableInvocations(classId: String, warlockLevel: Int, owned: Collection<String> = emptyList()): List<String> {
         val cls = getClassInfo(classId) ?: return emptyList()
+        val ownedLocal = owned.map { it.substringAfterLast(":") }.toSet()
         return cls.invocations.filter { invocationId ->
             val invocation = repository.getInvocation(invocationId) ?: return@filter false
-            val required = invocation.requirements?.warlock_level
-            required == null || required <= warlockLevel
+            val req = invocation.requirements
+            val reqLevel = req?.warlock_level
+            if (reqLevel != null && reqLevel > warlockLevel) return@filter false
+            // «Нельзя заменить воззвание, если оно требуется для другого, которое у вас уже есть» —
+            // и обратное: нельзя взять зависимое, пока нет базового
+            val requiredInvocation = req?.invocation_id
+            if (requiredInvocation != null && requiredInvocation !in ownedLocal) return@filter false
+            true
         }
+    }
+
+    /**
+     * Воззвания, которые нельзя ЗАМЕНИТЬ: они требуются другим имеющимся воззванием.
+     * Id возвращаются в том же формате, в котором хранятся выборы (полный id).
+     */
+    fun lockedInvocations(classId: String, selected: Collection<String>): Set<String> {
+        val requiredBy = mutableSetOf<String>()
+        for (invId in selected) {
+            val req = repository.getInvocation(invId)?.requirements?.invocation_id ?: continue
+            requiredBy.add(req)
+            requiredBy.add("phb2024:$req")
+        }
+        return selected.filter { it in requiredBy || it.substringAfterLast(":") in requiredBy }.toSet()
+    }
+
+    /**
+     * Заклинания от выбранных воззваний колдуна: id заклинания и флаг «всегда подготовлено».
+     * Воззвания хранятся в featureMultiChoices умения с choice.type == "invocations".
+     */
+    fun invocationSpells(char: CharacterData, classId: String): List<Pair<String, Boolean>> {
+        val cls = getClassInfo(classId) ?: return emptyList()
+        val invFeatureId = cls.features.firstOrNull { fid ->
+            repository.getFeature(fid)?.choice?.type == "invocations"
+        } ?: return emptyList()
+        val selected = char.featureMultiChoices[invFeatureId] ?: return emptyList()
+        val result = mutableListOf<Pair<String, Boolean>>()
+        for (invId in selected) {
+            val inv = repository.getInvocation(invId) ?: continue
+            inv.spell?.let { result.add(it to inv.always_prepared) }
+            for (spell in inv.spells) result.add(spell to inv.always_prepared)
+        }
+        return result
     }
 
     fun getClassManeuvers(classId: String): List<String> = getClassInfo(classId)?.maneuvers ?: emptyList()

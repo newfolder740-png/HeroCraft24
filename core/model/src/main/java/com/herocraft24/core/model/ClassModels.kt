@@ -58,6 +58,9 @@ data class Subclass(
     val class_id: String,
     val features: List<String> = emptyList(),
     val table: Table? = null,
+    // Таблица прогрессии подкласса-заклинателя (Мистический рыцарь, Мистический ловкач):
+    // колонки cantrips / prepared / slot1..slotN, как у GameClass.class_table
+    val class_table: ClassTable? = null,
     val description2: LocalizedString? = null
 )
 
@@ -90,7 +93,28 @@ data class Feature(
     // Фиксированная Экспертность в навыках
     val expertise: List<String> = emptyList(),
     // Фиксированное владение спасбросками (характеристики)
-    val saves: List<String> = emptyList()
+    val saves: List<String> = emptyList(),
+    // Сопротивления типам урона, которые даёт умение
+    val resistances: List<String> = emptyList(),
+    // Числовые пассивы умения (те же типы, что FeatEffect)
+    val effects: List<FeatEffect> = emptyList(),
+    // Меняет тип отдыха у ресурса другого умения
+    val resource_refresh: ResourceRefreshOverride? = null,
+    // Бонусы к проверкам навыков и спасброскам
+    val bonuses: List<BonusRule> = emptyList()
+)
+
+/**
+ * Бонус к проверкам от умения.
+ * formula: "half_proficiency_floor" | "<ability>_modifier" | "<ability>_modifier_min_1" | число.
+ * skills пусто + saves пусто = все навыки; saves непусто = правило только про эти спасброски.
+ */
+@Serializable
+data class BonusRule(
+    val formula: String,
+    val skills: List<String> = emptyList(),
+    val saves: List<String> = emptyList(),
+    val only_if_not_proficient: Boolean = false
 )
 
 @Serializable
@@ -140,17 +164,34 @@ data class FeatureChoice(
     // Для known_spell (Таинственный арканум): уровень выбираемого заклинания
     val spell_level: Int = 0,
     // Для maneuvers: общее число известных приёмов по порогам уровня ("3=3,7=5,10=7,15=9")
-    val count_steps: String? = null
+    val count_steps: String? = null,
+    // Русские подписи для произвольных id в options / proficiency_parts (варианты A/B и т.п.)
+    val option_names: Map<String, String> = emptyMap(),
+    // Ограничение по школам заклинаний («Учёный-Воплотитель» и т.п.)
+    val schools: List<String> = emptyList(),
+    // Максимальный уровень выбираемого заклинания (-1 = без ограничения)
+    val max_spell_level: Int = -1,
+    // Уровни класса, на которых добавляется ещё одно заклинание в книгу
+    val book_gain_levels: List<Int> = emptyList()
+)
+
+/** Умение меняет тип отдыха у ресурса ДРУГОГО умения («Источник вдохновения», «Улучшенная вспышка»). */
+@Serializable
+data class ResourceRefreshOverride(
+    val feature_id: String,
+    val refresh: String
 )
 
 @Serializable
 data class ProficiencyPart(
-    val kind: String, // skill | tool | instrument | skill_tool | save | damage_type
+    val kind: String, // skill | tool | instrument | skill_tool | save | damage_type | option
     val count: Int = 1,
-    val grant: String = "proficiency", // proficiency | expertise | expertise_or_proficiency | display
+    val grant: String = "proficiency", // proficiency | expertise | expertise_or_proficiency | proficiency_and_expertise | display
     val options: List<String> = emptyList(), // ограничивающий список id; пусто = все данного kind
     // Для grant="expertise": предлагать только навыки, которыми персонаж уже владеет
-    val require_proficiency: Boolean = false
+    val require_proficiency: Boolean = false,
+    // Подпись блока выбора, если стандартная («Владение — навыков») не подходит
+    val label: String? = null
 )
 
 @Serializable
@@ -162,7 +203,12 @@ data class SpellPickSpec(
     val schools: List<String> = emptyList(), // ограничение по школам
     val ritual_only: Boolean = false,
     val options: List<String> = emptyList(), // явный список заклинаний (Boon of Siberys)
-    val proficiency_count: Boolean = false   // количество = Бонусу владения (Ritual Caster)
+    val proficiency_count: Boolean = false,  // количество = Бонусу владения (Ritual Caster)
+    // Выбор не обязателен: открывается только если нужен
+    // («Несущий свет»: другой заговор Жреца, если Свет уже известен)
+    val optional: Boolean = false,
+    // Подпись блока, если стандартная не подходит
+    val label: String? = null
 )
 
 @Serializable
@@ -279,6 +325,10 @@ data class Invocation(
     val requirements: InvocationRequirements? = null,
     val table: Table? = null,
     val description2: LocalizedString? = null,
+    // Заклинание, которое воззвание даёт как всегда подготовленное («Доспех теней», «Договор цепи»)
+    val spell: String? = null,
+    val spells: List<String> = emptyList(),
+    val always_prepared: Boolean = false
 )
 
 @Serializable

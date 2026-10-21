@@ -174,6 +174,8 @@ class FeaturesCreateAdapter(
                     }
                     if (choice.spell_abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
                     choice.pick_spells.forEachIndexed { index, spec ->
+                        // Необязательный выбор не блокирует переход дальше
+                        if (spec.optional) return@forEachIndexed
                         val required = requiredSpellPickCount(spec)
                         val selections = featureMultiChoices["${feature.id}_spell$index"] ?: return false
                         if (selections.count { it != null } < required) return false
@@ -952,7 +954,12 @@ class FeaturesCreateAdapter(
         }
     }
 
-    private fun optionDisplayName(repo: ContentRepository, kind: String, id: String): String = when (kind) {
+    private fun optionDisplayName(
+        repo: ContentRepository,
+        kind: String,
+        id: String,
+        labels: Map<String, String> = emptyMap()
+    ): String = labels[id] ?: when (kind) {
         "skill" -> UiLocalizer.skill(id)
         "skill_tool" -> if (id in ALL_SKILL_IDS) UiLocalizer.skill(id) else (repo.resolveName(id) ?: id.substringAfterLast(":"))
         "save" -> abilityNames[id] ?: id
@@ -961,6 +968,7 @@ class FeaturesCreateAdapter(
     }
 
     private fun partLabel(part: ProficiencyPart): String {
+        part.label?.let { return if (part.count > 1) "$it (${part.count}):" else "$it:" }
         val what = when (part.kind) {
             "skill" -> "навыков"
             "skill_tool" -> "навыков или инструментов"
@@ -990,7 +998,8 @@ class FeaturesCreateAdapter(
         choiceContainer: LinearLayout,
         repo: ContentRepository,
         keyPrefix: String,
-        parts: List<ProficiencyPart>
+        parts: List<ProficiencyPart>,
+        labels: Map<String, String> = emptyMap()
     ) {
         val ctx = choiceContainer.context
         // Выбор в одной части может менять допустимые значения в другой
@@ -1010,7 +1019,7 @@ class FeaturesCreateAdapter(
                 featureMultiChoices[partKey] = MutableList(part.count) { null }
             }
             fun namesFor(excluded: Set<String?>): List<String> =
-                optionIds.filter { it !in excluded }.map { optionDisplayName(repo, part.kind, it) }
+                optionIds.filter { it !in excluded }.map { optionDisplayName(repo, part.kind, it, labels) }
 
             val dropdowns = mutableListOf<com.google.android.material.textfield.MaterialAutoCompleteTextView>()
             for (i in 0 until part.count) {
@@ -1019,7 +1028,7 @@ class FeaturesCreateAdapter(
                     inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
                     hint = "Выберите"; setOnClickListener { showDropDown() }
                     featureMultiChoices[partKey]?.getOrNull(i)?.let {
-                        setText(optionDisplayName(repo, part.kind, it), false)
+                        setText(optionDisplayName(repo, part.kind, it, labels), false)
                     }
                     setOnItemClickListener { _, _, pos, _ ->
                         val current = featureMultiChoices[partKey] ?: return@setOnItemClickListener
@@ -1055,7 +1064,7 @@ class FeaturesCreateAdapter(
     private fun buildGrantsChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         val ctx = container.context
         val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
-        renderProficiencyParts(choiceContainer, ContentRepository.get(ctx), feature.id, choice.proficiency_parts)
+        renderProficiencyParts(choiceContainer, ContentRepository.get(ctx), feature.id, choice.proficiency_parts, choice.option_names)
         container.addView(choiceContainer)
     }
 
@@ -1101,7 +1110,7 @@ class FeaturesCreateAdapter(
             }
         }
 
-        renderProficiencyParts(choiceContainer, contentRepo, feature.id, choice.proficiency_parts)
+        renderProficiencyParts(choiceContainer, contentRepo, feature.id, choice.proficiency_parts, choice.option_names)
 
         // Отдельный выбор заклинательной характеристики (например, Boon of Revelry)
         if (choice.spell_abilities.isNotEmpty()) {
@@ -1141,8 +1150,9 @@ class FeaturesCreateAdapter(
             val partKey = "${feature.id}_spell$index"
             val selected = featureMultiChoices[partKey]?.filterNotNull() ?: emptyList()
             val required = requiredSpellPickCount(spec)
+            val counter = if (spec.optional) "необязательно ${selected.size}/$required" else "${selected.size}/$required"
             choiceContainer.addView(TextView(ctx).apply {
-                text = spellPickLabel(spec) + " (${selected.size}/$required):"
+                text = spellPickLabel(spec) + " ($counter):"
                 setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
                 setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
             })
@@ -1170,6 +1180,7 @@ class FeaturesCreateAdapter(
         if (spec.proficiency_count) 2 + (characterLevel - 1) / 4 else spec.cantrips + spec.spells
 
     private fun spellPickLabel(spec: com.herocraft24.core.model.SpellPickSpec): String = when {
+        !spec.label.isNullOrEmpty() -> spec.label!!
         spec.ritual_only -> "Ритуальные заклинания 1-го уровня"
         spec.options.isNotEmpty() -> "Заклинание из списка"
         spec.cantrips > 0 && spec.spells > 0 -> "Заговор и заклинание 1-го уровня"
@@ -1189,7 +1200,11 @@ class FeaturesCreateAdapter(
     private fun buildFeatCategoryChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         val ctx = container.context
         val contentRepo = ContentRepository.get(ctx)
-        val areFeatOptions = choice.options.any { contentRepo.getFeat(it) != null }
+        // Черты категории без явного списка options (напр. «Гибкий» человека: любая черта Происхождения)
+        val categoryFeatIds = if (choice.options.isEmpty() && choice.category != null)
+            contentRepo.getFeatIds().filter { contentRepo.getFeat(it)?.category == choice.category }
+        else emptyList()
+        val areFeatOptions = choice.options.any { contentRepo.getFeat(it) != null } || categoryFeatIds.isNotEmpty()
         if (!areFeatOptions) {
             buildGenericOptionsChoice(container, feature, choice)
             return

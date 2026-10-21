@@ -86,6 +86,10 @@
             "en": "Forest Gnome Magic",
             "ru": "Магия лесных гномов"
           },
+          "spells": ["phb2024:minor_illusion", "phb2024:speak_with_animals"],
+          "always_prepared": true,
+          "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
+          "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
           "description": {
             "en": "You know the Minor Illusion cantrip. In addition, you always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also cast this spell using any spell slots you have.",
             "ru": "Вы знаете заговор Малая иллюзия. Кроме того, у вас всегда подготовлено заклинание Разговор с животными. Вы можете сотворять его без ячейки заклинаний количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха. Вы также можете сотворять это заклинание, используя любые имеющиеся у вас ячейки заклинаний."
@@ -113,6 +117,9 @@
             "en": "Rock Gnome Ingenuity",
             "ru": "Изобретательность скальных гномов"
           },
+          "spells": ["phb2024:mending", "phb2024:prestidigitation"],
+          "always_prepared": true,
+          "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
           "description": {
             "en": "You know the Mending and Prestidigitation cantrips. In addition, you can spend 10 minutes casting Prestidigitation to create a Tiny clockwork device (AC 5, 1 HP), such as a toy, a lighter, or a music box. When you create the device, you determine its function by choosing one of Prestidigitation's effects; the device produces that effect whenever you or another creature touches it and activates it as a Bonus Action. If the chosen effect has options, you choose the option when you create the device. You can have no more than three such devices at a time; each one falls apart 8 hours after creation or if you dismantle it by touching it and using a Utilize action.",
             "ru": "Вы знаете заговоры Починка и Фокусы. Кроме того, вы можете потратить 10 минут, сотворяя Фокусы, чтобы создать Крошечное заводное устройство (КЗ 5, 1 Хит), такое как игрушка, зажигалка или музыкальная шкатулка. Когда вы создаете устройство, вы определяете его функцию, выбирая один из эффектов Фокусов; устройство создаёт этот эффект всякий раз, когда вы или другое существо Бонусным действием активируете его прикосновением. Если выбранный эффект вариативен, вы выбираете вариант при создании устройства. Вы можете иметь не более чем три таких устройства одновременно; каждое из них разваливается через 8 часов после создания или если вы демонтируете его, касаясь, действием Использование."

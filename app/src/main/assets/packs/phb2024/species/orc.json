@@ -32,6 +32,7 @@
         "en": "Adrenaline Rush",
         "ru": "Выброс адреналина"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "short_rest"},
       "description": {
         "en": "You can use a Bonus Action to take the Dash action. When you do so, you gain Temporary Hit Points equal to your Proficiency Bonus. You can use this trait a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Short or Long Rest.",
         "ru": "Вы можете Бонусным действием совершить действие Рывок. Когда вы делаете это, вы получаете Временные хиты в количестве, равном вашему Бонусу владения. Вы можете использовать эту особенность количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Короткого или Долгого отдыха."
@@ -52,6 +53,7 @@
         "en": "Relentless Endurance",
         "ru": "Непоколебимая стойкость"
       },
+      "resource": {"shape": "hexagon", "count_formula": "1", "refresh": "long_rest"},
       "description": {
         "en": "When your Hit Points are reduced to 0 but you are not killed outright, you can instead drop to 1 Hit Point. Once you use this trait, you can't use it again until you finish a Long Rest.",
         "ru": "Когда ваши Хиты снижаются до 0, но вы не убиты мгновенно, вы можете вместо этого опустить ваши Хиты только до 1. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."

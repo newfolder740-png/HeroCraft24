@@ -1,5 +1,6 @@
 {
     "id":  "misty_visions",
+  "spell": "phb2024:silent_image", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

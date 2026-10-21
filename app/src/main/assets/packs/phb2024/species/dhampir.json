@@ -52,6 +52,7 @@
         "en": "Un-life Trail",
         "ru": "След не-жизни"
       },
+      "resistances": ["necrotic"],
       "description": {
         "en": "You have Resistance to Necrotic damage.",
         "ru": "Вы обладаете Сопротивлением Некротическому урону."
@@ -62,6 +63,7 @@
         "en": "Vampiric Bite",
         "ru": "Укус вампира"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
       "description": {
         "en": "When you make an Unarmed Strike and deal damage with it, you can deal the damage as a bite with your fangs. In that case, instead of the normal Unarmed Strike damage, you deal Piercing damage equal to 1d4 + your Constitution modifier.\n\nIn addition, when you make such a bite against a creature, and that creature isn't a Construct or Undead, you can empower yourself, choosing from the following options:\n\nDrain. You regain Hit Points equal to the Piercing damage dealt by the bite.\n\nEmpower. You gain a bonus to the next attack roll or ability check you make within the next minute; this bonus equals the Piercing damage dealt by the bite.\n\nYou can empower yourself this way a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
         "ru": "Когда вы совершаете Безоружный удар и наносите им урон, вы можете нанести этот урон укусом вашими клыками. В таком случае вместо обычного урона Безоружного удара вы наносите Колющий урон, равный 1к4 + ваш модификатор Телосложения.\n\nКроме того, когда вы совершаете такой укус по существу, и это существо не Конструкт и не Нежить, вы можете укрепить себя, выбирая из следующих вариантов:\n\nВытягивание. Вы восстанавливаете Хиты в количестве, равном нанесённому укусом Колющему урону.\n\nУсиление. Вы получаете бонус к следующему вашему броску атаки или проверке характеристики, совершаемым в течение следующей минуты; этот бонус равен нанесённому укусом Колющему урону.\n\nВы можете укрепить себя таким образом количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Долгого отдыха."

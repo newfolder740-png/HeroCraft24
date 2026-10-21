@@ -1,5 +1,6 @@
 {
     "id":  "gift_of_the_depths",
+  "spell": "phb2024:water_breathing", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

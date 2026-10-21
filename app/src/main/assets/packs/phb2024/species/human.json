@@ -42,6 +42,7 @@
         "en": "Skillful",
         "ru": "Умелый"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 1, "grant": "proficiency"}]},
       "description": {
         "en": "You gain proficiency in one skill of your choice.",
         "ru": "Вы получаете владение одним навыком на ваш выбор."
@@ -52,6 +53,7 @@
         "en": "Versatile",
         "ru": "Гибкий"
       },
+      "choice": {"type": "feat_category", "category": "origin", "count": 1},
       "description": {
         "en": "You gain an Origin feat of your choice. Skilled is recommended.",
         "ru": "Вы получаете черту Происхождения на ваш выбор. Рекомендуется Одарённый."

@@ -43,6 +43,7 @@
         "en": "Dwarven Resilience",
         "ru": "Дварфийская устойчивость"
       },
+      "resistances": ["poison"],
       "description": {
         "en": "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition.",
         "ru": "У вас есть Сопротивление урону Ядом. Вы также совершаете с Преимуществом спасброски на избежание или окончание состояния Отравленный."
@@ -53,6 +54,7 @@
         "en": "Dwarven Toughness",
         "ru": "Дварфийская крепость"
       },
+      "effects": [{"type": "hp_per_level", "value": 1}],
       "description": {
         "en": "Your Hit Point maximum increases by 1, and it increases by 1 again whenever you gain a level.",
         "ru": "Ваш максимум Хитов увеличивается на 1, и он увеличивается ещё на 1 каждый раз, когда вы получаете уровень."
@@ -63,6 +65,7 @@
         "en": "Stonecunning",
         "ru": "Знание камня"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
       "description": {
         "en": "As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. To use this Tremorsense, you must be on a stone surface or touching a stone surface. The stone can be either worked or unworked. You can use this trait a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
         "ru": "Бонусным действием вы на 10 минут получаете Чувство вибрации дальностью 60 футов. Чтобы использовать это Чувство вибрации, вы должны находиться на каменной поверхности или прикасаться к каменной поверхности. Камень может быть как обработанным, так и необработанным. Вы можете использовать эту особенность количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования по завершению Долгого отдыха."

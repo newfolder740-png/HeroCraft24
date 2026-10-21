@@ -25,5 +25,35 @@
     "phb2024:fighter_misticheskiy_rytsar_l10_misticheskiy_udar",
     "phb2024:fighter_misticheskiy_rytsar_l15_volshebnyy_ryvok",
     "phb2024:fighter_misticheskiy_rytsar_l18_uluchshennaya_boevaya_magiya"
-  ]
+  ],
+  "class_table": {
+    "columns": [
+      {"key":"cantrips","name":{"en":"Cantrips","ru":"Заговоры"}},
+      {"key":"prepared","name":{"en":"Prepared","ru":"Подготовленные"}},
+      {"key":"slot1","name":{"en":"1","ru":"1"}},
+      {"key":"slot2","name":{"en":"2","ru":"2"}},
+      {"key":"slot3","name":{"en":"3","ru":"3"}},
+      {"key":"slot4","name":{"en":"4","ru":"4"}}
+    ],
+    "rows": [
+      {"level":3,"values":{"cantrips":"2","prepared":"3","slot1":"2","slot2":"-","slot3":"-","slot4":"-"}},
+      {"level":4,"values":{"cantrips":"2","prepared":"4","slot1":"3","slot2":"-","slot3":"-","slot4":"-"}},
+      {"level":5,"values":{"cantrips":"2","prepared":"4","slot1":"3","slot2":"-","slot3":"-","slot4":"-"}},
+      {"level":6,"values":{"cantrips":"2","prepared":"4","slot1":"3","slot2":"-","slot3":"-","slot4":"-"}},
+      {"level":7,"values":{"cantrips":"2","prepared":"5","slot1":"4","slot2":"2","slot3":"-","slot4":"-"}},
+      {"level":8,"values":{"cantrips":"2","prepared":"6","slot1":"4","slot2":"2","slot3":"-","slot4":"-"}},
+      {"level":9,"values":{"cantrips":"2","prepared":"6","slot1":"4","slot2":"2","slot3":"-","slot4":"-"}},
+      {"level":10,"values":{"cantrips":"3","prepared":"7","slot1":"4","slot2":"3","slot3":"-","slot4":"-"}},
+      {"level":11,"values":{"cantrips":"3","prepared":"8","slot1":"4","slot2":"3","slot3":"-","slot4":"-"}},
+      {"level":12,"values":{"cantrips":"3","prepared":"8","slot1":"4","slot2":"3","slot3":"-","slot4":"-"}},
+      {"level":13,"values":{"cantrips":"3","prepared":"9","slot1":"4","slot2":"3","slot3":"2","slot4":"-"}},
+      {"level":14,"values":{"cantrips":"3","prepared":"10","slot1":"4","slot2":"3","slot3":"2","slot4":"-"}},
+      {"level":15,"values":{"cantrips":"3","prepared":"10","slot1":"4","slot2":"3","slot3":"2","slot4":"-"}},
+      {"level":16,"values":{"cantrips":"3","prepared":"11","slot1":"4","slot2":"3","slot3":"3","slot4":"-"}},
+      {"level":17,"values":{"cantrips":"3","prepared":"11","slot1":"4","slot2":"3","slot3":"3","slot4":"-"}},
+      {"level":18,"values":{"cantrips":"3","prepared":"11","slot1":"4","slot2":"3","slot3":"3","slot4":"-"}},
+      {"level":19,"values":{"cantrips":"3","prepared":"12","slot1":"4","slot2":"3","slot3":"3","slot4":"1"}},
+      {"level":20,"values":{"cantrips":"3","prepared":"13","slot1":"4","slot2":"3","slot3":"3","slot4":"1"}}
+    ]
+  }
 }

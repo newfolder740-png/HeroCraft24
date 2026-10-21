@@ -55,6 +55,7 @@
         "en": "Otherworldly Presence",
         "ru": "Потустороннее присутствие"
       },
+      "always_prepared": true,
       "description": {
         "en": "You know the Thaumaturgy cantrip. When you cast it with this trait, the spellcasting ability for it is the ability chosen for your Fiendish Legacy trait.",
         "ru": "Вы знаете заговор Чудотворство. Когда вы сотворяете его этой особенностью, заклинательной характеристикой для него будет характеристика, выбранная вами для вашей особенности Наследие исчадий."
@@ -88,6 +89,7 @@
             "en": "Infernal Resistance",
             "ru": "Инфернальное сопротивление"
           },
+          "resistances": ["fire"],
           "description": {
             "en": "You have Resistance to Fire damage. You also know the Fire Bolt cantrip.",
             "ru": "У вас есть Сопротивление урону Огнём. Вы также знаете заговор Огненный снаряд."
@@ -147,6 +149,7 @@
             "en": "Abyssal Resistance",
             "ru": "Сопротивление Бездны"
           },
+          "resistances": ["poison"],
           "description": {
             "en": "You have Resistance to Poison damage. You also know the Poison Spray cantrip.",
             "ru": "У вас есть Сопротивление урону Ядом. Вы также знаете заговор Ядовитые брызги."
@@ -206,6 +209,7 @@
             "en": "Chthonic Resistance",
             "ru": "Хтоническое сопротивление"
           },
+          "resistances": ["necrotic"],
           "description": {
             "en": "You have Resistance to Necrotic damage. You also know the Chill Touch cantrip.",
             "ru": "У вас есть Сопротивление Некротическому урону. Вы также знаете заговор Леденящее прикосновение."

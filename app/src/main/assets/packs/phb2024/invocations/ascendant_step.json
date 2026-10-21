@@ -1,5 +1,6 @@
 {
     "id":  "ascendant_step",
+  "spell": "phb2024:levitate", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

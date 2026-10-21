@@ -1,5 +1,6 @@
 {
     "id":  "pact_of_the_chain",
+  "spell": "phb2024:find_familiar", "always_prepared": true,
   "type": "invocation",
   "format_version": 1,
     "name":  {

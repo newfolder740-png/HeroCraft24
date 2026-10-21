@@ -39,8 +39,20 @@ data class SpeciesTrait(
     val description2: LocalizedString? = null,
     val choice: FeatureChoice? = null,
     val spell: String? = null,
+    // Несколько заклинаний/заговоров от одной черты (напр. гном: Малая иллюзия + Разговор с животными)
+    val spells: List<String> = emptyList(),
     val always_prepared: Boolean = false,
-    val spellcasting_ability: String? = null
+    val spellcasting_ability: String? = null,
+    // Фиксированные владения, которые даёт черта вида: навыки, инструменты, оружие
+    val proficiencies: List<String> = emptyList(),
+    val expertise: List<String> = emptyList(),
+    val saves: List<String> = emptyList(),
+    // Сопротивления типам урона (id из UiLocalizer.damageType)
+    val resistances: List<String> = emptyList(),
+    // Числовые пассивы (те же типы, что у черт): hp_per_level, speed_bonus, ac_bonus и т.д.
+    val effects: List<FeatEffect> = emptyList(),
+    // Счётчик использований «раз в отдых» (тот же механизм, что у умений класса)
+    val resource: FeatureResource? = null
 )
 
 @Serializable

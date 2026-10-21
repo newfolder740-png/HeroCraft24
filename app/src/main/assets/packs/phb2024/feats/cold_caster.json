@@ -20,7 +20,7 @@
   "tags": [
     "feat"
   ],
-  "category": "universal","choice":{"type":"feat_multi","asi":1,"abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:ray_of_frost"]},
+  "category": "universal","choice":{"type":"feat_multi","asi":1,"abilities":["intelligence","wisdom","charisma"],"fixed_spells":["phb2024:ray_of_frost"],"pick_spells":[{"cantrips":1,"spells":0,"class_filter":"phb2024:wizard","optional":true,"label":"Если Луч холода уже известен — другой заговор Волшебника"}]},
   "prerequisite": {
     "en": "",
     "ru": "4 уровень"

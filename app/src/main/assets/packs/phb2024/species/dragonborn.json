@@ -43,6 +43,7 @@
         "en": "Breath Weapon",
         "ru": "Оружие дыхания"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
       "description": {
         "en": "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (your choice each time). Each creature in the area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus). On a failed save, a creature takes 1d10 damage; the type is determined by your Draconic Ancestry trait. On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10).\n\nYou can use your Breath Weapon a number of times equal to your Proficiency Bonus. You regain all expended uses when you finish a Long Rest.",
         "ru": "Когда в ваш ход вы совершаете действие Атака, можете заменить одну из ваших атак выдохом магической энергии либо в виде 15-футового Конуса, либо в виде 30-футовой Линии шириной 5 футов (на ваш выбор при каждом применении). Каждое существо в области действия должно пройти спасбросок Ловкости (Сл 8 + ваши модификатор Телосложения и Бонус владения). При провале существо получает 1к10 урона; его тип определяется вашей особенностью Наследие дракона. При успехе существо получает половину этого урона. Этот урон увеличивается на 1к10, когда вы достигаете 5-го (2к10), 11го (3к10) и 17-го (4к10) уровней персонажа.\n\nВы можете использовать Оружие дыхания количество раз, равное вашему Бонусу владения. Вы восстанавливаете все потраченные использования после завершения Долгого отдыха."
@@ -73,6 +74,8 @@
         "en": "Draconic Flight",
         "ru": "Драконий полёт"
       },
+      "level": 5,
+      "resource": {"shape": "hexagon", "count_formula": "1", "refresh": "long_rest"},
       "description": {
         "en": "At character level 5, you can use draconic magic to temporarily send yourself into flight. As a Bonus Action, you sprout spectral wings from your back, which last for 10 minutes or until you retract them (no action required) or you have the Incapacitated condition. During this time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest.",
         "ru": "Достигнув 5-го уровня персонажа, вы можете использовать драконью магию, чтобы временно отправить себя в полёт. Бонусным действием вы выпускаете из спины призрачные крылья, которые сохраняются в течение 10 минут или до тех пор, пока вы не уберёте их (действий не требуется) или не получите состояние Недееспособный. В течение этого времени у вас есть Cкорость полёта, равная вашей Скорости. Ваши крылья выглядят состоящими из той же энергии, что и ваше Оружие дыхания. Как только вы используете эту особенность, вы не сможете сделать это снова, пока не завершите Долгий отдых."
@@ -95,6 +98,7 @@
         "en": "Black Dragon Ancestry",
         "ru": "Чёрный дракон"
       },
+      "resistances": ["acid"],
       "description": {
         "en": "",
         "ru": ""
@@ -122,6 +126,7 @@
         "en": "Blue Dragon Ancestry",
         "ru": "Синий дракон"
       },
+      "resistances": ["lightning"],
       "description": {
         "en": "",
         "ru": ""
@@ -149,6 +154,7 @@
         "en": "Brass Dragon Ancestry",
         "ru": "Латунный дракон"
       },
+      "resistances": ["fire"],
       "description": {
         "en": "",
         "ru": ""
@@ -176,6 +182,7 @@
         "en": "Bronze Dragon Ancestry",
         "ru": "Бронзовый дракон"
       },
+      "resistances": ["lightning"],
       "description": {
         "en": "",
         "ru": ""
@@ -203,6 +210,7 @@
         "en": "Copper Dragon Ancestry",
         "ru": "Медный дракон"
       },
+      "resistances": ["acid"],
       "description": {
         "en": "",
         "ru": ""
@@ -230,6 +238,7 @@
         "en": "Gold Dragon Ancestry",
         "ru": "Золотой дракон"
       },
+      "resistances": ["fire"],
       "description": {
         "en": "",
         "ru": ""
@@ -257,6 +266,7 @@
         "en": "Green Dragon Ancestry",
         "ru": "Зелёный дракон"
       },
+      "resistances": ["poison"],
       "description": {
         "en": "",
         "ru": ""
@@ -284,6 +294,7 @@
         "en": "Red Dragon Ancestry",
         "ru": "Красный дракон"
       },
+      "resistances": ["fire"],
       "description": {
         "en": "",
         "ru": ""
@@ -311,6 +322,7 @@
         "en": "Silver Dragon Ancestry",
         "ru": "Серебряный дракон"
       },
+      "resistances": ["cold"],
       "description": {
         "en": "",
         "ru": ""
@@ -338,6 +350,7 @@
         "en": "White Dragon Ancestry",
         "ru": "Белый дракон"
       },
+      "resistances": ["cold"],
       "description": {
         "en": "",
         "ru": ""

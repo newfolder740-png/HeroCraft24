@@ -175,9 +175,10 @@ class SheetInventoryFragment : Fragment() {
         val selectedMagicComposites = char.equippedMagicItems.take(24)
         val attunedCount = selectedMagicComposites.count { magicItemsByComposite[it]?.item?.attunement == true }
 
-        // Counter: 3 cells
+        // Counter: ячейки настройки (3, у вора 13-го уровня — 4)
+        val attunementSlots = vm.attunementSlots(char)
         val counterRow = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
-        repeat(3) { i ->
+        repeat(attunementSlots) { i ->
             counterRow.addView(statBox(ctx, "", if (i < attunedCount) "●" else "○", filled = i < attunedCount))
         }
         content.addView(counterRow)
@@ -213,7 +214,7 @@ class SheetInventoryFragment : Fragment() {
 
         // ── Equipment Proficiencies ──
         sectionTitle(content, "Владения экипировкой")
-        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char) + vm.getSpeciesGrants(char)
         val armorGroups = setOf("light_armor", "medium_armor", "heavy_armor", "shields")
         val weaponGroups = setOf("simple", "martial")
         val profArmor = (cls?.starting_proficiencies?.armor?.filterNotNull() ?: emptyList()) +

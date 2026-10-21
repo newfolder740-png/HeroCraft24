@@ -64,6 +64,7 @@
         "en": "Keen Senses",
         "ru": "Обострённые чувства"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 1, "grant": "proficiency", "options": ["perception", "survival", "insight"]}]},
       "description": {
         "en": "You have proficiency in one skill: Insight, Perception, or Survival.",
         "ru": "Вы владеете одним навыком: Восприятие, Выживание или Проницательность."
@@ -106,6 +107,9 @@
             "en": "High Elf Magic",
             "ru": "Магия высших эльфов"
           },
+          "spell": "phb2024:prestidigitation",
+          "always_prepared": true,
+          "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
           "description": {
             "en": "You learn the Prestidigitation cantrip. Whenever you finish a Long Rest, you can replace this cantrip with another cantrip from the Wizard spell list.",
             "ru": "Вы узнаёте заговор Фокусы. Всякий раз, когда вы завершаете Долгий отдых, вы можете заменить этот заговор на другой заговор из списка заклинаний Волшебника."
@@ -117,6 +121,8 @@
             "en": "Detect Magic",
             "ru": "Обнаружение магии"
           },
+          "spell": "phb2024:detect_magic",
+          "always_prepared": true,
           "description": {
             "en": "You always have Detect Magic prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Обнаружение магии. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
@@ -128,6 +134,8 @@
             "en": "Misty Step",
             "ru": "Туманный шаг"
           },
+          "spell": "phb2024:misty_step",
+          "always_prepared": true,
           "description": {
             "en": "You always have Misty Step prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Туманный шаг. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
@@ -155,6 +163,9 @@
             "en": "Drow Magic",
             "ru": "Магия дроу"
           },
+          "spell": "phb2024:dancing_lights",
+          "always_prepared": true,
+          "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
           "description": {
             "en": "The range of your Darkvision increases to 120 feet. You also learn the Dancing Lights cantrip.",
             "ru": "Дальность вашего Тёмного зрения увеличивается до 120 футов. Вы также узнаёте заговор Пляшущие огоньки."
@@ -166,6 +177,8 @@
             "en": "Faerie Fire",
             "ru": "Огонь фей"
           },
+          "spell": "phb2024:faerie_fire",
+          "always_prepared": true,
           "description": {
             "en": "You always have Faerie Fire prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Огонь фей. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
@@ -177,6 +190,8 @@
             "en": "Darkness",
             "ru": "Тьма"
           },
+          "spell": "phb2024:darkness",
+          "always_prepared": true,
           "description": {
             "en": "You always have Darkness prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Тьма. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
@@ -204,6 +219,10 @@
             "en": "Wood Elf Magic",
             "ru": "Магия лесных эльфов"
           },
+          "spell": "phb2024:druidcraft",
+          "always_prepared": true,
+          "effects": [{"type": "speed_bonus", "value": 5}],
+          "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
           "description": {
             "en": "Your Speed increases to 35 feet. You learn the Druidcraft cantrip.",
             "ru": "Ваша Скорость увеличивается до 35 футов. Вы узнаёте заговор Искусство друидов."
@@ -215,6 +234,8 @@
             "en": "Longstrider",
             "ru": "Скороход"
           },
+          "spell": "phb2024:longstrider",
+          "always_prepared": true,
           "description": {
             "en": "You always have Longstrider prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Скороход. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."
@@ -226,6 +247,8 @@
             "en": "Pass without Trace",
             "ru": "Бесследное передвижение"
           },
+          "spell": "phb2024:pass_without_trace",
+          "always_prepared": true,
           "description": {
             "en": "You always have Pass without Trace prepared. You can cast it once without a spell slot, and you regain the ability to do so when you finish a Long Rest.",
             "ru": "У вас всегда подготовлено заклинание Бесследное передвижение. Вы можете сотворить его раз без траты ячейки заклинаний, и вы восстанавливаете возможность сделать это по завершению Долгого отдыха."

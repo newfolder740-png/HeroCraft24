@@ -51,6 +51,8 @@
         "en": "Knowledge from a Past Life",
         "ru": "Знание прошлой жизни"
       },
+      "resource": {"shape": "hexagon", "count_formula": "proficiency_bonus", "refresh": "long_rest"},
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 1, "grant": "proficiency"}]},
       "description": {
         "en": "You gain proficiency in one skill of your choice.\n\nIn addition, you can temporarily glimpse into the past to gain help in the present. When you fail an ability check, you can roll 1d6 and add the result to the check, potentially turning the failure into a success. You can do this a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
         "ru": "Вы получаете владение одним навыком на ваш выбор.\n\nКроме того, вы можете на время заглянуть в прошлое, чтобы получить помощь в настоящем. Когда вы проваливаете проверку характеристики, вы можете бросить 1к6 и добавить результат броска к результату проверки, что может изменить результат на успех. Вы можете сделать это количество раз, равное вашему Бонусу владения, и вы восстанавливаете все потраченные использования по завершению Долгого отдыха."
@@ -61,6 +63,7 @@
         "en": "Supernatural Resilience",
         "ru": "Сверхъестественная устойчивость"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "damage_type", "count": 1, "grant": "resistance", "label": "Сопротивление урону", "options": ["necrotic", "cold", "poison"]}]},
       "description": {
         "en": "You have Resistance to one of the following damage types of your choice: Necrotic damage, Cold damage, or Poison damage.",
         "ru": "Вы обладаете Сопротивлением одному из следующих типов урона на ваш выбор: Некротический урон, урон Холодом или урон Ядом."

@@ -33,6 +33,7 @@
         "en": "Constructed Resilience",
         "ru": "Устойчивость конструкта"
       },
+      "resistances": ["poison"],
       "description": {
         "en": "You have Resistance to Poison damage, and you have Advantage on saving throws to avoid or end the Poisoned condition.",
         "ru": "Вы обладаете Сопротивлением урону Ядом, а также совершаете с Преимуществом спасброски на избежание и окончание состояния Отравленный."
@@ -43,6 +44,7 @@
         "en": "Integrated Protection",
         "ru": "Встроенная защита"
       },
+      "effects": [{"type": "ac_bonus", "value": 1}],
       "description": {
         "en": "You have a +1 bonus to AC. In addition, armor you don can't be removed from you against your will while you are alive.",
         "ru": "Вы обладаете бонусом +1 к КЗ. Кроме того, доспех, который вы надели на себя, нельзя снять с вас против вашей воли, пока вы живы."
@@ -63,6 +65,7 @@
         "en": "Specialized Design",
         "ru": "Специальная сборка"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 1, "grant": "proficiency"}, {"kind": "tool", "count": 1, "grant": "proficiency", "options": ["phb2024:carpenter_s_tools", "phb2024:leatherworker_s_tools", "phb2024:mason_s_tools", "phb2024:potter_s_tools", "phb2024:smith_s_tools", "phb2024:tinker_s_tools", "phb2024:weaver_s_tools", "phb2024:woodcarver_s_tools"]}]},
       "description": {
         "en": "You gain proficiency in one skill and one tool of your choice.",
         "ru": "Вы получаете владение одним навыком и одним инструментом на ваш выбор."

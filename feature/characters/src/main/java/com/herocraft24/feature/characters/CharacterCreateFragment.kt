@@ -996,7 +996,9 @@ class CharacterCreateFragment : Fragment() {
                     spells = choice.spells,
                     selected = current,
                     charId = ch.id,
-                    ability = ability
+                    ability = ability,
+                    maxLevel = choice.max_spell_level,
+                    schools = choice.schools
                 ).apply {
                     setOnResultListener { selected ->
                         featuresCreateAdapter?.updateClassSpells(featureId, selected)

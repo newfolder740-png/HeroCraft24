@@ -43,6 +43,7 @@
         "en": "Mental Discipline",
         "ru": "Ментальная дисциплина"
       },
+      "resistances": ["psychic"],
       "description": {
         "en": "You have Resistance to Psychic damage.",
         "ru": "Вы обладаете Сопротивлением Психическому урону."

@@ -42,6 +42,7 @@
         "en": "Eerie Token",
         "ru": "Мистический маркер"
       },
+      "resource": {"shape": "hexagon", "count_formula": "1", "refresh": "long_rest"},
       "description": {
         "en": "You can use a Bonus Action to create a magical token by harmlessly cutting a lock of hair, a fingernail, or a similar method. While the token exists, you gain the following benefits:\n\nDistant Message. As a Magic action, you can send a telepathic message of up to 25 words to the creature carrying or wearing the token, if that creature is within 10 miles of you.\n\nObservation. If you are within 10 miles of the token, you can use a Magic action to perceive the area around the token using your senses; you can do so for up to 1 minute, until you become Incapacitated, or until you end this perception (no action required). During this time, you see and hear through the token as if you were in its space. When this effect ends, the token is harmlessly destroyed.\n\nUnless destroyed earlier, the token lasts until you finish a Long Rest. Once you create an Eerie Token with this trait, you can't do so again until you finish a Long Rest.",
         "ru": "Вы можете Бонусным действием создать магический маркер, безвредно отрезая локон волос, ноготь или аналогичным методом. Пока этот маркер существует, вы обладаете следующими преимуществами:\n\nДальнее послание. Действием Магия вы можете послать существу, носящему или несущему маркер, телепатическое послание не более 25 слов длиной, если это существо находится в пределах 10 миль от вас.\n\nНаблюдение. Если вы находитесь в пределах 10 миль от маркера, вы можете действием Магия воспринимать окружение вокруг маркера, используя ваши чувства; вы можете делать это в течение 1 минуты, пока не станете Недееспособны или пока не окончите это восприятие (действий не требуется). В течение этого времени вы видите и слышите через маркер, как если бы находились там же, где и знак. По окончанию этого эффекта маркер безвредно уничтожается.\n\nЕсли маркер не уничтожается раньше, он существует, пока вы не завершите Долгий отдых. Создав мистический маркер с помощью этой особенности, вы не можете сделать этого снова, пока не завершите Долгий отдых."
@@ -52,6 +53,10 @@
         "en": "Hex Magic",
         "ru": "Ведьмовская магия"
       },
+      "spells": ["phb2024:disguise_self", "phb2024:hex"],
+      "always_prepared": true,
+      "resource": {"shape": "hexagon", "count_formula": "2", "refresh": "long_rest"},
+      "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
       "description": {
         "en": "You always have the Disguise Self and Hex spells prepared. You can cast each of these spells once without a spell slot, and you regain the ability to do so when you finish a Long Rest. You can also cast these spells using any spell slots you have of the appropriate level. Your spellcasting ability for these spells is Intelligence, Wisdom, or Charisma; you choose the ability when you choose this species.",
         "ru": "У вас всегда подготовлены заклинания Маскировка и Сглаз. Вы можете сотворить каждое из них без ячейки заклинаний, и вы восстанавливаете возможность сотворить это заклинание таким образом снова по завершении Долгого отдыха. Вы также можете сотворять эти заклинания, используя имеющиеся у вас ячейки подходящих уровней. Ваша заклинательная характеристика для этих заклинаний — Интеллект, Мудрость или Харизма; вы выбираете заклинательную характеристику, когда выбираете этот вид."

@@ -53,6 +53,9 @@
         "en": "Fey Gift",
         "ru": "Дар фей"
       },
+      "spell": "phb2024:friends",
+      "always_prepared": true,
+      "choice": {"type": "spellcasting_ability", "options": ["intelligence", "wisdom", "charisma"]},
       "description": {
         "en": "You know the Friends cantrip. Each time you finish a Long Rest, you can replace this cantrip with another cantrip from the Wizard, Druid, or Cleric spell list. The spellcasting ability for the cantrip you gain from this trait is Intelligence, Wisdom, or Charisma; choose it when you choose this species.",
         "ru": "Вы знаете заговор Дружба. Каждый раз, когда вы завершаете Долгий отдых, вы можете заменить этот заговор другим заговором из списка заклинаний Волшебника, Друида или Жреца. Заклинательная характеристика для заговора, полученного вами от этой особенности — Интеллект, Мудрость или Харизма; выберите её при выборе этого вида."
@@ -73,6 +76,7 @@
         "en": "Versatile Skills",
         "ru": "Универсальные умения"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill_tool", "count": 1, "grant": "proficiency", "options": ["athletics", "acrobatics", "sleight_of_hand", "stealth", "arcana", "history", "investigation", "nature", "religion", "animal_handling", "insight", "medicine", "perception", "survival", "deception", "intimidation", "performance", "persuasion", "phb2024:alchemist_s_supplies", "phb2024:brewer_s_supplies", "phb2024:calligrapher_s_supplies", "phb2024:carpenter_s_tools", "phb2024:cartographer_s_tools", "phb2024:cobbler_s_tools", "phb2024:cook_s_utensils", "phb2024:glassblower_s_tools", "phb2024:herbalism_kit", "phb2024:jeweler_s_tools", "phb2024:leatherworker_s_tools", "phb2024:mason_s_tools", "phb2024:navigator_s_tools", "phb2024:painter_s_supplies", "phb2024:poisoner_s_kit", "phb2024:potter_s_tools", "phb2024:smith_s_tools", "phb2024:tinker_s_tools", "phb2024:thieves_tools", "phb2024:weaver_s_tools", "phb2024:woodcarver_s_tools"]}]},
       "description": {
         "en": "You gain proficiency in one skill or tool of your choice. Each time you finish a Long Rest, you can replace this proficiency with another skill or tool proficiency.",
         "ru": "Вы получаете владение одним навыком или инструментом на ваш выбор. Каждый раз, когда вы завершаете Долгий отдых, можете заменить это владение другим владением навыком или инструментом."

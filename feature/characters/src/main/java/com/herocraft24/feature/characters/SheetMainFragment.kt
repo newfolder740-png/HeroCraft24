@@ -114,7 +114,7 @@ class SheetMainFragment : Fragment() {
         val size = species?.size ?: "Ср"
 
         val effectiveScores = computeEffectiveScores(char, bg)
-        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char)
+        val featGrants = vm.getFeatProficiencyGrants(char) + vm.getFeatureGrants(char) + vm.getSpeciesGrants(char)
         val baseProficientSkills = computeProficientSkills(char, cls, bg)
         // «Владение или Экспертность» (Observant/Keen Mind): экспертность, если навыком уже владеешь
         val conditionalExpertise = featGrants.conditional.filter { it in baseProficientSkills }.toSet()
@@ -126,7 +126,18 @@ class SheetMainFragment : Fragment() {
         val profBonus = char.proficiencyBonus
         val dexMod = vm.modifier(effectiveScores["dexterity"] ?: 10)
         val wisMod = vm.modifier(effectiveScores["wisdom"] ?: 10)
-        val percBonus = if ("perception" in proficientSkills) profBonus else 0
+        // Бонусы к проверкам от умений («Мастер на все руки», «Потустороннее очарование», «Алчущая мощь»)
+        val bonusRules = vm.evaluateBonusRules(char)
+        fun skillExtra(skillId: String, isProf: Boolean): Int = bonusRules
+            .filter { it.saves.isEmpty() && (it.skills.isEmpty() || skillId in it.skills) && !(it.onlyIfNotProficient && isProf) }
+            .sumOf { it.value }
+        fun saveExtra(ability: String): Int = bonusRules.filter { ability in it.saves }.sumOf { it.value }
+        val percProf = "perception" in proficientSkills
+        val percBonus = (when {
+            "perception" in expertiseSkills -> profBonus * 2
+            percProf -> profBonus
+            else -> 0
+        }) + skillExtra("perception", percProf)
 
         // ── Info cards ──
         val infoContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
@@ -230,7 +241,7 @@ class SheetMainFragment : Fragment() {
         val left3 = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
         val row3a = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
         row3a.addView(labelValue("Размер", size).apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
-        row3a.addView(labelValue("Скорость", "${char.speed + vm.featEffectTotal(char, "speed_bonus") + vm.computeFeatureSpeedBonus(char)} фт.").apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
+        row3a.addView(labelValue("Скорость", "${char.speed + vm.featEffectTotal(char, "speed_bonus") + vm.speciesEffectTotal(char, "speed_bonus") + vm.computeFeatureSpeedBonus(char)} фт.").apply { layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
         left3.addView(row3a)
         val row3b = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
         val initiativeBonus = dexMod +
@@ -347,7 +358,7 @@ class SheetMainFragment : Fragment() {
                 val score = effectiveScores[ab] ?: 10
                 val mod = vm.modifier(score)
                 val isProfSave = ab in proficientSaves
-                val saveBonus = mod + if (isProfSave) profBonus else 0
+                val saveBonus = mod + (if (isProfSave) profBonus else 0) + saveExtra(ab)
 
                 val col = LinearLayout(ctx).apply {
                     orientation = LinearLayout.VERTICAL
@@ -413,7 +424,7 @@ class SheetMainFragment : Fragment() {
                         isExpertise -> profBonus * 2
                         isProf -> profBonus
                         else -> 0
-                    }
+                    } + skillExtra(skillId, isProf)
                     val skillName = SKILL_NAMES[skillId] ?: skillId.replaceFirstChar { it.uppercase() }
                     col.addView(makeSkillRow(ctx, isProf, "${formatBonus(skillMod)} $skillName", expertise = isExpertise))
                 }
@@ -442,6 +453,10 @@ class SheetMainFragment : Fragment() {
                 char.bgAbilityPlus2?.let { scores[it] = (scores[it] ?: 10) + 2 }
                 char.bgAbilityPlus1?.let { scores[it] = (scores[it] ?: 10) + 1 }
             }
+        }
+        // Плоские бонусы от умений (напр. «Тело и разум» монаха 20)
+        for ((ability, bonus) in vm.featureAbilityBonuses(char)) {
+            scores[ability] = (scores[ability] ?: 10) + bonus
         }
         Log.d("SheetMain", "effectiveScores=$scores")
         return scores
@@ -650,6 +665,9 @@ class SheetMainFragment : Fragment() {
         if (wearingArmor) {
             ac += vm.featEffectTotal(char, "ac_bonus_armored")
         }
+
+        // Безусловный бонус КЗ (кованый «Встроенная защита»)
+        ac += vm.speciesEffectTotal(char, "ac_bonus")
 
         return ac
     }

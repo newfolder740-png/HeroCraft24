@@ -33,6 +33,7 @@
         "en": "Changeling Instincts",
         "ru": "Инстинкты подменыша"
       },
+      "choice": {"type": "grants", "proficiency_parts": [{"kind": "skill", "count": 2, "grant": "proficiency", "options": ["performance", "intimidation", "deception", "insight", "persuasion"]}]},
       "description": {
         "en": "Your connection to the fey worlds grants you proficiency in two skills of your choice from the following list: Deception, Insight, Intimidation, Performance, Persuasion.",
         "ru": "Ваша связь с мирами фей дарует вам владение двумя навыками на ваш выбор из следующего списка: Выступление, Запугивание, Обман, Проницательность, Убеждение."
