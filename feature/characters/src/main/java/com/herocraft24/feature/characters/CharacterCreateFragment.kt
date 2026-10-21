@@ -1106,6 +1106,7 @@ class CharacterCreateFragment : Fragment() {
             initialFeatureMultiChoices = wizard.featureMultiChoices,
             initialAsiChoices = wizard.asiChoices,
             proficientSkills = (wizard.classSkillChoices + (vm.getAllBackgrounds().find { it.id == wizard.backgroundId.substringAfterLast(":") }?.skill_proficiencies ?: emptyList())).toSet(),
+            invocationChoiceFeatures = { ids -> ids.mapNotNull { vm.invocationChoiceFeature(it) } },
             classSavingThrows = vm.getClassInfo(wizard.classId)?.saving_throws?.toSet() ?: emptySet(),
             characterLevel = 1,
             selectedFeats = wizard.selectedFeats.toSet(),

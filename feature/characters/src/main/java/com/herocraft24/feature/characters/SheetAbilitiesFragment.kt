@@ -260,6 +260,15 @@ class SheetAbilitiesFragment : Fragment() {
 
     private fun resolveFeatureChoiceText(char: CharacterData, f: Feature): String? {
         val choice = f.choice ?: return null
+        if (choice.type == "branches") {
+            val branchId = char.featureChoices[f.id] ?: return null
+            val branch = choice.branches.find { it.id == branchId } ?: return null
+            val nested = branch.choice
+            val nestedText = if (nested != null && nested.type != "branches") {
+                resolveFeatureChoiceText(char, f.copy(id = "${f.id}#${branch.id}", choice = nested))
+            } else null
+            return if (nestedText.isNullOrEmpty()) branch.label else "${branch.label}: $nestedText"
+        }
         if (choice.type == "skill_expertise") {
             val skills = char.featureMultiChoices[f.id] ?: return null
             if (skills.isEmpty()) return null

@@ -47,6 +47,87 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun saveCharacter(char: CharacterData) { viewModelScope.launch { repo.save(char) } }
     fun getCharacter(id: String): CharacterData? = repo.getById(id)
 
+    // ── Редактируемые поля листа: опыт и хиты ──
+
+    fun updateExperience(charId: String, value: Int) {
+        val char = getCharacter(charId) ?: return
+        val xp = value.coerceAtLeast(0)
+        if (char.experience == xp) return
+        saveCharacter(char.copy(experience = xp))
+    }
+
+    fun updateCurrentHitPoints(charId: String, value: Int) {
+        val char = getCharacter(charId) ?: return
+        var hp = value.coerceAtLeast(0)
+        if (char.hitPoints.max > 0) hp = hp.coerceAtMost(char.hitPoints.max)
+        if (char.hitPoints.current == hp) return
+        saveCharacter(char.copy(hitPoints = char.hitPoints.copy(current = hp)))
+    }
+
+    fun updateTemporaryHitPoints(charId: String, value: Int) {
+        val char = getCharacter(charId) ?: return
+        val tmp = value.coerceAtLeast(0)
+        if (char.hitPoints.temporary == tmp) return
+        saveCharacter(char.copy(hitPoints = char.hitPoints.copy(temporary = tmp)))
+    }
+
+    // ── Отдых ──
+
+    /** Тип отдыха каждого активного ресурса: id → "short_rest" | "long_rest" | "none". */
+    fun resourceRefreshMap(char: CharacterData): Map<String, String> {
+        val result = mutableMapOf<String, String>()
+        for ((_, _, feature) in grantedFeatures(char)) {
+            val res = feature.resource ?: continue
+            result[feature.id] = effectiveResourceRefresh(char, feature.id, res.refresh)
+        }
+        effectiveSpeciesTraits(char)?.let { (speciesId, traits) ->
+            for (trait in traits) {
+                val res = trait.resource ?: continue
+                result[speciesTraitFeatureId(speciesId, trait.name.get())] = res.refresh
+            }
+        }
+        return result
+    }
+
+    /** Магия договора (колдун): ячейки заклинаний восстанавливаются за короткий отдых. */
+    private fun hasPactMagic(char: CharacterData): Boolean {
+        val cls = getClassInfo(char.classId) ?: return false
+        val classLevel = char.classLevels[char.classId] ?: char.level
+        val row = cls.class_table?.rows?.find { it.level == classLevel } ?: return false
+        return (row.values["spell_slots"]?.toIntOrNull() ?: 0) > 0 &&
+            (row.values["slot_level"]?.toIntOrNull() ?: 0) > 0
+    }
+
+    /** Короткий отдых: ячейки Магии договора и ресурсы, восстанавливающиеся за короткий отдых. */
+    fun takeShortRest(charId: String) {
+        val char = getCharacter(charId) ?: return
+        val refreshes = resourceRefreshMap(char)
+        val resources = char.featureResources.mapValues { (id, state) ->
+            if (refreshes[id] == "short_rest") state.copy(used = 0) else state
+        }
+        val slots = if (hasPactMagic(char)) char.spellSlots.mapValues { (_, s) -> s.copy(used = 0) } else char.spellSlots
+        saveCharacter(char.copy(featureResources = resources, spellSlots = slots))
+    }
+
+    /**
+     * Долгий отдых: все ячейки и ресурсы, Хиты до максимума, временные Хиты и спасброски от смерти
+     * сбрасываются, возвращается половина костей хитов (минимум одна).
+     */
+    fun takeLongRest(charId: String) {
+        val char = getCharacter(charId) ?: return
+        val totalDice = char.level.coerceAtLeast(1)
+        val regained = maxOf(1, totalDice / 2)
+        saveCharacter(
+            char.copy(
+                featureResources = char.featureResources.mapValues { (_, state) -> state.copy(used = 0) },
+                spellSlots = char.spellSlots.mapValues { (_, s) -> s.copy(used = 0) },
+                hitDice = char.hitDice.copy(remaining = minOf(totalDice, char.hitDice.remaining + regained)),
+                hitPoints = char.hitPoints.copy(current = char.hitPoints.max, temporary = 0),
+                deathSaves = DeathSaves()
+            )
+        )
+    }
+
     // Wizard
     fun startWizard() { _wizardStep.value = 0; _wizard.value = CharacterData() }
     fun setWizardStep(step: Int) { _wizardStep.value = step }
@@ -471,6 +552,83 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     data class PreparedSpellEntry(val entryId: String, val spell: SpellSummary)
 
+    /** Prepared-кастер: класс, умение, лимит подготовки и доступный уровень заклинаний. */
+    data class PreparedCasterInfo(
+        val classId: String,
+        val featureId: String,
+        val ability: String,
+        val limit: Int,
+        val maxSpellLevel: Int
+    )
+
+    /** Класс с умением choice.type == "prepared_spells" (жрец, друид, паладин, следопыт, колдун). */
+    fun preparedCasterInfo(char: CharacterData): PreparedCasterInfo? {
+        for (classId in (char.classLevels.keys + char.classId).distinct()) {
+            val cls = getClassInfo(classId) ?: continue
+            val classLevel = char.classLevels[classId] ?: if (classId == char.classId) char.level else 0
+            val feature = cls.features.mapNotNull { repository.getFeature(it) }
+                .firstOrNull { it.choice?.type == "prepared_spells" && (it.level ?: 1) <= classLevel }
+                ?: continue
+            val ability = feature.spell_ability ?: cls.spellcasting?.ability ?: continue
+            val limit = cls.class_table?.rows?.find { it.level == classLevel }?.values?.get("prepared")?.toIntOrNull() ?: 0
+            return PreparedCasterInfo(classId, feature.id, ability, limit, getMaxSpellSlotLevel(classId, classLevel))
+        }
+        return null
+    }
+
+    fun isPreparedCaster(char: CharacterData): Boolean = preparedCasterInfo(char) != null
+
+    /** Заклинания списка класса уровней 1..maxSpellLevel, доступные для подготовки. */
+    fun preparedSpellCandidates(char: CharacterData): List<SpellSummary> {
+        val info = preparedCasterInfo(char) ?: return emptyList()
+        val classLocal = info.classId.substringAfterLast(":")
+        return getAllSpellSummaries()
+            .filter { spell -> spell.level in 1..info.maxSpellLevel && spell.classes.any { it.substringAfterLast(":") == classLocal } }
+            .sortedWith(compareBy<SpellSummary> { it.level }.thenBy { it.name.lowercase() })
+    }
+
+    /** Классовые заклинания 1+ уровня, подготовленные прямо сейчас (не «всегда подготовленные»). */
+    fun preparedClassSpellIds(char: CharacterData): Set<String> {
+        val info = preparedCasterInfo(char) ?: return emptySet()
+        val alwaysPrepared = char.spells?.alwaysPreparedSpells?.get(info.ability) ?: emptyList()
+        return (char.spells?.innateSpells?.get(info.ability) ?: emptyList())
+            .filter { it.spellSource() == info.classId && it !in alwaysPrepared }
+            .filter { (repository.getSpell(it.spellFullId())?.level ?: 0) >= 1 }
+            .map { it.spellFullId() }
+            .toSet()
+    }
+
+    /**
+     * Меняет список подготовленных заклинаний prepared-кастера (после долгого отдыха).
+     * Заговоры, «всегда подготовленные» записи и заклинания не от этого класса не трогаются.
+     */
+    fun setPreparedSpells(charId: String, spellIds: List<String>): Boolean {
+        val char = getCharacter(charId) ?: return false
+        val info = preparedCasterInfo(char) ?: return false
+        val unique = spellIds.distinct()
+        if (unique.size > info.limit) return false
+        val sp = char.spells ?: CharacterSpells()
+        val alwaysPrepared = sp.alwaysPreparedSpells[info.ability] ?: emptyList()
+        val old = sp.innateSpells[info.ability] ?: emptyList()
+
+        val keep = old.filter { entry ->
+            val level = repository.getSpell(entry.spellFullId())?.level ?: 0
+            level == 0 || entry in alwaysPrepared || entry.spellSource() != info.classId
+        }
+        val keptIds = keep.map { it.spellFullId() }.toSet()
+        val merged = keep + unique.filter { it !in keptIds }.map { spellEntry(it, info.classId) }
+        val newInnate = sp.innateSpells.toMutableMap().apply { put(info.ability, merged) }
+
+        // Синхронизируем выбор умения, иначе при следующем левелапе вернулись бы старые заклинания
+        val oldChoice = char.featureMultiChoices[info.featureId] ?: emptyList()
+        val cantrips = oldChoice.filter { (repository.getSpell(it)?.level ?: 0) == 0 }
+        val newMulti = char.featureMultiChoices.toMutableMap()
+        newMulti[info.featureId] = cantrips + unique
+
+        saveCharacter(char.copy(spells = sp.copy(innateSpells = newInnate), featureMultiChoices = newMulti))
+        return true
+    }
+
     fun getPreparedSpellSummaries(char: CharacterData, ability: String): List<PreparedSpellEntry> {
         val sp = char.spells ?: return emptyList()
         val preparedIds = sp.preparedByAbility[ability] ?: emptyList()
@@ -819,10 +977,19 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         }
                     }
                 }
-                // Class spell choices (e.g. Sorcerer Spellcasting, Wizard Spellcasting, prepared casters)
-                val choiceType = feature.choice?.type
+                // Выбор заклинаний: прямой или из активной ветви «А или Б»
+                val branch = activeBranch(char, feature)
+                val spellKey = branch?.first ?: feature.id
+                val spellChoice = branch?.second?.choice ?: feature.choice
+                if (branch != null && spellAbility != null) {
+                    for (s in listOfNotNull(branch.second.spell) + branch.second.spells) {
+                        addInnate(spellAbility, s, classId)
+                        if (branch.second.always_prepared) addAlwaysPrepared(spellAbility, s, classId)
+                    }
+                }
+                val choiceType = spellChoice?.type
                 if ((choiceType == "class_spells" || choiceType == "wizard_spells" || choiceType == "prepared_spells" || choiceType == "known_spell") && classSpellAbility != null) {
-                    val selected = char.featureMultiChoices[feature.id] ?: emptyList()
+                    val selected = char.featureMultiChoices[spellKey] ?: emptyList()
                     for (spell in selected) {
                         // У волшебника в подготовленные идут только заговоры; остальное — в книгу
                         if (choiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
@@ -857,11 +1024,20 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     }
                 }
                 // Выборы заклинаний подкласса-заклинателя (Мистический рыцарь, Мистический ловкач)
-                val subChoiceType = feature.choice?.type
+                val subBranch = activeBranch(char, feature)
+                val subSpellKey = subBranch?.first ?: feature.id
+                val subSpellChoice = subBranch?.second?.choice ?: feature.choice
+                if (subBranch != null) {
+                    for (s in listOfNotNull(subBranch.second.spell) + subBranch.second.spells) {
+                        addInnate(spellAbility, s, classId)
+                        if (subBranch.second.always_prepared) addAlwaysPrepared(spellAbility, s, classId)
+                    }
+                }
+                val subChoiceType = subSpellChoice?.type
                 if (subChoiceType == "class_spells" || subChoiceType == "wizard_spells" ||
                     subChoiceType == "prepared_spells" || subChoiceType == "known_spell"
                 ) {
-                    for (spell in char.featureMultiChoices[feature.id] ?: emptyList()) {
+                    for (spell in char.featureMultiChoices[subSpellKey] ?: emptyList()) {
                         if (subChoiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
                         addInnate(spellAbility, spell, classId)
                     }
@@ -980,21 +1156,38 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             feature.proficiencies.forEach { classify(it) }
             expertise.addAll(feature.expertise)
             saves.addAll(feature.saves)
-            val choice = feature.choice ?: return
-            if (choice.type != "grants") return
-            choice.proficiency_parts.forEachIndexed { index, part ->
-                val selected = char.featureMultiChoices["${feature.id}_prof$index"] ?: return@forEachIndexed
-                for (id in selected) {
-                    when (part.grant) {
-                        "expertise" -> expertise.add(id)
-                        "proficiency_and_expertise" -> { classify(id); expertise.add(id) }
-                        "expertise_or_proficiency" -> conditional.add(id)
-                        "display" -> display.add(id)
-                        "resistance" -> resistances.add(id)
-                        else -> if (part.kind == "save") saves.add(id) else classify(id)
-                    }
+            resistances.addAll(feature.resistances)
+
+            fun applyPart(part: com.herocraft24.core.model.ProficiencyPart, id: String) {
+                when (part.grant) {
+                    "expertise" -> expertise.add(id)
+                    "proficiency_and_expertise" -> { classify(id); expertise.add(id) }
+                    "expertise_or_proficiency" -> conditional.add(id)
+                    "display" -> display.add(id)
+                    "resistance" -> resistances.add(id)
+                    else -> if (part.kind == "save") saves.add(id) else classify(id)
                 }
             }
+
+            fun applyGrants(key: String, choice: com.herocraft24.core.model.FeatureChoice?) {
+                if (choice?.type != "grants") return
+                choice.proficiency_parts.forEachIndexed { index, part ->
+                    val selected = char.featureMultiChoices["${key}_prof$index"] ?: return@forEachIndexed
+                    for (id in selected) applyPart(part, id)
+                }
+            }
+
+            // Ветвящийся выбор «А или Б»: гранты берём из активной ветви
+            val active = activeBranch(char, feature)
+            if (active != null) {
+                val (key, branch) = active
+                branch.proficiencies.forEach { classify(it) }
+                expertise.addAll(branch.expertise)
+                saves.addAll(branch.saves)
+                resistances.addAll(branch.resistances)
+                applyGrants(key, branch.choice)
+            }
+            applyGrants(feature.id, feature.choice)
         }
 
         val subclass = char.subclassId?.let { repository.getSubclass(it) }
@@ -1087,7 +1280,10 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
     fun getCharacterResistances(char: CharacterData): Set<String> {
         val result = mutableSetOf<String>()
         effectiveSpeciesTraits(char)?.second?.forEach { result.addAll(it.resistances) }
-        for ((_, _, feature) in grantedFeatures(char)) result.addAll(feature.resistances)
+        for ((_, _, feature) in grantedFeatures(char)) {
+            result.addAll(feature.resistances)
+            activeBranch(char, feature)?.second?.let { result.addAll(it.resistances) }
+        }
         result.addAll(getSpeciesGrants(char).resistances)
         result.addAll(getFeatureGrants(char).resistances)
         result.addAll(getFeatProficiencyGrants(char).resistances)
@@ -1114,7 +1310,8 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         val pb = char.proficiencyBonus
         val result = mutableListOf<EvaluatedBonus>()
         for ((_, _, feature) in grantedFeatures(char)) {
-            for (rule in feature.bonuses) {
+            val rules = feature.bonuses + (activeBranch(char, feature)?.second?.bonuses ?: emptyList())
+            for (rule in rules) {
                 val value = when {
                     rule.formula == "half_proficiency_floor" -> pb / 2
                     rule.formula.endsWith("_modifier_min_1") ->
@@ -1411,6 +1608,18 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
 
     // ── Формулы листа от умений (КЗ без доспеха, скорость, инициатива) ──
 
+    /**
+     * Активная ветвь выбора "branches" у умения.
+     * Возвращает ключ хранения вложенных выборов ("<featureId>#<branchId>") и саму ветвь.
+     */
+    fun activeBranch(char: CharacterData, feature: Feature): Pair<String, com.herocraft24.core.model.ChoiceBranch>? {
+        val choice = feature.choice ?: return null
+        if (choice.type != "branches") return null
+        val branchId = char.featureChoices[feature.id] ?: return null
+        val branch = choice.branches.find { it.id == branchId } ?: return null
+        return "${feature.id}#$branchId" to branch
+    }
+
     /** Умения всех классов и подкласса, доступные на текущих уровнях (класс, уровень в классе, умение). */
     fun grantedFeatures(char: CharacterData): List<Triple<com.herocraft24.core.model.GameClass, Int, com.herocraft24.core.model.Feature>> {
         val result = mutableListOf<Triple<com.herocraft24.core.model.GameClass, Int, com.herocraft24.core.model.Feature>>()
@@ -1557,10 +1766,19 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                     }
                 }
             }
-            // Class spell choices (e.g. Sorcerer Spellcasting, Wizard Spellcasting, prepared casters)
-            val choiceType = feature.choice?.type
+            // Выбор заклинаний: прямой или из активной ветви «А или Б»
+            val branch = activeBranch(char, feature)
+            val spellKey = branch?.first ?: feature.id
+            val spellChoice = branch?.second?.choice ?: feature.choice
+            if (branch != null && spellAbility != null) {
+                for (s in listOfNotNull(branch.second.spell) + branch.second.spells) {
+                    addSpell(spellAbility, s)
+                    if (branch.second.always_prepared) addAlways(spellAbility, s)
+                }
+            }
+            val choiceType = spellChoice?.type
             if ((choiceType == "class_spells" || choiceType == "wizard_spells" || choiceType == "prepared_spells" || choiceType == "known_spell") && classSpellAbility != null) {
-                val selected = char.featureMultiChoices[feature.id] ?: emptyList()
+                val selected = char.featureMultiChoices[spellKey] ?: emptyList()
                 for (spell in selected) {
                     if (choiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
                     addSpell(classSpellAbility, spell)
@@ -1597,11 +1815,20 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
                         }
                     }
                     // Выборы заклинаний подкласса-заклинателя (Мистический рыцарь, Мистический ловкач)
-                    val subChoiceType = feature.choice?.type
+                    val subBranch = activeBranch(char, feature)
+                    val subSpellKey = subBranch?.first ?: feature.id
+                    val subSpellChoice = subBranch?.second?.choice ?: feature.choice
+                    if (subBranch != null) {
+                        for (s in listOfNotNull(subBranch.second.spell) + subBranch.second.spells) {
+                            addSpell(spellAbility, s)
+                            if (subBranch.second.always_prepared) addAlways(spellAbility, s)
+                        }
+                    }
+                    val subChoiceType = subSpellChoice?.type
                     if (subChoiceType == "class_spells" || subChoiceType == "wizard_spells" ||
                         subChoiceType == "prepared_spells" || subChoiceType == "known_spell"
                     ) {
-                        for (spell in char.featureMultiChoices[feature.id] ?: emptyList()) {
+                        for (spell in char.featureMultiChoices[subSpellKey] ?: emptyList()) {
                             if (subChoiceType == "wizard_spells" && (repository.getSpell(spell)?.level ?: 0) > 0) continue
                             addSpell(spellAbility, spell)
                         }
@@ -1691,6 +1918,21 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         return selected.filter { it in requiredBy || it.substringAfterLast(":") in requiredBy }.toSet()
     }
 
+    /** Ключ хранения под-выбора воззвания в featureChoices / featureMultiChoices. */
+    fun invocationChoiceKey(invocationFullId: String) = "inv_" + invocationFullId.substringAfterLast(":")
+
+    /** Синтетическое умение для под-выбора воззвания — его рендерит FeaturesCreateAdapter. */
+    fun invocationChoiceFeature(invocationFullId: String): Feature? {
+        val inv = repository.getInvocation(invocationFullId) ?: return null
+        val choice = inv.choice ?: return null
+        return Feature(
+            id = invocationChoiceKey(invocationFullId),
+            name = inv.name,
+            description = inv.description,
+            choice = choice
+        )
+    }
+
     /**
      * Заклинания от выбранных воззваний колдуна: id заклинания и флаг «всегда подготовлено».
      * Воззвания хранятся в featureMultiChoices умения с choice.type == "invocations".
@@ -1706,6 +1948,18 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
             val inv = repository.getInvocation(invId) ?: continue
             inv.spell?.let { result.add(it to inv.always_prepared) }
             for (spell in inv.spells) result.add(spell to inv.always_prepared)
+            // Под-выбор воззвания (Договор гримуара, Мучительный взрыв и т.п.)
+            val choice = inv.choice
+            if (choice?.type == "feat_multi") {
+                val key = invocationChoiceKey(invId)
+                choice.pick_spells.forEachIndexed { index, _ ->
+                    for (spell in char.featureMultiChoices["${key}_spell$index"] ?: emptyList()) {
+                        // Заговоры известны постоянно, leveled-заклинания — нет
+                        val isCantrip = (repository.getSpell(spell)?.level ?: 0) == 0
+                        result.add(spell to isCantrip)
+                    }
+                }
+            }
         }
         return result
     }

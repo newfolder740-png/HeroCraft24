@@ -32,6 +32,8 @@ class FeaturesCreateAdapter(
     private val initialFeatureMultiChoices: Map<String, List<String>> = emptyMap(),
     private val initialAsiChoices: Map<String, AsiChoice> = emptyMap(),
     private val proficientSkills: Set<String> = emptySet(),
+    // Синтетические карточки под-выборов выбранных воззваний колдуна
+    private val invocationChoiceFeatures: (List<String>) -> List<Feature> = { emptyList() },
     // Навыки, в которых у персонажа уже есть Экспертность (из любого источника)
     private val expertiseSkills: Set<String> = emptySet(),
     // Характеристики, спасбросками которыми персонаж уже владеет (от класса)
@@ -119,6 +121,12 @@ class FeaturesCreateAdapter(
             if (parentId !in attachedParents) result.add(featCard)
         }
         result.addAll(subclassFeatures)
+        // Карточки под-выборов уже выбранных воззваний колдуна
+        val invocationIds = (baseItems + subclassFeatures)
+            .filter { it.choice?.type == "invocations" }
+            .flatMap { featureMultiChoices[it.id]?.filterNotNull() ?: emptyList() }
+            .distinct()
+        result.addAll(invocationChoiceFeatures(invocationIds))
         displayItems = result
         notifyDataSetChanged()
     }
@@ -126,93 +134,108 @@ class FeaturesCreateAdapter(
     fun areAllChoicesMade(): Boolean {
         for (feature in displayItems) {
             val choice = feature.choice ?: continue
-            when (choice.type) {
-                "skill_expertise" -> {
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    if (choices.size < choice.count || choices.any { it == null }) return false
+            if (!isChoiceComplete(feature.id, choice)) return false
+        }
+        return true
+    }
+
+    /**
+     * Все ли выборы сделаны для choice, лежащего под ключом [featureId].
+     * У вложенных ветвей (choice.type == "branches") ключ — "<featureId>#<branchId>".
+     */
+    fun isChoiceComplete(featureId: String, choice: FeatureChoice): Boolean {
+        when (choice.type) {
+            "skill_expertise" -> {
+                val choices = featureMultiChoices[featureId] ?: return false
+                if (choices.size < choice.count || choices.any { it == null }) return false
+            }
+            "metamagic" -> {
+                val choices = featureMultiChoices[featureId] ?: return false
+                if (choices.size < choice.count || choices.any { it == null }) return false
+            }
+            "invocations" -> {
+                val choices = featureMultiChoices[featureId] ?: return false
+                if (choices.size < choice.count || choices.any { it == null }) return false
+            }
+            "maneuvers" -> {
+                val choices = featureMultiChoices[featureId] ?: return false
+                val required = requiredManeuverCount(choice)
+                if (choices.count { it != null } < required) return false
+            }
+            "magic_initiate" -> {
+                if (featureChoices["${featureId}_list"] == null) return false
+                if (featureChoices["${featureId}_ability"] == null) return false
+                val choices = featureMultiChoices[featureId] ?: return false
+                val selectedCount = choices.count { it != null }
+                if (selectedCount < choice.cantrips + choice.spells) return false
+            }
+            "class_spells", "wizard_spells", "prepared_spells", "known_spell" -> {
+                val choices = featureMultiChoices[featureId] ?: return false
+                val selectedCount = choices.count { it != null }
+                if (selectedCount < choice.cantrips + choice.spells) return false
+            }
+            "spellcasting_ability" -> {
+                if (featureChoices[featureId] == null) return false
+            }
+            "feat_asi" -> {
+                // Фиксированная характеристика (одна в списке) выбора не требует
+                if (choice.abilities.size != 1 && featureChoices["${featureId}_asi"] == null) return false
+            }
+            "feat_spells" -> {
+                if (choice.abilities.size > 1 && featureChoices["${featureId}_ability"] == null) return false
+            }
+            "feat_multi" -> {
+                if (choice.asi > 0 && choice.abilities.size != 1 && featureChoices["${featureId}_asi"] == null) return false
+                choice.proficiency_parts.forEachIndexed { index, part ->
+                    val selections = featureMultiChoices["${featureId}_prof$index"] ?: return false
+                    if (selections.count { it != null } < part.count) return false
                 }
-                "metamagic" -> {
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    if (choices.size < choice.count || choices.any { it == null }) return false
+                if (choice.spell_abilities.size > 1 && featureChoices["${featureId}_ability"] == null) return false
+                choice.pick_spells.forEachIndexed { index, spec ->
+                    // Необязательный выбор не блокирует переход дальше
+                    if (spec.optional) return@forEachIndexed
+                    val required = requiredSpellPickCount(spec)
+                    val selections = featureMultiChoices["${featureId}_spell$index"] ?: return false
+                    if (selections.count { it != null } < required) return false
                 }
-                "invocations" -> {
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    if (choices.size < choice.count || choices.any { it == null }) return false
+            }
+            "grants" -> {
+                choice.proficiency_parts.forEachIndexed { index, part ->
+                    val selections = featureMultiChoices["${featureId}_prof$index"] ?: return false
+                    if (selections.count { it != null } < part.count) return false
                 }
-                "maneuvers" -> {
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    val required = requiredManeuverCount(choice)
-                    if (choices.count { it != null } < required) return false
-                }
-                "magic_initiate" -> {
-                    if (featureChoices["${feature.id}_list"] == null) return false
-                    if (featureChoices["${feature.id}_ability"] == null) return false
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    val selectedCount = choices.count { it != null }
-                    if (selectedCount < choice.cantrips + choice.spells) return false
-                }
-                "class_spells", "wizard_spells", "prepared_spells", "known_spell" -> {
-                    val choices = featureMultiChoices[feature.id] ?: return false
-                    val selectedCount = choices.count { it != null }
-                    if (selectedCount < choice.cantrips + choice.spells) return false
-                }
-                "spellcasting_ability" -> {
-                    if (featureChoices[feature.id] == null) return false
-                }
-                "feat_asi" -> {
-                    // Фиксированная характеристика (одна в списке) выбора не требует
-                    if (choice.abilities.size != 1 && featureChoices["${feature.id}_asi"] == null) return false
-                }
-                "feat_spells" -> {
-                    if (choice.abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
-                }
-                "feat_multi" -> {
-                    if (choice.asi > 0 && choice.abilities.size != 1 && featureChoices["${feature.id}_asi"] == null) return false
-                    choice.proficiency_parts.forEachIndexed { index, part ->
-                        val selections = featureMultiChoices["${feature.id}_prof$index"] ?: return false
-                        if (selections.count { it != null } < part.count) return false
-                    }
-                    if (choice.spell_abilities.size > 1 && featureChoices["${feature.id}_ability"] == null) return false
-                    choice.pick_spells.forEachIndexed { index, spec ->
-                        // Необязательный выбор не блокирует переход дальше
-                        if (spec.optional) return@forEachIndexed
-                        val required = requiredSpellPickCount(spec)
-                        val selections = featureMultiChoices["${feature.id}_spell$index"] ?: return false
-                        if (selections.count { it != null } < required) return false
-                    }
-                }
-                "grants" -> {
-                    choice.proficiency_parts.forEachIndexed { index, part ->
-                        val selections = featureMultiChoices["${feature.id}_prof$index"] ?: return false
-                        if (selections.count { it != null } < part.count) return false
-                    }
-                }
-                "asi_or_feat" -> {
-                    if (featureChoices[feature.id] == null) return false
-                    if (feature.id in featuresNeedingAsi) {
-                        val asi = asiChoices[feature.id] ?: return false
-                        if (asi.mode == "plus1x2") {
-                            if (asi.ability1.isEmpty() || asi.ability2.isEmpty()) return false
-                        } else {
-                            if (asi.ability1.isEmpty()) return false
-                        }
-                    }
-                }
-                "subclass" -> {
-                    if (featureChoices[feature.id] == null) return false
-                }
-                "asi" -> {
-                    val parentFeatureId = featCards.entries.find { it.value.id == feature.id }?.key ?: feature.id
-                    val asi = asiChoices[parentFeatureId] ?: return false
+            }
+            "branches" -> {
+                val branchId = featureChoices[featureId] ?: return false
+                val branch = choice.branches.find { it.id == branchId } ?: return false
+                val nested = branch.choice ?: return true
+                if (!isChoiceComplete("$featureId#${branch.id}", nested)) return false
+            }
+            "asi_or_feat" -> {
+                if (featureChoices[featureId] == null) return false
+                if (featureId in featuresNeedingAsi) {
+                    val asi = asiChoices[featureId] ?: return false
                     if (asi.mode == "plus1x2") {
                         if (asi.ability1.isEmpty() || asi.ability2.isEmpty()) return false
                     } else {
                         if (asi.ability1.isEmpty()) return false
                     }
                 }
-                else -> {
-                    if (choice.options.isNotEmpty() && featureChoices[feature.id] == null) return false
+            }
+            "subclass" -> {
+                if (featureChoices[featureId] == null) return false
+            }
+            "asi" -> {
+                val parentFeatureId = featCards.entries.find { it.value.id == featureId }?.key ?: featureId
+                val asi = asiChoices[parentFeatureId] ?: return false
+                if (asi.mode == "plus1x2") {
+                    if (asi.ability1.isEmpty() || asi.ability2.isEmpty()) return false
+                } else {
+                    if (asi.ability1.isEmpty()) return false
                 }
+            }
+            else -> {
+                if (choice.options.isNotEmpty() && featureChoices[featureId] == null) return false
             }
         }
         return true
@@ -260,6 +283,11 @@ class FeaturesCreateAdapter(
         })
 
         val choice = feature.choice ?: return
+        buildChoiceUi(container, feature, choice)
+    }
+
+    /** Диспетчер построителей выбора. Используется и для вложенных ветвей (choice.type == "branches"). */
+    private fun buildChoiceUi(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
         when (choice.type) {
             "skill_expertise" -> buildSkillExpertiseChoice(container, feature, choice)
             "spellcasting_ability" -> buildSpellcastingAbilityChoice(container, feature, choice)
@@ -272,6 +300,7 @@ class FeaturesCreateAdapter(
             "feat_spells" -> buildFeatSpellsChoice(container, feature, choice)
             "feat_multi" -> buildFeatMultiChoice(container, feature, choice)
             "grants" -> buildGrantsChoice(container, feature, choice)
+            "branches" -> buildBranchesChoice(container, feature, choice)
             "asi_or_feat" -> buildAsiOrFeatChoice(container, feature)
             "asi" -> {
                 // For feat cards, use the parent feature ID as the asiChoices key
@@ -281,6 +310,54 @@ class FeaturesCreateAdapter(
             "subclass" -> buildSubclassChoice(container, feature)
             else -> if (choice.options.isNotEmpty()) buildFeatCategoryChoice(container, feature, choice)
         }
+    }
+
+    /**
+     * Ветвящийся выбор «А или Б»: дропдаун ветвей, под выбранной — её собственный choice.
+     * Вложенные выборы хранятся под ключом "<featureId>#<branchId>".
+     */
+    private fun buildBranchesChoice(container: LinearLayout, feature: Feature, choice: FeatureChoice) {
+        val ctx = container.context
+        val choiceContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 8.dp(ctx), 0, 8.dp(ctx)) }
+        val labels = choice.branches.map { it.label }
+
+        choiceContainer.addView(TextView(ctx).apply {
+            text = "Выберите вариант:"
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+            setPadding(0, 0, 0, 4.dp(ctx))
+        })
+        choiceContainer.addView(com.google.android.material.textfield.MaterialAutoCompleteTextView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            inputType = android.text.InputType.TYPE_NULL; threshold = 0; isFocusableInTouchMode = false
+            hint = "Вариант"; setOnClickListener { showDropDown() }
+            setAdapter(android.widget.ArrayAdapter(ctx, android.R.layout.simple_dropdown_item_1line, labels))
+            featureChoices[feature.id]?.let { id ->
+                val idx = choice.branches.indexOfFirst { it.id == id }
+                if (idx >= 0) setText(labels[idx], false)
+            }
+            setOnItemClickListener { _, _, pos, _ ->
+                val branch = choice.branches.getOrNull(pos) ?: return@setOnItemClickListener
+                if (featureChoices[feature.id] == branch.id) return@setOnItemClickListener
+                featureChoices[feature.id] = branch.id
+                onFeatureChoiceChanged(feature.id, branch.id)
+                notifyDataSetChanged()
+            }
+        })
+
+        val branchContainer = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
+        choiceContainer.addView(branchContainer)
+        val selectedBranch = featureChoices[feature.id]?.let { id -> choice.branches.find { it.id == id } }
+        val nestedChoice = selectedBranch?.choice
+        if (selectedBranch != null && nestedChoice != null) {
+            val nested = Feature(
+                id = "${feature.id}#${selectedBranch.id}",
+                name = feature.name,
+                description = feature.description,
+                choice = nestedChoice
+            )
+            buildChoiceUi(branchContainer, nested, nestedChoice)
+        }
+        container.addView(choiceContainer)
     }
 
     // ── Skill Expertise ──
@@ -466,7 +543,8 @@ class FeaturesCreateAdapter(
     fun updateInvocations(featureId: String, selected: List<String>) {
         featureMultiChoices[featureId] = selected.toMutableList()
         onFeatureMultiChoiceChanged(featureId, selected)
-        notifyDataSetChanged()
+        // У выбранных воззваний могут быть собственные под-выборы (Договор гримуара, Уроки древних)
+        rebuildDisplayItems()
     }
 
     // ── Maneuvers (Battle Master) ──

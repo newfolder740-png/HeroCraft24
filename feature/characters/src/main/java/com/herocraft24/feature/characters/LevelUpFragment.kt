@@ -133,6 +133,66 @@ class LevelUpFragment : Fragment() {
     // id умений шага 1 с choice.type == "skill_expertise": только их выборы становятся Экспертностью
     private var expertiseFeatureIds: Set<String> = emptySet()
 
+    // Адаптер под-выборов воззваний, полученных на этом уровне (Договор гримуара, Уроки древних)
+    private var invocationSubAdapter: FeaturesCreateAdapter? = null
+
+    /** Выбор воззвания хранится в отдельном адаптере: его ключи начинаются с "inv_". */
+    private fun adapterFor(key: String): FeaturesCreateAdapter? =
+        if (key.startsWith("inv_")) invocationSubAdapter else featuresAdapter
+
+    /** Пикер черт. Используется и шагом 1, и под-выборами воззваний («Уроки древних»). */
+    private fun pickFeatOption(key: String, title: String, candidates: List<String>, selected: List<String>, count: Int) {
+        OptionPickerDialogFragment.newInstance(
+            kind = OptionPickerDialogFragment.KIND_FEAT,
+            title = title,
+            optionIds = candidates,
+            requiredCount = count,
+            selected = selected
+        ).apply {
+            setOnResultListener { sel ->
+                adapterFor(key)?.updateFeatChoice(key, sel.firstOrNull())
+                updateButtons()
+            }
+        }.show(childFragmentManager, "FeatPicker")
+    }
+
+    /** Пикер части pick_spells. Используется и шагом 1, и под-выборами воззваний («Договор гримуара»). */
+    private fun pickFeatSpellPart(
+        key: String,
+        partIndex: Int,
+        spec: com.herocraft24.core.model.SpellPickSpec,
+        current: List<String>,
+        required: Int
+    ) {
+        val ability = featureChoices["${key}_ability"]
+            ?: featureChoices["${key}_asi"]
+            ?: char?.featureChoices?.get("${key}_ability")
+            ?: char?.featureChoices?.get("${key}_asi")
+            ?: char?.classId?.let { vm.getClassInfo(it)?.spellcasting?.ability }
+            ?: "intelligence"
+        ClassSpellPickerDialogFragment.newInstance(
+            classFilter = spec.class_filter ?: "",
+            cantrips = spec.cantrips,
+            spells = if (spec.proficiency_count) required else spec.spells,
+            selected = current,
+            charId = char?.id ?: "",
+            ability = ability,
+            levelFilter = when {
+                spec.options.isNotEmpty() -> -1
+                spec.cantrips > 0 && spec.spells > 0 -> -1
+                else -> spec.spell_level
+            },
+            schools = spec.schools,
+            ritualOnly = spec.ritual_only,
+            optionIds = spec.options
+        ).apply {
+            setOnResultListener { selected ->
+                adapterFor(key)?.updateFeatSpellPart(key, partIndex, selected)
+                updateButtons()
+            }
+        }.show(childFragmentManager, "FeatSpellPartPicker")
+    }
+
     // Step 2 maneuvers state (Мастер боя: добор приёмов по порогам уровня + замена одного)
     private var maneuverFeatureId: String? = null
     private var baseNewManeuvers: Int = 0
@@ -493,18 +553,7 @@ class LevelUpFragment : Fragment() {
                 }.show(childFragmentManager, "ClassSpellPicker")
             },
             onPickFeatOptions = { featureId, title, candidates, selected, count ->
-                OptionPickerDialogFragment.newInstance(
-                    kind = OptionPickerDialogFragment.KIND_FEAT,
-                    title = title,
-                    optionIds = candidates,
-                    requiredCount = count,
-                    selected = selected
-                ).apply {
-                    setOnResultListener { sel ->
-                        featuresAdapter?.updateFeatChoice(featureId, sel.firstOrNull())
-                        updateButtons()
-                    }
-                }.show(childFragmentManager, "FeatPicker")
+                pickFeatOption(featureId, title, candidates, selected, count)
             },
             onPickMetamagicOptions = { featureId, title, candidates, selected, count ->
                 OptionPickerDialogFragment.newInstance(
@@ -551,37 +600,13 @@ class LevelUpFragment : Fragment() {
                 }.show(childFragmentManager, "FeatSpellPicker")
             },
             onPickFeatSpellPart = { featureId, partIndex, spec, current, required ->
-                val ability = featureChoices["${featureId}_ability"]
-                    ?: featureChoices["${featureId}_asi"]
-                    ?: char?.featureChoices?.get("${featureId}_ability")
-                    ?: char?.featureChoices?.get("${featureId}_asi")
-                    ?: "intelligence"
-                ClassSpellPickerDialogFragment.newInstance(
-                    classFilter = spec.class_filter ?: "",
-                    cantrips = spec.cantrips,
-                    spells = if (spec.proficiency_count) required else spec.spells,
-                    selected = current,
-                    charId = char?.id ?: "",
-                    ability = ability,
-                    levelFilter = when {
-                        spec.options.isNotEmpty() -> -1
-                        spec.cantrips > 0 && spec.spells > 0 -> -1
-                        else -> spec.spell_level
-                    },
-                    schools = spec.schools,
-                    ritualOnly = spec.ritual_only,
-                    optionIds = spec.options
-                ).apply {
-                    setOnResultListener { selected ->
-                        featuresAdapter?.updateFeatSpellPart(featureId, partIndex, selected)
-                        updateButtons()
-                    }
-                }.show(childFragmentManager, "FeatSpellPartPicker")
+                pickFeatSpellPart(featureId, partIndex, spec, current, required)
             },
             initialFeatureChoices = featureChoices,
             initialFeatureMultiChoices = featureMultiChoices,
             initialAsiChoices = asiChoices,
             proficientSkills = proficientSkills,
+            invocationChoiceFeatures = { ids -> ids.mapNotNull { vm.invocationChoiceFeature(it) } },
             expertiseSkills = expertiseSkills,
             classSavingThrows = computeClassSavingThrows(ch, selectedClass),
             characterLevel = ch.level + 1,
@@ -623,18 +648,31 @@ class LevelUpFragment : Fragment() {
         scroll.addView(content)
         binding.stepContainer.addView(scroll)
 
-        // Секция получения/замены заклинаний: умение класса ИЛИ подкласса
-        // (Мистический рыцарь и Мистический ловкач получают заклинательство от подкласса)
-        fun isSpellGainFeature(feature: Feature): Boolean {
-            val choice = feature.choice ?: return false
-            return (choice.type == "class_spells" || choice.type == "prepared_spells") && choice.level_up != null
-        }
+        // Секция получения/замены заклинаний: умение класса ИЛИ подкласса, прямой выбор
+        // или вложенный в ветвь «А или Б» (заговоры от Боевого стиля следопыта/паладина)
         val spellSubclass = ch.subclassId?.let { vm.repository.getSubclass(it) }?.takeIf { it.class_id == selectedClass }
-        val classSpellFeature = cls.features.mapNotNull { vm.repository.getFeature(it) }.find { isSpellGainFeature(it) }
-        val subclassSpellFeature = spellSubclass?.features?.mapNotNull { vm.repository.getFeature(it) }?.find { isSpellGainFeature(it) }
-        val spellFeature = classSpellFeature ?: subclassSpellFeature
-        if (spellFeature != null) {
-            val fromSubclass = classSpellFeature == null
+
+        val spellCandidates = mutableListOf<Pair<Feature, Pair<String, com.herocraft24.core.model.FeatureChoice>>>()
+        fun collect(featureIds: List<String>) {
+            for (fid in featureIds) {
+                val feature = vm.repository.getFeature(fid) ?: continue
+                val branch = vm.activeBranch(ch, feature)
+                val key = branch?.first ?: feature.id
+                val c = branch?.second?.choice ?: feature.choice ?: continue
+                if ((c.type != "class_spells" && c.type != "prepared_spells") || c.level_up == null) continue
+                spellCandidates.add(feature to (key to c))
+            }
+        }
+        collect(cls.features)
+        spellSubclass?.let { collect(it.features) }
+        // Предпочитаем умение, у которого разрешена замена: иначе список был бы только для чтения,
+        // а замена заговоров Боевого стиля не появилась бы
+        val picked = spellCandidates.firstOrNull { (_, c) ->
+            (c.second.level_up?.replace_cantrips ?: 0) > 0 || (c.second.level_up?.replace_spells ?: 0) > 0
+        } ?: spellCandidates.firstOrNull()
+        if (picked != null) {
+            val (spellFeature, keyAndChoice) = picked
+            val fromSubclass = spellSubclass?.features?.contains(spellFeature.id) == true
             val (card, body) = ExpandableCard.createExpandableCard(
                 context = ctx,
                 title = "Получение и замена заклинаний",
@@ -643,13 +681,14 @@ class LevelUpFragment : Fragment() {
                 openIdsSet = expandedSections
             ) { _ -> }
             content.addView(card)
-            spellSectionFeatureId = spellFeature.id
+            spellSectionFeatureId = keyAndChoice.first
             renderClassSpellsSection(
                 container = body,
                 ch = ch,
                 selectedClass = selectedClass,
                 spellFeature = spellFeature,
-                spellTable = if (fromSubclass) spellSubclass?.class_table else cls.class_table
+                spellTable = if (fromSubclass) spellSubclass?.class_table else cls.class_table,
+                effectiveChoice = keyAndChoice.second
             )
             spellsSectionVisible = true
         }
@@ -733,7 +772,8 @@ class LevelUpFragment : Fragment() {
         ch: CharacterData,
         selectedClass: String,
         spellFeature: Feature,
-        spellTable: com.herocraft24.core.model.ClassTable? = null
+        spellTable: com.herocraft24.core.model.ClassTable? = null,
+        effectiveChoice: com.herocraft24.core.model.FeatureChoice? = null
     ) {
         val ctx = requireContext()
         val cls = vm.getClassInfo(selectedClass) ?: return
@@ -746,7 +786,7 @@ class LevelUpFragment : Fragment() {
         baseNewCantrips = gain.cantrips
         baseNewSpells = gain.spells
 
-        val levelUp = spellFeature.choice?.level_up
+        val levelUp = (effectiveChoice ?: spellFeature.choice)?.level_up
         allowReplaceCantrip = (levelUp?.replace_cantrips ?: 1) > 0
         allowReplaceSpell = (levelUp?.replace_spells ?: 1) > 0
 
@@ -1345,6 +1385,59 @@ class LevelUpFragment : Fragment() {
         }
         invocationCounterView?.let { body.addView(it) }
 
+        // Под-выборы новых воззваний (Договор гримуара, Уроки древних, Мучительный взрыв)
+        val subContainer = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        fun rebuildInvocationSubChoices() {
+            subContainer.removeAllViews()
+            val features = newSelectedInvocations.mapNotNull { vm.invocationChoiceFeature(it) }
+            if (features.isEmpty()) {
+                invocationSubAdapter = null
+                return
+            }
+            subContainer.addView(TextView(ctx).apply {
+                text = "Выборы новых воззваний:"
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                setPadding(0, 8.dp(ctx), 0, 4.dp(ctx))
+            })
+            val recycler = RecyclerView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                layoutManager = LinearLayoutManager(ctx)
+                isNestedScrollingEnabled = false
+            }
+            val adapter = FeaturesCreateAdapter(
+                onFeatureChoiceChanged = { k, v ->
+                    if (v != null) featureChoices[k] = v else featureChoices.remove(k)
+                    updateButtons()
+                },
+                onFeatureMultiChoiceChanged = { k, v ->
+                    featureMultiChoices[k] = v
+                    updateButtons()
+                },
+                onPickFeatOptions = { key, title, candidates, selected, count ->
+                    pickFeatOption(key, title, candidates, selected, count)
+                },
+                onPickFeatSpellPart = { key, partIndex, spec, current, required ->
+                    pickFeatSpellPart(key, partIndex, spec, current, required)
+                },
+                initialFeatureChoices = featureChoices,
+                initialFeatureMultiChoices = featureMultiChoices,
+                characterLevel = ch.level + 1
+            )
+            adapter.submitList(features)
+            invocationSubAdapter = adapter
+            recycler.adapter = adapter
+            subContainer.addView(recycler)
+        }
+
         body.addView(MaterialButton(ctx).apply {
             text = "Выбрать воззвания"
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -1364,6 +1457,7 @@ class LevelUpFragment : Fragment() {
                     setOnResultListener { sel ->
                         newSelectedInvocations.clear()
                         newSelectedInvocations.addAll(sel)
+                        rebuildInvocationSubChoices()
                         updateInvocationCounter()
                         updateButtons()
                     }
@@ -1371,6 +1465,8 @@ class LevelUpFragment : Fragment() {
             }
         })
 
+        body.addView(subContainer)
+        rebuildInvocationSubChoices()
         updateInvocationCounter()
     }
 
@@ -1831,6 +1927,8 @@ class LevelUpFragment : Fragment() {
         if (invocationFeatureId != null) {
             val required = baseNewInvocations + if (removeInvocationId != null) 1 else 0
             if (newSelectedInvocations.size != required) return false
+            // Под-выборы новых воззваний (Договор гримуара, Уроки древних) тоже должны быть сделаны
+            if (invocationSubAdapter?.areAllChoicesMade() == false) return false
         }
         // Волшебник: заговоры по таблице и ровно 2 заклинания в книгу
         if (wizardSectionVisible) {
@@ -2196,14 +2294,14 @@ class LevelUpFragment : Fragment() {
         // Add new features to the character's features list
         val mergedFeatures = (ch.features + newFeatures).distinct().toMutableList()
 
-        // Collect chosen feats from asi_or_feat choices
+        // Черты из любых выборов: asi_or_feat, feat_category (Боевой стиль, доп. стиль Чемпиона)
+        // и вложенные ветви «А или Б» (ключ "<featureId>#<branchId>"). Значения, которые чертами
+        // не являются (id подклассов, характеристик, списков заклинаний, ветвей), getFeat не находит.
         val newFeats = ch.feats.toMutableList()
         for ((featureId, featId) in featureChoices) {
-            val feature = featuresAdapter?.currentBaseItems?.find { it.id == featureId } ?: continue
-            if (feature.choice?.type != "asi_or_feat") continue
-            if (featId != null && featId !in newFeats) {
-                newFeats.add(featId)
-            }
+            if (featureId == "background" || featId == null) continue
+            if (vm.repository.getFeat(featId) == null) continue
+            if (featId !in newFeats) newFeats.add(featId)
         }
 
         // Handle subclass selection

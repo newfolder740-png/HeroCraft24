@@ -1,5 +1,6 @@
 {
     "id":  "mystic_spear",
+  "choice": {"type":"feat_multi","pick_spells":[{"cantrips":1,"spells":0,"class_filter":"phb2024:warlock","label":"Известный вам заговор Колдуна, наносящий урон (не «на себя» и не «касание»)"}]},
   "type": "invocation",
   "format_version": 1,
     "name":  {

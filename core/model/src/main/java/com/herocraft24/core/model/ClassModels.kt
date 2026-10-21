@@ -172,7 +172,29 @@ data class FeatureChoice(
     // Максимальный уровень выбираемого заклинания (-1 = без ограничения)
     val max_spell_level: Int = -1,
     // Уровни класса, на которых добавляется ещё одно заклинание в книгу
-    val book_gain_levels: List<Int> = emptyList()
+    val book_gain_levels: List<Int> = emptyList(),
+    // Ветвящийся выбор «А или Б» (Боевой стиль следопыта, Природный орден друида)
+    val branches: List<ChoiceBranch> = emptyList()
+)
+
+/**
+ * Ветвь выбора «А или Б». Может нести фиксированные гранты, заклинание
+ * и/или вложенный choice любого поддерживаемого типа.
+ * Выборы вложенного choice хранятся под ключом "<featureId>#<branchId>".
+ */
+@Serializable
+data class ChoiceBranch(
+    val id: String,
+    val label: String,
+    val spell: String? = null,
+    val spells: List<String> = emptyList(),
+    val always_prepared: Boolean = false,
+    val proficiencies: List<String> = emptyList(),
+    val expertise: List<String> = emptyList(),
+    val saves: List<String> = emptyList(),
+    val resistances: List<String> = emptyList(),
+    val bonuses: List<BonusRule> = emptyList(),
+    val choice: FeatureChoice? = null
 )
 
 /** Умение меняет тип отдыха у ресурса ДРУГОГО умения («Источник вдохновения», «Улучшенная вспышка»). */
@@ -328,7 +350,10 @@ data class Invocation(
     // Заклинание, которое воззвание даёт как всегда подготовленное («Доспех теней», «Договор цепи»)
     val spell: String? = null,
     val spells: List<String> = emptyList(),
-    val always_prepared: Boolean = false
+    val always_prepared: Boolean = false,
+    // Собственный выбор воззвания (Договор гримуара, Уроки древних, Мучительный взрыв).
+    // Хранится под ключом "inv_<локальный id воззвания>"
+    val choice: FeatureChoice? = null
 )
 
 @Serializable

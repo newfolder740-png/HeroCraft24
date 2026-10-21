@@ -1,5 +1,6 @@
 {
     "id":  "pact_of_the_tome",
+  "choice": {"type":"feat_multi","pick_spells":[{"cantrips":3,"spells":0,"label":"Три заговора (любой класс)"},{"cantrips":0,"spells":2,"spell_level":1,"ritual_only":true,"label":"Два ритуальных заклинания 1-го уровня (любой класс)"}]},
   "type": "invocation",
   "format_version": 1,
     "name":  {

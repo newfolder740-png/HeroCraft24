@@ -175,6 +175,23 @@ class SheetSpellsFragment : Fragment() {
                 }
             })
         }
+        // Смена подготовленных заклинаний за долгий отдых (жрец, друид, паладин, следопыт, колдун)
+        if (vm.isPreparedCaster(char)) {
+            preparedHeader.addView(AppCompatButton(ctx).apply {
+                text = "🔄"
+                setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
+                minimumWidth = 0
+                minHeight = 0
+                minWidth = 0
+                minimumHeight = 0
+                background = null
+                textSize = 18f
+                setOnClickListener {
+                    PreparedSpellsDialogFragment.newInstance(char.id)
+                        .show(childFragmentManager, "PreparedSpells")
+                }
+            })
+        }
         if (isCaster) {
             preparedHeader.addView(AppCompatButton(ctx).apply {
                 text = "+"

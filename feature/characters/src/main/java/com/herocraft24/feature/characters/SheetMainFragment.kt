@@ -197,7 +197,9 @@ class SheetMainFragment : Fragment() {
         val card1 = makeCard(left1)
 
         val right1 = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
-        right1.addView(makeInfoInput(ctx, "Опыт", "${char.experience}"))
+        right1.addView(makeInfoInput(ctx, "Опыт", "${char.experience}") { xp ->
+            charId?.let { vm.updateExperience(it, xp) }
+        })
         val xpThresholds = listOf(0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000)
         val nextXp = xpThresholds.getOrElse(char.level) { 355000 }
         right1.addView(labelValue("След. уровень", "$nextXp"))
@@ -222,16 +224,23 @@ class SheetMainFragment : Fragment() {
         hpRowCard.addView(TextView(ctx).apply { text = "Хиты: "; setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall) })
         hpRowCard.addView(TextInputEditText(ctx).apply {
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            imeOptions = android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+            isSingleLine = true
             setText("${char.hitPoints.current}")
             textSize = 16f
             minEms = 2
             maxEms = 3
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            attachNumberCommit(this, "${char.hitPoints.current}") { hp ->
+                charId?.let { vm.updateCurrentHitPoints(it, hp) }
+            }
         })
         hpRowCard.addView(TextView(ctx).apply { text = "/${char.hitPoints.max}"; setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium) })
         right2.addView(hpRowCard)
-        right2.addView(makeInfoInput(ctx, "Врем. хиты", if (char.hitPoints.temporary > 0) "${char.hitPoints.temporary}" else ""))
+        right2.addView(makeInfoInput(ctx, "Врем. хиты", if (char.hitPoints.temporary > 0) "${char.hitPoints.temporary}" else "0") { tmp ->
+            charId?.let { vm.updateTemporaryHitPoints(it, tmp) }
+        })
         val hitDie = cls?.hit_die ?: 6
         right2.addView(makeInfoDropdown(ctx, "Кости хитов", "d$hitDie ${char.hitDice.remaining}/${char.level}"))
         val card4 = makeCard(right2)
@@ -436,8 +445,30 @@ class SheetMainFragment : Fragment() {
 
         // ── Rest buttons ──
         val restRow = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_HORIZONTAL }
-        restRow.addView(Button(ctx).apply { text = "Короткий отдых"; textSize = 12f; setPadding(16.dp(ctx), 0, 16.dp(ctx), 0) })
-        restRow.addView(Button(ctx).apply { text = "Долгий отдых"; textSize = 12f; setPadding(16.dp(ctx), 0, 16.dp(ctx), 0) })
+        restRow.addView(Button(ctx).apply {
+            text = "Короткий отдых"; textSize = 12f; setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
+            setOnClickListener {
+                charId?.let { id ->
+                    vm.takeShortRest(id)
+                    android.widget.Toast.makeText(ctx, "Короткий отдых: восстановлены ресурсы короткого отдыха", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+        restRow.addView(Button(ctx).apply {
+            text = "Долгий отдых"; textSize = 12f; setPadding(16.dp(ctx), 0, 16.dp(ctx), 0)
+            setOnClickListener {
+                charId?.let { id ->
+                    // Prepared-кастер после долгого отдыха меняет список подготовленных заклинаний
+                    val isPreparedCaster = vm.getCharacter(id)?.let { vm.isPreparedCaster(it) } == true
+                    vm.takeLongRest(id)
+                    android.widget.Toast.makeText(ctx, "Долгий отдых: ячейки, ресурсы и Хиты восстановлены", android.widget.Toast.LENGTH_SHORT).show()
+                    if (isPreparedCaster) {
+                        PreparedSpellsDialogFragment.newInstance(id)
+                            .show(childFragmentManager, "PreparedSpells")
+                    }
+                }
+            }
+        })
         content.addView(restRow)
     }
 
@@ -521,17 +552,53 @@ class SheetMainFragment : Fragment() {
         }
     }
 
-    private fun makeInfoInput(ctx: android.content.Context, label: String, value: String): TextInputLayout {
+    private fun makeInfoInput(
+        ctx: android.content.Context,
+        label: String,
+        value: String,
+        onCommit: ((Int) -> Unit)? = null
+    ): TextInputLayout {
         return TextInputLayout(ctx, null, com.google.android.material.R.attr.textInputOutlinedDenseStyle).apply {
             this.hint = label
             setPadding(0, 0, 0, 4.dp(ctx))
             val input = TextInputEditText(ctx).apply {
                 inputType = android.text.InputType.TYPE_CLASS_NUMBER
+                // Enter означает «готово», а не «перейти к следующему полю»
+                imeOptions = android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+                isSingleLine = true
                 setText(value)
                 textSize = 14f
+                if (onCommit != null) attachNumberCommit(this, value, onCommit)
             }
             addView(input)
         }
+    }
+
+    /**
+     * Сохраняет число по «Готово» и по потере фокуса — не на каждое нажатие клавиши:
+     * лист перестраивается целиком (vm.characters.collect → render), и ввод бы сбрасывался.
+     */
+    private fun attachNumberCommit(field: TextInputEditText, initial: String, onCommit: (Int) -> Unit) {
+        var lastCommitted = initial
+        fun commit() {
+            val raw = field.text?.toString()?.trim().orEmpty()
+            if (raw.isEmpty() || raw == lastCommitted) return
+            val parsed = raw.toIntOrNull() ?: return
+            lastCommitted = raw
+            onCommit(parsed)
+        }
+        field.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE ||
+                actionId == android.view.inputmethod.EditorInfo.IME_NULL
+            ) {
+                field.clearFocus()
+                commit()
+                true
+            } else {
+                false
+            }
+        }
+        field.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) commit() }
     }
 
     private fun infoLabel(container: LinearLayout, label: String, value: String) {
